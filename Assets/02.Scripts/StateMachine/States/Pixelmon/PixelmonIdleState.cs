@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PixelmonIdleState : MonoBehaviour
+public class PixelmonIdleState 
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //protected override void Enter()
+    //{
+    //    base.Enter();
+    //    //StartAnimation();
+    //}
+
+    //protected override void Exit()
+    //{
+    //    base.Exit();
+    //    //StopAnimation();
+    //}
+
+    //protected override void Execute()
+    //{
+    //    base.Execute();
+    //}
+
 }
