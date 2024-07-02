@@ -29,7 +29,7 @@ public class EnemyStateMachine : DeathableStateMachine
         AttackState = new EnemyAttackState(this);
         DieState = new EnemyDieState(this);
 
-        moveSpeed = Enemy.baseSpeed;
-        rotationDamping = Enemy.baseRotationDamping;
+        moveSpeed = Enemy.data.baseSpeed;
+        rotationDamping = Enemy.data.baseRotationDamping;
     }
 }

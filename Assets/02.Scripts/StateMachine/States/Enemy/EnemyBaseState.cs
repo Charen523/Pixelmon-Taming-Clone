@@ -74,6 +74,6 @@ public class EnemyBaseState : IState
     protected bool IsAttackRange()
     {
         float playerDistanceSqr = (stateMachine.target.transform.position - stateMachine.Enemy.transform.position).sqrMagnitude;
-        return playerDistanceSqr <= stateMachine.Enemy.attackRange * stateMachine.Enemy.attackRange;
+        return playerDistanceSqr <= stateMachine.Enemy.data.attackRange * stateMachine.Enemy.data.attackRange;
     }
 }
