@@ -11,9 +11,9 @@ public class EnemyDieState : EnemyBaseState
         base.Enter();
     }
 
-    public override void Update()
+    public override void Execute()
     {
-        base.Update();
+        base.Execute();
         //애니메이션 재생 끝나면 소멸.
     }
 }

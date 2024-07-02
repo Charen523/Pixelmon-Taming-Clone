@@ -26,11 +26,6 @@ public class Enemy : MonoBehaviour
         stateMachine.ChangeState(stateMachine.ChaseState);
     }
 
-    private void Update()
-    {
-        stateMachine.Update();
-    }
-
     private void LoadEnemyData()
     { 
 
