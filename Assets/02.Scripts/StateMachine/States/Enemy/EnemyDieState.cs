@@ -7,7 +7,7 @@ public class EnemyDieState : EnemyBaseState
 
     public override void Enter()
     {
-        stateMachine.movementSpeedModifier = 0;
+        fsm.movementSpeedModifier = 0;
         base.Enter();
     }
 

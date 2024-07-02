@@ -11,7 +11,7 @@ public class EnemyAttackState : EnemyBaseState
 
     public override void Enter()
     {
-        stateMachine.movementSpeedModifier = 0;
+        fsm.movementSpeedModifier = 0;
         base.Enter();
     }
 
@@ -26,12 +26,12 @@ public class EnemyAttackState : EnemyBaseState
 
         if (IsDead())
         {
-            stateMachine.ChangeState(stateMachine.DieState);
+            fsm.ChangeState(fsm.DieState);
             return;
         }
         else if (!IsAttackRange())
         {
-            stateMachine.ChangeState(stateMachine.ChaseState);
+            fsm.ChangeState(fsm.ChaseState);
             return;
         }
 

@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
     public EnemyData data;
     public Rigidbody2D rb;
     private Animator anim;
-    private EnemyStateMachine stateMachine;
+    private EnemyStateMachine fsm;
     #endregion
 
     private void Awake()
@@ -18,12 +18,12 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         
-        stateMachine = new EnemyStateMachine(this);
+        fsm = new EnemyStateMachine(this);
     }
 
     private void Start()
     {
-        stateMachine.ChangeState(stateMachine.ChaseState);
+        fsm.ChangeState(fsm.ChaseState);
     }
 
     private void LoadEnemyData()

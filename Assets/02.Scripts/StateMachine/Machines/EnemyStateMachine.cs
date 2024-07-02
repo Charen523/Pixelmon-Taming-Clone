@@ -4,8 +4,8 @@ using UnityEngine;
 public class EnemyStateMachine : DeathableStateMachine
 {
     public Enemy Enemy { get; }
-    public GameObject target;  
-
+    public GameObject target;
+    
     #region Enemy States
     public EnemyChaseState ChaseState {  get; private set; }
     public EnemyAttackState AttackState { get; private set; }
@@ -13,15 +13,14 @@ public class EnemyStateMachine : DeathableStateMachine
     #endregion
 
     #region Movement Status
-    public Vector2 moveInput;
     public float moveSpeed;
-    public float movementSpeedModifier;
-    public float rotationDamping;
+    public float movementSpeedModifier; //1 또는 0으로 속도 존재 여부 알려주기.
+    public float rotationDamping; //없어질 수도 있음(flip으로 대체.)
     #endregion
 
     public EnemyStateMachine (Enemy enemy)
     {
-        this.Enemy = enemy;
+        Enemy = enemy;
         target = enemy.PlayerObject;
 
         /*states 인스턴스 생성*/

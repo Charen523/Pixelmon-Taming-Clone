@@ -1,13 +1,11 @@
 ﻿
 public class EnemyChaseState : EnemyBaseState
 {
-    public EnemyChaseState(EnemyStateMachine stateMachine) : base(stateMachine)
-    {
-    }
+    public EnemyChaseState(EnemyStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {
-        stateMachine.movementSpeedModifier = 1;
+        fsm.movementSpeedModifier = 1;
         base.Enter();
     }
 
@@ -22,11 +20,11 @@ public class EnemyChaseState : EnemyBaseState
 
         if (IsDead())
         {
-            stateMachine.ChangeState(stateMachine.DieState);
+            fsm.ChangeState(fsm.DieState);
         }
         else if (IsAttackRange())
         {
-            stateMachine.ChangeState(stateMachine.AttackState);
+            fsm.ChangeState(fsm.AttackState);
         }
     }
 }
