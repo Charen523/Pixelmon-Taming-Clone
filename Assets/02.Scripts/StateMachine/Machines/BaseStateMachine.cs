@@ -1,27 +1,27 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
+using UnityEngine;
 
-public abstract class BaseStateMachine
+public class BaseStateMachine : StateMachine
 {
-    protected IState currentState;
+    [Header("Animations")]
+    public Animator animator;
+    public AnimationData animationData = new AnimationData();
 
-    public void ChangeState(IState state)
+    //protected IdleState idleState;
+
+    //public float MovementSpeed = 1f;
+    //public float MovementSpeedModifier { get; set; } = 1f;
+
+    void Awake()
     {
-        currentState?.Exit();
-        currentState = state;
-        currentState?.Enter();
+        animationData.Initialize();
     }
 
-    public void HandleInput()
+    void Start()
     {
-        currentState?.HandleInput();
-    }
-
-    public void Update() //Monobehaviour 없어서 그 Update아님.
-    {
-        currentState?.Update();
-    }
-
-    public void PhysicsUpdate()
-    {
-        currentState?.PhysicsUpdate();
+        //idleState = new IdleState(this, animator, animationData);
+        //ChangeState(idleState);
     }
 }
