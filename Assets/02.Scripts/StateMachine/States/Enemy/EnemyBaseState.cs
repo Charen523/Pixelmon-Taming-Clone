@@ -46,14 +46,14 @@ public class EnemyBaseState : IState
     private Vector2 GetMovementDirection()
     {
         //enemy -> target πÊ«‚.
-        Vector2 dir = (stateMachine.target.transform.position - stateMachine.enemy.transform.position).normalized;
+        Vector2 dir = (stateMachine.target.transform.position - stateMachine.Enemy.transform.position).normalized;
         return dir;
     }
 
     private void Move(Vector2 direction)
     {
         float magnitude = stateMachine.moveSpeed * stateMachine.movementSpeedModifier;
-        stateMachine.enemy.rb.velocity = direction * magnitude * Time.deltaTime;
+        stateMachine.Enemy.rb.velocity = direction * magnitude * Time.deltaTime;
     }
 
     private void Rotate(Vector2 direction)
@@ -62,7 +62,7 @@ public class EnemyBaseState : IState
         {
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle));
-            stateMachine.enemy.transform.rotation = Quaternion.Lerp(stateMachine.enemy.transform.rotation, targetRotation, stateMachine.rotationDamping * Time.deltaTime);
+            stateMachine.Enemy.transform.rotation = Quaternion.Lerp(stateMachine.Enemy.transform.rotation, targetRotation, stateMachine.rotationDamping * Time.deltaTime);
         }
     }
 }

@@ -38,8 +38,8 @@ public class EnemyChaseState : EnemyBaseState
 
     protected bool IsAttackRange()
     {
-        float playerDistanceSqr = (stateMachine.target.transform.position - stateMachine.enemy.transform.position).sqrMagnitude;
-        return playerDistanceSqr <= stateMachine.enemy.attackDistance * stateMachine.enemy.attackDistance;
+        float playerDistanceSqr = (stateMachine.target.transform.position - stateMachine.Enemy.transform.position).sqrMagnitude;
+        return playerDistanceSqr <= stateMachine.Enemy.attackRange * stateMachine.Enemy.attackRange;
     }
 }
 }
