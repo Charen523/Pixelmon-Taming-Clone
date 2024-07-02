@@ -29,17 +29,4 @@ public class EnemyChaseState : EnemyBaseState
             stateMachine.ChangeState(stateMachine.AttackState);
         }
     }
-
-    protected bool IsDead()
-    {
-        //애니메이션 GetBool로 죽음 상태 가져오기??
-        return false;
-    }
-
-    protected bool IsAttackRange()
-    {
-        float playerDistanceSqr = (stateMachine.target.transform.position - stateMachine.Enemy.transform.position).sqrMagnitude;
-        return playerDistanceSqr <= stateMachine.Enemy.attackRange * stateMachine.Enemy.attackRange;
-    }
-}
 }
