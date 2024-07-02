@@ -1,9 +1,11 @@
-
 public interface IState
 {
-    public void Enter();
-    public void Exit();
-    public void HandleInput();
-    public void Update();
-    public void PhysicsUpdate();
+    void Enter();
+    void Execute();
+    void Exit();
+}
+
+public interface IPlayerState : IState
+{
+    void HandleInput();
 }
