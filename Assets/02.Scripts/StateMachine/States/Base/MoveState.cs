@@ -27,13 +27,6 @@ public class MoveState : BaseState
         stateMachine.rb.velocity = Vector3.zero;
     }
 
-    /// <summary>
-    /// 플레이어는 Idle, 적과 펫은 Attack 상태로 변경바람.
-    /// </summary>
-    protected virtual void ChangeFightState()
-    {
-    }
-
     protected void MoveTowardsTarget()
     {
         // 자동으로 타겟에게 이동하는 로직
@@ -47,7 +40,7 @@ public class MoveState : BaseState
             // 타겟에게 도착하면 공격 상태로 변경
             if (Vector2.Distance(currentPosition, targetPosition) < 0.1f)
             {
-                ChangeFightState();
+                stateMachine.ChangeState(stateMachine.attackState);
             }
         }
     }

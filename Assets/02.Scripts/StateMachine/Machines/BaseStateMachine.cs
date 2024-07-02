@@ -13,6 +13,7 @@ public class BaseStateMachine : StateMachine
     public Rigidbody2D rb;
 
     [HideInInspector] public IdleState idleState;
+    [HideInInspector] public AttackState attackState;
 
     public float MovementSpeed = 1f;
 
@@ -25,5 +26,6 @@ public class BaseStateMachine : StateMachine
     protected virtual void Start()
     {
         idleState = new IdleState(this);
+        attackState = new AttackState(this);
     }
 }
