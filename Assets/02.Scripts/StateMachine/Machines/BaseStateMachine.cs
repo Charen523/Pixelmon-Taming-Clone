@@ -9,18 +9,21 @@ public class BaseStateMachine : StateMachine
     public Animator anim;
     public AnimationData animationData = new AnimationData();
 
-    //protected IdleState idleState;
+    [Header("Physics")]
+    public Rigidbody2D rb;
 
-    //public float MovementSpeed = 1f;
+    [HideInInspector] public IdleState idleState;
 
-    void Awake()
+    public float MovementSpeed = 1f;
+
+    protected virtual void Awake()
     {
         animationData.Initialize();
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    void Start()
+    protected virtual void Start()
     {
-        //idleState = new IdleState(this, animator, animationData);
-        //ChangeState(idleState);
+        idleState = new IdleState(this);
     }
 }

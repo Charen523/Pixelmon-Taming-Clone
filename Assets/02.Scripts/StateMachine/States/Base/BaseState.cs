@@ -2,28 +2,24 @@ using UnityEngine;
 
 public abstract class BaseState : IState
 {
-    protected StateMachine stateMachine;
-    protected Animator anim;
-    protected AnimationData animationData;
-
-    public BaseState(StateMachine stateMachine, Animator anim, AnimationData animationData)
-    {
-        this.stateMachine = stateMachine;
-        this.anim = anim;
-        this.animationData = animationData;
-    }
+    protected BaseStateMachine stateMachine;
 
     public abstract void Enter();
     public abstract void Execute();
     public abstract void Exit();
 
+    public BaseState(BaseStateMachine stateMachine)
+    { 
+        this.stateMachine = stateMachine;
+    }
+
     protected void StartAnimation(int animationHash)
     {
-        anim.SetBool(animationHash, true);
+        stateMachine.anim.SetBool(animationHash, true);
     }
 
     protected void StopAnimation(int animationHash)
     {
-        anim.SetBool(animationHash, false);
+        stateMachine.anim.SetBool(animationHash, false);
     }
 }
