@@ -3,13 +3,13 @@ using UnityEngine;
 public abstract class BaseState : IState
 {
     protected StateMachine stateMachine;
-    protected Animator animator;
+    protected Animator anim;
     protected AnimationData animationData;
 
-    public BaseState(StateMachine stateMachine, Animator animator, AnimationData animationData)
+    public BaseState(StateMachine stateMachine, Animator anim, AnimationData animationData)
     {
         this.stateMachine = stateMachine;
-        this.animator = animator;
+        this.anim = anim;
         this.animationData = animationData;
     }
 
@@ -19,11 +19,11 @@ public abstract class BaseState : IState
 
     protected void StartAnimation(int animationHash)
     {
-        animator.SetBool(animationHash, true);
+        anim.SetBool(animationHash, true);
     }
 
     protected void StopAnimation(int animationHash)
     {
-        animator.SetBool(animationHash, false);
+        anim.SetBool(animationHash, false);
     }
 }

@@ -6,13 +6,12 @@ using UnityEngine;
 public class BaseStateMachine : StateMachine
 {
     [Header("Animations")]
-    public Animator animator;
+    public Animator anim;
     public AnimationData animationData = new AnimationData();
 
     //protected IdleState idleState;
 
     //public float MovementSpeed = 1f;
-    //public float MovementSpeedModifier { get; set; } = 1f;
 
     void Awake()
     {
