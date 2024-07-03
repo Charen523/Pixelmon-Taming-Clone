@@ -28,6 +28,8 @@ public class PlayerStateMachine : StateMachine
         GameManager.Instance.OnGameStarted += () => ChangeState(idleState);   
         GameManager.Instance.OnGameEnded += () => ChangeState(timeOutState);
         moveState.OnTargetReached += ChangeAttackState;
+
+        ChangeState(idleState);
     }
 
     // 공격 상태로 변경(플레이어는 idle 상태)
