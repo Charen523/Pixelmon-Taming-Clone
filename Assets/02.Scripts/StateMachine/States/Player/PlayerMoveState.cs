@@ -15,9 +15,4 @@ public class PlayerMoveState : MoveState
         // 입력이 없을 경우 타겟을 향해 이동
         base.Execute();
     }
-
-    protected override void ChangeFightState()
-    {
-        stateMachine.ChangeState(new IdleState(stateMachine));
-    }
 }
