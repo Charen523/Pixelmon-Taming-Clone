@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -18,21 +19,31 @@ public class DataManager : Singleton<DataManager>
     Dictionary<string, EnemyData> EnemyDictionary = new Dictionary<string, EnemyData>();
     Dictionary<string, PixelmonData> PixelmonDictionary = new Dictionary<string, PixelmonData>();
     Dictionary<string, ItemData> ItemDictionary = new Dictionary<string, ItemData>();
+    Dictionary<Type, object> dataDictionaries = new Dictionary<Type, object>();
     #endregion
 
     protected override void Awake()
     {
         isDontDestroyOnLoad = true;
         base.Awake();
+        InitializeDictionaries();
         LoadData();
+    }
+
+    private void InitializeDictionaries()
+    {
+        dataDictionaries.Add(typeof(StageData), StageDictionary);
+        dataDictionaries.Add(typeof(EnemyData), EnemyDictionary);
+        dataDictionaries.Add(typeof(PixelmonData), PixelmonDictionary);
+        dataDictionaries.Add(typeof(ItemData), ItemDictionary);
     }
 
     private void LoadData()
     {
-        LoadJsonData<StageData>(jsonStageData, StageDictionary);
-        LoadJsonData<EnemyData>(jsonEnemyData, EnemyDictionary);
-        LoadJsonData<PixelmonData>(jsonPixelmonData, PixelmonDictionary);
-        LoadJsonData<ItemData>(jsonItemData, ItemDictionary);
+        LoadJsonData(jsonStageData, StageDictionary);
+        LoadJsonData(jsonEnemyData, EnemyDictionary);
+        LoadJsonData(jsonPixelmonData, PixelmonDictionary);
+        LoadJsonData(jsonItemData, ItemDictionary);
     }
 
     private void LoadJsonData<T>(string jsonFileName, Dictionary<string, T> dictionary) where T : IData
@@ -40,7 +51,7 @@ public class DataManager : Singleton<DataManager>
         TextAsset jsonTextAsset = Resources.Load<TextAsset>($"{jsonFolderName}/{jsonFileName}");
         if (jsonTextAsset == null)
         {
-            Debug.LogError($"Failed to load {jsonFileName} from Resources/{jsonFolderName}");
+            Debug.LogError($"{jsonFileName}가 경로 Resources/{jsonFolderName}에 존재하지 않음.");
             return;
         }
 
@@ -51,4 +62,25 @@ public class DataManager : Singleton<DataManager>
         }
     }
 
+    public T GetData<T>(string rcode) where T : class, IData
+    {
+        if (dataDictionaries.TryGetValue(typeof(T), out var dictionary))
+        {
+            var typedDictionary = dictionary as Dictionary<string, T>;
+            if (typedDictionary != null && typedDictionary.TryGetValue(rcode, out var data))
+            {
+                return data;
+            }
+            else
+            {
+                Debug.LogError("잘못된 Rcode입니다.");
+            }
+        }
+        else
+        {
+            Debug.LogError("잘못된 데이터 타입입니다.");
+        }
+
+        return null;
+    }
 }
