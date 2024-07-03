@@ -1,12 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMoveState : MoveState
 {
-    public PlayerMoveState(StateMachine stateMachine, Transform target)
+    PlayerStateMachine PlayerStateMachine;
+    public PlayerMoveState(PlayerStateMachine stateMachine, Transform target)
         : base(stateMachine, target)
     {
+        PlayerStateMachine = stateMachine;
     }
 
     public override void Execute()

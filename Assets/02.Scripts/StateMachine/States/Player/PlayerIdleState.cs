@@ -1,22 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class PlayerIdleState : IdleState
 {
+    PlayerStateMachine PlayerStateMachine;
     public PlayerIdleState(PlayerStateMachine stateMachine) 
         : base(stateMachine)
     {
+        PlayerStateMachine = stateMachine;
     }
 
     public override void Execute()
     {      
-        GameObject closestTarget = FindClosestTarget((stateMachine as PlayerStateMachine).EnemyTag);
+        GameObject closestTarget = FindClosestTarget(PlayerStateMachine.EnemyTag);
         if (closestTarget != null)
         {
-            (stateMachine as PlayerStateMachine).moveState.targetTransform = closestTarget.transform;
-            stateMachine.ChangeState((stateMachine as PlayerStateMachine).moveState);
+            PlayerStateMachine.moveState.targetTransform = closestTarget.transform;
+            stateMachine.ChangeState(PlayerStateMachine.moveState);
         }
     }
 
@@ -26,7 +25,7 @@ public class PlayerIdleState : IdleState
         GameObject[] enemies = PoolManager.Instance.GetActiveObjectsFromPool(enemyTag);
         GameObject closestEnemy = null;
         float closestDistance = Mathf.Infinity;
-        Vector3 playerPosition = (stateMachine as PlayerStateMachine).transform.position;
+        Vector3 playerPosition = PlayerStateMachine.transform.position;
 
         foreach (GameObject enemy in enemies)
         {
