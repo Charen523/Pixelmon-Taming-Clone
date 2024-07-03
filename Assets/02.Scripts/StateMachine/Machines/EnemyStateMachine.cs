@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-public class EnemyStateMachine : DeathableStateMachine
+public class EnemyStateMachine : StateMachine
 {
     public Enemy Enemy { get; }
     public GameObject target;
@@ -14,8 +14,8 @@ public class EnemyStateMachine : DeathableStateMachine
 
     #region Movement Status
     public float moveSpeed;
-    public float movementSpeedModifier; //1 ¶Ç´Â 0À¸·Î ¼Óµµ Á¸Àç ¿©ºÎ ¾Ë·ÁÁÖ±â.
-    public float rotationDamping; //¾ø¾îÁú ¼öµµ ÀÖÀ½(flipÀ¸·Î ´ëÃ¼.)
+    public float movementSpeedModifier; //1 ë˜ëŠ” 0ìœ¼ë¡œ ì†ë„ ì¡´ì¬ ì—¬ë¶€ ì•Œë ¤ì£¼ê¸°.
+    public float rotationDamping; //ì—†ì–´ì§ˆ ìˆ˜ë„ ìˆìŒ(flipìœ¼ë¡œ ëŒ€ì²´.)
     #endregion
 
     public EnemyStateMachine (Enemy enemy)
@@ -23,7 +23,7 @@ public class EnemyStateMachine : DeathableStateMachine
         Enemy = enemy;
         target = enemy.PlayerObject;
 
-        /*states ÀÎ½ºÅÏ½º »ı¼º*/
+        /*states ì¸ìŠ¤í„´ìŠ¤ ìƒì„±*/
         ChaseState = new EnemyChaseState(this);
         AttackState = new EnemyAttackState(this);
         DieState = new EnemyDieState(this);

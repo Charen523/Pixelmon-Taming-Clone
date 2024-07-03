@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DieState : BaseState
 {
-    public DieState(BaseStateMachine stateMachine) 
+    public DieState(StateMachine stateMachine) 
         : base(stateMachine)
     {
     }

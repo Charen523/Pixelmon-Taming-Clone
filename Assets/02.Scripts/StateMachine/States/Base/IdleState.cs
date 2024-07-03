@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class IdleState : BaseState
 {
-    public IdleState(BaseStateMachine stateMachine)
+    public IdleState(StateMachine stateMachine)
         : base(stateMachine)
     {
     }
@@ -17,6 +17,8 @@ public class IdleState : BaseState
 
     public override void Execute()
     {
+        // 탐색로직
+        // 몬스터 찾음 -> moveState로 변경
     }
 
     public override void Exit()

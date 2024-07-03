@@ -2,13 +2,13 @@ using UnityEngine;
 
 public abstract class BaseState : IState
 {
-    protected BaseStateMachine stateMachine;
+    protected StateMachine stateMachine;
 
     public abstract void Enter();
     public abstract void Execute();
     public abstract void Exit();
 
-    public BaseState(BaseStateMachine stateMachine)
+    public BaseState(StateMachine stateMachine)
     { 
         this.stateMachine = stateMachine;
     }

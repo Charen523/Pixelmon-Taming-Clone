@@ -1,18 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    // Start is called before the first frame update
-    void Start()
-    {
+    public event Action OnPlayerDie;
+    public event Action OnGameEnded;
+    public event Action OnGameStarted;
 
+    public void NotifyPlayerDie()
+    {
+        OnPlayerDie?.Invoke();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void NotifyGameEnded()
     {
-        
+        OnGameEnded?.Invoke();
+    }
+
+    public void NotifyGameStarted()
+    {
+        OnGameStarted?.Invoke();
     }
 }
