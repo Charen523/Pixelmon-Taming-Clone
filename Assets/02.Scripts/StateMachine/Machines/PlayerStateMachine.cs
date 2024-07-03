@@ -7,10 +7,6 @@ public class PlayerStateMachine : StateMachine
 
     public Vector2 MovementInput { get; set; }
 
-   // public bool IsAttacking { get; set; }
-
-    public Transform MainCameraTransform { get; set; } // 카메라가 플레이어 따라다님
-
     // States
     public IdleState idleState { get; private set; }
     public PlayerDetectState detectState { get; private set; }
