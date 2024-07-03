@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MoveState : BaseState
 {
-    protected Transform targetTransform;
+    public Transform targetTransform;
 
     public event Action OnTargetReached;
 
