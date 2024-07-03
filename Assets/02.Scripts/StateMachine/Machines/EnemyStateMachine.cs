@@ -29,6 +29,5 @@ public class EnemyStateMachine : StateMachine
         DieState = new EnemyDieState(this);
 
         moveSpeed = Enemy.data.baseSpeed;
-        rotationDamping = Enemy.data.baseRotationDamping;
     }
 }

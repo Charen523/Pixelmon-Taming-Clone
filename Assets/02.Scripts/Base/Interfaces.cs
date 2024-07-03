@@ -9,3 +9,8 @@ public interface IPlayerState : IState
 {
     void HandleInput();
 }
+
+public interface IData
+{
+    string Rcode { get; }
+}
