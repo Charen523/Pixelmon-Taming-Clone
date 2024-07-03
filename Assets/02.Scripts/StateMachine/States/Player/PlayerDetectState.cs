@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class PlayerIdleState : IdleState
+public class PlayerDetectState : IdleState
 {
     PlayerStateMachine PlayerStateMachine;
-    public PlayerIdleState(PlayerStateMachine stateMachine) 
+    public PlayerDetectState(PlayerStateMachine stateMachine) 
         : base(stateMachine)
     {
         PlayerStateMachine = stateMachine;
