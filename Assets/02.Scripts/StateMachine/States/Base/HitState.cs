@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HitState : BaseState
 {
-    public HitState(BaseStateMachine stateMachine) 
+    public HitState(StateMachine stateMachine) 
         : base(stateMachine)
     {
     }

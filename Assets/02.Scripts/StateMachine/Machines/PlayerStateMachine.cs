@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStateMachine : DeathableStateMachine
+public class PlayerStateMachine : StateMachine
 {
     //public Player Player { get; }
 
@@ -15,12 +15,18 @@ public class PlayerStateMachine : DeathableStateMachine
     // States
     private PlayerMoveState moveState;
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
         moveState = new PlayerMoveState(this, null); // Todo: 탐색한 타겟 넘겨주기
-        ChangeState(moveState);
+        moveState.OnTargetReached += ChangeAttackState;
+        //ChangeState(idleState);
     }
 
     // 탐색 메서드 필요
+
+    // 공격 상태로 변경
+    private void ChangeAttackState()
+    {
+        
+    }
 }

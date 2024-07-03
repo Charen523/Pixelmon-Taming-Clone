@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,10 @@ public class MoveState : BaseState
 {
     protected Transform targetTransform;
 
-    public MoveState(BaseStateMachine stateMachine, Transform target) : base(stateMachine)
+    public event Action OnTargetReached;
+
+    public MoveState(StateMachine stateMachine, Transform target) 
+        : base(stateMachine)
     {
         this.targetTransform = target;
     }
@@ -40,7 +44,7 @@ public class MoveState : BaseState
             // 타겟에게 도착하면 공격 상태로 변경
             if (Vector2.Distance(currentPosition, targetPosition) < 0.1f)
             {
-                stateMachine.ChangeState(stateMachine.attackState);
+                OnTargetReached?.Invoke();
             }
         }
     }
