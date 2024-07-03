@@ -12,7 +12,7 @@ public class PlayerIdleState : IdleState
 
     public override void Execute()
     {      
-        GameObject closestTarget = FindClosestTarget((stateMachine as PlayerStateMachine).enemyTag);
+        GameObject closestTarget = FindClosestTarget((stateMachine as PlayerStateMachine).EnemyTag);
         if (closestTarget != null)
         {
             (stateMachine as PlayerStateMachine).moveState.targetTransform = closestTarget.transform;

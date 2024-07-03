@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class PlayerStateMachine : StateMachine
 {
     //public Player Player { get; }
-    public string enemyTag = "Slime";
+    public string EnemyTag = "Slime";
 
     public Vector2 MovementInput { get; set; }
 
@@ -20,8 +20,10 @@ public class PlayerStateMachine : StateMachine
 
     private void Start()
     {
+        MovementSpeed = 3f;
+        AttackRange = 2f;
         idleState = new PlayerIdleState(this);
-        moveState = new PlayerMoveState(this, null); // Todo: 탐색한 타겟 넘겨주기
+        moveState = new PlayerMoveState(this, null);
         moveState.OnTargetReached += ChangeAttackState;
         ChangeState(idleState);
     }

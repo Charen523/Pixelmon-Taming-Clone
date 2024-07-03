@@ -6,7 +6,6 @@ using UnityEngine;
 public class MoveState : BaseState
 {
     public Transform targetTransform;
-
     public event Action OnTargetReached;
 
     public MoveState(StateMachine stateMachine, Transform target) 
@@ -42,7 +41,7 @@ public class MoveState : BaseState
             stateMachine.rb.velocity = direction * stateMachine.MovementSpeed;
 
             // 타겟에게 도착하면 공격 상태로 변경
-            if (Vector2.Distance(currentPosition, targetPosition) < 0.1f)
+            if (Vector2.Distance(currentPosition, targetPosition) < stateMachine.AttackRange)
             {
                 OnTargetReached?.Invoke();
             }

@@ -13,6 +13,7 @@ public class StateMachine : MonoBehaviour
     public Rigidbody2D rb;
 
     public float MovementSpeed = 1f;
+    public float AttackRange = 1f;
 
     public void ChangeState(IState newState)
     {
