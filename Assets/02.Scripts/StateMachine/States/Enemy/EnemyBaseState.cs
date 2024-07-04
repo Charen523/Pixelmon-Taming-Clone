@@ -29,12 +29,12 @@ public class EnemyBaseState : IState
     {
         Vector2 movementDirection = GetMovementDirection();
         Move(movementDirection);
-        //ÇÃ¸³À¸·Î È¸Àü ±¸Çö ÇÊ¿ä.
+        //í”Œë¦½ìœ¼ë¡œ íšŒì „ êµ¬í˜„ í•„ìš”.
     }
 
     private Vector2 GetMovementDirection()
     {
-        //enemy -> target ¹æÇâ.
+        //enemy -> target ë°©í–¥.
         Vector2 dir = (fsm.target.transform.position - fsm.Enemy.transform.position).normalized;
         return dir;
     }
@@ -47,13 +47,13 @@ public class EnemyBaseState : IState
 
     protected bool IsDead()
     {
-        //¾Ö´Ï¸ŞÀÌ¼Ç GetBool·Î Á×À½ »óÅÂ °¡Á®¿À±â??
+        //ì• ë‹ˆë©”ì´ì…˜ GetBoolë¡œ ì£½ìŒ ìƒíƒœ ê°€ì ¸ì˜¤ê¸°??
         return false;
     }
 
     protected bool IsAttackRange()
     {
         float playerDistanceSqr = (fsm.target.transform.position - fsm.Enemy.transform.position).sqrMagnitude;
-        return playerDistanceSqr <= fsm.Enemy.data.attackRange * fsm.Enemy.data.attackRange;
+        return playerDistanceSqr <= fsm.Enemy.data.atkRange * fsm.Enemy.data.atkRange;
     }
 }
