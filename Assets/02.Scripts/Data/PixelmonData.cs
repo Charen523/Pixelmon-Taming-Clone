@@ -3,7 +3,7 @@ using System;
 [Serializable]
 public class PixelmonData : IData
 {
-    public string Rcode;
+    public string rcode;
 
-    string IData.Rcode => Rcode;  // 명시적 인터페이스 구현
+    string IData.Rcode => rcode;  // 명시적 인터페이스 구현
 }
