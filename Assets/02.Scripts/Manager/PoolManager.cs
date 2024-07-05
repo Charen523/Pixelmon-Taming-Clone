@@ -40,20 +40,4 @@ public class PoolManager : Singleton<PoolManager>
         obj.SetActive(true);
         return obj;
     }
-
-    public GameObject[] GetActiveObjectsFromPool(string tag)
-    {
-        if (!PoolDictionary.ContainsKey(tag))
-            return new GameObject[0];
-
-        List<GameObject> activeObjects = new List<GameObject>();
-        foreach (var obj in PoolDictionary[tag])
-        {
-            if (obj.activeInHierarchy)
-            {
-                activeObjects.Add(obj);
-            }
-        }
-        return activeObjects.ToArray();
-    }
 }

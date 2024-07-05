@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerStateMachine : StateMachine
 {
     //public Player Player { get; }
-    public string EnemyTag = "Slime";
+    public string EnemyTag = "Enemy";
 
     public Vector2 MovementInput { get; set; }
 
