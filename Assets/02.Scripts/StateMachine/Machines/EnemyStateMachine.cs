@@ -1,10 +1,9 @@
-
 using UnityEngine;
 
 public class EnemyStateMachine : StateMachine
 {
-    public Enemy Enemy { get; }
-    public GameObject target;
+    public EnemyData data;
+    public GameObject target; //어케 찾아올까유~ 플레이어 싱글톤?
     
     #region Enemy States
     public EnemyChaseState ChaseState {  get; private set; }
@@ -15,19 +14,14 @@ public class EnemyStateMachine : StateMachine
     #region Movement Status
     public float moveSpeed;
     public float movementSpeedModifier; //1 또는 0으로 속도 존재 여부 알려주기.
-    public float rotationDamping; //없어질 수도 있음(flip으로 대체.)
     #endregion
 
-    public EnemyStateMachine (Enemy enemy)
+    private void Start()
     {
-        Enemy = enemy;
-        target = enemy.PlayerObject;
+        MovementSpeed = data.spd;
 
-        /*states 인스턴스 생성*/
         ChaseState = new EnemyChaseState(this);
         AttackState = new EnemyAttackState(this);
         DieState = new EnemyDieState(this);
-
-        moveSpeed = Enemy.data.spd;
     }
 }

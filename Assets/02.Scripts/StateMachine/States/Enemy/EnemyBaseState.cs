@@ -35,14 +35,14 @@ public class EnemyBaseState : IState
     private Vector2 GetMovementDirection()
     {
         //enemy -> target 방향.
-        Vector2 dir = (fsm.target.transform.position - fsm.Enemy.transform.position).normalized;
+        Vector2 dir = (fsm.target.transform.position - fsm.transform.position).normalized;
         return dir;
     }
 
     private void Move(Vector2 direction)
     {
         float magnitude = fsm.moveSpeed * fsm.movementSpeedModifier;
-        fsm.Enemy.rb.velocity = direction * magnitude * Time.deltaTime;
+        fsm.rb.velocity = direction * magnitude * Time.deltaTime;
     }
 
     protected bool IsDead()
@@ -53,7 +53,7 @@ public class EnemyBaseState : IState
 
     protected bool IsAttackRange()
     {
-        float playerDistanceSqr = (fsm.target.transform.position - fsm.Enemy.transform.position).sqrMagnitude;
-        return playerDistanceSqr <= fsm.Enemy.data.atkRange * fsm.Enemy.data.atkRange;
+        float playerDistanceSqr = (fsm.target.transform.position - fsm.transform.position).sqrMagnitude;
+        return playerDistanceSqr <= fsm.data.atkRange * fsm.data.atkRange;
     }
 }
