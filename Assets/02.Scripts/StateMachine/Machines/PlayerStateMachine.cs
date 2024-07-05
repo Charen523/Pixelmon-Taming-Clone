@@ -21,8 +21,8 @@ public class PlayerStateMachine : StateMachine
         DetectState = new PlayerDetectState(this);
         MoveState = new PlayerMoveState(this, null);
 
-        GameManager.Instance.OnGameStarted += () => ChangeState(DetectState);   
-        GameManager.Instance.OnGameEnded += () => ChangeState(IdleState);
+        GameManager.Instance.OnStageStart += () => ChangeState(DetectState);   
+        GameManager.Instance.OnStageTimeOut += () => ChangeState(IdleState);
         MoveState.OnTargetReached += ChangeAttackState;
 
         ChangeState(DetectState);
