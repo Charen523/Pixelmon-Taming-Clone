@@ -3,39 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PixelmonAttackState
+public class PixelmonAttackState : PixelmonBaseState
 {
-
-    //public override void Enter()
-    //{
-    //    base.Enter();
-    //    //StartAnimation();
-    //}
-
-    //public override void Exit()
-    //{
-    //    base.Exit();
-    //    //StopAnimation();
-    //}
-
-    //public override void Execute()
-    //{
-    //    base.Execute();
-    //}
-
-    public GameObject Search(GameObject pixelmon, List<GameObject> enemies)
+    public PixelmonAttackState(PixelmonStateMachine stateMachine) : base(stateMachine)
     {
-        GameObject target = new GameObject();
-        // 5f => 탐색범위 길이로 변경
-        float minDistance = 5f;
-        enemies.ForEach(enemy =>
-        {
-            Vector3 pos = pixelmon.transform.position - enemy.transform.position;
-            float distance = pos.sqrMagnitude;
 
-            if(distance < minDistance * minDistance)
-                target = enemy;
-        });
-        return target;
     }
+
+    public override void Enter()
+    {
+        StartAnimation(stateMachine.animationData.AttackParameterHash);
+    }
+
+    public override void Execute()
+    {
+        //몹이 널이라면 상태 변화
+        //널이 아니라면 공격 및 스킬
+    }
+
+    public override void Exit()
+    {
+        StopAnimation(stateMachine.animationData.AttackParameterHash);
+
+    }
+
 }
