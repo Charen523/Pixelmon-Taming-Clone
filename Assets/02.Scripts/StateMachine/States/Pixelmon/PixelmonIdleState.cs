@@ -2,24 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PixelmonIdleState 
+public class PixelmonIdleState : PixelmonBaseState
 {
+    public PixelmonIdleState(PixelmonStateMachine stateMachine) : base(stateMachine)
+    {
+        
+    }
 
-    //protected override void Enter()
-    //{
-    //    base.Enter();
-    //    //StartAnimation();
-    //}
+    public override void Enter()
+    {        
+        //Search();
+        StartAnimation(stateMachine.animationData.IdleParameterHash);
+    }
 
-    //protected override void Exit()
-    //{
-    //    base.Exit();
-    //    //StopAnimation();
-    //}
+    public override void Execute()
+    {
+       
+    }
 
-    //protected override void Execute()
-    //{
-    //    base.Execute();
-    //}
+    public override void Exit()
+    {
+        StopAnimation(stateMachine.animationData.IdleParameterHash);
+    }
 
+
+    public GameObject Search(GameObject pixelmon, List<GameObject> enemies)
+    {
+        GameObject target = new GameObject();
+        // 5f => 탐색범위 길이로 변경
+        float minDistance = 5f;
+        enemies.ForEach(enemy =>
+        {
+            Vector3 pos = pixelmon.transform.position - enemy.transform.position;
+            float distance = pos.sqrMagnitude;
+
+            if (distance < minDistance * minDistance)
+                target = enemy;
+        });
+        return target;
+    }
 }
