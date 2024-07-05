@@ -1,17 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StageManager : MonoBehaviour
 {
+    [Header("소환")]
     [SerializeField]
-    public string CurrentRCode {  get; private set; }
+    private Spawner spawner;
+    [Header("UI")]
+    [SerializeField]
+    private TextMeshProUGUI stageTitleTxt;
+    [SerializeField]
+    private Image clearBar;
+    [SerializeField]
+    private TextMeshProUGUI clearTxt;
 
+    [Header("난이도")]
     [SerializeField]
     private string stgRcode;
-    [SerializeField]
-    StageData data;
 
+    [SerializeField]
+    private StageData data;
+    public int spawnCount = 0;
+
+    [SerializeField]
+    public string CurrentRCode { get; private set; }
+    private readonly string stagercode = "STG";
     [SerializeField]
     private int difficultyNum;
     [SerializeField]
@@ -27,9 +43,11 @@ public class StageManager : MonoBehaviour
     [SerializeField]
     private int maxStageNum = 10;
 
+
+
     void Start()
     {
-        
+        StageInitialize();
     }
 
     // Update is called once per frame
@@ -40,15 +58,34 @@ public class StageManager : MonoBehaviour
 
     private void SetRcode()
     {
-        stgRcode = $"STG{difficultyNum}{worldNum}{stageNum}";
+        stgRcode = $"{stagercode}{difficultyNum}{worldNum}{stageNum}";
     }
 
     public void StageInitialize()
     {
-        data = DataManager.Instance.GetData<StageData>(stgRcode);
+        ReturnPools();
+        //data = DataManager.Instance.GetData<StageData>(stgRcode);
         //UI초기화
+        InitStageUI();
+        SummonMonster();
     }
 
+    private void InitStageUI()
+    {
+
+    }
+
+    private void SummonMonster()
+    {
+        data = DataManager.Instance.GetData<StageData>(stgRcode);
+        StartCoroutine(spawner.RandGroupCount(data));
+    }
+
+    private void ReturnPools()
+    {
+
+    }
+    #region 다음 스테이지
     public void ToNextStage(int index)
     {
         if(stageNum <= maxStageNum)
@@ -72,4 +109,5 @@ public class StageManager : MonoBehaviour
     {
         difficultyNum++;
     }
+    #endregion
 }
