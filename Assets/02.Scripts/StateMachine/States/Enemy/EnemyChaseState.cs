@@ -1,11 +1,10 @@
-﻿
+
 public class EnemyChaseState : EnemyBaseState
 {
     public EnemyChaseState(EnemyStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {
-        fsm.movementSpeedModifier = 1;
         base.Enter();
     }
 

@@ -11,14 +11,10 @@ public class EnemyStateMachine : StateMachine
     public EnemyDieState DieState { get; private set; }
     #endregion
 
-    #region Movement Status
-    public float moveSpeed;
-    public float movementSpeedModifier; //1 또는 0으로 속도 존재 여부 알려주기.
-    #endregion
-
     private void Start()
     {
         MovementSpeed = data.spd;
+        AttackRange = data.atkRange;
 
         ChaseState = new EnemyChaseState(this);
         AttackState = new EnemyAttackState(this);

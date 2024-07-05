@@ -41,8 +41,8 @@ public class EnemyBaseState : IState
 
     private void Move(Vector2 direction)
     {
-        float magnitude = fsm.moveSpeed * fsm.movementSpeedModifier;
-        fsm.rb.velocity = direction * magnitude * Time.deltaTime;
+        //float magnitude = fsm.moveSpeed * fsm.movementSpeedModifier;
+        //fsm.rb.velocity = direction * magnitude * Time.deltaTime;
     }
 
     protected bool IsDead()

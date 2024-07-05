@@ -1,4 +1,4 @@
-﻿
+
 using UnityEngine;
 
 public class EnemyAttackState : EnemyBaseState
@@ -11,7 +11,6 @@ public class EnemyAttackState : EnemyBaseState
 
     public override void Enter()
     {
-        fsm.movementSpeedModifier = 0;
         base.Enter();
     }
 
