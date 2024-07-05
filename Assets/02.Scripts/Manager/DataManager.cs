@@ -11,14 +11,12 @@ public class DataManager : Singleton<DataManager>
     private readonly string jsonStageData = "StageData";
     private readonly string jsonEnemyData = "EnemyData";
     private readonly string jsonPixelmonData = "PixelmonData";
-    private readonly string jsonItemData = "ItemData";
     #endregion
 
     #region Dictionaries
     Dictionary<string, StageData> StageDictionary = new Dictionary<string, StageData>();
     Dictionary<string, EnemyData> EnemyDictionary = new Dictionary<string, EnemyData>();
     Dictionary<string, PixelmonData> PixelmonDictionary = new Dictionary<string, PixelmonData>();
-    Dictionary<string, ItemData> ItemDictionary = new Dictionary<string, ItemData>();
     Dictionary<Type, object> dataDictionaries = new Dictionary<Type, object>();
     #endregion
 
@@ -35,7 +33,6 @@ public class DataManager : Singleton<DataManager>
         dataDictionaries.Add(typeof(StageData), StageDictionary);
         dataDictionaries.Add(typeof(EnemyData), EnemyDictionary);
         dataDictionaries.Add(typeof(PixelmonData), PixelmonDictionary);
-        dataDictionaries.Add(typeof(ItemData), ItemDictionary);
     }
 
     private void LoadData()
@@ -43,7 +40,6 @@ public class DataManager : Singleton<DataManager>
         LoadJsonData(jsonStageData, StageDictionary);
         LoadJsonData(jsonEnemyData, EnemyDictionary);
         LoadJsonData(jsonPixelmonData, PixelmonDictionary);
-        LoadJsonData(jsonItemData, ItemDictionary);
     }
 
     private void LoadJsonData<T>(string jsonFileName, Dictionary<string, T> dictionary) where T : IData

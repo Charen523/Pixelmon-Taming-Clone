@@ -11,11 +11,12 @@ public class PlayerDetectState : IdleState
 
     public override void Execute()
     {      
+        base.Execute();
         GameObject closestTarget = FindClosestTarget(PlayerStateMachine.EnemyTag);
         if (closestTarget != null)
         {
-            PlayerStateMachine.moveState.targetTransform = closestTarget.transform;
-            stateMachine.ChangeState(PlayerStateMachine.moveState);
+            PlayerStateMachine.MoveState.targetTransform = closestTarget.transform;
+            stateMachine.ChangeState(PlayerStateMachine.MoveState);
         }
     }
 

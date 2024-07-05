@@ -28,6 +28,6 @@ public class EnemyStateMachine : StateMachine
         AttackState = new EnemyAttackState(this);
         DieState = new EnemyDieState(this);
 
-        moveSpeed = Enemy.data.baseSpeed;
+        moveSpeed = Enemy.data.spd;
     }
 }
