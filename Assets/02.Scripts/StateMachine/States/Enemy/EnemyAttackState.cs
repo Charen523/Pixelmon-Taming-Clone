@@ -1,11 +1,11 @@
 
 using UnityEngine;
 
-public class EnemyAttackState : EnemyBaseState
+public class EnemyAttackState : AttackState
 {
     private float attackTime = 0;
 
-    public EnemyAttackState(EnemyStateMachine stateMachine) : base(stateMachine)
+    public EnemyAttackState(StateMachine stateMachine) : base(stateMachine)
     {
     }
 
@@ -23,16 +23,16 @@ public class EnemyAttackState : EnemyBaseState
     {
         base.Execute();
 
-        if (IsDead())
-        {
-            fsm.ChangeState(fsm.DieState);
-            return;
-        }
-        else if (!IsAttackRange())
-        {
-            fsm.ChangeState(fsm.ChaseState);
-            return;
-        }
+        //if (IsDead())
+        //{
+        //    fsm.ChangeState(fsm.DieState);
+        //    return;
+        //}
+        //else if (!IsAttackRange())
+        //{
+        //    fsm.ChangeState(fsm.ChaseState);
+        //    return;
+        //}
 
         if (attackTime <= 0)
         {
