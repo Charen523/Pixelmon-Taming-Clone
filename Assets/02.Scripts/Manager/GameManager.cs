@@ -4,8 +4,9 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     public event Action OnPlayerDie;
-    public event Action OnGameEnded;
-    public event Action OnGameStarted;
+    public event Action OnStageTimeOut;
+    public event Action OnStageStart;
+    public event Action OnStageClear;
 
 
     protected override void Awake()
@@ -20,13 +21,18 @@ public class GameManager : Singleton<GameManager>
         OnPlayerDie?.Invoke();
     }
 
-    public void NotifyGameEnded()
+    public void NotifyStageTimeOut()
     {
-        OnGameEnded?.Invoke();
+        OnStageTimeOut?.Invoke();
     }
 
-    public void NotifyGameStarted()
+    public void NotifyStageStart()
     {
-        OnGameStarted?.Invoke();
+        OnStageStart?.Invoke();
+    }
+
+    public void NotifyStageClear()
+    {
+        OnStageClear?.Invoke();
     }
 }
