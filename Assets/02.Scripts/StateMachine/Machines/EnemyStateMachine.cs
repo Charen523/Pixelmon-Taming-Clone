@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class EnemyStateMachine : StateMachine
@@ -36,5 +37,15 @@ public class EnemyStateMachine : StateMachine
         ChaseState.OnTargetReached += () => ChangeState(AttackState);
 
         ChangeState(ChaseState);
+    }
+
+    public void OnEnemyDead()
+    {
+        //public void OnMonsterDead(string rcode, GameObject enemy)
+    }
+
+    public void OnEnemyAttack()
+    {
+        //HealthSystem
     }
 }
