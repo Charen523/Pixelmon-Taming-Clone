@@ -12,7 +12,7 @@ public class StageData : IData
     public int spawnCount;
     public int nextStageCount;
     public List<string> monsterIds;
-    public string bossId;
+    public List<string> bossId;
     public List<string> rewardTypes;
     public List<string> rewardValues;
     public List<string> offlineRewardTypes;
