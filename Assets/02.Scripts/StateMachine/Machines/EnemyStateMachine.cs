@@ -21,8 +21,11 @@ public class EnemyStateMachine : StateMachine
     {
         target = Player.Instance.gameObject;
 
-        MovementSpeed = data.spd;
-        AttackRange = data.atkRange;
+        //MovementSpeed = data.spd;
+        //AttackRange = data.atkRange;
+
+        MovementSpeed = 1.3f;
+        AttackRange = 2f;
 
         ChaseState = new EnemyChaseState(this, target.transform);
         AttackState = new EnemyAttackState(this);
@@ -31,5 +34,7 @@ public class EnemyStateMachine : StateMachine
         GameManager.Instance.OnPlayerDie += () => ChangeState(IdleState);
         GameManager.Instance.OnStageTimeOut += () => ChangeState(IdleState);
         ChaseState.OnTargetReached += () => ChangeState(AttackState);
+
+        ChangeState(ChaseState);
     }
 }
