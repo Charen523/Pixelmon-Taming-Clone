@@ -5,22 +5,17 @@ using UnityEngine;
 public class PixelmonManager : Singleton<PixelmonManager>
 {
     [SerializeField]
-    private float radius = 1.0f;
+    private float radius = 2.0f;
     public int currentPixelmonCount;
     public Pixelmon[] Pixelmons = new Pixelmon[5];
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     [ContextMenu("Located")]
+
+    private void Start()
+    {
+        LocatedPixelmon();
+    }
+
     public void LocatedPixelmon()
     {
         int angle = 360 / currentPixelmonCount;
