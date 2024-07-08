@@ -8,6 +8,14 @@ public class GameManager : Singleton<GameManager>
     public event Action OnStageStart;
     public event Action OnStageClear;
 
+
+    protected override void Awake()
+    {
+        base.Awake();
+        Application.targetFrameRate = 30;
+    }
+
+
     public void NotifyPlayerDie()
     {
         OnPlayerDie?.Invoke();

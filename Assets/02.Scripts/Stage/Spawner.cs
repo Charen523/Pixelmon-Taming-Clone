@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,30 +11,26 @@ public class Spawner : MonoBehaviour
     public float spawnInterval = 2f;
 
     private float timer;
-
-    //소환 테스트용(차후 지울것)
-    private int spawnCount = 0;
-    private Dictionary<int, string> monsterTags;
-
+    [SerializeField]
+    private WaitForSeconds respawnTime = new WaitForSeconds(3);
+    [SerializeField]
+    private StageManager stageManager;
     private void Start()
     {
-        monsterTags = new Dictionary<int, string>();
+       
     }
 
-    private void Update()
+    public IEnumerator RandGroupCount(StageData data)
     {
-        timer += Time.deltaTime;
-
-        if (timer > spawnInterval && spawnCount++ < 6) 
+        while(true) 
         {
-            timer = 0;
-            monsterTags.Clear();
-            monsterTags.Add(UnityEngine.Random.Range(1, 6), "Slime");
-            RandomSpawnPoint(monsterTags);
+            if(stageManager.spawnCount < data.spawnCount)
+                RandomSpawnPoint(data);
+            yield return respawnTime;
         }
     }
 
-    public void RandomSpawnPoint(Dictionary<int, string> monsterTags)
+    public void RandomSpawnPoint(StageData data)
     {
         Vector2 RandomPosition;
 
@@ -46,19 +43,18 @@ public class Spawner : MonoBehaviour
         points.transform.position = RandomPosition;
         Transform[] spawnPoints = points.GetComponentsInChildren<Transform>();
 
-        foreach(var data in monsterTags)
+
+        foreach(var rcode in data.monsterIds)
         {
-            for(int i = 0; i < data.Key; i++)
+            int rand = UnityEngine.Random.Range(1, 6);
+
+            for(int i = 0; i < rand; i++)
             {
-                try
-                {
-                    GameObject enemy = PoolManager.Instance.SpawnFromPool(data.Value);
-                    enemy.transform.position = spawnPoints[i].position;
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    Debug.LogError("한번에 소환 가능한 몬스터수 초과");
-                }
+                if (stageManager.spawnCount == data.spawnCount)
+                    return;
+                GameObject enemy = PoolManager.Instance.SpawnFromPool(rcode);
+                enemy.transform.position = spawnPoints[i].position;
+                stageManager.spawnCount++;
             }
         }
     }

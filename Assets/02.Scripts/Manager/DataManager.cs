@@ -14,7 +14,9 @@ public class DataManager : Singleton<DataManager>
     #endregion
 
     #region Dictionaries
+    [SerializeField]
     Dictionary<string, StageData> StageDictionary = new Dictionary<string, StageData>();
+    [SerializeField]
     Dictionary<string, EnemyData> EnemyDictionary = new Dictionary<string, EnemyData>();
     Dictionary<string, PixelmonData> PixelmonDictionary = new Dictionary<string, PixelmonData>();
     Dictionary<Type, object> dataDictionaries = new Dictionary<Type, object>();
@@ -25,7 +27,7 @@ public class DataManager : Singleton<DataManager>
         isDontDestroyOnLoad = true;
         base.Awake();
         InitializeDictionaries();
-        LoadData();
+        //LoadData();
     }
 
     private void InitializeDictionaries()
