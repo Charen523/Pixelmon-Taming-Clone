@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -8,29 +9,16 @@ public class Spawner : MonoBehaviour
     public GameObject points;
     public Collider2D spawnArea;
     public Collider2D cleanArea;
-    public float spawnInterval = 2f;
 
-    private float timer;
-    [SerializeField]
-    private WaitForSeconds respawnTime = new WaitForSeconds(3);
     [SerializeField]
     private StageManager stageManager;
+    public List<GameObject> isActivatedEnemy = new List<GameObject>();
     private void Start()
     {
-       
+
     }
 
-    public IEnumerator RandGroupCount(StageData data)
-    {
-        while(true) 
-        {
-            if(stageManager.spawnCount < data.spawnCount)
-                RandomSpawnPoint(data);
-            yield return respawnTime;
-        }
-    }
-
-    public void RandomSpawnPoint(StageData data)
+    public void RandomSpawnPoint(List<string> rcodes, int count)
     {
         Vector2 RandomPosition;
 
@@ -44,15 +32,16 @@ public class Spawner : MonoBehaviour
         Transform[] spawnPoints = points.GetComponentsInChildren<Transform>();
 
 
-        foreach(var rcode in data.monsterIds)
+        foreach(var rcode in rcodes)
         {
             int rand = UnityEngine.Random.Range(1, 6);
 
             for(int i = 0; i < rand; i++)
             {
-                if (stageManager.spawnCount == data.spawnCount)
+                if (stageManager.spawnCount == count)
                     return;
                 GameObject enemy = PoolManager.Instance.SpawnFromPool(rcode);
+                isActivatedEnemy.Add(enemy);
                 enemy.transform.position = spawnPoints[i].position;
                 stageManager.spawnCount++;
             }
