@@ -12,6 +12,15 @@ public class EnemyChaseState : MoveState
 
     public override void Execute()
     {
+        if (targetTransform.position.x - stateMachine.transform.position.x > 0)
+        {
+            stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
+        }
+        else
+        {
+            stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
+        }
+
         base.Execute();
     }
 }
