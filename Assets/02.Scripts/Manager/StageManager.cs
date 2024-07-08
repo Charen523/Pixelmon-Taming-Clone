@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -53,7 +54,7 @@ public class StageManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void SetRcode()
@@ -88,10 +89,10 @@ public class StageManager : MonoBehaviour
     #region 다음 스테이지
     public void ToNextStage(int index)
     {
-        if(stageNum <= maxStageNum)
+        if (stageNum <= maxStageNum)
             stageNum += index;
         else
-            ToNextWorld(); 
+            ToNextWorld();
         SetRcode();
         StageInitialize();
     }
