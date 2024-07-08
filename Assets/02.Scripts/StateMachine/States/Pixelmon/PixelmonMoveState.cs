@@ -1,25 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PixelmonMoveState : PixelmonBaseState
+public class PixelmonMoveState : MoveState
 {
-    
-    public PixelmonMoveState(PixelmonStateMachine stateMachine) : base(stateMachine)
+    private PixelmonStateMachine pixelmonStateMachine;
+    private Transform enemyTarget;
+    public PixelmonMoveState(PixelmonStateMachine stateMachine, Transform target) 
+        : base(stateMachine, target)
     {
-        
+        pixelmonStateMachine = stateMachine;
+        enemyTarget = target;
     }
-
-    public override void Enter()
-    {
-        StartAnimation(stateMachine.animationData.MoveParameterHash);
-    }
-
 
     public override void Execute()
     {
-        //if (position.x - stateMachine.transform.position.x > 0)
+        //if (enemyTarget.position.x - stateMachine.transform.position.x > 0)
         //{
         //    stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
         //}
@@ -27,12 +25,6 @@ public class PixelmonMoveState : PixelmonBaseState
         //{
         //    stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
         //}
-
         base.Execute();
-    }
-
-    public override void Exit()
-    {
-        StopAnimation(stateMachine.animationData.MoveParameterHash);
     }
 }

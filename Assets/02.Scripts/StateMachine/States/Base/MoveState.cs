@@ -14,7 +14,7 @@ public class MoveState : BaseState
 
     public override void Enter()
     {
-        StartAnimation(stateMachine.animationData.MoveParameterHash);
+        StartAnimation(stateMachine.animData.MoveParameterHash);
     }
 
     public override void Execute()
@@ -24,7 +24,7 @@ public class MoveState : BaseState
 
     public override void Exit()
     {
-        StopAnimation(stateMachine.animationData.MoveParameterHash);
+        StopAnimation(stateMachine.animData.MoveParameterHash);
         stateMachine.rb.velocity = Vector3.zero;
     }
 

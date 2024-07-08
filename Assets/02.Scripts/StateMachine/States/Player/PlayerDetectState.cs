@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public class PlayerDetectState : IdleState
 {
-    PlayerStateMachine PlayerStateMachine;
+    private PlayerStateMachine playerStateMachine;
     public float initialDetectionRadius = 4; // 초기 탐지 반경 설정
     public float maxDetectionRadius = 10; // 최대 탐지 반경 설정
     public float radiusIncrement = 2; // 탐지 반경 증가 값
@@ -17,13 +17,13 @@ public class PlayerDetectState : IdleState
     public PlayerDetectState(PlayerStateMachine stateMachine)
         : base(stateMachine)
     {
-        PlayerStateMachine = stateMachine;
+        playerStateMachine = stateMachine;
     }
 
     public override void Execute()
     {
         base.Execute();
-        PlayerStateMachine.StartCoroutine(DetectClosestTargetCoroutine());
+        playerStateMachine.StartCoroutine(DetectClosestTargetCoroutine());
     }
 
     private IEnumerator DetectClosestTargetCoroutine()
@@ -32,11 +32,11 @@ public class PlayerDetectState : IdleState
 
         while (closestTarget == null && currentDetectionRadius <= maxDetectionRadius)
         {
-            closestTarget = FindClosestTarget(PlayerStateMachine.EnemyTag, currentDetectionRadius);
+            closestTarget = FindClosestTarget(playerStateMachine.EnemyTag, currentDetectionRadius);
             if (closestTarget != null)
             {
-                PlayerStateMachine.MoveState.targetTransform = closestTarget.transform;
-                stateMachine.ChangeState(PlayerStateMachine.MoveState);
+                playerStateMachine.MoveState.targetTransform = closestTarget.transform;
+                stateMachine.ChangeState(playerStateMachine.MoveState);
                 yield break;
             }
             currentDetectionRadius += radiusIncrement;
@@ -52,7 +52,7 @@ public class PlayerDetectState : IdleState
     {
         GameObject closestEnemy = null;
         float closestDistance = Mathf.Infinity;
-        Vector2 playerPosition = PlayerStateMachine.transform.position;
+        Vector2 playerPosition = playerStateMachine.transform.position;
 
         // 탐지 반경 내 모든 오브젝트 찾기
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(playerPosition, detectionRadius);

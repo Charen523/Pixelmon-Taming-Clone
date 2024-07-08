@@ -4,15 +4,5 @@ using UnityEngine;
 
 public class Pixelmon : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    // 픽셀몬 데이터 필요
 }

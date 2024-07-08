@@ -2,29 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PixelmonIdleState : PixelmonBaseState
+public class PixelmonIdleState : IdleState
 {
     public PixelmonIdleState(PixelmonStateMachine stateMachine) : base(stateMachine)
     {
         
     }
 
-    public override void Enter()
-    {        
-        //Search();
-        StartAnimation(stateMachine.animationData.IdleParameterHash);
-    }
-
     public override void Execute()
     {
        
     }
-
-    public override void Exit()
-    {
-        StopAnimation(stateMachine.animationData.IdleParameterHash);
-    }
-
 
     public GameObject Search(GameObject pixelmon, List<GameObject> enemies)
     {
