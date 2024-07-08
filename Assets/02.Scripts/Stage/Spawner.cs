@@ -13,10 +13,6 @@ public class Spawner : MonoBehaviour
     [SerializeField]
     private StageManager stageManager;
     public List<GameObject> isActivatedEnemy = new List<GameObject>();
-    private void Start()
-    {
-
-    }
 
     public void RandomSpawnPoint(List<string> rcodes, int count)
     {
