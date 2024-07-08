@@ -1,18 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Sirenix.OdinInspector;
 
-public class HealthSystem : MonoBehaviour
+public abstract class HealthSystem : SerializedMonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    /*체력변수*/
+    public float MaxHealth { get; protected set; }
+    protected float currentHealth;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //체력변화 추상클래스
+    public abstract bool ChangeHealth(float damage);
+
+    //사망 이벤트
+    protected abstract void NoticeDead();
 }

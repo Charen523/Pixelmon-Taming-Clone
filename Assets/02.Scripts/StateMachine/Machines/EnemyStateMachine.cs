@@ -41,7 +41,7 @@ public class EnemyStateMachine : StateMachine
 
     public void OnEnemyDead()
     {
-        //OnMonsterDead(MonsterRcode);
+        //public void OnMonsterDead(string rcode, GameObject enemy)
     }
 
     public void OnEnemyAttack()
