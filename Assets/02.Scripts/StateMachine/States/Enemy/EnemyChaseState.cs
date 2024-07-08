@@ -1,30 +1,17 @@
-﻿
-public class EnemyChaseState : EnemyBaseState
+
+using UnityEngine;
+
+public class EnemyChaseState : MoveState
 {
-    public EnemyChaseState(EnemyStateMachine stateMachine) : base(stateMachine) { }
+    EnemyStateMachine enemyStateMachine;
 
-    public override void Enter()
+    public EnemyChaseState(EnemyStateMachine stateMachine, Transform target) : base(stateMachine, target)
     {
-        fsm.movementSpeedModifier = 1;
-        base.Enter();
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
+        enemyStateMachine = stateMachine;
     }
 
     public override void Execute()
     {
         base.Execute();
-
-        if (IsDead())
-        {
-            fsm.ChangeState(fsm.DieState);
-        }
-        else if (IsAttackRange())
-        {
-            fsm.ChangeState(fsm.AttackState);
-        }
     }
 }
