@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerStateMachine : StateMachine
@@ -9,19 +10,16 @@ public class PlayerStateMachine : StateMachine
 
     // States
     public IdleState IdleState { get; private set; }
-    public PlayerDetectState DetectState { get; private set; }
+    public PlayerDetectState DetectState;
     public PlayerMoveState MoveState { get; private set; }
 
     private void Start()
     {
-        MovementSpeed = 3f;
-        AttackRange = 2f;
-
         IdleState = new IdleState(this);
         DetectState = new PlayerDetectState(this);
         MoveState = new PlayerMoveState(this, null);
 
-        GameManager.Instance.OnStageStart += () => ChangeState(DetectState);   
+        GameManager.Instance.OnStageStart += () => ChangeState(DetectState);
         GameManager.Instance.OnStageTimeOut += () => ChangeState(IdleState);
         MoveState.OnTargetReached += ChangeAttackState;
 
@@ -32,5 +30,15 @@ public class PlayerStateMachine : StateMachine
     private void ChangeAttackState()
     {
         ChangeState(IdleState);
+    }
+
+    // Gizmos를 사용하여 탐지 반경을 시각적으로 표시
+    private void OnDrawGizmos()
+    {
+        if (DetectState != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, DetectState.currentDetectionRadius);
+        }
     }
 }

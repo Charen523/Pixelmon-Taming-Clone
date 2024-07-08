@@ -6,22 +6,30 @@ public class EnemyStateMachine : StateMachine
     public GameObject target; //어케 찾아올까유~ 플레이어 싱글톤?
     
     #region Enemy States
+    public EnemyIdleState IdleState { get; private set; }
     public EnemyChaseState ChaseState {  get; private set; }
     public EnemyAttackState AttackState { get; private set; }
     public EnemyDieState DieState { get; private set; }
     #endregion
 
-    #region Movement Status
-    public float moveSpeed;
-    public float movementSpeedModifier; //1 또는 0으로 속도 존재 여부 알려주기.
-    #endregion
+    private void OnEnable()
+    {
+        ChangeState(ChaseState);
+    }
 
     private void Start()
     {
-        MovementSpeed = data.spd;
+        target = Player.Instance.gameObject;
 
-        ChaseState = new EnemyChaseState(this);
+        MovementSpeed = data.spd;
+        AttackRange = data.atkRange;
+
+        ChaseState = new EnemyChaseState(this, target.transform);
         AttackState = new EnemyAttackState(this);
         DieState = new EnemyDieState(this);
+
+        GameManager.Instance.OnPlayerDie += () => ChangeState(IdleState);
+        GameManager.Instance.OnStageTimeOut += () => ChangeState(IdleState);
+        ChaseState.OnTargetReached += () => ChangeState(AttackState);
     }
 }
