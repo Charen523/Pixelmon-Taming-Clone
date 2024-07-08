@@ -9,7 +9,9 @@ public class PlayerDetectState : IdleState
     public float initialDetectionRadius = 4; // 초기 탐지 반경 설정
     public float maxDetectionRadius = 10; // 최대 탐지 반경 설정
     public float radiusIncrement = 2; // 탐지 반경 증가 값
-    public float currentDetectionRadius = 4;
+    [HideInInspector] public float currentDetectionRadius = 4;
+    [HideInInspector] public GameObject closestTarget = null;
+
     private WaitForSeconds detectionInterval = new WaitForSeconds(0.5f);
 
     public PlayerDetectState(PlayerStateMachine stateMachine)
@@ -26,8 +28,7 @@ public class PlayerDetectState : IdleState
 
     private IEnumerator DetectClosestTargetCoroutine()
     {
-        currentDetectionRadius = initialDetectionRadius;
-        GameObject closestTarget = null;
+        currentDetectionRadius = initialDetectionRadius;      
 
         while (closestTarget == null && currentDetectionRadius <= maxDetectionRadius)
         {

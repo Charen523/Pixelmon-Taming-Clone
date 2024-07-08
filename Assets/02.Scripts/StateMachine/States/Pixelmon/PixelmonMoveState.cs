@@ -19,7 +19,16 @@ public class PixelmonMoveState : PixelmonBaseState
 
     public override void Execute()
     {
-        
+        //if (position.x - stateMachine.transform.position.x > 0)
+        //{
+        //    stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
+        //}
+        //else
+        //{
+        //    stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
+        //}
+
+        base.Execute();
     }
 
     public override void Exit()
