@@ -25,7 +25,7 @@ public class EnemyStateMachine : StateMachine
         //AttackRange = data.atkRange;
 
         MovementSpeed = 1.3f;
-        AttackRange = 0.8f;
+        AttackRange = 2f;
 
         ChaseState = new EnemyChaseState(this, target.transform);
         AttackState = new EnemyAttackState(this);
