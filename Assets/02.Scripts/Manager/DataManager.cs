@@ -18,7 +18,9 @@ public class DataManager : Singleton<DataManager>
     Dictionary<string, StageData> StageDictionary = new Dictionary<string, StageData>();
     [SerializeField]
     Dictionary<string, EnemyData> EnemyDictionary = new Dictionary<string, EnemyData>();
+    [SerializeField]
     Dictionary<string, PixelmonData> PixelmonDictionary = new Dictionary<string, PixelmonData>();
+
     Dictionary<Type, object> dataDictionaries = new Dictionary<Type, object>();
     #endregion
 
