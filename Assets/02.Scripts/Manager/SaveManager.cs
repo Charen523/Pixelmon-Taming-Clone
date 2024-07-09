@@ -6,17 +6,16 @@ using UnityEngine;
 public class SaveManager : Singleton<DataManager>
 {
     private readonly string jsonPlayerData = "PlayerData";
-    private readonly string jsonFolder = Application.persistentDataPath;
-    [SerializeField]
-    Dictionary<string, PlayerData> PlayerDictionary = new Dictionary<string, PlayerData>();
+    private string jsonFolder;
+    //[SerializeField]
+    //Dictionary<string, PlayerData> PlayerDictionary = new Dictionary<string, PlayerData>();
 
     [SerializeField]
     private string playerPrefs;
-    private PlayerData playerData;
     private string saveData = "SaveFile";
     void Start()
     {
-        playerData = Player.Instance.data;
+        jsonFolder = Application.persistentDataPath;        
     }
 
     public void SaveUserData()
@@ -39,22 +38,22 @@ public class SaveManager : Singleton<DataManager>
     [ContextMenu("Prefs저장")]
     public void SaveToPrefs()
     {
-        string jsonData = JsonUtility.ToJson(playerData);
+        string jsonData = JsonUtility.ToJson(Player.Instance.data);
         PlayerPrefs.SetString(saveData, jsonData);
     }
 
 
     [ContextMenu("Prefs로드")]
-    private void LoadFromPrefs()
+    public void LoadFromPrefs()
     {
         if(PlayerPrefs.HasKey(saveData)) 
         { 
             string prefsValue = PlayerPrefs .GetString(saveData);
-            playerData = JsonUtility.FromJson<PlayerData>(prefsValue);
+            Player.Instance.data = JsonUtility.FromJson<PlayerData>(prefsValue);
         }
         else
         {
-            playerData = new PlayerData();
+            Player.Instance.data = new PlayerData();
             SaveToPrefs();
             LoadFromPrefs();
         }
@@ -63,6 +62,11 @@ public class SaveManager : Singleton<DataManager>
     [ContextMenu("Prefs제거")]
     public void RemoveAllPrefs()
     {
-        PlayerPrefs.DeleteAll();
+        if (PlayerPrefs.HasKey(saveData))
+        {
+            PlayerPrefs.DeleteKey(saveData);
+            Debug.Log("제거");
+        }
     }
+
 }
