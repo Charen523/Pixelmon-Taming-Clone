@@ -19,6 +19,10 @@ public class FailState : BaseState
     {
     }
 
+    public override void FixedExecute()
+    {
+    }
+
     public override void Exit()
     {
         StopAnimation(stateMachine.animData.FailParameterHash);

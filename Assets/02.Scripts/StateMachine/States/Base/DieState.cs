@@ -16,7 +16,10 @@ public class DieState : BaseState
 
     public override void Execute()
     {
+    }
 
+    public override void FixedExecute()
+    {
     }
 
     public override void Exit()
