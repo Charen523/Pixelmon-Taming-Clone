@@ -13,9 +13,10 @@ public class SaveManager : Singleton<DataManager>
     [SerializeField]
     private string playerPrefs;
     private PlayerData playerData;
+    private string saveData = "SaveFile";
     void Start()
     {
-     playerData = Player.Instance   
+        playerData = Player.Instance.data;
     }
 
     public void SaveUserData()
@@ -23,14 +24,34 @@ public class SaveManager : Singleton<DataManager>
 
     }
 
-    private void SaveToJsonData<T>(T data, string path)
+    public void SaveToJsonData<T>(T data, string path)
     {
         string fileName = Path.Combine(jsonFolder, path);
         if(!File.Exists(fileName)) 
         {
             File.Create(fileName);
         }
-        string dataJson = JsonUtility.ToJson(data);
-        File.WriteAllText(fileName, dataJson);
-    }    
+        string jsonData = JsonUtility.ToJson(data);
+        File.WriteAllText(fileName, jsonData);
+    }
+
+    public void SaveToPrefs()
+    {
+        string jsonData = JsonUtility.ToJson(playerData);
+        PlayerPrefs.SetString(saveData, jsonData);
+    }
+
+    private void LoadFromPrefs()
+    {
+        if(PlayerPrefs.HasKey(saveData)) 
+        { 
+            string prefsValue = PlayerPrefs .GetString(saveData);
+            playerData = JsonUtility.FromJson<PlayerData>(prefsValue);
+        }
+        else
+        {
+            SaveToPrefs();
+            LoadFromPrefs();
+        }
+    }
 }
