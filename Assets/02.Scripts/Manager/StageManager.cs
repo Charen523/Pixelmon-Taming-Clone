@@ -26,6 +26,8 @@ public class StageManager : Singleton<StageManager>
     public StageData Data {get; private set;}
     public int spawnCount = 0;
     public int killedCount = 0;
+    private float bossTimer = 30;
+    private float bossLimitTime = 30;
     //보스 처치여부
     public bool isStageClear = false;
     [SerializeField]
@@ -46,18 +48,25 @@ public class StageManager : Singleton<StageManager>
     [SerializeField]
     private int maxStageNum = 5;
 
-    private float timer = 0;
+    //리스폰 현재시간
+    private float intervalTimer = 0;
+    //리스폰 대기시간
     public float spawnInterval = 2f;
     private WaitUntil normalStageCondition;
     private WaitUntil BossStageCondition;
     private WaitForSeconds waitTime = new WaitForSeconds(3);
 
+
+
+    //몬스터 사망 시 넘겨받을 정보 액션
     public event Action<EnemyData, GameObject> monsterDead;
-    private Coroutine stageCorutine;
+    //스테이지 로직
+    private Coroutine stageCoroutine;
+
     void Start()
     {
         normalStageCondition = new WaitUntil(() => NormalStage());
-        BossStageCondition = new WaitUntil(() => BossStage());
+        BossStageCondition = new WaitUntil(() => CheckedBossStage());
         monsterDead += MonsterDead;
         GameManager.Instance.OnPlayerDie += OnPlayerDead;
         StageInitialize();
@@ -88,7 +97,7 @@ public class StageManager : Singleton<StageManager>
     #region 몬스터소환
     private void SummonMonster()
     {
-        stageCorutine = StartCoroutine(StartStage());
+        stageCoroutine = StartCoroutine(StartStage());
     }
 
     public IEnumerator StartStage()
@@ -98,8 +107,12 @@ public class StageManager : Singleton<StageManager>
         if (Data.stageId == maxStageNum)
         {
             /*TODO: 보스 rcode처리해야함*/
-            //spawner.RandomSpawnPoint(Data.bossId, Data.spawnCount);
-
+            stageNum++;
+            SetRcode();
+            stageTitleTxt.text = $"{SetTitleTxt()}{worldNum}- BOSS";
+            spawner.RandomSpawnPoint(Data.monsterId, Data.spawnCount);
+            clearBar.fillAmount = 1;
+            bossTimer = bossLimitTime;
             //보스클리어여부
             yield return BossStageCondition;
             //넥스트
@@ -125,20 +138,20 @@ public class StageManager : Singleton<StageManager>
             return true;
         }
 
-        timer += Time.deltaTime;
-        if (timer >= spawnInterval)
+        intervalTimer += Time.deltaTime;
+        if (intervalTimer >= spawnInterval)
         {
             //몬스터 최대치 미만 추가 소환
             if (spawnCount < Data.spawnCount)
             {
                 spawner.RandomSpawnPoint(Data.monsterId, Data.spawnCount);
-                timer = 0;
+                intervalTimer = 0;
             }
         }
         return false;
     }
 
-    private bool BossStage()
+    private bool CheckedBossStage()
     {
         if (isStageClear)
         {
@@ -146,10 +159,21 @@ public class StageManager : Singleton<StageManager>
             return true;
         }
 
-        //시간체크
+        bossTimer -= Time.deltaTime;
+        float percent = bossTimer / bossLimitTime;
+        clearBar.fillAmount = percent;
+        clearTxt.text = string.Format("{0:F2}초", percent);
 
+        if (bossTimer <= 0)
+        {
+            ReturnPools();
+            GameManager.Instance.NotifyPlayerDie();
+            StopCoroutine(stageCoroutine);
+        }
         return false;
     }
+
+
     private void ReturnPools()
     {
         foreach (var enemy in spawner.isActivatedEnemy)
@@ -207,7 +231,7 @@ public class StageManager : Singleton<StageManager>
 
     public void OnPlayerDead()
     {
-        StopCoroutine(stageCorutine);
+        StopCoroutine(stageCoroutine);
         ToNextStage(-1);
         StageInitialize();
     }
