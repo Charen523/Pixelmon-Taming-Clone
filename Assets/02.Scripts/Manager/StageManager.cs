@@ -108,10 +108,10 @@ public class StageManager : MonoBehaviour
                 ToNextStage();
             }
             else
-                ToNextStage();
+                ToNextStage(-1);
         }
         else
-            ToNextStage(-1);
+            ToNextStage();
         yield return waitTime;
         StageInitialize();
     }
@@ -154,6 +154,7 @@ public class StageManager : MonoBehaviour
         foreach (var enemy in spawner.isActivatedEnemy)
         {
             enemy.SetActive(false);
+            spawner.isActivatedEnemy.Remove(enemy);
         }
     }
     #endregion
