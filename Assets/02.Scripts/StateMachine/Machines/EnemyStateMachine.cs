@@ -4,7 +4,6 @@ using UnityEngine;
 public class EnemyStateMachine : StateMachine
 {
     public EnemyData data;
-    public GameObject target; //어케 찾아올까유~ 플레이어 싱글톤?
     
     #region Enemy States
     public EnemyIdleState IdleState { get; private set; }
@@ -20,15 +19,13 @@ public class EnemyStateMachine : StateMachine
 
     private void Start()
     {
-        target = Player.Instance.gameObject;
-
         //MovementSpeed = data.spd;
         //AttackRange = data.atkRange;
 
         MovementSpeed = 1.3f;
         AttackRange = 2f;
 
-        ChaseState = new EnemyChaseState(this, target.transform);
+        ChaseState = new EnemyChaseState(this);
         AttackState = new EnemyAttackState(this);
         DieState = new EnemyDieState(this);
 

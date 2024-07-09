@@ -18,10 +18,6 @@ public class DieState : BaseState
     {
     }
 
-    public override void FixedExecute()
-    {
-    }
-
     public override void Exit()
     {
         StopAnimation(stateMachine.animData.DieParameterHash);

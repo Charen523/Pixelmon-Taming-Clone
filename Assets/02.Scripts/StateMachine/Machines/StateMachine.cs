@@ -31,9 +31,4 @@ public class StateMachine : MonoBehaviour
     {
         currentState?.Execute();
     }
-
-    private void FixedUpdate()
-    {
-        currentState?.FixedExecute();
-    }
 }

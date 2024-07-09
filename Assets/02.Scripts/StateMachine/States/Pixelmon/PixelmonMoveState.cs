@@ -6,14 +6,12 @@ using UnityEngine.InputSystem;
 
 public class PixelmonMoveState : MoveState
 {
-    private PixelmonStateMachine pixelmonStateMachine;
-    public PixelmonMoveState(PixelmonStateMachine stateMachine, Transform target) 
-        : base(stateMachine, target)
+    public PixelmonMoveState(PixelmonStateMachine stateMachine) 
+        : base(stateMachine)
     {
-        pixelmonStateMachine = stateMachine;
     }
 
-    public override void FixedExecute()
+    public override void Execute()
     {
         Flip();
     }

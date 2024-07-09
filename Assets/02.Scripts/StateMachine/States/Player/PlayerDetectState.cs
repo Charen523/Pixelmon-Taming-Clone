@@ -36,8 +36,10 @@ public class PlayerDetectState : IdleState
             if (closestTarget != null)
             {
                 playerStateMachine.MoveState.targetTransform = closestTarget.transform;
+
                 stateMachine.ChangeState(playerStateMachine.MoveState);
-                Player.Instance.ChangePixelmonsMoveState();
+                Player.Instance.NotifyPlayerMove();
+
                 yield break;
             }
             currentDetectionRadius += radiusIncrement;

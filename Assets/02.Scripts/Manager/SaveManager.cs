@@ -38,7 +38,7 @@ public class SaveManager : Singleton<DataManager>
     [ContextMenu("Prefs저장")]
     public void SaveToPrefs()
     {
-        string jsonData = JsonUtility.ToJson(Player.Instance.Data);
+        string jsonData = JsonUtility.ToJson(Player.Instance.data);
         PlayerPrefs.SetString(saveData, jsonData);
     }
 
@@ -49,11 +49,11 @@ public class SaveManager : Singleton<DataManager>
         if(PlayerPrefs.HasKey(saveData)) 
         { 
             string prefsValue = PlayerPrefs .GetString(saveData);
-            Player.Instance.Data = JsonUtility.FromJson<PlayerData>(prefsValue);
+            Player.Instance.data = JsonUtility.FromJson<PlayerData>(prefsValue);
         }
         else
         {
-            Player.Instance.Data = new PlayerData();
+            Player.Instance.data = new PlayerData();
             SaveToPrefs();
             LoadFromPrefs();
         }

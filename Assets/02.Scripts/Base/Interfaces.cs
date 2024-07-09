@@ -2,13 +2,7 @@ public interface IState
 {
     void Enter();
     void Execute();
-    void FixedExecute();
     void Exit();
-}
-
-public interface IPlayerState : IState
-{
-    void HandleInput();
 }
 
 public interface IData

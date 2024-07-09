@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Player : Singleton<Player>
@@ -8,40 +9,35 @@ public class Player : Singleton<Player>
     [Header("Animations")]
     public float radius = 2.0f;
     public int currentPixelmonCount;
+
     public Pixelmon[] pixelmons = new Pixelmon[5];
 
-    protected override void Awake()
-    {
-        base.Awake();
-        InitiPixelmonFSM();
-    }
+    public event Action OnPlayerMove;
+
     private void Start()
     {
         LocatedPixelmon();
+        SubscribePixelmons();
     }
 
-    private void InitiPixelmonFSM()
+    public void NotifyPlayerMove()
     {
-        if (pixelmons == null || pixelmons.Length == 0)
-        {
-            Debug.LogError("Pixelmon 배열이 초기화되지 않았거나 비어 있음");
-            return;
-        }
+        OnPlayerMove?.Invoke();
+    }
 
+    private void SubscribePixelmons()
+    {
         foreach (var pixelmon in pixelmons)
         {
             if (pixelmon != null)
             {
-                pixelmon.StateMachine = new PixelmonStateMachine(pixelmon);
-            }
-            else
-            {
-                Debug.LogWarning("Pixelmon is null");
+                OnPlayerMove += () => pixelmon.StateMachine.ChangeState(pixelmon.StateMachine.MoveState);
+                //stateMachine.MoveState.OnTargetReached += () => pixelmon.StateMachine.ChangeState(pixelmon.StateMachine.AttackState);
             }
         }
     }
 
-    public void LocatedPixelmon()
+    private void LocatedPixelmon()
     {
         int angle = 360 / currentPixelmonCount;
         int currentAngle = 90;
@@ -50,21 +46,6 @@ public class Player : Singleton<Player>
             Vector3 pos = new Vector3(Mathf.Cos(currentAngle * Mathf.Deg2Rad) * radius, Mathf.Sin(currentAngle * Mathf.Deg2Rad) * radius, 0);
             pixelmons[i].transform.position = pos;
             currentAngle += angle;
-        }
-    }
-
-    public void ChangePixelmonsMoveState()
-    {
-        foreach (var pixelmon in pixelmons)
-        {
-            if (pixelmon != null)
-            {
-                pixelmon.StateMachine.ChangeState(pixelmon.StateMachine.MoveState);
-            }
-            else
-            {
-                Debug.LogWarning("Pixelmon is null");
-            }
         }
     }
 }
