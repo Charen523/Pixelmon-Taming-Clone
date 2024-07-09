@@ -4,7 +4,6 @@ using UnityEngine;
 public class PlayerStateMachine : StateMachine
 {
     public Player Player { get; private set; }
-    public PixelmonManager PixelmonManager;
     public string EnemyTag = "Enemy";
 
     public Vector2 MovementInput { get; set; }
@@ -16,13 +15,17 @@ public class PlayerStateMachine : StateMachine
     public PlayerDetectState DetectState;
     #endregion
 
-    private void Start()
+    protected override void Awake()
     {
+        Player = Player.Instance;
         IdleState = new IdleState(this);
         DetectState = new PlayerDetectState(this);
         MoveState = new PlayerMoveState(this, null);
-        FailState = new FailState(this);
+        FailState = new FailState(this);      
+    }
 
+    private void Start()
+    {
         GameManager.Instance.OnStageStart += () => ChangeState(DetectState);
         GameManager.Instance.OnStageTimeOut += () => ChangeState(FailState);
         MoveState.OnTargetReached += () => ChangeState(IdleState);
