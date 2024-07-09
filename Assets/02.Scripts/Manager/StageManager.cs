@@ -70,7 +70,7 @@ public class StageManager : MonoBehaviour
 
     public void StageInitialize()
     {
-        //data = DataManager.Instance.GetData<StageData>(stgRcode);
+        Data = DataManager.Instance.GetData<StageData>(stgRcode);
         LoadData();
         //UI초기화
         InitStageUI();
@@ -79,7 +79,7 @@ public class StageManager : MonoBehaviour
 
     private void LoadData()
     {
-        //Data = DataManager.Instance.GetData<StageData>(stgRcode);
+        Data = DataManager.Instance.GetData<StageData>(stgRcode);
         difficultyNum = Data.difficulty ;
         worldNum = Data.worldId;
         stageNum = Data.stageId;

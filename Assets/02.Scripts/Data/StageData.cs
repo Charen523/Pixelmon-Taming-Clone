@@ -32,10 +32,20 @@ public class StageData : IData
 
     public void ParseData()
     {
-        monsterId = monsterIds.Split(" ");
-        rewardType = rewardTypes.Split(" ");
-        rewardValue = Array.ConvertAll(rewardValues.Split(" "), int.Parse);
-        offlineRewardType = offlineRewardTypes.Split(" ");
-        offlineRewardValue = Array.ConvertAll(offlineRewardValues.Split(" "), int.Parse);
+        monsterId = monsterIds.Split(' ');
+        rewardType = rewardTypes.Split(' ');
+
+        // rewardValues가 정수 배열일 경우와 문자열 배열일 경우를 처리
+        if (rewardValues.Contains(" "))
+        {
+            rewardValue = Array.ConvertAll(rewardValues.Split(' '), int.Parse);
+        }
+        else
+        {
+            rewardValue = new int[] { int.Parse(rewardValues) };
+        }
+
+        offlineRewardType = offlineRewardTypes.Split(' ');
+        offlineRewardValue = Array.ConvertAll(offlineRewardValues.Split(' '), int.Parse);
     }
 }
