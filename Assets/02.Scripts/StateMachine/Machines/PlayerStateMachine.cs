@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class PlayerStateMachine : StateMachine
 {
-    public Player Player { get; private set; }   
+    public Player Player { get; private set; }
+    public PixelmonManager PixelmonManager;
     public string EnemyTag = "Enemy";
 
     public Vector2 MovementInput { get; set; }
