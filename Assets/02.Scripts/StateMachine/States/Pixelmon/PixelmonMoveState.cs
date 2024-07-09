@@ -15,13 +15,6 @@ public class PixelmonMoveState : MoveState
 
     public override void FixedExecute()
     {
-        //if (enemyTarget.position.x - stateMachine.transform.position.x > 0)
-        //{
-        //    stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
-        //}
-        //else
-        //{
-        //    stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
-        //}
+        Flip();
     }
 }

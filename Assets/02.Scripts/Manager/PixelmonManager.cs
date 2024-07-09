@@ -9,7 +9,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
     public int currentPixelmonCount;
     public Pixelmon[] Pixelmons = new Pixelmon[5];
 
-    [ContextMenu("Located")]
+    
 
     private void Start()
     {
