@@ -70,7 +70,6 @@ public class StageManager : MonoBehaviour
 
     public void StageInitialize()
     {
-        Data = DataManager.Instance.GetData<StageData>(stgRcode);
         LoadData();
         //UI초기화
         InitStageUI();
@@ -98,7 +97,9 @@ public class StageManager : MonoBehaviour
         yield return normalStageCondition;
         if (Data.stageId == maxStageNum)
         {
+            /*TODO: 보스 rcode처리해야함*/
             //spawner.RandomSpawnPoint(Data.bossId, Data.spawnCount);
+
             //보스클리어여부
             yield return BossStageCondition;
             //넥스트
@@ -130,7 +131,7 @@ public class StageManager : MonoBehaviour
             //몬스터 최대치 미만 추가 소환
             if (spawnCount < Data.spawnCount)
             {
-                //spawner.RandomSpawnPoint(Data.monsterIds, Data.spawnCount);
+                spawner.RandomSpawnPoint(Data.monsterId, Data.spawnCount);
                 timer = 0;
             }
         }
