@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StageManager : MonoBehaviour
+public class StageManager : Singleton<StageManager>
 {
     [Header("소환")]
     [SerializeField]
