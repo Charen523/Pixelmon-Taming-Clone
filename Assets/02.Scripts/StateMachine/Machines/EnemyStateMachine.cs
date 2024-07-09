@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class EnemyStateMachine : StateMachine
 {
-    public EnemyData data;
-    public GameObject target; //어케 찾아올까유~ 플레이어 싱글톤?
+    [Header("EnemyStateMachine")]
+    [SerializeField] private Enemy enemy;
+    public GameObject target;
     
     #region Enemy States
     public EnemyIdleState IdleState { get; private set; }
@@ -20,12 +21,19 @@ public class EnemyStateMachine : StateMachine
 
     private void Start()
     {
+        if (enemy == null)
+        {
+            enemy = GetComponent<Enemy>();
+
+            if (enemy == null)
+            {
+                Debug.LogError($"{gameObject.name} 객체에 Enemy 클래스 없음!");
+            }
+        }
+
         target = Player.Instance.gameObject;
 
-        //MovementSpeed = data.spd;
-        //AttackRange = data.atkRange;
-
-        MovementSpeed = 1.3f;
+        MovementSpeed = enemy.data.spd;
         AttackRange = 2f;
 
         ChaseState = new EnemyChaseState(this, target.transform);
