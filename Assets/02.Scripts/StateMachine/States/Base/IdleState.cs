@@ -20,6 +20,9 @@ public class IdleState : BaseState
         // 탐색로직
         // 몬스터 찾음 -> moveState로 변경
     }
+    public override void FixedExecute()
+    {
+    }
 
     public override void Exit()
     {

@@ -6,6 +6,7 @@ public abstract class BaseState : IState
 
     public abstract void Enter();
     public abstract void Execute();
+    public abstract void FixedExecute();
     public abstract void Exit();
 
     public BaseState(StateMachine stateMachine)

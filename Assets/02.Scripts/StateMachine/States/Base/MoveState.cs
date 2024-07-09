@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MoveState : BaseState
@@ -18,6 +19,10 @@ public class MoveState : BaseState
     }
 
     public override void Execute()
+    {
+    }
+
+    public override void FixedExecute()
     {
         MoveTowardsTarget();
     }

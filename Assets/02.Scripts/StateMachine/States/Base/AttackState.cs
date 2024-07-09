@@ -18,6 +18,10 @@ public class AttackState : BaseState
     {
     }
 
+    public override void FixedExecute()
+    {
+    }
+
     public override void Exit()
     {
         StopAnimation(stateMachine.animData.AttackParameterHash);

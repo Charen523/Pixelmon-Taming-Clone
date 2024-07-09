@@ -27,8 +27,13 @@ public class StateMachine : MonoBehaviour
         animData.Initialize();
     }
 
-    void Update()
+    private void Update()
     {
         currentState?.Execute();
+    }
+
+    private void FixedUpdate()
+    {
+        currentState?.FixedExecute();
     }
 }
