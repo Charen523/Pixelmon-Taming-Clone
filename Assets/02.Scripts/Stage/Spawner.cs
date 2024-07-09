@@ -14,7 +14,7 @@ public class Spawner : MonoBehaviour
     private StageManager stageManager;
     public List<GameObject> isActivatedEnemy = new List<GameObject>();
 
-    public void RandomSpawnPoint(List<string> rcodes, int count)
+    public void RandomSpawnPoint(string[] rcodes, int count)
     {
         Vector2 RandomPosition;
 
