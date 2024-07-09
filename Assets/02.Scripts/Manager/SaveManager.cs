@@ -35,12 +35,16 @@ public class SaveManager : Singleton<DataManager>
         File.WriteAllText(fileName, jsonData);
     }
 
+
+    [ContextMenu("Prefs저장")]
     public void SaveToPrefs()
     {
         string jsonData = JsonUtility.ToJson(playerData);
         PlayerPrefs.SetString(saveData, jsonData);
     }
 
+
+    [ContextMenu("Prefs로드")]
     private void LoadFromPrefs()
     {
         if(PlayerPrefs.HasKey(saveData)) 
@@ -50,8 +54,11 @@ public class SaveManager : Singleton<DataManager>
         }
         else
         {
+            playerData = new PlayerData();
             SaveToPrefs();
             LoadFromPrefs();
         }
     }
+
+
 }
