@@ -10,12 +10,18 @@ public class PixelmonStateMachine : StateMachine
     public IdleState IdleState { get; private set; }
     public PixelmonMoveState MoveState { get; private set; }
     public PixelmonAttackState AttackState { get; private set; }
-    private void Start()
+
+    public PixelmonStateMachine(Pixelmon pixelmon)
+    {
+        Pixelmon = pixelmon;
+    }
+
+    protected override void Awake()
     {
         IdleState = new IdleState(this);
         MoveState = new PixelmonMoveState(this, null);
         AttackState = new PixelmonAttackState(this);
-        
+
         ChangeState(IdleState);
     }
 }
