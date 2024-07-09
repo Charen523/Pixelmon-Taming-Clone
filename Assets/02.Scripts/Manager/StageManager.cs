@@ -79,7 +79,7 @@ public class StageManager : MonoBehaviour
 
     private void LoadData()
     {
-        Data = DataManager.Instance.GetData<StageData>(stgRcode);
+        //Data = DataManager.Instance.GetData<StageData>(stgRcode);
         difficultyNum = Data.difficulty ;
         worldNum = Data.worldId;
         stageNum = Data.stageId;
@@ -98,7 +98,7 @@ public class StageManager : MonoBehaviour
         yield return normalStageCondition;
         if (Data.stageId == maxStageNum)
         {
-            spawner.RandomSpawnPoint(Data.bossId, Data.spawnCount);
+            //spawner.RandomSpawnPoint(Data.bossId, Data.spawnCount);
             //보스클리어여부
             yield return BossStageCondition;
             //넥스트
@@ -130,7 +130,7 @@ public class StageManager : MonoBehaviour
             //몬스터 최대치 미만 추가 소환
             if (spawnCount < Data.spawnCount)
             {
-                spawner.RandomSpawnPoint(Data.monsterIds, Data.spawnCount);
+                //spawner.RandomSpawnPoint(Data.monsterIds, Data.spawnCount);
                 timer = 0;
             }
         }

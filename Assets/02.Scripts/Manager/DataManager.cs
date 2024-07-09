@@ -6,81 +6,113 @@ using UnityEngine;
 public class DataManager : Singleton<DataManager>
 {
     private readonly string jsonFolderName = "GameData";
+    private readonly Dictionary<string, object> dataDictionaries = new Dictionary<string, object>();
 
     #region json file names
     private readonly string jsonStageData = "StageData";
     private readonly string jsonEnemyData = "EnemyData";
     private readonly string jsonPixelmonData = "PixelmonData";
+    private readonly string jsonRewardData = "RewardData";
     #endregion
 
     #region Dictionaries
     [SerializeField]
-    Dictionary<string, StageData> StageDictionary = new Dictionary<string, StageData>();
+    Dictionary<string, StageData> StageDataDictionary = new Dictionary<string, StageData>();
+    //[SerializeField]
+    //Dictionary<string, EnemyData> EnemyDictionary = new Dictionary<string, EnemyData>();
+    //[SerializeField]
+    //Dictionary<string, PixelmonData> PixelmonDictionary = new Dictionary<string, PixelmonData>();
     [SerializeField]
-    Dictionary<string, EnemyData> EnemyDictionary = new Dictionary<string, EnemyData>();
-    [SerializeField]
-    Dictionary<string, PixelmonData> PixelmonDictionary = new Dictionary<string, PixelmonData>();
-
-    Dictionary<Type, object> dataDictionaries = new Dictionary<Type, object>();
+    private Dictionary<string, RewardData> RewardDataDictionary = new Dictionary<string, RewardData>();
     #endregion
 
     protected override void Awake()
     {
         isDontDestroyOnLoad = true;
         base.Awake();
-        InitializeDictionaries();
-        //LoadData();
-    }
-
-    private void InitializeDictionaries()
-    {
-        dataDictionaries.Add(typeof(StageData), StageDictionary);
-        dataDictionaries.Add(typeof(EnemyData), EnemyDictionary);
-        dataDictionaries.Add(typeof(PixelmonData), PixelmonDictionary);
+        LoadData();
     }
 
     private void LoadData()
     {
-        LoadJsonData(jsonStageData, StageDictionary);
-        LoadJsonData(jsonEnemyData, EnemyDictionary);
-        LoadJsonData(jsonPixelmonData, PixelmonDictionary);
+        LoadStageData();
+        //LoadJsonData(jsonEnemyData, EnemyDictionary);
+        //LoadJsonData(jsonPixelmonData, PixelmonDictionary);
     }
 
-    private void LoadJsonData<T>(string jsonFileName, Dictionary<string, T> dictionary) where T : IData
+    private void LoadStageData()
     {
-        TextAsset jsonTextAsset = Resources.Load<TextAsset>($"{jsonFolderName}/{jsonFileName}");
-        if (jsonTextAsset == null)
+        TextAsset jsonData = Resources.Load<TextAsset>($"{jsonFolderName}/{jsonStageData}");
+        if (jsonData != null)
         {
-            Debug.LogError($"{jsonFileName}가 경로 Resources/{jsonFolderName}에 존재하지 않음.");
-            return;
-        }
+            // JSON 파일을 읽어 StageDataArrayWrapper 객체로 변환합니다.
+            StageDataArrayWrapper stageDataWrapper = JsonUtility.FromJson<StageDataArrayWrapper>(jsonData.text);
 
-        T[] datas = JsonUtility.FromJson<T[]>(jsonTextAsset.text);
-        foreach (var data in datas)
-        {
-            dictionary.Add(data.Rcode, data);
-        }
-    }
-
-    public T GetData<T>(string rcode) where T : class, IData
-    {
-        if (dataDictionaries.TryGetValue(typeof(T), out var dictionary))
-        {
-            var typedDictionary = dictionary as Dictionary<string, T>;
-            if (typedDictionary != null && typedDictionary.TryGetValue(rcode, out var data))
+            foreach (var stageData in stageDataWrapper.Items)
             {
-                return data;
-            }
-            else
-            {
-                Debug.LogError("잘못된 Rcode입니다.");
+                stageData.ParseData();
+                StageDataDictionary[stageData.rcode] = stageData;
             }
         }
         else
         {
-            Debug.LogError("잘못된 데이터 타입입니다.");
+            Debug.LogError("Cannot find StageData file!");
         }
-
-        return null;
     }
+
+    private void LoadRewardData()
+    {
+        TextAsset jsonData = Resources.Load<TextAsset>("GameData/RewardData");
+        if (jsonData != null)
+        {
+            RewardDataArrayWrapper rewardDataArray = JsonUtility.FromJson<RewardDataArrayWrapper>(jsonData.text);
+
+            foreach (var rewardData in rewardDataArray.Items)
+            {
+                RewardDataDictionary[rewardData.rcode] = rewardData;
+            }
+        }
+        else
+        {
+            Debug.LogError("Cannot find RewardData file!");
+        }
+    }
+
+    public StageData GetData(string rcode)
+    {
+        if (StageDataDictionary.TryGetValue(rcode, out StageData stageData))
+        {
+            return stageData;
+        }
+        else
+        {
+            Debug.LogWarning($"StageData with rcode {rcode} not found.");
+            return null;
+        }
+    }
+
+    public RewardData GetRewardData(string rcode)
+    {
+        if (RewardDataDictionary.TryGetValue(rcode, out RewardData rewardData))
+        {
+            return rewardData;
+        }
+        else
+        {
+            Debug.LogWarning($"RewardData with rcode {rcode} not found.");
+            return null;
+        }
+    }
+}
+
+[Serializable]
+public class StageDataArrayWrapper
+{
+    public StageData[] Items;
+}
+
+[Serializable]
+public class RewardDataArrayWrapper
+{
+    public RewardData[] Items;
 }
