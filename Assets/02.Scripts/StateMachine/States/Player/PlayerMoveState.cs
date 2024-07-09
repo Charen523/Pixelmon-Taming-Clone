@@ -20,16 +20,16 @@ public class PlayerMoveState : MoveState
 
         // 입력이 없을 경우 타겟을 향해 이동
         base.FixedExecute();
-        if (targetTransform != null)
-        {
-            foreach (Pixelmon pixelmon in playerStateMachine.PixelmonManager.Pixelmons)
-            {
-                if (pixelmon != null && pixelmon.StateMachine.MoveState != null)
-                {
-                    pixelmon.StateMachine.MoveState.targetTransform = targetTransform;
-                    pixelmon.StateMachine.ChangeState(pixelmon.StateMachine.MoveState);
-                }
-            }
-        }
+        //if (targetTransform != null)
+        //{
+        //    foreach (Pixelmon pixelmon in playerStateMachine.PixelmonManager.Pixelmons)
+        //    {
+        //        if (pixelmon != null && pixelmon.StateMachine.MoveState != null)
+        //        {
+        //            pixelmon.StateMachine.MoveState.targetTransform = targetTransform;
+        //            pixelmon.StateMachine.ChangeState(pixelmon.StateMachine.MoveState);
+        //        }
+        //    }
+        //}
     }
 }
