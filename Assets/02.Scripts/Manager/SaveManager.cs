@@ -60,5 +60,9 @@ public class SaveManager : Singleton<DataManager>
         }
     }
 
-
+    [ContextMenu("Prefs제거")]
+    public void RemoveAllPrefs()
+    {
+        PlayerPrefs.DeleteAll();
+    }
 }
