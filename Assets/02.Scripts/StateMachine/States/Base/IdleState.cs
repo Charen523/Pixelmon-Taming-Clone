@@ -12,7 +12,7 @@ public class IdleState : BaseState
 
     public override void Enter()
     {
-        StartAnimation(stateMachine.animationData.IdleParameterHash);
+        StartAnimation(stateMachine.animData.IdleParameterHash);
     }
 
     public override void Execute()
@@ -23,6 +23,6 @@ public class IdleState : BaseState
 
     public override void Exit()
     {
-        StopAnimation(stateMachine.animationData.IdleParameterHash);
+        StopAnimation(stateMachine.animData.IdleParameterHash);
     }
 }

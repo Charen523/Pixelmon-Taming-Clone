@@ -3,33 +3,30 @@ using UnityEngine;
 
 public class PlayerStateMachine : StateMachine
 {
-    public PlayerData data;
+    public Player Player { get; private set; }   
     public string EnemyTag = "Enemy";
 
     public Vector2 MovementInput { get; set; }
 
-    // States
+    #region Player States
     public IdleState IdleState { get; private set; }
-    public PlayerDetectState DetectState;
+    public FailState FailState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
+    public PlayerDetectState DetectState;
+    #endregion
 
     private void Start()
     {
         IdleState = new IdleState(this);
         DetectState = new PlayerDetectState(this);
         MoveState = new PlayerMoveState(this, null);
+        FailState = new FailState(this);
 
         GameManager.Instance.OnStageStart += () => ChangeState(DetectState);
-        GameManager.Instance.OnStageTimeOut += () => ChangeState(IdleState);
-        MoveState.OnTargetReached += ChangeAttackState;
+        GameManager.Instance.OnStageTimeOut += () => ChangeState(FailState);
+        MoveState.OnTargetReached += () => ChangeState(IdleState);
 
         ChangeState(DetectState);
-    }
-
-    // 공격 상태로 변경(플레이어는 idle 상태)
-    private void ChangeAttackState()
-    {
-        ChangeState(IdleState);
     }
 
     // Gizmos를 사용하여 탐지 반경을 시각적으로 표시

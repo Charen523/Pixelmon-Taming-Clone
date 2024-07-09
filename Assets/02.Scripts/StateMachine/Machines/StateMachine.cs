@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class StateMachine : MonoBehaviour
@@ -6,7 +7,7 @@ public class StateMachine : MonoBehaviour
 
     [Header("Animations")]
     public Animator anim;
-    public AnimationData animationData = new AnimationData();
+    public AnimationData animData = new AnimationData();
 
     [Header("Physics")]
     public Rigidbody2D rb;
@@ -23,8 +24,7 @@ public class StateMachine : MonoBehaviour
 
     protected virtual void Awake()
     {
-        animationData.Initialize();
-        rb = GetComponent<Rigidbody2D>();
+        animData.Initialize();
     }
 
     void Update()

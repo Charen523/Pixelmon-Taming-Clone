@@ -12,13 +12,15 @@ public class AnimationData
     [SerializeField] private string dieParameterName = "Die";
     [SerializeField] private string hitParameterName = "Hit";
     [SerializeField] private string failParameterName = "Fail";
+    [SerializeField] private string skillParameterName = "Skill";
 
     public int IdleParameterHash { get; private set; }
     public int MoveParameterHash { get; private set; }
     public int AttackParameterHash { get; private set; }
-    public int DieParameterName { get; private set; }
-    public int HitParameterName { get; private set; }
-    public int FailParameterName { get; private set; }
+    public int DieParameterHash { get; private set; }
+    public int HitParameterHash { get; private set; }
+    public int FailParameterHash { get; private set; }
+    public int SkillParameterHash { get; private set; }
 
     public void Initialize()
     {
@@ -26,8 +28,9 @@ public class AnimationData
         MoveParameterHash = Animator.StringToHash(moveParameterName);
 
         AttackParameterHash = Animator.StringToHash(attackParameterName);
-        DieParameterName = Animator.StringToHash(dieParameterName);
-        HitParameterName = Animator.StringToHash(hitParameterName);
-        FailParameterName = Animator.StringToHash(failParameterName);
+        DieParameterHash = Animator.StringToHash(dieParameterName);
+        HitParameterHash = Animator.StringToHash(hitParameterName);
+        FailParameterHash = Animator.StringToHash(failParameterName);
+        SkillParameterHash = Animator.StringToHash(skillParameterName);
     }
 }
