@@ -74,6 +74,7 @@ public class DataManager : Singleton<DataManager>
 
             //만들어진 Dictionary를 또다른 Dictionary로 묶어주기
             dataDictionaries[key] = dictionary;
+            Debug.Log($"{key} 생성.");
         }
         catch (Exception e)
         {
