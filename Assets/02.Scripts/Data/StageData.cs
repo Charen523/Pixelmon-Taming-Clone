@@ -21,31 +21,12 @@ public class StageData : IData
     #endregion
 
     #region converted arrays
-    public string[] monsterId;
-    public string[] rewardType;
-    public int[] rewardValue;
-    public string[] offlineRewardType;
-    public int[] offlineRewardValue;
+    public string[] monsterId => monsterIds.Split(' ');
+    public string[] rewardType => rewardTypes.Split(' ');
+    public int[] rewardValue => Array.ConvertAll(rewardValues.Split(' '), int.Parse);
+    public string[] offlineRewardType => offlineRewardTypes.Split(' ');
+    public int[] offlineRewardValue => Array.ConvertAll(offlineRewardValues.Split(' '), int.Parse);
     #endregion
 
     string IData.Rcode => rcode;  // 명시적 인터페이스 구현
-
-    public void ParseData()
-    {
-        monsterId = monsterIds.Split(' ');
-        rewardType = rewardTypes.Split(' ');
-
-        // rewardValues가 정수 배열일 경우와 문자열 배열일 경우를 처리
-        if (rewardValues.Contains(" "))
-        {
-            rewardValue = Array.ConvertAll(rewardValues.Split(' '), int.Parse);
-        }
-        else
-        {
-            rewardValue = new int[] { int.Parse(rewardValues) };
-        }
-
-        offlineRewardType = offlineRewardTypes.Split(' ');
-        offlineRewardValue = Array.ConvertAll(offlineRewardValues.Split(' '), int.Parse);
-    }
 }
