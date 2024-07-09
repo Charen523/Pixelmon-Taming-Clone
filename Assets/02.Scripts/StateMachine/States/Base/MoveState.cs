@@ -23,7 +23,7 @@ public class MoveState : BaseState
     }
 
     public override void FixedExecute()
-    {
+    {      
         MoveTowardsTarget();
     }
 
@@ -31,6 +31,18 @@ public class MoveState : BaseState
     {
         StopAnimation(stateMachine.animData.MoveParameterHash);
         stateMachine.rb.velocity = Vector3.zero;
+    }
+
+    protected void Flip()
+    {
+        if (targetTransform.position.x - stateMachine.transform.position.x < 0)
+        {
+            stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
+        }
+        else
+        {
+            stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
+        }
     }
 
     protected void MoveTowardsTarget()
