@@ -11,16 +11,19 @@ public class DieState : BaseState
 
     public override void Enter()
     {
-        StartAnimation(stateMachine.animationData.DieParameterName);
+        StartAnimation(stateMachine.animData.DieParameterHash);
     }
 
     public override void Execute()
     {
+    }
 
+    public override void FixedExecute()
+    {
     }
 
     public override void Exit()
     {
-        StopAnimation(stateMachine.animationData.DieParameterName);
+        StopAnimation(stateMachine.animData.DieParameterHash);
     }
 }

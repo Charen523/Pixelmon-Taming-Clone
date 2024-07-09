@@ -11,15 +11,19 @@ public class AttackState : BaseState
 
     public override void Enter()
     {
-        StartAnimation(stateMachine.animationData.AttackParameterHash);
+        StartAnimation(stateMachine.animData.AttackParameterHash);
     }
 
     public override void Execute()
     {
     }
 
+    public override void FixedExecute()
+    {
+    }
+
     public override void Exit()
     {
-        StopAnimation(stateMachine.animationData.AttackParameterHash);
+        StopAnimation(stateMachine.animData.AttackParameterHash);
     }
 }

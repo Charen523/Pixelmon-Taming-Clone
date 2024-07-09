@@ -3,29 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState : BaseState
+public class FailState : BaseState
 {
-    public IdleState(StateMachine stateMachine)
+    public FailState(StateMachine stateMachine)
         : base(stateMachine)
     {
     }
 
     public override void Enter()
     {
-        StartAnimation(stateMachine.animData.IdleParameterHash);
+        StartAnimation(stateMachine.animData.FailParameterHash);
     }
 
     public override void Execute()
     {
-        // 탐색로직
-        // 몬스터 찾음 -> moveState로 변경
     }
+
     public override void FixedExecute()
     {
     }
 
     public override void Exit()
     {
-        StopAnimation(stateMachine.animData.IdleParameterHash);
+        StopAnimation(stateMachine.animData.FailParameterHash);
     }
 }

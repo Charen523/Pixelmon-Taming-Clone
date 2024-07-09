@@ -7,17 +7,15 @@ public class PixelmonStateMachine : StateMachine
 {
     public Pixelmon Pixelmon { get; private set; }
 
-    public PixelmonIdleState IdleState { get;}
-    public PixelmonMoveState MoveState { get;}
-    public PixelmonAttackState AttackState { get; }
-    public PixelmonStateMachine(Pixelmon pixelmon)
+    public IdleState IdleState { get; private set; }
+    public PixelmonMoveState MoveState { get; private set; }
+    public PixelmonAttackState AttackState { get; private set; }
+    private void Start()
     {
-        this.Pixelmon = pixelmon;
-        IdleState = new PixelmonIdleState(this);
-        MoveState = new PixelmonMoveState(this);
+        IdleState = new IdleState(this);
+        MoveState = new PixelmonMoveState(this, null);
         AttackState = new PixelmonAttackState(this);
-
-        //ChangeState(detectState);
-
+        
+        ChangeState(IdleState);
     }
 }
