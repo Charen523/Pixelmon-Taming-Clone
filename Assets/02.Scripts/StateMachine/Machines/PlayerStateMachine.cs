@@ -11,9 +11,10 @@ public class PlayerStateMachine : StateMachine
     public Action stageStart, stageClear, stageTimeOut, targetReached;
 
     #region Player States
-    public IdleState IdleState { get; private set; }
-    public FailState FailState { get; private set; }
+    public PlayerIdleState IdleState { get; private set; }
+    public PlayerFailState FailState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
+    public PlayerDieState DieState { get; private set; }
     public PlayerDetectState DetectState;
 
     #endregion
@@ -25,6 +26,7 @@ public class PlayerStateMachine : StateMachine
         DetectState = new PlayerDetectState(this);
         MoveState = new PlayerMoveState(this);
         FailState = new PlayerFailState(this);
+        DieState = new PlayerDieState(this);
 
         GameManager.Instance.OnStageStart += stageStart = () => ChangeState(DetectState);
         GameManager.Instance.OnStageClear += stageClear = () => ChangeState(IdleState);

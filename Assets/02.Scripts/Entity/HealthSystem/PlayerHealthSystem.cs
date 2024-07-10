@@ -8,6 +8,6 @@ public class PlayerHealthSystem : HealthSystem
 
     protected override void NoticeDead()
     {
-       //여기다가 상태변경 느 
+        Player.Instance.stateMachine.ChangeState(Player.Instance.stateMachine.DieState);
     }
 }
