@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class EnemyStateMachine : StateMachine
 {
-    public EnemyData data;
+    [Header("EnemyStateMachine")]
+    [SerializeField] private Enemy enemy;
+    public GameObject target;
     
     #region Enemy States
     public EnemyIdleState IdleState { get; private set; }
@@ -19,11 +21,19 @@ public class EnemyStateMachine : StateMachine
 
     private void Start()
     {
-        //MovementSpeed = data.spd;
-        //AttackRange = data.atkRange;
+        if (enemy == null)
+        {
+            enemy = GetComponent<Enemy>();
 
-        MovementSpeed = 1.3f;
-        AttackRange = 2f;
+            if (enemy == null)
+            {
+                Debug.LogError($"{gameObject.name} 객체에 Enemy 클래스 없음!");
+            }
+        }
+
+        target = Player.Instance.gameObject;
+
+        MovementSpeed = enemy.data.spd;
 
         ChaseState = new EnemyChaseState(this);
         AttackState = new EnemyAttackState(this);
@@ -36,13 +46,14 @@ public class EnemyStateMachine : StateMachine
         ChangeState(ChaseState);
     }
 
-    public void OnEnemyDead()
-    {
-        //public void OnMonsterDead(string rcode, GameObject enemy)
-    }
-
     public void OnEnemyAttack()
     {
-        //HealthSystem
+        target.GetComponent<PlayerHealthSystem>().TakeDamage(enemy.data.dmg);
+    }
+
+    public void OnEnemyDead()
+    {
+        //StageManager.Instance.OnMonsterDead(enemy.data.rcode, gameObject);
+        gameObject.SetActive(false);
     }
 }

@@ -4,16 +4,23 @@ using UnityEngine;
 
 public class PixelmonIdleState : IdleState
 {
-    public PixelmonIdleState(PixelmonStateMachine stateMachine) : base(stateMachine)
+    private PixelmonStateMachine pixelmonStateMachine;
+    public PixelmonIdleState(PixelmonStateMachine stateMachine)
+        : base(stateMachine)
     {
-        
+        pixelmonStateMachine = stateMachine;
     }
 
-    public override void Execute()
+    public override void Enter()
     {
-       
+        base.Enter();
+        GameManager.Instance.OnStageStart -= pixelmonStateMachine.stageStart;
+        GameManager.Instance.OnStageClear -= pixelmonStateMachine.stageClear;
+        GameManager.Instance.OnStageTimeOut -= pixelmonStateMachine.stageTimeOut;
+        GameManager.Instance.OnPlayerDie -= pixelmonStateMachine.playerDie;
     }
 
+    /*
     public GameObject Search(GameObject pixelmon, List<GameObject> enemies)
     {
         GameObject target = new GameObject();
@@ -28,5 +35,5 @@ public class PixelmonIdleState : IdleState
                 target = enemy;
         });
         return target;
-    }
+    }*/
 }

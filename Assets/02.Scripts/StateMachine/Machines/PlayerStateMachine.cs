@@ -8,6 +8,8 @@ public class PlayerStateMachine : StateMachine
 
     public Vector2 MovementInput { get; set; }
 
+    public Action stageStart, stageClear, stageTimeOut, targetReached;
+
     #region Player States
     public IdleState IdleState { get; private set; }
     public FailState FailState { get; private set; }
@@ -19,15 +21,15 @@ public class PlayerStateMachine : StateMachine
     private void Start()
     {
         Player = Player.Instance;
-        IdleState = new IdleState(this);
+        IdleState = new PlayerIdleState(this);
         DetectState = new PlayerDetectState(this);
         MoveState = new PlayerMoveState(this);
-        FailState = new FailState(this);
+        FailState = new PlayerFailState(this);
 
-        GameManager.Instance.OnStageStart += () => ChangeState(DetectState);
-        GameManager.Instance.OnStageClear += () => ChangeState(IdleState);
-        GameManager.Instance.OnStageTimeOut += () => ChangeState(FailState);
-        MoveState.OnTargetReached += () => ChangeState(IdleState);
+        GameManager.Instance.OnStageStart += stageStart = () => ChangeState(DetectState);
+        GameManager.Instance.OnStageClear += stageClear = () => ChangeState(IdleState);
+        GameManager.Instance.OnStageTimeOut += stageTimeOut = () => ChangeState(FailState);
+        MoveState.OnTargetReached += targetReached = () => ChangeState(IdleState);
 
         ChangeState(DetectState);
     }

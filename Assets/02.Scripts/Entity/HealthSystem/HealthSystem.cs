@@ -1,13 +1,37 @@
 using Sirenix.OdinInspector;
+using System;
+using UnityEngine.UI;
 
 public abstract class HealthSystem : SerializedMonoBehaviour
 {
+    public Image hpBar;
+
     /*체력변수*/
-    public float MaxHealth { get; protected set; }
+    protected float maxHealth;
     protected float currentHealth;
 
-    //체력변화 추상클래스
-    public abstract bool ChangeHealth(float damage);
+    private void Update()
+    {
+        hpBar.fillAmount = currentHealth / maxHealth;
+    }
+
+    public virtual void GetHealed(float delta)
+    {
+        if (currentHealth != 0)
+        {
+            currentHealth = MathF.Min(maxHealth, currentHealth + delta);
+        }
+    }
+
+    public virtual void TakeDamage(float delta)
+    {
+        currentHealth = MathF.Max(0, currentHealth - delta);
+
+        if (currentHealth == 0)
+        {
+            NoticeDead();
+        } 
+    }
 
     //사망 이벤트
     protected abstract void NoticeDead();

@@ -24,7 +24,7 @@ public class DataManager : Singleton<DataManager>
 
     private void LoadAllData()
     {
-        // Get all JSON files in the GameData folder
+        //GameData폴더 Load.
         var jsonFiles = Resources.LoadAll<TextAsset>(jsonFolderName);
         foreach (var jsonFile in jsonFiles)
         {
@@ -59,7 +59,7 @@ public class DataManager : Singleton<DataManager>
             var wrapper = JsonUtility.FromJson<Wrapper<T>>("{\"Items\":" + jsonData + "}");
             if (wrapper == null || wrapper.Items == null)
             {
-                Debug.LogError("Failed to deserialize JSON data.");
+                Debug.LogError("json 역직렬화 실패.");
                 return;
             }
 
@@ -74,7 +74,6 @@ public class DataManager : Singleton<DataManager>
 
             //만들어진 Dictionary를 또다른 Dictionary로 묶어주기
             dataDictionaries[key] = dictionary;
-            Debug.Log($"{key} 생성.");
         }
         catch (Exception e)
         {
