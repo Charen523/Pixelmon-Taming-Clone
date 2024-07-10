@@ -47,13 +47,14 @@ public class EnemyStateMachine : StateMachine
         ChangeState(ChaseState);
     }
 
-    public void OnEnemyDead()
-    {
-        //public void OnMonsterDead(string rcode, GameObject enemy)
-    }
-
     public void OnEnemyAttack()
     {
         //HealthSystem
+    }
+
+    public void OnEnemyDead()
+    {
+        //StageManager.Instance.OnMonsterDead(enemy.data.rcode, gameObject);
+        gameObject.SetActive(false);
     }
 }
