@@ -65,6 +65,9 @@ public class StageManager : Singleton<StageManager>
     //스테이지 로직
     private Coroutine stageCoroutine;
 
+    //플레이어 사망 중복 호출 방지 플래그
+    private bool isPlayerDeadHandled = false;
+
     void Start()
     {
         normalStageCondition = new WaitUntil(() => NormalStage());
@@ -234,11 +237,21 @@ public class StageManager : Singleton<StageManager>
 
     public void OnPlayerDead()
     {
-        StopCoroutine(stageCoroutine);
+        if (isPlayerDeadHandled) return;
+
+        isPlayerDeadHandled = true;
+        
+        if (stageCoroutine != null)
+        {
+            StopCoroutine(stageCoroutine);
+        }
+
         ReturnPools();
         ToNextStage(-1);
         StageInitialize();
         Player.Instance.stateMachine.ReStartPlayer();
+
+        isPlayerDeadHandled = false;
     }
 
 
