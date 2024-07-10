@@ -1,0 +1,18 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class UserData
+{
+    public string userId;
+    public int money;
+    public int diamond;
+    public int eggClass;
+    public int eggCount;
+    public int seed;
+    public int petFood;
+    public int compost;
+    public int dungeonKeyA;
+    public int dungeonKeyB;
+    public int dungeonKeyC;
+}
