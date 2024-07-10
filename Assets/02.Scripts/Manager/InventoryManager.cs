@@ -47,14 +47,27 @@ public class InventoryManager : Singleton<InventoryManager>
         isDirty = true;
     }
 
-    private void DropItem(string rcode, int amount)
+    public void DropItem(string[] rcodes, float[] rates ,int[] amounts)
     {
-        SetData(dataManager.GetData<RewardData>(rcode).name, amount);
+        for(int i = 0; i < rcodes.Length; i++) 
+        {
+            if (CheckedDropRate(rates[i]))
+            {
+                SetData(dataManager.GetData<RewardData>(rcodes[i]).name, amounts[i]);
+            }
+        }
     }
 
     public void UseGold(int amount)
     {
         SetData(nameof(userData.money), userData.money - amount);
+    }
+
+    public bool CheckedDropRate(float rate)
+    {
+        int rand = UnityEngine.Random.Range(0, 100);
+        if (rand <= rate) return true;
+        return false;
     }
 }
 
