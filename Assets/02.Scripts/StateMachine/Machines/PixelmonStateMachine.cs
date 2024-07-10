@@ -1,8 +1,5 @@
 
 using System;
-using System.Collections.Generic;
-using Unity.IO.LowLevel.Unsafe;
-using UnityEngine;
 
 public class PixelmonStateMachine : StateMachine
 {
@@ -16,7 +13,7 @@ public class PixelmonStateMachine : StateMachine
     public PixelmonAttackState AttackState { get; private set; }
     #endregion
 
-    public PixelmonStateMachine(Pixelmon pixelmon)
+    public void InitPixelmon(Pixelmon pixelmon)
     {
         Pixelmon = pixelmon;
         IdleState = new PixelmonIdleState(Pixelmon.StateMachine);

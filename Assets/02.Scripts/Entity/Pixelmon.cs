@@ -8,6 +8,6 @@ public class Pixelmon : MonoBehaviour
     public PixelmonStateMachine StateMachine;
     private void Awake()
     {
-        StateMachine = new PixelmonStateMachine(this);
+        StateMachine.InitPixelmon(this);
     }
 }
