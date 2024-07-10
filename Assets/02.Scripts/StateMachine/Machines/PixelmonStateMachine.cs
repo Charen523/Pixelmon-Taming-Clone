@@ -5,7 +5,7 @@ public class PixelmonStateMachine : StateMachine
 {
     public Pixelmon Pixelmon { get; private set; }
 
-    public Action stageStart, stageClear, stageTimeOut, playerDie;
+    public Action stageClear, stageTimeOut, playerDie;
 
     #region Pixelmon States
     public PixelmonIdleState IdleState { get; private set; }
@@ -20,7 +20,6 @@ public class PixelmonStateMachine : StateMachine
         MoveState = new PixelmonMoveState(Pixelmon.StateMachine);
         AttackState = new PixelmonAttackState(Pixelmon.StateMachine);
 
-        GameManager.Instance.OnStageStart += stageStart = () => ChangeState(IdleState);
         GameManager.Instance.OnStageClear += stageClear = () => ChangeState(IdleState);
         GameManager.Instance.OnStageTimeOut += stageTimeOut = () => ChangeState(IdleState);
         GameManager.Instance.OnPlayerDie += playerDie = () => ChangeState(IdleState);

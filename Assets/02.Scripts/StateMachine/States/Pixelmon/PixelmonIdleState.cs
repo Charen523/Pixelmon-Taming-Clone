@@ -14,7 +14,7 @@ public class PixelmonIdleState : IdleState
     public override void Enter()
     {
         base.Enter();
-        GameManager.Instance.OnStageStart -= pixelmonStateMachine.stageStart;
+        Player.Instance.OnReStartStage -= Player.Instance.reStartStage;
         GameManager.Instance.OnStageClear -= pixelmonStateMachine.stageClear;
         GameManager.Instance.OnStageTimeOut -= pixelmonStateMachine.stageTimeOut;
         GameManager.Instance.OnPlayerDie -= pixelmonStateMachine.playerDie;
@@ -23,7 +23,7 @@ public class PixelmonIdleState : IdleState
     public override void Exit()
     {
         base.Exit();
-        GameManager.Instance.OnStageStart += pixelmonStateMachine.stageStart;
+        Player.Instance.OnReStartStage += Player.Instance.reStartStage;
         GameManager.Instance.OnStageClear += pixelmonStateMachine.stageClear;
         GameManager.Instance.OnStageTimeOut += pixelmonStateMachine.stageTimeOut;
         GameManager.Instance.OnPlayerDie += pixelmonStateMachine.playerDie;

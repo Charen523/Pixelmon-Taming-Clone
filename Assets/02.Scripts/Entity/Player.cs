@@ -13,8 +13,8 @@ public class Player : Singleton<Player>
 
     public Pixelmon[] pixelmons = new Pixelmon[5];
 
-    public event Action OnPlayerMove;
-    public Action playerMove, targetReached;
+    public event Action OnPlayerMove, OnReStartStage;
+    public Action reStartStage, playerMove, targetReached;
 
     private void Start()
     {
@@ -33,6 +33,7 @@ public class Player : Singleton<Player>
         {
             if (pixelmon != null)
             {
+                OnReStartStage += reStartStage = () => pixelmon.StateMachine.ChangeState(pixelmon.StateMachine.IdleState);
                 OnPlayerMove += playerMove = () => pixelmon.StateMachine.ChangeState(pixelmon.StateMachine.MoveState);
                 stateMachine.MoveState.OnTargetReached += targetReached = () => pixelmon.StateMachine.ChangeState(pixelmon.StateMachine.AttackState);
             }

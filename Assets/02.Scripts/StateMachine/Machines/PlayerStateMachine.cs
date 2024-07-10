@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerStateMachine : StateMachine
 {
@@ -37,7 +38,8 @@ public class PlayerStateMachine : StateMachine
 
     public void ReStartPlayer()
     {
-        Player.Instance.healthSystem.InitHealth();
+        Player.healthSystem.InitHealth();
+        Player.reStartStage?.Invoke();
         ChangeState(DetectState);
     }
 
