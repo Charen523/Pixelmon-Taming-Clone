@@ -44,16 +44,16 @@ public class SaveManager : Singleton<SaveManager>
 
 
     [ContextMenu("Prefs로드")]
-    public void LoadFromPrefs<T>(T data)
+    public void LoadFromPrefs(UserData data)
     {
         if(PlayerPrefs.HasKey(saveData)) 
         { 
             string prefsValue = PlayerPrefs .GetString(saveData);
-            Player.Instance.data = JsonUtility.FromJson<PlayerData>(prefsValue);
+            InventoryManager.Instance.userData = JsonUtility.FromJson<UserData>(prefsValue);
         }
         else
         {
-            Player.Instance.data = new PlayerData();
+            InventoryManager.Instance.userData = new UserData();
             SaveToPrefs(data);
             LoadFromPrefs(data);
         }
