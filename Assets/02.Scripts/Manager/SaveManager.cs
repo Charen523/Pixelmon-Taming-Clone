@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class SaveManager : Singleton<DataManager>
+public class SaveManager : Singleton<SaveManager>
 {
     private readonly string jsonPlayerData = "PlayerData";
     private string jsonFolder;
@@ -36,15 +36,15 @@ public class SaveManager : Singleton<DataManager>
 
 
     [ContextMenu("Prefs저장")]
-    public void SaveToPrefs()
+    public void SaveToPrefs<T>(T data)
     {
-        string jsonData = JsonUtility.ToJson(Player.Instance.data);
+        string jsonData = JsonUtility.ToJson(data);
         PlayerPrefs.SetString(saveData, jsonData);
     }
 
 
     [ContextMenu("Prefs로드")]
-    public void LoadFromPrefs()
+    public void LoadFromPrefs<T>(T data)
     {
         if(PlayerPrefs.HasKey(saveData)) 
         { 
@@ -54,8 +54,8 @@ public class SaveManager : Singleton<DataManager>
         else
         {
             Player.Instance.data = new PlayerData();
-            SaveToPrefs();
-            LoadFromPrefs();
+            SaveToPrefs(data);
+            LoadFromPrefs(data);
         }
     }
 
@@ -65,7 +65,7 @@ public class SaveManager : Singleton<DataManager>
         if (PlayerPrefs.HasKey(saveData))
         {
             PlayerPrefs.DeleteKey(saveData);
-            Debug.Log("제거");
+            Debug.Log($"{saveData}제거");
         }
     }
 
