@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class StageManager : Singleton<StageManager>
 {
@@ -69,6 +71,7 @@ public class StageManager : Singleton<StageManager>
         BossStageCondition = new WaitUntil(() => CheckedBossStage());
         monsterDead += MonsterDead;
         GameManager.Instance.OnPlayerDie += OnPlayerDead;
+        GameManager.Instance.OnStageStart += StageInitialize;
         StageInitialize();
     }
 
@@ -178,9 +181,10 @@ public class StageManager : Singleton<StageManager>
     {
         foreach (var enemy in spawner.isActivatedEnemy)
         {
-            enemy.SetActive(false);
-            spawner.isActivatedEnemy.Remove(enemy);
+            enemy.SetActive(false);            
         }
+        spawner.isActivatedEnemy.Clear();
+        spawnCount = 0;
     }
     #endregion
 
@@ -232,8 +236,8 @@ public class StageManager : Singleton<StageManager>
     public void OnPlayerDead()
     {
         StopCoroutine(stageCoroutine);
+        ReturnPools();
         ToNextStage(-1);
-        StageInitialize();
     }
 
 
