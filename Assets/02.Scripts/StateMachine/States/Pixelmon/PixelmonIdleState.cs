@@ -20,6 +20,15 @@ public class PixelmonIdleState : IdleState
         GameManager.Instance.OnPlayerDie -= pixelmonStateMachine.playerDie;
     }
 
+    public override void Exit()
+    {
+        base.Exit();
+        GameManager.Instance.OnStageStart += pixelmonStateMachine.stageStart;
+        GameManager.Instance.OnStageClear += pixelmonStateMachine.stageClear;
+        GameManager.Instance.OnStageTimeOut += pixelmonStateMachine.stageTimeOut;
+        GameManager.Instance.OnPlayerDie += pixelmonStateMachine.playerDie;
+    }
+
     /*
     public GameObject Search(GameObject pixelmon, List<GameObject> enemies)
     {

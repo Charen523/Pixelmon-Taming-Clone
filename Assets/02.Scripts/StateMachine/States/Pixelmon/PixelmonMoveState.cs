@@ -17,8 +17,17 @@ public class PixelmonMoveState : MoveState
         Player.Instance.OnPlayerMove -= Player.Instance.playerMove;
     }
 
+    public override void Exit()
+    {
+        base.Exit();
+        Player.Instance.OnPlayerMove += Player.Instance.playerMove;
+    }
+
     public override void Execute()
     {
+        Debug.Log("execute");
+        targetTransform = Player.Instance.stateMachine.MoveState.targetTransform;
+        Debug.Log(targetTransform.name);
         Flip();
     }
 }
