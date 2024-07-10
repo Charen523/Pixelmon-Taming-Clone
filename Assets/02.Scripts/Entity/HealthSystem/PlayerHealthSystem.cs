@@ -6,6 +6,12 @@ public class PlayerHealthSystem : HealthSystem
         currentHealth = maxHealth;
     }
 
+    public void InitHealth()
+    {
+        maxHealth = 100;
+        currentHealth = maxHealth;
+    }
+
     protected override void NoticeDead()
     {
         Player.Instance.stateMachine.ChangeState(Player.Instance.stateMachine.DieState);

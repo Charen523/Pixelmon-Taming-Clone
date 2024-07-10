@@ -7,9 +7,9 @@ public class PlayerDieState : DieState
         PlayerStateMachine = stateMachine;
     }
 
-    public override void Enter()
-    {
-        base.Enter();
+    public override void Exit() 
+    { 
+        base.Exit();
         GameManager.Instance.NotifyPlayerDie();
     }
 }

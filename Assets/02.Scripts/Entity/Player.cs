@@ -5,6 +5,7 @@ public class Player : Singleton<Player>
 {
     public PlayerData data;
     public PlayerStateMachine stateMachine;
+    public PlayerHealthSystem healthSystem;
 
     [Header("Animations")]
     public float radius = 2.0f;

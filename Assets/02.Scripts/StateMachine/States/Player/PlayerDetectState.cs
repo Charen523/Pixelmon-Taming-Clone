@@ -23,13 +23,13 @@ public class PlayerDetectState : IdleState
     public override void Enter()
     {
         base.Enter();
-        GameManager.Instance.OnStageStart -= playerStateMachine.stageStart;
+        GameManager.Instance.OnStageStart -= playerStateMachine.ReStartPlayer;
     }
 
     public override void Exit()
     {
         base.Exit();
-        GameManager.Instance.OnStageStart += playerStateMachine.stageStart;
+        GameManager.Instance.OnStageStart += playerStateMachine.ReStartPlayer;
     }
 
     public override void Execute()

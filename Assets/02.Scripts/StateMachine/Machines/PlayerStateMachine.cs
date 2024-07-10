@@ -8,7 +8,7 @@ public class PlayerStateMachine : StateMachine
 
     public Vector2 MovementInput { get; set; }
 
-    public Action stageStart, stageClear, stageTimeOut, targetReached;
+    public Action stageClear, stageTimeOut, targetReached;
 
     #region Player States
     public PlayerIdleState IdleState { get; private set; }
@@ -28,11 +28,17 @@ public class PlayerStateMachine : StateMachine
         FailState = new PlayerFailState(this);
         DieState = new PlayerDieState(this);
 
-        GameManager.Instance.OnStageStart += stageStart = () => ChangeState(DetectState);
+        GameManager.Instance.OnStageStart += ReStartPlayer;
         GameManager.Instance.OnStageClear += stageClear = () => ChangeState(IdleState);
         GameManager.Instance.OnStageTimeOut += stageTimeOut = () => ChangeState(FailState);
         MoveState.OnTargetReached += targetReached = () => ChangeState(IdleState);
 
+        ChangeState(DetectState);
+    }
+
+    public void ReStartPlayer()
+    {
+        Player.Instance.healthSystem.InitHealth();
         ChangeState(DetectState);
     }
 
