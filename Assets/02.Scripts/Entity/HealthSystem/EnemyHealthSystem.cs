@@ -16,15 +16,14 @@ public class EnemyHealthSystem : HealthSystem
                 Debug.LogError($"{gameObject.name} 객체에 Enemy 클래스 없음!");
             }
         }
+
+        maxHealth = enemy.data.hp;
+        currentHealth = maxHealth;
     }
 
-    public override bool ChangeHealth(float damage)
-    {
-        throw new System.NotImplementedException();
-    }
 
     protected override void NoticeDead()
     {
-        throw new System.NotImplementedException();
+        enemy.stateMachine.ChangeState(enemy.stateMachine.DieState);
     }
 }

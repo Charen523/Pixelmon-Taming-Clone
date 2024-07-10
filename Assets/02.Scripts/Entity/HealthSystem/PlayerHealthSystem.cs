@@ -1,12 +1,13 @@
-﻿public class PlayerHealthSystem : HealthSystem
+public class PlayerHealthSystem : HealthSystem
 {
-    public override bool ChangeHealth(float damage)
+    private void Start()
     {
-        throw new System.NotImplementedException();
+        maxHealth = 100;
+        currentHealth = maxHealth;
     }
 
     protected override void NoticeDead()
     {
-        throw new System.NotImplementedException();
+       //여기다가 상태변경 느 
     }
 }

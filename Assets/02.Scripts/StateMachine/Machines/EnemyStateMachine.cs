@@ -34,7 +34,6 @@ public class EnemyStateMachine : StateMachine
         target = Player.Instance.gameObject;
 
         MovementSpeed = enemy.data.spd;
-        AttackRange = 2f;
 
         ChaseState = new EnemyChaseState(this);
         AttackState = new EnemyAttackState(this);
@@ -49,7 +48,7 @@ public class EnemyStateMachine : StateMachine
 
     public void OnEnemyAttack()
     {
-        //HealthSystem
+        target.GetComponent<PlayerHealthSystem>().TakeDamage(enemy.data.dmg);
     }
 
     public void OnEnemyDead()

@@ -30,10 +30,17 @@ public class Enemy : SerializedMonoBehaviour
                 Debug.LogError($"{gameObject.name} 객체에 healthSystem이 부여되지 않음!");
             }
         }
+
+        //임시
+        data.dmg = data.atk;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
+        if (collision.CompareTag("PixelmonProjectile"))
+        {
+            //대충 발사체에 등록된 데미지만큼 내 HP 깎아주기.
+            //healthSystem.TakeDamage(발사제 데미지);
+        }
     }
 }
