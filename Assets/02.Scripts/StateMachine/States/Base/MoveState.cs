@@ -26,8 +26,7 @@ public class MoveState : BaseState
 
     public override void Exit()
     {
-        StopAnimation(stateMachine.animData.MoveParameterHash);
-        stateMachine.rb.velocity = Vector3.zero;
+        StopAnimation(stateMachine.animData.MoveParameterHash);        
     }
 
     protected void Flip()
@@ -52,6 +51,7 @@ public class MoveState : BaseState
             // 타겟에게 도착하면 공격 상태로 변경
             if (Vector2.Distance(currentPosition, targetPosition) < stateMachine.AttackRange)
             {
+                stateMachine.rb.velocity = Vector3.zero;
                 OnTargetReached?.Invoke();
             }
         }

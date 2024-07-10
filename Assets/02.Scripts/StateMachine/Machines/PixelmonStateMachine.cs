@@ -19,7 +19,7 @@ public class PixelmonStateMachine : StateMachine
     public PixelmonStateMachine(Pixelmon pixelmon)
     {
         Pixelmon = pixelmon;
-        IdleState = new IdleState(Pixelmon.StateMachine);
+        IdleState = new PixelmonIdleState(Pixelmon.StateMachine);
         MoveState = new PixelmonMoveState(Pixelmon.StateMachine);
         AttackState = new PixelmonAttackState(Pixelmon.StateMachine);
 
