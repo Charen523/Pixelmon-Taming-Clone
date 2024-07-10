@@ -71,7 +71,6 @@ public class StageManager : Singleton<StageManager>
         BossStageCondition = new WaitUntil(() => CheckedBossStage());
         monsterDead += MonsterDead;
         GameManager.Instance.OnPlayerDie += OnPlayerDead;
-        GameManager.Instance.OnStageStart += StageInitialize;
         StageInitialize();
     }
 
@@ -82,6 +81,7 @@ public class StageManager : Singleton<StageManager>
 
     public void StageInitialize()
     {
+        GameManager.Instance.NotifyStageStart();
         LoadData();
         //UI초기화
         InitStageUI();
