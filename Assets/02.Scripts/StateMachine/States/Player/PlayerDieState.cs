@@ -10,6 +10,6 @@ public class PlayerDieState : DieState
     public override void Exit() 
     { 
         base.Exit();
-        GameManager.Instance.NotifyPlayerDie();
+        GameManager.Instance.NotifyPlayerDie(); 
     }
 }

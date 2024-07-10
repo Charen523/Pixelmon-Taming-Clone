@@ -28,7 +28,6 @@ public class PlayerStateMachine : StateMachine
         FailState = new PlayerFailState(this);
         DieState = new PlayerDieState(this);
 
-        GameManager.Instance.OnStageStart += ReStartPlayer;
         GameManager.Instance.OnStageClear += stageClear = () => ChangeState(IdleState);
         GameManager.Instance.OnStageTimeOut += stageTimeOut = () => ChangeState(FailState);
         MoveState.OnTargetReached += targetReached = () => ChangeState(IdleState);

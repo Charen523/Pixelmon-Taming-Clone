@@ -81,7 +81,6 @@ public class StageManager : Singleton<StageManager>
 
     public void StageInitialize()
     {
-        GameManager.Instance.NotifyStageStart();
         LoadData();
         //UI초기화
         InitStageUI();
@@ -238,6 +237,8 @@ public class StageManager : Singleton<StageManager>
         StopCoroutine(stageCoroutine);
         ReturnPools();
         ToNextStage(-1);
+        StageInitialize();
+        Player.Instance.stateMachine.ReStartPlayer();
     }
 
 
