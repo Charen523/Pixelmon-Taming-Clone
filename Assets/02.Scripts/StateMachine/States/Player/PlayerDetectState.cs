@@ -26,6 +26,12 @@ public class PlayerDetectState : IdleState
         GameManager.Instance.OnStageStart -= playerStateMachine.stageStart;
     }
 
+    public override void Exit()
+    {
+        base.Exit();
+        GameManager.Instance.OnStageStart += playerStateMachine.stageStart;
+    }
+
     public override void Execute()
     {
         base.Execute();

@@ -10,8 +10,8 @@ public class PixelmonStateMachine : StateMachine
 
     public Action stageStart, stageClear, stageTimeOut, playerDie;
 
-    #region Player States
-    public IdleState IdleState { get; private set; }
+    #region Pixelmon States
+    public PixelmonIdleState IdleState { get; private set; }
     public PixelmonMoveState MoveState { get; private set; }
     public PixelmonAttackState AttackState { get; private set; }
     #endregion
