@@ -11,9 +11,9 @@ public class PlayerFailState : FailState
         playerStateMachine = stateMachine;
     }
 
-    public override void Exit() 
+    public override void Enter() 
     { 
-        base.Exit();
+        base.Enter();
         GameManager.Instance.OnStageTimeOut -= playerStateMachine.stageTimeOut;
     }
 }

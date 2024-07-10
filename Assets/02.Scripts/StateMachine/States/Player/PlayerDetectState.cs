@@ -20,16 +20,16 @@ public class PlayerDetectState : IdleState
         playerStateMachine = stateMachine;
     }
 
+    public override void Enter()
+    {
+        base.Enter();
+        GameManager.Instance.OnStageStart -= playerStateMachine.stageStart;
+    }
+
     public override void Execute()
     {
         base.Execute();
         playerStateMachine.StartCoroutine(DetectClosestTargetCoroutine());
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
-        GameManager.Instance.OnStageStart -= playerStateMachine.stageStart;
     }
 
     private IEnumerator DetectClosestTargetCoroutine()

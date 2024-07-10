@@ -11,9 +11,9 @@ public class PlayerIdleState : IdleState
         playerStateMachine = stateMachine;
     }
 
-    public override void Exit()
+    public override void Enter()
     {
-        base.Exit();
+        base.Enter();
         GameManager.Instance.OnStageClear -= playerStateMachine.stageClear;
         playerStateMachine.MoveState.OnTargetReached -= playerStateMachine.targetReached;
     }
