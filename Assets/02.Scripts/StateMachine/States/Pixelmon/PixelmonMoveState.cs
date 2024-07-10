@@ -11,6 +11,12 @@ public class PixelmonMoveState : MoveState
     {
     }
 
+    public override void Enter()
+    {
+        base.Enter();
+        Player.Instance.OnPlayerMove -= Player.Instance.playerMove;
+    }
+
     public override void Execute()
     {
         Flip();
