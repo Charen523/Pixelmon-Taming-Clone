@@ -13,20 +13,19 @@ public class PlayerStateMachine : StateMachine
     public FailState FailState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
     public PlayerDetectState DetectState;
+
     #endregion
 
-    protected override void Awake()
+    private void Start()
     {
         Player = Player.Instance;
         IdleState = new IdleState(this);
         DetectState = new PlayerDetectState(this);
-        MoveState = new PlayerMoveState(this, null);
-        FailState = new FailState(this);      
-    }
+        MoveState = new PlayerMoveState(this);
+        FailState = new FailState(this);
 
-    private void Start()
-    {
         GameManager.Instance.OnStageStart += () => ChangeState(DetectState);
+        GameManager.Instance.OnStageClear += () => ChangeState(IdleState);
         GameManager.Instance.OnStageTimeOut += () => ChangeState(FailState);
         MoveState.OnTargetReached += () => ChangeState(IdleState);
 

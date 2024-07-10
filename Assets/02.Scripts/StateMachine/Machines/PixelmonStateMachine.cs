@@ -14,13 +14,14 @@ public class PixelmonStateMachine : StateMachine
     public PixelmonStateMachine(Pixelmon pixelmon)
     {
         Pixelmon = pixelmon;
-    }
+        IdleState = new IdleState(Pixelmon.StateMachine);
+        MoveState = new PixelmonMoveState(Pixelmon.StateMachine);
+        AttackState = new PixelmonAttackState(Pixelmon.StateMachine);
 
-    protected override void Awake()
-    {
-        IdleState = new IdleState(this);
-        MoveState = new PixelmonMoveState(this, null);
-        AttackState = new PixelmonAttackState(this);
+        GameManager.Instance.OnStageStart += () => ChangeState(IdleState);
+        GameManager.Instance.OnStageClear += () => ChangeState(IdleState);
+        GameManager.Instance.OnStageTimeOut += () => ChangeState(IdleState);
+        GameManager.Instance.OnPlayerDie += () => ChangeState(IdleState);
 
         ChangeState(IdleState);
     }

@@ -6,22 +6,13 @@ using UnityEngine.InputSystem;
 
 public class PixelmonMoveState : MoveState
 {
-    private PixelmonStateMachine pixelmonStateMachine;
-    public PixelmonMoveState(PixelmonStateMachine stateMachine, Transform target) 
-        : base(stateMachine, target)
+    public PixelmonMoveState(PixelmonStateMachine stateMachine) 
+        : base(stateMachine)
     {
-        pixelmonStateMachine = stateMachine;
     }
 
-    public override void FixedExecute()
+    public override void Execute()
     {
-        //if (enemyTarget.position.x - stateMachine.transform.position.x > 0)
-        //{
-        //    stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
-        //}
-        //else
-        //{
-        //    stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
-        //}
+        Flip();
     }
 }

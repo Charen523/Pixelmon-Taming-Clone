@@ -6,11 +6,11 @@ public class MoveState : BaseState
 {
     public Transform targetTransform;
     public event Action OnTargetReached;
+    public bool isFlipEnemy = false;
 
-    public MoveState(StateMachine stateMachine, Transform target) 
+    public MoveState(StateMachine stateMachine) 
         : base(stateMachine)
     {
-        this.targetTransform = target;
     }
 
     public override void Enter()
@@ -20,11 +20,8 @@ public class MoveState : BaseState
 
     public override void Execute()
     {
-    }
-
-    public override void FixedExecute()
-    {      
         MoveTowardsTarget();
+        Flip();
     }
 
     public override void Exit()
@@ -35,14 +32,11 @@ public class MoveState : BaseState
 
     protected void Flip()
     {
-        if (targetTransform.position.x - stateMachine.transform.position.x < 0)
-        {
-            stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
-        }
-        else
-        {
-            stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
-        }
+        bool comparisonResult = isFlipEnemy ?
+            (targetTransform.position.x - stateMachine.transform.position.x > 0) :
+            (targetTransform.position.x - stateMachine.transform.position.x < 0);
+
+        stateMachine.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = comparisonResult;
     }
 
     protected void MoveTowardsTarget()
