@@ -2,8 +2,7 @@ public class PlayerHealthSystem : HealthSystem
 {
     private void Start()
     {
-        maxHealth = 100;
-        currentHealth = maxHealth;
+        InitHealth();
     }
 
     public void InitHealth()
