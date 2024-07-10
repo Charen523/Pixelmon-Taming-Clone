@@ -71,7 +71,7 @@ public class StageManager : Singleton<StageManager>
         BossStageCondition = new WaitUntil(() => CheckedBossStage());
         monsterDead += MonsterDead;
         GameManager.Instance.OnPlayerDie += OnPlayerDead;
-
+        GameManager.Instance.OnStageStart += StageInitialize;
         StageInitialize();
     }
 
@@ -238,7 +238,6 @@ public class StageManager : Singleton<StageManager>
         StopCoroutine(stageCoroutine);
         ReturnPools();
         ToNextStage(-1);
-        StageInitialize();
     }
 
 
