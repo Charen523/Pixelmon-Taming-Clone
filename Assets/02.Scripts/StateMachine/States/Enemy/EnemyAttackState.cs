@@ -3,15 +3,19 @@ using UnityEngine;
 
 public class EnemyAttackState : AttackState
 {
+    EnemyStateMachine enemyStateMachine;
     private float attackTime = 0;
 
-    public EnemyAttackState(StateMachine stateMachine) : base(stateMachine)
+    public EnemyAttackState(EnemyStateMachine stateMachine)
+        : base(stateMachine)
     {
+        enemyStateMachine = stateMachine;
     }
 
     public override void Enter()
     {
         base.Enter();
+        enemyStateMachine.ChaseState.OnTargetReached -= enemyStateMachine.targetReached;
     }
 
     public override void Exit()
@@ -45,6 +49,6 @@ public class EnemyAttackState : AttackState
 
     private void Attack()
     {
-
+        enemyStateMachine.OnEnemyAttack();
     }
 }

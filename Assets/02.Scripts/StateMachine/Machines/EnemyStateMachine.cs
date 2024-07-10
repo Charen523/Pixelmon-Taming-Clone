@@ -6,7 +6,9 @@ public class EnemyStateMachine : StateMachine
     [Header("EnemyStateMachine")]
     [SerializeField] private Enemy enemy;
     public GameObject target;
-    
+
+    public Action playerDie, stageClear, stageTimeOut, targetReached;
+
     #region Enemy States
     public EnemyIdleState IdleState { get; private set; }
     public EnemyChaseState ChaseState {  get; private set; }
@@ -35,13 +37,15 @@ public class EnemyStateMachine : StateMachine
 
         MovementSpeed = enemy.data.spd;
 
+        IdleState = new EnemyIdleState(this);
         ChaseState = new EnemyChaseState(this);
         AttackState = new EnemyAttackState(this);
         DieState = new EnemyDieState(this);
 
-        GameManager.Instance.OnPlayerDie += () => ChangeState(IdleState);
-        GameManager.Instance.OnStageTimeOut += () => ChangeState(IdleState);
-        ChaseState.OnTargetReached += () => ChangeState(AttackState);
+        GameManager.Instance.OnPlayerDie += playerDie = () => ChangeState(IdleState);
+        GameManager.Instance.OnStageClear += stageClear = () => ChangeState(IdleState);
+        GameManager.Instance.OnStageTimeOut += stageTimeOut = () => ChangeState(IdleState);
+        ChaseState.OnTargetReached += targetReached = () => ChangeState(AttackState);
 
         ChangeState(ChaseState);
     }
