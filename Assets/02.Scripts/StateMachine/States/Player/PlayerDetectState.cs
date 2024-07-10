@@ -26,6 +26,12 @@ public class PlayerDetectState : IdleState
         playerStateMachine.StartCoroutine(DetectClosestTargetCoroutine());
     }
 
+    public override void Exit()
+    {
+        base.Exit();
+        GameManager.Instance.OnStageStart -= playerStateMachine.stageStart;
+    }
+
     private IEnumerator DetectClosestTargetCoroutine()
     {
         currentDetectionRadius = initialDetectionRadius;      
