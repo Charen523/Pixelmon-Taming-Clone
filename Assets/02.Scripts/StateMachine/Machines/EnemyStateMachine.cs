@@ -57,7 +57,7 @@ public class EnemyStateMachine : StateMachine
 
     public void OnEnemyDead()
     {
-        //StageManager.Instance.OnMonsterDead(enemy.data.rcode, gameObject);
+        StageManager.Instance.OnMonsterDead(enemy.data, gameObject);
         gameObject.SetActive(false);
     }
 }
