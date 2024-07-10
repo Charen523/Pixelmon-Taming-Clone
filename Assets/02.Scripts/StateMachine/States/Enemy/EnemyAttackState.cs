@@ -4,7 +4,6 @@ using UnityEngine;
 public class EnemyAttackState : AttackState
 {
     EnemyStateMachine enemyStateMachine;
-    private float attackTime = 0;
 
     public EnemyAttackState(EnemyStateMachine stateMachine)
         : base(stateMachine)
@@ -21,34 +20,33 @@ public class EnemyAttackState : AttackState
     public override void Exit()
     {
         base.Exit();
+        enemyStateMachine.ChaseState.OnTargetReached += enemyStateMachine.targetReached;
     }
 
     public override void Execute()
     {
-        base.Execute();
+        if (!IsAttackRange())
+            enemyStateMachine.ChangeState(enemyStateMachine.ChaseState);
 
-        //if (IsDead())
-        //{
-        //    fsm.ChangeState(fsm.DieState);
-        //    return;
-        //}
-        //else if (!IsAttackRange())
-        //{
-        //    fsm.ChangeState(fsm.ChaseState);
-        //    return;
-        //}
-
-        if (attackTime <= 0)
-        {
-            attackTime = 1f;
-            Attack();
-        }
-
-        attackTime -= Time.deltaTime;
     }
 
     private void Attack()
     {
         enemyStateMachine.OnEnemyAttack();
+    }
+
+    private bool IsAttackRange()
+    {
+        Vector2 currentPosition = enemyStateMachine.rb.position;
+        Vector2 targetPosition = Player.Instance.stateMachine.rb.position;
+
+        if (Vector2.Distance(currentPosition, targetPosition) > enemyStateMachine.AttackRange)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 }
