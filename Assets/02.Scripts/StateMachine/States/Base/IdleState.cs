@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class IdleState : BaseState
 {
-    public IdleState(StateMachine stateMachine)
-        : base(stateMachine)
+    public IdleState(FSM fsm)
+        : base(fsm)
     {
     }
 
     public override void Enter()
     {
-        StartAnimation(stateMachine.animData.IdleParameterHash);
+        StartAnimation(fsm.animData.IdleParameterHash);
     }
 
     public override void Execute()
@@ -21,6 +21,6 @@ public class IdleState : BaseState
 
     public override void Exit()
     {
-        StopAnimation(stateMachine.animData.IdleParameterHash);
+        StopAnimation(fsm.animData.IdleParameterHash);
     }
 }

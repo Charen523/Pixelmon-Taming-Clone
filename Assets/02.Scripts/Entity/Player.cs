@@ -1,42 +1,55 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 public class Player : Singleton<Player>
 {
     public PlayerData data;
-    public PlayerStateMachine stateMachine;
+    public PlayerFSM fsm;
     public PlayerHealthSystem healthSystem;
 
-    [Header("Animations")]
+    [Header("LocatedPixelmon")]
     public float radius = 2.0f;
     public int currentPixelmonCount;
-
-    public Pixelmon[] pixelmons = new Pixelmon[5];
-
-    public event Action OnPlayerMove, OnReStartStage;
-    public Action reStartStage, playerMove, targetReached;
+    public List<Pixelmon> pixelmons = new List<Pixelmon>(5);
 
     private void Start()
     {
+        fsm.Init();
         LocatedPixelmon();
-        SubscribePixelmons();
     }
 
-    public void NotifyPlayerMove()
+    private void Update()
     {
-        OnPlayerMove?.Invoke();
+        fsm.Update();
     }
 
-    private void SubscribePixelmons()
+    public void ChangePixelmonsState(PixelmonState newState)
     {
-        foreach (var pixelmon in pixelmons)
+        foreach (Pixelmon pixelmon in pixelmons)
         {
-            if (pixelmon != null)
+            switch (newState)
             {
-                OnReStartStage += reStartStage = () => pixelmon.StateMachine.ChangeState(pixelmon.StateMachine.IdleState);
-                OnPlayerMove += playerMove = () => pixelmon.StateMachine.ChangeState(pixelmon.StateMachine.MoveState);
-                stateMachine.MoveState.OnTargetReached += targetReached = () => pixelmon.StateMachine.ChangeState(pixelmon.StateMachine.AttackState);
+                case PixelmonState.Attack:
+                    pixelmon.fsm.ChangeState(pixelmon.fsm.AttackState);
+                    break;
+                case PixelmonState.Idle:
+                    pixelmon.fsm.ChangeState(pixelmon.fsm.IdleState);
+                    break;
+                case PixelmonState.Move:
+                    pixelmon.fsm.ChangeState(pixelmon.fsm.MoveState);
+                    break;
             }
+        }
+    }
+
+    public void SetPixelmonsTarget(GameObject target)
+    {
+        foreach(Pixelmon pixelmon in pixelmons)
+        {
+            pixelmon.fsm.target = target;
         }
     }
 

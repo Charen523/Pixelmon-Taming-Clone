@@ -4,22 +4,16 @@ using UnityEngine;
 
 public class PlayerFailState : FailState
 {
-    private PlayerStateMachine playerStateMachine;
-    public PlayerFailState(PlayerStateMachine stateMachine)
-        : base(stateMachine)
+    private new PlayerFSM fsm;
+    public PlayerFailState(PlayerFSM fsm)
+        : base(fsm)
     {
-        playerStateMachine = stateMachine;
+        this.fsm = fsm;
     }
 
-    public override void Enter() 
-    { 
+    public override void Enter()
+    {
         base.Enter();
-        GameManager.Instance.OnStageTimeOut -= playerStateMachine.stageTimeOut;
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
-        GameManager.Instance.OnStageTimeOut += playerStateMachine.stageTimeOut;
+        Player.Instance.ChangePixelmonsState(PixelmonState.Idle);
     }
 }

@@ -6,3 +6,10 @@
 //    Pixelmon,
 //    Item
 //}
+
+public enum PixelmonState
+{
+    Idle,
+    Move,
+    Attack
+}

@@ -4,23 +4,16 @@ using UnityEngine;
 
 public class PlayerIdleState : IdleState
 {
-    private PlayerStateMachine playerStateMachine;
-    public PlayerIdleState(PlayerStateMachine stateMachine)
-        : base(stateMachine)
+    private new PlayerFSM fsm;
+    public PlayerIdleState(PlayerFSM fsm)
+        : base(fsm)
     {
-        playerStateMachine = stateMachine;
+        this.fsm = fsm;
     }
 
     public override void Enter()
     {
         base.Enter();
-        GameManager.Instance.OnStageClear -= playerStateMachine.stageClear;
-        playerStateMachine.MoveState.OnTargetReached -= playerStateMachine.targetReached;
-    }
-    public override void Exit()
-    {
-        base.Exit();
-        GameManager.Instance.OnStageClear += playerStateMachine.stageClear;
-        playerStateMachine.MoveState.OnTargetReached += playerStateMachine.targetReached;
+        Player.Instance.ChangePixelmonsState(PixelmonState.Idle);
     }
 }

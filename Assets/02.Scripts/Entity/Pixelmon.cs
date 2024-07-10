@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class Pixelmon : MonoBehaviour
 {
-    // 픽셀몬 데이터 필요
-    public PixelmonStateMachine StateMachine;
-    private void Awake()
+    public PixelmonData data;
+    public PixelmonFSM fsm;
+    private void Start()
     {
-        StateMachine.InitPixelmon(this);
+        fsm.InitStates();
+    }
+    private void Update()
+    {
+        fsm.Update();
     }
 }
