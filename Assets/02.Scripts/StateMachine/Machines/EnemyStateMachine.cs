@@ -36,7 +36,7 @@ public class EnemyStateMachine : StateMachine
         MovementSpeed = enemy.data.spd;
         AttackRange = 2f;
 
-        ChaseState = new EnemyChaseState(this, target.transform);
+        ChaseState = new EnemyChaseState(this);
         AttackState = new EnemyAttackState(this);
         DieState = new EnemyDieState(this);
 
