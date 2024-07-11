@@ -46,6 +46,7 @@ public class PlayerFSM : FSM
     {
         GameManager.Instance.NotifyStageStart();
         Player.Instance.healthSystem.InitHealth();
+        joystick.gameObject.SetActive(true);
         ChangeState(DetectState);
     }
 
