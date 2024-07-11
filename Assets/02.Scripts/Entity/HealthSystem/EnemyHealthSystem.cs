@@ -4,7 +4,13 @@ using UnityEngine;
 public class EnemyHealthSystem : HealthSystem
 {
     [SerializeField] private Enemy enemy;
-    
+
+    private void OnEnable()
+    {
+        maxHealth = enemy.data.hp;
+        currentHealth = maxHealth;
+    }
+
     private void Start()
     {
         if (enemy == null)
@@ -16,9 +22,6 @@ public class EnemyHealthSystem : HealthSystem
                 Debug.LogError($"{gameObject.name} 객체에 Enemy 클래스 없음!");
             }
         }
-
-        maxHealth = enemy.data.hp;
-        currentHealth = maxHealth;
     }
 
 
