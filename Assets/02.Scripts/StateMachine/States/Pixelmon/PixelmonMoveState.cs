@@ -15,7 +15,6 @@ public class PixelmonMoveState : MoveState
 
     public override void Execute()
     {
-        if (fsm.target == null) Debug.Log("Pixelmons Target is Null");
         base.Execute();
     }
 }
