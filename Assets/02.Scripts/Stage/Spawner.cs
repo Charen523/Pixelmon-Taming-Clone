@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -27,10 +24,9 @@ public class Spawner : MonoBehaviour
         points.transform.position = RandomPosition;
         Transform[] spawnPoints = points.GetComponentsInChildren<Transform>();
 
-
         foreach(var rcode in rcodes)
         {
-            int rand = UnityEngine.Random.Range(1, 6);
+            int rand = Random.Range(1, 4);
 
             for(int i = 0; i < rand; i++)
             {
@@ -47,7 +43,6 @@ public class Spawner : MonoBehaviour
     Vector2 GetRandomPositionCollider(Collider2D collider)
     {
         Bounds bounds = collider.bounds;
-        return new Vector2(UnityEngine.Random.Range(bounds.min.x, bounds.max.x), (UnityEngine.Random.Range(bounds.min.y, bounds.max.y)));
+        return new Vector2(Random.Range(bounds.min.x, bounds.max.x), (Random.Range(bounds.min.y, bounds.max.y)));
     }
-
 }
