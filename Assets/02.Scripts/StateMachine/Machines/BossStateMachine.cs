@@ -1,5 +1,5 @@
 
-public class BossStateMachine : EnemyStateMachine
+public class BossStateMachine : EnemyFSM
 {
 
 }

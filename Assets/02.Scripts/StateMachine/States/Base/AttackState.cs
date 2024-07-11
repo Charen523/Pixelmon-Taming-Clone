@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class AttackState : BaseState
 {
-    public AttackState(StateMachine stateMachine) 
+    public AttackState(FSM stateMachine) 
         : base(stateMachine)
     {
     }
 
     public override void Enter()
     {
-        StartAnimation(stateMachine.animData.AttackParameterHash);
+        StartAnimation(fsm.animData.AttackParameterHash);
     }
 
     public override void Execute()
@@ -20,6 +20,6 @@ public class AttackState : BaseState
 
     public override void Exit()
     {
-        StopAnimation(stateMachine.animData.AttackParameterHash);
+        StopAnimation(fsm.animData.AttackParameterHash);
     }
 }

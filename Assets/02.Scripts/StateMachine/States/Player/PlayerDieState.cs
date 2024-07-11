@@ -1,10 +1,16 @@
 public class PlayerDieState : DieState
 {
-    PlayerStateMachine PlayerStateMachine;
-    public PlayerDieState(PlayerStateMachine stateMachine) 
-        : base(stateMachine)
+    private new PlayerFSM fsm;
+    public PlayerDieState(PlayerFSM fsm) 
+        : base(fsm)
     {
-        PlayerStateMachine = stateMachine;
+        this.fsm = fsm;
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+        Player.Instance.ChangePixelmonsState(PixelmonState.Idle);
     }
 
     public override void Exit() 

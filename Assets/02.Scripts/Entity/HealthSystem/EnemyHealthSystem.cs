@@ -24,6 +24,6 @@ public class EnemyHealthSystem : HealthSystem
 
     protected override void NoticeDead()
     {
-        enemy.stateMachine.ChangeState(enemy.stateMachine.DieState);
+        enemy.fsm.ChangeState(enemy.fsm.DieState);
     }
 }

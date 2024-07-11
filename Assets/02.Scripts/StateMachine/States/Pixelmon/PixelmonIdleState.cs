@@ -4,29 +4,11 @@ using UnityEngine;
 
 public class PixelmonIdleState : IdleState
 {
-    private PixelmonStateMachine pixelmonStateMachine;
-    public PixelmonIdleState(PixelmonStateMachine stateMachine)
-        : base(stateMachine)
+    private new PixelmonFSM fsm;
+    public PixelmonIdleState(PixelmonFSM fsm)
+        : base(fsm)
     {
-        pixelmonStateMachine = stateMachine;
-    }
-
-    public override void Enter()
-    {
-        base.Enter();
-        Player.Instance.OnReStartStage -= Player.Instance.reStartStage;
-        GameManager.Instance.OnStageClear -= pixelmonStateMachine.stageClear;
-        GameManager.Instance.OnStageTimeOut -= pixelmonStateMachine.stageTimeOut;
-        GameManager.Instance.OnPlayerDie -= pixelmonStateMachine.playerDie;
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
-        Player.Instance.OnReStartStage += Player.Instance.reStartStage;
-        GameManager.Instance.OnStageClear += pixelmonStateMachine.stageClear;
-        GameManager.Instance.OnStageTimeOut += pixelmonStateMachine.stageTimeOut;
-        GameManager.Instance.OnPlayerDie += pixelmonStateMachine.playerDie;
+        this.fsm = fsm;
     }
 
     /*

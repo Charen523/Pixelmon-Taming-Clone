@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class StateMachine : MonoBehaviour
+public class FSM : MonoBehaviour
 {
     protected IState currentState;
 
@@ -9,26 +9,25 @@ public class StateMachine : MonoBehaviour
     public Animator anim;
     public AnimationData animData = new AnimationData();
 
-    [Header("Physics")]
     public Rigidbody2D rb;
+    public GameObject target;
 
-    public float MovementSpeed = 2f;
-    public float AttackRange = 2f;
-
-    public void ChangeState(IState newState)
+    public virtual void ChangeState(IState newState)
     {
-        currentState?.Exit();
+        if (currentState != null)
+            currentState?.Exit();
         currentState = newState;
         currentState?.Enter();
     }
 
-    protected virtual void Awake()
+    public virtual void Awake()
     {
         animData.Initialize();
     }
 
-    private void Update()
+    public virtual void Update()
     {
-        currentState?.Execute();
+        if (currentState != null)
+            currentState?.Execute();
     }
 }

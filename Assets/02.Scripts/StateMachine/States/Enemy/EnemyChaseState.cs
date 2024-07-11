@@ -3,18 +3,17 @@ using UnityEngine;
 
 public class EnemyChaseState : MoveState
 {
-    EnemyStateMachine enemyStateMachine;
+    private new EnemyFSM fsm;
 
-    public EnemyChaseState(EnemyStateMachine stateMachine) 
-        : base(stateMachine)
+    public EnemyChaseState(EnemyFSM fsm) 
+        : base(fsm)
     {
-        enemyStateMachine = stateMachine;
+        this.fsm = fsm;
     }
 
     public override void Execute()
     {
-        targetTransform = Player.Instance.transform;
-        isFlipEnemy = true;
         base.Execute();
+        MoveTowardsTarget(fsm.enemy.data.spd, fsm.enemy.data.atkRange, fsm.AttackState);
     }
 }

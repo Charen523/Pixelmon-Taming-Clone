@@ -1,53 +1,47 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
-public class PlayerStateMachine : StateMachine
+public class PlayerFSM : FSM
 {
-    public Player Player { get; private set; }
     public string EnemyTag = "Enemy";
-
-    public Vector2 MovementInput { get; set; }
-
-    public Action stageClear, stageTimeOut, targetReached;
 
     #region Player States
     public PlayerIdleState IdleState { get; private set; }
     public PlayerFailState FailState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
     public PlayerDieState DieState { get; private set; }
-    public PlayerDetectState DetectState;
+    public PlayerAttackState AttackState { get; private set; }
+    public PlayerDetectState DetectState { get; private set; }
     #endregion
 
+    #region Player Input
+    public Vector2 MovementInput { get; set; }
     public FloatingJoystick joystick;
     private Coroutine activeMovementCoroutine;
     public bool isActiveMove; //능동 움직임 플래그.
+    #endregion
 
-    private void Start()
+    #region Player Detect
+    public float initialDetectionRadius = 4; // 초기 탐지 반경 설정
+    public float maxDetectionRadius = 10; // 최대 탐지 반경 설정
+    public float radiusIncrement = 2; // 탐지 반경 증가 값
+    #endregion
+
+    public void Init()
     {
-        Player = Player.Instance;
         IdleState = new PlayerIdleState(this);
-        DetectState = new PlayerDetectState(this);
-        MoveState = new PlayerMoveState(this);
         FailState = new PlayerFailState(this);
+        MoveState = new PlayerMoveState(this);
+        DetectState = new PlayerDetectState(this);
         DieState = new PlayerDieState(this);
+        AttackState = new PlayerAttackState(this);
 
-        GameManager.Instance.OnStageClear += stageClear = () => ChangeState(IdleState);
-        GameManager.Instance.OnStageTimeOut += stageTimeOut = () => ChangeState(FailState);
-        MoveState.OnTargetReached += targetReached = () => ChangeState(IdleState);
         joystick.OnJoystickVisible += JoystickChecker;
 
         ChangeState(DetectState);
     }
 
-    public void ReStartPlayer()
-    {
-        Player.healthSystem.InitHealth();
-        Player.reStartStage?.Invoke();
-        ChangeState(DetectState);
-    }
 
     // Gizmos를 사용하여 탐지 반경을 시각적으로 표시
     private void OnDrawGizmos()

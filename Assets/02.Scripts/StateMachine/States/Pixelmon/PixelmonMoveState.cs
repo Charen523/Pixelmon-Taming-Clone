@@ -6,26 +6,16 @@ using UnityEngine.InputSystem;
 
 public class PixelmonMoveState : MoveState
 {
-    public PixelmonMoveState(PixelmonStateMachine stateMachine) 
-        : base(stateMachine)
+    private new PixelmonFSM fsm;
+    public PixelmonMoveState(PixelmonFSM fsm) 
+        : base(fsm)
     {
-    }
-
-    public override void Enter()
-    {
-        base.Enter();
-        Player.Instance.OnPlayerMove -= Player.Instance.playerMove;
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
-        Player.Instance.OnPlayerMove += Player.Instance.playerMove;
+        this.fsm = fsm;
     }
 
     public override void Execute()
     {
-        targetTransform = Player.Instance.stateMachine.MoveState.targetTransform;
-        Flip();
+        if (fsm.target == null) Debug.Log("Pixelmons Target is Null");
+        base.Execute();
     }
 }

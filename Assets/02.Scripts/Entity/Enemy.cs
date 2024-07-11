@@ -4,18 +4,18 @@ using UnityEngine;
 public class Enemy : SerializedMonoBehaviour
 {
     public EnemyData data;
-    public EnemyStateMachine stateMachine;
+    public EnemyFSM fsm;
     public EnemyHealthSystem healthSystem;
 
     private void Start()
     {
         data = DataManager.Instance.GetData<EnemyData>("ENY00101");
         
-        if (stateMachine == null)
+        if (fsm == null)
         {
-            GetComponent<EnemyStateMachine>();
+            GetComponent<EnemyFSM>();
 
-            if (stateMachine == null)
+            if (fsm == null)
             {
                 Debug.LogError($"{gameObject.name} 객체에 stateMachine 부여되지 않음!");
             }
@@ -33,6 +33,11 @@ public class Enemy : SerializedMonoBehaviour
 
         //임시
         data.dmg = data.atk;
+        fsm.Init();
+    }
+    private void Update()
+    {
+        fsm.Update();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class FailState : BaseState
 {
-    public FailState(StateMachine stateMachine)
-        : base(stateMachine)
+    public FailState(FSM fsm)
+        : base(fsm)
     {
     }
 
     public override void Enter()
     {
-        StartAnimation(stateMachine.animData.FailParameterHash);
+        StartAnimation(fsm.animData.FailParameterHash);
     }
 
     public override void Execute()
@@ -21,6 +21,6 @@ public class FailState : BaseState
 
     public override void Exit()
     {
-        StopAnimation(stateMachine.animData.FailParameterHash);
+        StopAnimation(fsm.animData.FailParameterHash);
     }
 }
