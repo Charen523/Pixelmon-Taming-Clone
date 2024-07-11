@@ -74,6 +74,7 @@ public class StageManager : Singleton<StageManager>
         BossStageCondition = new WaitUntil(() => CheckedBossStage());
         monsterDead += MonsterDead;
         GameManager.Instance.OnPlayerDie += OnPlayerDead;
+        GameManager.Instance.OnStageStart += StageInitialize;
         StageInitialize();
     }
 
@@ -84,7 +85,6 @@ public class StageManager : Singleton<StageManager>
 
     public void StageInitialize()
     {
-        GameManager.Instance.NotifyStageStart();
         LoadData();
         //UI초기화
         InitStageUI();
@@ -234,7 +234,7 @@ public class StageManager : Singleton<StageManager>
             clearTxt.text = string.Format("{0}%", percent);
             spawner.isActivatedEnemy.Remove(enemyGo);
         }
-        InventoryManager.Instance.DropItem(enemyData.rewardType, enemyData.rewardRate, enemyData.rewardValue);
+        //InventoryManager.Instance.DropItem(enemyData.rewardType, enemyData.rewardRate, enemyData.rewardValue);
     }
 
     public void OnPlayerDead()
@@ -250,7 +250,6 @@ public class StageManager : Singleton<StageManager>
 
         ReturnPools();
         ToNextStage(-1);
-        StageInitialize();
 
         isPlayerDeadHandled = false;
     }

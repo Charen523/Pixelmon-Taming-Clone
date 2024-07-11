@@ -42,6 +42,14 @@ public class PlayerFSM : FSM
         ChangeState(DetectState);
     }
 
+    public void NotifyPlayerDie()
+    {
+        GameManager.Instance.NotifyStageStart();
+        Player.Instance.healthSystem.InitHealth();
+        joystick.gameObject.SetActive(true);
+        ChangeState(DetectState);
+    }
+
 
     // Gizmos를 사용하여 탐지 반경을 시각적으로 표시
     private void OnDrawGizmos()
@@ -77,6 +85,14 @@ public class PlayerFSM : FSM
         while (isActiveMove)
         {
             MovementInput = joystick.Direction;
+            if(MovementInput.x < 0)
+            {
+                gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
+            }
+            else
+            {
+                gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
+            }
             yield return null;
         }
     }

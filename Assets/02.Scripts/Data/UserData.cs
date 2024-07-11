@@ -16,4 +16,5 @@ public class UserData
     public int dungeonKeyA;
     public int dungeonKeyB;
     public int dungeonKeyC;
+    public PlayerData data;
 }

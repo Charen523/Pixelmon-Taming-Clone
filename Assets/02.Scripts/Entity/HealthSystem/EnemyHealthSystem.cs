@@ -4,7 +4,12 @@ using UnityEngine;
 public class EnemyHealthSystem : HealthSystem
 {
     [SerializeField] private Enemy enemy;
-    
+
+    private void OnEnable()
+    {
+        initEnemyHealth();
+    }
+
     private void Start()
     {
         if (enemy == null)
@@ -17,10 +22,14 @@ public class EnemyHealthSystem : HealthSystem
             }
         }
 
+        initEnemyHealth();
+    }
+
+    private void initEnemyHealth()
+    {
         maxHealth = enemy.data.hp;
         currentHealth = maxHealth;
     }
-
 
     protected override void NoticeDead()
     {

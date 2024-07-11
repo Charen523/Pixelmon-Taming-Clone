@@ -19,7 +19,7 @@ public class DieState : BaseState
     }
 
     public override void Exit()
-    {
+    {    
         StopAnimation(fsm.animData.DieParameterHash);
     }
 }
