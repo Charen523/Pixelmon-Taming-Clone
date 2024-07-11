@@ -38,16 +38,22 @@ public class PlayerFSM : FSM
         AttackState = new PlayerAttackState(this);
 
         joystick.OnJoystickVisible += JoystickChecker;
+        GameManager.Instance.OnStageClear += ReStartPlayer;
 
+        ChangeState(DetectState);
+    }
+
+    public void ReStartPlayer()
+    {
+        Player.Instance.healthSystem.InitHealth();
         ChangeState(DetectState);
     }
 
     public void NotifyPlayerDie()
     {
         GameManager.Instance.NotifyStageStart();
-        Player.Instance.healthSystem.InitHealth();
         joystick.gameObject.SetActive(true);
-        ChangeState(DetectState);
+        ReStartPlayer();
     }
 
 
@@ -61,7 +67,7 @@ public class PlayerFSM : FSM
         }
     }
 
-    private void JoystickChecker(bool isActivated)
+    public void JoystickChecker(bool isActivated)
     {
         if (isActivated && currentState != DieState)
         {
@@ -95,5 +101,11 @@ public class PlayerFSM : FSM
             }
             yield return null;
         }
+    }
+
+    private void OnDestroy()
+    {
+        joystick.OnJoystickVisible -= JoystickChecker;
+        GameManager.Instance.OnStageClear -= ReStartPlayer;
     }
 }
