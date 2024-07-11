@@ -134,6 +134,7 @@ public class StageManager : Singleton<StageManager>
             ToNextStage();
         yield return waitTime;
         StageInitialize();
+        GameManager.Instance.NotifyStageClear();
     }
 
     private bool NormalStage()
@@ -188,6 +189,7 @@ public class StageManager : Singleton<StageManager>
         }
         spawner.isActivatedEnemy.Clear();
         spawnCount = 0;
+        killedCount = 0;
     }
     #endregion
 
@@ -229,9 +231,10 @@ public class StageManager : Singleton<StageManager>
         else
         {
             killedCount++;
-            float percent = killedCount / Data.nextStageCount;
-            clearBar.fillAmount = percent;
-            clearTxt.text = string.Format("{0}%", percent);
+            spawnCount--;
+            float percent = (float)killedCount / (float)Data.nextStageCount;
+            clearBar.fillAmount = (float)percent;
+            clearTxt.text = string.Format("{0:F2}%", percent * 100);
             spawner.isActivatedEnemy.Remove(enemyGo);
         }
         //InventoryManager.Instance.DropItem(enemyData.rewardType, enemyData.rewardRate, enemyData.rewardValue);
@@ -254,7 +257,7 @@ public class StageManager : Singleton<StageManager>
         isPlayerDeadHandled = false;
     }
 
-
+    
 
     #region 다음 스테이지
     public void ToNextStage(int index = 1)
