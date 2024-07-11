@@ -69,5 +69,12 @@ public class InventoryManager : Singleton<InventoryManager>
         if (rand <= rate) return true;
         return false;
     }
+
+    public bool CheckedInventory(string field, int value)
+    {
+        var fields = userData.GetType().GetField(field);
+        if((int)fields.GetValue(userData) >= value) return true;
+        return false;
+    }
 }
 
