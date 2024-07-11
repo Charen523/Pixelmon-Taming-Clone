@@ -5,9 +5,9 @@ public class PlayerData
 {
     public string userId;
     public string nickName;
-    public string hp;
-    public string def;
-    public string eva;
-    public string atkRange;
-    public string spd;
+    public float hp;
+    public float def;
+    public float eva;
+    public float atkRange;
+    public float spd;
 }

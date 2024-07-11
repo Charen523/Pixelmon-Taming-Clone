@@ -3,11 +3,12 @@ using System.Collections;
 
 public class EnemyDieState : DieState
 {
-    EnemyStateMachine enemyStateMachine;
+    private new EnemyFSM fsm;
 
-    public EnemyDieState(EnemyStateMachine stateMachine) : base(stateMachine)
+    public EnemyDieState(EnemyFSM fsm) 
+        : base(fsm)
     {
-        enemyStateMachine = stateMachine;
+        this.fsm = fsm;
     }
 
     public override void Enter()

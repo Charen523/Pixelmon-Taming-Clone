@@ -8,6 +8,7 @@ public class EnemyData : IData
     public string name;
     public string spawnWorldId;
     public bool isBoss;
+    public float atkRange;
     public float atk;
     public float hp;
     public float def;

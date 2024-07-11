@@ -3,44 +3,27 @@ using UnityEngine;
 
 public class EnemyAttackState : AttackState
 {
-    EnemyStateMachine enemyStateMachine;
+    private new EnemyFSM fsm;
 
-    public EnemyAttackState(EnemyStateMachine stateMachine)
-        : base(stateMachine)
+    public EnemyAttackState(EnemyFSM fsm)
+        : base(fsm)
     {
-        enemyStateMachine = stateMachine;
-    }
-
-    public override void Enter()
-    {
-        base.Enter();
-        enemyStateMachine.ChaseState.OnTargetReached -= enemyStateMachine.targetReached;
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
-        enemyStateMachine.ChaseState.OnTargetReached += enemyStateMachine.targetReached;
+        this.fsm = fsm;
     }
 
     public override void Execute()
     {
         if (!IsAttackRange())
-            enemyStateMachine.ChangeState(enemyStateMachine.ChaseState);
+            fsm.ChangeState(fsm.ChaseState);
 
-    }
-
-    private void Attack()
-    {
-        enemyStateMachine.OnEnemyAttack();
     }
 
     private bool IsAttackRange()
     {
-        Vector2 currentPosition = enemyStateMachine.rb.position;
-        Vector2 targetPosition = Player.Instance.stateMachine.rb.position;
+        Vector2 currentPosition = fsm.rb.position;
+        Vector2 targetPosition = Player.Instance.fsm.rb.position;
 
-        if (Vector2.Distance(currentPosition, targetPosition) > enemyStateMachine.AttackRange)
+        if (Vector2.Distance(currentPosition, targetPosition) > fsm.enemy.data.atkRange)
         {
             return false;
         }

@@ -1,16 +1,12 @@
 using System;
 using UnityEngine;
 
-public class EnemyStateMachine : StateMachine
+public class EnemyFSM : FSM
 {
-    [Header("EnemyStateMachine")]
-    [SerializeField] private Enemy enemy;
-    public GameObject target;
-
-    public Action playerDie, stageClear, stageTimeOut, targetReached;
+    public Enemy enemy;   
 
     #region Enemy States
-    public EnemyIdleState IdleState { get; private set; }
+    public IdleState IdleState { get; private set; }
     public EnemyChaseState ChaseState {  get; private set; }
     public EnemyAttackState AttackState { get; private set; }
     public EnemyDieState DieState { get; private set; }
@@ -33,19 +29,14 @@ public class EnemyStateMachine : StateMachine
             }
         }
 
-        target = Player.Instance.gameObject;
-
-        MovementSpeed = enemy.data.spd;
-
-        IdleState = new EnemyIdleState(this);
+        target = Player.Instance.gameObject;  
+    }
+    public void Init()
+    {
+        IdleState = new IdleState(this);
         ChaseState = new EnemyChaseState(this);
         AttackState = new EnemyAttackState(this);
         DieState = new EnemyDieState(this);
-
-        GameManager.Instance.OnPlayerDie += playerDie = () => ChangeState(IdleState);
-        GameManager.Instance.OnStageClear += stageClear = () => ChangeState(IdleState);
-        GameManager.Instance.OnStageTimeOut += stageTimeOut = () => ChangeState(IdleState);
-        ChaseState.OnTargetReached += targetReached = () => ChangeState(AttackState);
 
         ChangeState(ChaseState);
     }

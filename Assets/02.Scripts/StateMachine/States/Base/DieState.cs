@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class DieState : BaseState
 {
-    public DieState(StateMachine stateMachine) 
-        : base(stateMachine)
+    public DieState(FSM fsm) 
+        : base(fsm)
     {
     }
 
     public override void Enter()
     {
-        StartAnimation(stateMachine.animData.DieParameterHash);
+        StartAnimation(fsm.animData.DieParameterHash);
     }
 
     public override void Execute()
@@ -20,6 +20,6 @@ public class DieState : BaseState
 
     public override void Exit()
     {
-        StopAnimation(stateMachine.animData.DieParameterHash);
+        StopAnimation(fsm.animData.DieParameterHash);
     }
 }
