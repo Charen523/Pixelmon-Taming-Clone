@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class PlayerDieState : DieState
 {
     private new PlayerFSM fsm;
@@ -11,11 +13,8 @@ public class PlayerDieState : DieState
     {
         base.Enter();
         Player.Instance.ChangePixelmonsState(PixelmonState.Idle);
-    }
-
-    public override void Exit() 
-    { 
-        base.Exit();
-        GameManager.Instance.NotifyPlayerDie(); 
+        GameManager.Instance.NotifyPlayerDie();
+        fsm.isActiveMove = false;
+        fsm.rb.velocity = Vector2.zero;
     }
 }

@@ -50,5 +50,6 @@ public class EnemyFSM : FSM
     {
         StageManager.Instance.OnMonsterDead(enemy.data, gameObject);
         gameObject.SetActive(false);
+        target.GetComponent<PlayerFSM>().target = null;
     }
 }
