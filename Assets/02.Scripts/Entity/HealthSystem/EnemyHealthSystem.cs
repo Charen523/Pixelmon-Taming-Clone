@@ -7,8 +7,7 @@ public class EnemyHealthSystem : HealthSystem
 
     private void OnEnable()
     {
-        maxHealth = enemy.data.hp;
-        currentHealth = maxHealth;
+        initEnemyHealth();
     }
 
     private void Start()
@@ -22,8 +21,15 @@ public class EnemyHealthSystem : HealthSystem
                 Debug.LogError($"{gameObject.name} 객체에 Enemy 클래스 없음!");
             }
         }
+
+        initEnemyHealth();
     }
 
+    private void initEnemyHealth()
+    {
+        maxHealth = enemy.data.hp;
+        currentHealth = maxHealth;
+    }
 
     protected override void NoticeDead()
     {
