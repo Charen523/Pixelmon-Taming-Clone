@@ -134,6 +134,7 @@ public class StageManager : Singleton<StageManager>
             ToNextStage();
         yield return waitTime;
         StageInitialize();
+        GameManager.Instance.NotifyStageClear();
     }
 
     private bool NormalStage()
@@ -231,9 +232,9 @@ public class StageManager : Singleton<StageManager>
         {
             killedCount++;
             spawnCount--;
-            float percent = killedCount / Data.nextStageCount * 100;
-            clearBar.fillAmount = percent;
-            clearTxt.text = string.Format("{0}%", percent);
+            float percent = (float)killedCount / (float)Data.nextStageCount;
+            clearBar.fillAmount = (float)percent;
+            clearTxt.text = string.Format("{0:F2}%", percent * 100);
             spawner.isActivatedEnemy.Remove(enemyGo);
         }
         //InventoryManager.Instance.DropItem(enemyData.rewardType, enemyData.rewardRate, enemyData.rewardValue);
