@@ -39,7 +39,7 @@ public class InventoryManager : Singleton<InventoryManager>
         isDirty = true;
     }
 
-    public void SetData(string field, int value)
+    public void SetAddData(string field, int value)
     {
         var fields = userData.GetType().GetField(field);
         int val = (int)fields.GetValue(userData) + value;
@@ -53,14 +53,14 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             if (CheckedDropRate(rates[i]))
             {
-                SetData(dataManager.GetData<RewardData>(rcodes[i]).name, amounts[i]);
+                SetAddData(dataManager.GetData<RewardData>(rcodes[i]).name, amounts[i]);
             }
         }
     }
 
     public void UseGold(int amount)
     {
-        SetData(nameof(userData.money), userData.money - amount);
+        SetAddData(nameof(userData.money), userData.money - amount);
     }
 
     public bool CheckedDropRate(float rate)
