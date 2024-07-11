@@ -1,4 +1,5 @@
 using System;
+using UnityEngine.Events;
 
 [Serializable]
 public class PixelmonData : IData
@@ -13,5 +14,6 @@ public class PixelmonData : IData
     public float atkDmg;
     public float hit;
 
+    public UnityAction activeSkill;
     string IData.Rcode => rcode;  // 명시적 인터페이스 구현
 }
