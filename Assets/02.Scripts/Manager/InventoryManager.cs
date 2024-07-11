@@ -76,5 +76,11 @@ public class InventoryManager : Singleton<InventoryManager>
         if((int)fields.GetValue(userData) >= value) return true;
         return false;
     }
+
+    //정보 가져오는 용도
+    public List<PixelmonData> GetProssessPixelmons()
+    {
+        return userData.prossessPixelmons;
+    }
 }
 
