@@ -250,7 +250,6 @@ public class StageManager : Singleton<StageManager>
 
         ReturnPools();
         ToNextStage(-1);
-        Player.Instance.stateMachine.ReStartPlayer();
         StageInitialize();
 
         isPlayerDeadHandled = false;
