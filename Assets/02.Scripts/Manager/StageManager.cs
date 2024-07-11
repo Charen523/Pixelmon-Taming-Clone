@@ -188,6 +188,7 @@ public class StageManager : Singleton<StageManager>
         }
         spawner.isActivatedEnemy.Clear();
         spawnCount = 0;
+        killedCount = 0;
     }
     #endregion
 
@@ -229,7 +230,8 @@ public class StageManager : Singleton<StageManager>
         else
         {
             killedCount++;
-            float percent = killedCount / Data.nextStageCount;
+            spawnCount--;
+            float percent = killedCount / Data.nextStageCount * 100;
             clearBar.fillAmount = percent;
             clearTxt.text = string.Format("{0}%", percent);
             spawner.isActivatedEnemy.Remove(enemyGo);
@@ -254,7 +256,7 @@ public class StageManager : Singleton<StageManager>
         isPlayerDeadHandled = false;
     }
 
-
+    
 
     #region 다음 스테이지
     public void ToNextStage(int index = 1)
