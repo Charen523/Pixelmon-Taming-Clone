@@ -56,10 +56,10 @@ public class Player : Singleton<Player>
     private void LocatedPixelmon()
     {
         int angle = 360 / currentPixelmonCount;
-        int currentAngle = 90;
+        int currentAngle = -90;
         for (int i = 0; i < currentPixelmonCount; i++)
         {
-            Vector3 pos = new Vector3(Mathf.Cos(currentAngle * Mathf.Deg2Rad) * radius, Mathf.Sin(currentAngle * Mathf.Deg2Rad) * radius, 0);
+            Vector3 pos = new Vector3(Mathf.Cos(currentAngle * Mathf.Deg2Rad) * radius, Mathf.Sin(currentAngle * Mathf.Deg2Rad) * radius - 0.6f, 0);
             pixelmons[i].transform.position = pos;
             currentAngle += angle;
         }
