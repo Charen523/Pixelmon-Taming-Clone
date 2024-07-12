@@ -28,7 +28,7 @@ public class StageManager : Singleton<StageManager>
     public StageData Data {get; private set;}
     public int spawnCount = 0;
     public int killedCount = 0;
-    private float bossTimer = 30;
+    private float bossTimer;
     private float bossLimitTime = 30;
     //보스 처치여부
     public bool isStageClear = false;
@@ -112,13 +112,14 @@ public class StageManager : Singleton<StageManager>
         yield return normalStageCondition;
         if (Data.stageId == maxStageNum)
         {
-            /*TODO: 보스 rcode처리해야함*/
             stageNum++;
             SetRcode();
+            LoadData();
             stageTitleTxt.text = $"{SetTitleTxt()}{worldNum}- BOSS";
             spawner.RandomSpawnPoint(Data.monsterId, Data.spawnCount);
             clearBar.fillAmount = 1;
             bossTimer = bossLimitTime;
+            GameManager.Instance.NotifyStageClear();
             //보스클리어여부
             yield return BossStageCondition;
             //넥스트
@@ -128,7 +129,10 @@ public class StageManager : Singleton<StageManager>
                 ToNextStage();
             }
             else
+            {
                 ToNextStage(-1);
+                GameManager.Instance.NotifyStageTimeOut();
+            }
         }
         else
             ToNextStage();
@@ -169,13 +173,15 @@ public class StageManager : Singleton<StageManager>
         bossTimer -= Time.deltaTime;
         float percent = bossTimer / bossLimitTime;
         clearBar.fillAmount = percent;
-        clearTxt.text = string.Format("{0:F2}초", percent);
+        clearTxt.text = string.Format("{0:F2}초", bossTimer);
 
         if (bossTimer <= 0)
         {
+            clearTxt.text = string.Format("0초");
+            clearBar.fillAmount = 0;
             ReturnPools();
-            GameManager.Instance.NotifyPlayerDie();
-            StopCoroutine(stageCoroutine);
+            ToNextStage(-1);
+            return true;
         }
         return false;
     }
@@ -256,8 +262,6 @@ public class StageManager : Singleton<StageManager>
 
         isPlayerDeadHandled = false;
     }
-
-    
 
     #region 다음 스테이지
     public void ToNextStage(int index = 1)
