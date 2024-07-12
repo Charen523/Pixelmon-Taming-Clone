@@ -4,7 +4,7 @@ using UnityEditor;
 
 public class AutoBoxCollider : MonoBehaviour
 {
-    [MenuItem("Tools/GameObject/AutoBoxCollider")]
+    [MenuItem("Tools/GameObject/AutoBoxCollider2D")]
     public static void AdjustBounds()
     {
         GameObject selectedGameObject = Selection.activeGameObject;

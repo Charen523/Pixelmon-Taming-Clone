@@ -13,7 +13,7 @@ internal class AddressableUtils : Editor
 {
     const string assetBundlePath = "Assets/AddressableDatas";
 
-    [MenuItem("Addressable/Addressable Build")]
+    [MenuItem("Tools/Addressable/Addressable Build")]
     internal static void BuildAddressable()
     {
         Mapping();
@@ -27,37 +27,37 @@ internal class AddressableUtils : Editor
         File.WriteAllText(path, list);
     }
 
-    [MenuItem("Addressable/Addressable Build And Upload")]
+    [MenuItem("Tools/Addressable/Addressable Build And Upload")]
     internal static void BuildAndUploadAddressable()
     {
         BuildAddressable();
         UploadLastBuild();
     }
 
-    [MenuItem("Addressable/Addressable Upload")]
+    [MenuItem("Tools/Addressable/Addressable Upload")]
     public async static void UploadLastBuild()
     {
         var path = Application.dataPath + "/lastBuildData.txt";
         var uploadList = File.ReadAllText(path).Split('\n').ToList();
-        var type = Util.GetBuildTargetToString();
+        var type = GetBuildTargetToString();
         await DeleteFileinFolder(type);
         await CreateFolder(type);
 
         for (int i = 0; i < uploadList.Count; i++)
         {
-            if(uploadList[i].Length > 0)
+            if (uploadList[i].Length > 0)
                 await Upload(type, uploadList[i].Replace('\\', '/'));
         }
     }
 
     [InitializeOnEnterPlayMode]
-    [MenuItem("Addressable/Mapping")]
+    [MenuItem("Tools/Addressable/Mapping")]
     internal static void Mapping()
     {
         var settings = AddressableAssetSettingsDefaultObject.Settings;
-        foreach(var group in settings.groups)
+        foreach (var group in settings.groups)
         {
-            foreach(var entry in group.entries)
+            foreach (var entry in group.entries)
             {
                 if (!entry.AssetPath.Contains("Assets") || entry.AssetPath.Contains("addressableMap")) continue;
                 var type = (eAddressableType)Enum.Parse(typeof(eAddressableType), group.Name);
@@ -68,20 +68,15 @@ internal class AddressableUtils : Editor
                 File.WriteAllText(newPath, dt);
                 AssetDatabase.ImportAsset(newPath);
             }
-            
+
         }
     }
-   
+
     static AddressableMapData SetMapping(string dir, eAddressableType type)
     {
         var files = Directory.GetFiles(dir).ToList();
         files.RemoveAll(obj => obj.Contains(".meta"));
         AddressableMapData mapData = new AddressableMapData();
-        if (files[0].Contains("addressableMap"))
-        {
-            mapData = JsonUtility.FromJson<AddressableMapData>(File.ReadAllText(files[0]));
-            files.RemoveAll(obj => mapData.list.Exists(obj2 => obj.Replace("\\", "/").Contains(obj2.path)));
-        }
         var dirs = Directory.GetDirectories(dir).ToList();
         foreach (var d in dirs)
         {
@@ -95,13 +90,23 @@ internal class AddressableUtils : Editor
             var data = new AddressableMap();
             data.addressableType = type;
             data.assetType = path.Contains(".png") ? eAssetType.sprite : path.Contains(".json") ? eAssetType.jsondata : eAssetType.prefab;
-            data.key = path.FileName().Split('.').First();
+            data.key = path.Split('/').Last().Split('.')[0].ToLower().Split('.').First();
             data.path = path;
             mapData.Add(data);
         }
         return mapData;
     }
 
+    
+    public static string GetBuildTargetToString()
+    {
+#if UNITY_EDITOR
+        return EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android ? "Android" : EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS ? "IOS" : "StandaloneWindows";
+#endif
+        return Application.platform == RuntimePlatform.Android ? "Android" : Application.platform == RuntimePlatform.IPhonePlayer ? "IOS" : "StandaloneWindows";
+    }
+
+    #region Use NAS Server
     public async static Task DeleteFileinFolder(string type)
     {
         var ftpUrl = new Uri("ftp://localhost/web/Addressable/");
@@ -121,7 +126,7 @@ internal class AddressableUtils : Editor
             reader.Close();
             response.Close();
             res.Dispose();
-            for(int i = 0; i < list.Length; i++)
+            for (int i = 0; i < list.Length; i++)
             {
                 var request2 = WebRequest.Create(ftpUrl + type + "/" + list[i]) as FtpWebRequest;
                 request2.Credentials = new NetworkCredential("wocjf84", "afsd2977");
@@ -227,7 +232,7 @@ internal class AddressableUtils : Editor
         request.KeepAlive = false;
         request.UseBinary = true;
         request.ContentLength = target.Length;
-        
+
         using (var ftpStream = request.GetRequestStream())
         {
             await ftpStream.WriteAsync(target, 0, target.Length);
@@ -255,5 +260,5 @@ internal class AddressableUtils : Editor
             response.Dispose();
         }
     }
-
+    #endregion
 }
