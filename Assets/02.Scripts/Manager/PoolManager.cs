@@ -5,6 +5,7 @@ using UnityEngine;
 public class Pool
 {
     public string tag;
+    public string rcode;
     public GameObject prefab;
     public int size;
 }
@@ -17,6 +18,7 @@ public class PoolManager : Singleton<PoolManager>
     protected override void Awake()
     {
         PoolDictionary = new Dictionary<string, Queue<GameObject>>();
+
         foreach (var pool in Pools)
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
@@ -24,6 +26,10 @@ public class PoolManager : Singleton<PoolManager>
             {
                 GameObject obj = Instantiate(pool.prefab);
                 obj.SetActive(false);
+                if (pool.tag == "Enemy")
+                {
+                    obj.GetComponent<Enemy>().data = DataManager.Instance.GetData<EnemyData>(pool.rcode);
+                }
                 objectPool.Enqueue(obj);
             }
             PoolDictionary.Add(pool.tag, objectPool);

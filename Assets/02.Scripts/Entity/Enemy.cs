@@ -9,8 +9,6 @@ public class Enemy : SerializedMonoBehaviour
 
     private void Start()
     {
-        data = DataManager.Instance.GetData<EnemyData>("ENY00101");
-        
         if (fsm == null)
         {
             GetComponent<EnemyFSM>();
