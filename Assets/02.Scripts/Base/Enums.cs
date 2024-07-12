@@ -5,3 +5,11 @@ public enum PixelmonState
     Move,
     Attack
 }
+
+public enum FieldState
+{
+    Default,
+    Empty,
+    Seeded,
+    Harvest
+}
