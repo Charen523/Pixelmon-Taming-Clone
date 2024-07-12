@@ -12,6 +12,7 @@ public class DieState : BaseState
     public override void Enter()
     {
         StartAnimation(fsm.animData.DieParameterHash);
+        fsm.rb.velocity = Vector3.zero;
     }
 
     public override void Execute()
