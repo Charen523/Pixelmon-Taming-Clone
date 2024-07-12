@@ -28,7 +28,9 @@ public class StageManager : Singleton<StageManager>
     public StageData Data {get; private set;}
     public int spawnCount = 0;
     public int killedCount = 0;
-    private float bossTimer = 30;
+    float stageGage;
+    float processivity = 0;
+    private float bossTimer;
     private float bossLimitTime = 30;
     //보스 처치여부
     public bool isStageClear = false;
@@ -49,6 +51,7 @@ public class StageManager : Singleton<StageManager>
     private int stageNum;
     [SerializeField]
     private int maxStageNum = 5;
+
 
     //리스폰 현재시간
     private float intervalTimer = 0;
@@ -76,6 +79,7 @@ public class StageManager : Singleton<StageManager>
         GameManager.Instance.OnPlayerDie += OnPlayerDead;
         GameManager.Instance.OnStageStart += StageInitialize;
         StageInitialize();
+        StartCoroutine(StageProcessivity());
     }
 
     private void SetRcode()
@@ -112,13 +116,15 @@ public class StageManager : Singleton<StageManager>
         yield return normalStageCondition;
         if (Data.stageId == maxStageNum)
         {
-            /*TODO: 보스 rcode처리해야함*/
+            yield return waitTime;
             stageNum++;
             SetRcode();
+            LoadData();
             stageTitleTxt.text = $"{SetTitleTxt()}{worldNum}- BOSS";
             spawner.RandomSpawnPoint(Data.monsterId, Data.spawnCount);
             clearBar.fillAmount = 1;
             bossTimer = bossLimitTime;
+            GameManager.Instance.NotifyStageClear();
             //보스클리어여부
             yield return BossStageCondition;
             //넥스트
@@ -128,13 +134,16 @@ public class StageManager : Singleton<StageManager>
                 ToNextStage();
             }
             else
+            {
                 ToNextStage(-1);
+                GameManager.Instance.NotifyStageTimeOut();
+            }
         }
         else
             ToNextStage();
+        GameManager.Instance.NotifyStageClear();
         yield return waitTime;
         StageInitialize();
-        GameManager.Instance.NotifyStageClear();
     }
 
     private bool NormalStage()
@@ -169,13 +178,15 @@ public class StageManager : Singleton<StageManager>
         bossTimer -= Time.deltaTime;
         float percent = bossTimer / bossLimitTime;
         clearBar.fillAmount = percent;
-        clearTxt.text = string.Format("{0:F2}초", percent);
+        clearTxt.text = string.Format("{0:F2}초", bossTimer);
 
         if (bossTimer <= 0)
         {
+            clearTxt.text = string.Format("0초");
+            clearBar.fillAmount = 0;
             ReturnPools();
-            GameManager.Instance.NotifyPlayerDie();
-            StopCoroutine(stageCoroutine);
+            ToNextStage(-1);
+            return true;
         }
         return false;
     }
@@ -198,6 +209,8 @@ public class StageManager : Singleton<StageManager>
     {
         stageTitleTxt.text = $"{SetTitleTxt()}{worldNum}-{stageNum:D2}";
         clearBar.fillAmount = 0;
+        stageGage = 0;
+        processivity = 0;
         clearTxt.text = string.Format("0%");
     }
     private string SetTitleTxt()
@@ -232,9 +245,7 @@ public class StageManager : Singleton<StageManager>
         {
             killedCount++;
             spawnCount--;
-            float percent = (float)killedCount / (float)Data.nextStageCount;
-            clearBar.fillAmount = (float)percent;
-            clearTxt.text = string.Format("{0:F2}%", percent * 100);
+            processivity = (float)killedCount / Data.nextStageCount;
             spawner.isActivatedEnemy.Remove(enemyGo);
         }
         //InventoryManager.Instance.DropItem(enemyData.rewardType, enemyData.rewardRate, enemyData.rewardValue);
@@ -257,7 +268,27 @@ public class StageManager : Singleton<StageManager>
         isPlayerDeadHandled = false;
     }
 
-    
+    IEnumerator StageProcessivity()
+    {
+        float time = 0;
+        float duration = 0.5f;
+        while (true) 
+        {
+            if (processivity > stageGage)
+            {
+                time += Time.deltaTime;
+                stageGage = Mathf.Lerp(stageGage, processivity, time / duration);
+                clearBar.fillAmount = stageGage;
+                clearTxt.text = string.Format("{0:F2}%", stageGage * 100);
+            }
+            else
+            {
+                time = 0;
+            }
+            
+            yield return null;
+        }
+    }
 
     #region 다음 스테이지
     public void ToNextStage(int index = 1)
