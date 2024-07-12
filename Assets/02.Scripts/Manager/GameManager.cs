@@ -53,4 +53,13 @@ public class GameManager : Singleton<GameManager>
     {
         OnStageClear?.Invoke();
     }
+
+    private void OnDestroy()
+    {
+        // 이벤트 구독 해제
+        OnPlayerDie = null;
+        OnStageTimeOut = null;
+        OnStageStart = null;
+        OnStageClear = null;
+    }
 }

@@ -102,10 +102,4 @@ public class PlayerFSM : FSM
             yield return null;
         }
     }
-
-    private void OnDestroy()
-    {
-        joystick.OnJoystickVisible -= JoystickChecker;
-        GameManager.Instance.OnStageClear -= ReStartPlayer;
-    }
 }
