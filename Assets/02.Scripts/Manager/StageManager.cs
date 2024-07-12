@@ -286,4 +286,10 @@ public class StageManager : Singleton<StageManager>
         difficultyNum++;
     }
     #endregion
+
+    public void OnDestroy()
+    {
+        GameManager.Instance.OnPlayerDie -= OnPlayerDead;
+        GameManager.Instance.OnStageStart -= StageInitialize;
+    }
 }
