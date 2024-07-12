@@ -25,24 +25,24 @@ public class PoolManager : Singleton<PoolManager>
             for (int i = 0; i < pool.size; i++)
             {
                 GameObject obj = Instantiate(pool.prefab);
-                obj.SetActive(false);
-                if (pool.tag == "Enemy")
+                if (obj.TryGetComponent(out Enemy e))
                 {
-                    obj.GetComponent<Enemy>().data = DataManager.Instance.GetData<EnemyData>(pool.rcode);
+                    e.data = DataManager.Instance.GetData<EnemyData>(pool.rcode);
                 }
+                obj.SetActive(false);
                 objectPool.Enqueue(obj);
             }
-            PoolDictionary.Add(pool.tag, objectPool);
+            PoolDictionary.Add(pool.rcode, objectPool);
         }
     }
 
-    public GameObject SpawnFromPool(string tag)
+    public GameObject SpawnFromPool(string rcode)
     {
-        if (!PoolDictionary.ContainsKey(tag))
+        if (!PoolDictionary.ContainsKey(rcode))
             return null;
 
-        GameObject obj = PoolDictionary[tag].Dequeue();
-        PoolDictionary[tag].Enqueue(obj);
+        GameObject obj = PoolDictionary[rcode].Dequeue();
+        PoolDictionary[rcode].Enqueue(obj);
         obj.SetActive(true);
         return obj;
     }
