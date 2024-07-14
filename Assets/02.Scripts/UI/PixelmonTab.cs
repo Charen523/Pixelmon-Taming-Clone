@@ -58,7 +58,7 @@ public class PixelmonTab : MonoBehaviour
         {
             if (data.pixelmonData.isPossess)
             {
-                prossessData.Add(data);
+                possessData.Add(data);
                 if(data.lockIcon.activeSelf) data.lockIcon.SetActive(false);
             }
             else
