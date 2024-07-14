@@ -25,7 +25,7 @@ public class PixelmonTab : MonoBehaviour
     private List<GameObject> noneData;
     //보유한 픽셀몬 정보
     [SerializeField]
-    private List<PixelmonSlot> prossessData;
+    private List<PixelmonSlot> possessData;
     //편성된 픽셀몬 정보
     [SerializeField]
     private PixelmonSlot[] composedData = new PixelmonSlot[5];
@@ -92,21 +92,20 @@ public class PixelmonTab : MonoBehaviour
 
     }
 
-    public void NextPixelmon(int index = 1)
-    {
-
-    }
-
     public void ChoicePixelmon()
     {
 
     }
     
-    public void Prossess()
+    public void Possess()
     {
         
     }
 
+    public void EnrolledPixelmon()
+    {
+
+    }
     public void EquipSkill()
     {
 
