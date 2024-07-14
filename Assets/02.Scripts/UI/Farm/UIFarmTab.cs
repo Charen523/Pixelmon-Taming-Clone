@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class FarmTab : SerializedMonoBehaviour
+public class UIFarmTab : SerializedMonoBehaviour
 {
     
 }
