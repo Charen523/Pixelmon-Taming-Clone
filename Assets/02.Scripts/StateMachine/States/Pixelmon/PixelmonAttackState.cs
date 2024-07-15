@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class PixelmonAttackState : AttackState
 {
     private new PixelmonFSM fsm;
@@ -9,10 +11,12 @@ public class PixelmonAttackState : AttackState
 
     public override void Execute()
     {
-        //몹이 null이 아니라면 공격 및 스킬
-        if (fsm.target != null)
-        {
-            fsm.target.GetComponent<EnemyHealthSystem>().TakeDamage(fsm.pixelmon.data.atk);
-        }
+        fsm.InvokeAttack(true);
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        fsm.InvokeAttack(false);
     }
 }
