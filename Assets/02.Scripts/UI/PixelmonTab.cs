@@ -18,8 +18,7 @@ public class PixelmonTab : MonoBehaviour
     [SerializeField]
     private InventoryManager inven;
     //전체 픽셀몬 정보
-    [SerializeField]
-    private List<PixelmonSlot> allData;
+    public List<PixelmonSlot> allData;
     //미보유 픽셀몬 정보
     [SerializeField]
     private List<GameObject> noneData;
@@ -97,17 +96,30 @@ public class PixelmonTab : MonoBehaviour
 
     }
     
-    public void Possess()
+    public void Possess(int index)
     {
-        
+        allData[index].pixelmonData.isPossess = true;
     }
 
-    public void EnrolledPixelmon()
+    public void EnrolledPixelmon(int possessIndex, PixelmonData pixelData)
     {
-
+        if (pixelData.isPossess)
+        {
+            for(int i = 0; i < possessData.Count; i++) 
+            {
+                if (possessData[i].pixelmonData == pixelData)
+                {
+                    RemovePossessSlot(i);
+                    break;
+                }
+            }                           
+        }
+        possessData[possessIndex].InitSlot(pixelData);
     }
-    public void EquipSkill()
-    {
 
+    public void RemovePossessSlot(int possessIndex)
+    {
+        possessData[possessIndex].RemoveInfo();
+        possessData[possessIndex] = null;
     }
 }
