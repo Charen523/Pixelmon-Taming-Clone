@@ -19,7 +19,8 @@ public class CanvasGame : MonoBehaviour
         UIManager.SetParents(parents);
         yield return null;
         yield return new WaitUntil(() => DataManager.Instance.isInit);
-        yield return null;
-        yield return UIManager.Show<UIGame>();
+        //GameManager.Instance.InitWorld();
+        //yield return null;
+        //yield return UIManager.Show<UIGame>();
     }
 }
