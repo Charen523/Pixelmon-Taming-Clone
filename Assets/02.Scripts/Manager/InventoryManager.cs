@@ -15,11 +15,11 @@ public class InventoryManager : Singleton<InventoryManager>
     {
         dataManager = DataManager.Instance;
         SaveManager.Instance.LoadFromPrefs(userData);
-        StartCoroutine(ChagnedValue());
+        StartCoroutine(ChangedValue());
         //SetData(nameof(userData.money), 20);
     }
 
-    IEnumerator ChagnedValue()
+    IEnumerator ChangedValue()
     {
         while (true)
         {
@@ -39,7 +39,9 @@ public class InventoryManager : Singleton<InventoryManager>
         isDirty = true;
     }
 
-    public void SetAddData(string field, int value)
+    /// <param name="field">nameof(userData.변수)</param>
+    /// <param name="value">데이터 변화량</param>
+    public void SetDeltaData(string field, int value)
     {
         var fields = userData.GetType().GetField(field);
         int val = (int)fields.GetValue(userData) + value;
@@ -53,14 +55,9 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             if (CheckedDropRate(rates[i]))
             {
-                SetAddData(dataManager.GetData<RewardData>(rcodes[i]).name, amounts[i]);
+                SetDeltaData(dataManager.GetData<RewardData>(rcodes[i]).name, amounts[i]);
             }
         }
-    }
-
-    public void UseGold(int amount)
-    {
-        SetAddData(nameof(userData.money), userData.money - amount);
     }
 
     public bool CheckedDropRate(float rate)
