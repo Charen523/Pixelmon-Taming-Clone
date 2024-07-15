@@ -48,7 +48,7 @@ public class PixelmonTab : MonoBehaviour
 
     public void SetPetfoodCount(int count)
     {
-        inven.SetAddData(nameof(inven.userData.petFood), count);
+        inven.SetDeltaData(nameof(inven.userData.petFood), count);
         seedCountTxt.text = inven.userData.petFood.ToString();
     }
     public void CheckedDate()
