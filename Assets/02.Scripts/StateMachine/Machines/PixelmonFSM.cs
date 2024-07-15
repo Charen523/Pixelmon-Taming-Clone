@@ -33,16 +33,21 @@ public class PixelmonFSM : FSM
 
     private IEnumerator Attack()
     {
-        //몹이 null이 아니라면 공격 및 스킬
-        if (target != null)
+        while (true)
         {
-            Vector2 direction = target.transform.position - transform.position;
-            float damage = pixelmon.data.atkDmg;
-            
-            GameObject projectile = PoolManager.Instance.SpawnFromPool("ATV00000");
-            projectile.GetComponent<ProjectileController>().GetAttackInfo(direction, damage);
+            //몹이 null이 아니라면 공격 및 스킬
+            //기다리는 시간과 날아가는 시간에 대한 보정 필요!!!!!
+            if (target != null)
+            {
+                Vector2 direction = target.transform.position - transform.position;
+                float damage = pixelmon.data.atkDmg;
+                float bulletRange = 2f; //임의의 변수
 
-            yield return attackSpeed;
+                GameObject projectile = PoolManager.Instance.SpawnFromPool("ATV00000");
+                projectile.GetComponent<ProjectileController>().GetAttackSign(transform.position, direction, damage, bulletRange, pixelmon.data.atkSpd);
+                
+                yield return attackSpeed;
+            }
         }
     }
 
