@@ -42,8 +42,9 @@ public class Enemy : SerializedMonoBehaviour
     {
         if (collision.CompareTag("PixelmonProjectile"))
         {
-            //대충 발사체에 등록된 데미지만큼 내 HP 깎아주기.
-            //healthSystem.TakeDamage(발사제 데미지);
+            ProjectileController projectile = collision.gameObject.GetComponent<ProjectileController>();
+            healthSystem.TakeDamage(projectile.projectileDamage);
+            collision.gameObject.SetActive(false);
         }
     }
 }

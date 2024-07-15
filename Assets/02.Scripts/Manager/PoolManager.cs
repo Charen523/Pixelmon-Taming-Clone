@@ -5,9 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class Pool
 {
+    public bool isInitActive;
     public string tag;
     public string rcode;
-    public bool isInitActive;
     public GameObject prefab;
     public int size;
 }
