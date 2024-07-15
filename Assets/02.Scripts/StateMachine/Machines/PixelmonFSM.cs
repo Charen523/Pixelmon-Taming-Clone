@@ -36,7 +36,12 @@ public class PixelmonFSM : FSM
         //몹이 null이 아니라면 공격 및 스킬
         if (target != null)
         {
-            target.GetComponent<EnemyHealthSystem>().TakeDamage(pixelmon.data.atk);
+            Vector2 direction = target.transform.position - transform.position;
+            float damage = pixelmon.data.atkDmg;
+            
+            GameObject projectile = PoolManager.Instance.SpawnFromPool("ATV00000");
+            projectile.GetComponent<ProjectileController>().GetAttackInfo(direction, damage);
+
             yield return attackSpeed;
         }
     }
