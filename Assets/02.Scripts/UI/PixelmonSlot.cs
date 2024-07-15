@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PixelmonSlot : MonoBehaviour
 {
     public PixelmonData pixelmonData;
+    public bool isPossessed => pixelmonData.isPossessed;
     public GameObject lockIcon;
     [SerializeField]
     private Image SlotIcon;
@@ -13,7 +14,7 @@ public class PixelmonSlot : MonoBehaviour
 
     public void InitSlot(PixelmonData data)
     {
-
+        if (lockIcon.activeSelf) lockIcon.SetActive(false);
     }
 
     public void RemoveInfo()
