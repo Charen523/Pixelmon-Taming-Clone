@@ -13,3 +13,10 @@ public enum FieldState
     Seeded,
     Harvest
 }
+
+public enum PassiveType
+{
+    Attack,
+    Buff,
+    Farming
+}
