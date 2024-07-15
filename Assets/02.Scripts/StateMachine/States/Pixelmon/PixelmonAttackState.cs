@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class PixelmonAttackState : AttackState
 {
     private new PixelmonFSM fsm;
@@ -9,6 +11,12 @@ public class PixelmonAttackState : AttackState
 
     public override void Execute()
     {
-        
+        fsm.InvokeAttack(true);
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        fsm.InvokeAttack(false);
     }
 }

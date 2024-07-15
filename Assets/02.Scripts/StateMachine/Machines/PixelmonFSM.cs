@@ -1,5 +1,7 @@
 
 using System;
+using System.Collections;
+using UnityEngine;
 
 public class PixelmonFSM : FSM
 {
@@ -11,6 +13,15 @@ public class PixelmonFSM : FSM
     public PixelmonAttackState AttackState { get; private set; }
     #endregion
 
+    Coroutine attackCoroutine;
+    WaitForSeconds attackSpeed;
+
+    private void Start()
+    {
+        attackSpeed = new WaitForSeconds(1f);
+        //attackSpeed = new WaitForSeconds(pixelmon.data.atkSpd);
+    }
+
     public void InitStates()
     {
         IdleState = new IdleState(this);
@@ -20,12 +31,24 @@ public class PixelmonFSM : FSM
         ChangeState(IdleState);
     }
 
-    public void Attack()
+    private IEnumerator Attack()
     {
         //몹이 null이 아니라면 공격 및 스킬
         if (target != null)
         {
             target.GetComponent<EnemyHealthSystem>().TakeDamage(pixelmon.data.atk);
+            yield return attackSpeed;
+        }
+    }
+
+    public void InvokeAttack(bool isAttack)
+    {
+        if (isAttack)
+        {
+            attackCoroutine = StartCoroutine(Attack());
+        }else if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
         }
     }
 }
