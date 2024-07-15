@@ -76,9 +76,14 @@ public class InventoryManager : Singleton<InventoryManager>
     }
 
     //정보 가져오는 용도
-    public List<PixelmonData> GetProssessPixelmons()
+    public List<PixelmonData> GetPossessPixelmons()
     {
         return userData.prossessPixelmons.ToList();
+    }
+
+    public void SetPossessPixelmons(List<PixelmonData> data) 
+    {
+        SetData(nameof(userData.prossessPixelmons), data.ToArray());
     }
 }
 
