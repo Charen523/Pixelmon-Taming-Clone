@@ -9,22 +9,27 @@ public class PixelmonTab : MonoBehaviour
     [Header("UI")]
     [SerializeField]
     private Toggle prossessToggle;
-    public bool isOnToggle;
 
     [SerializeField]
     private TextMeshProUGUI seedCountTxt;
 
+    [SerializeField]
+    private PixelmonSlot slotPrefab;
+    [SerializeField]
+    private Transform contentTr;
     [Header("Info")]
     [SerializeField]
     private InventoryManager inven;
+    [SerializeField]
+    private DataManager dataManager;
     //전체 픽셀몬 정보
-    public List<PixelmonSlot> allData;
+    public List<PixelmonSlot> allData = new List<PixelmonSlot>();
     //미보유 픽셀몬 정보
     [SerializeField]
-    private List<GameObject> noneData;
+    private List<PixelmonSlot> noneData = new List<PixelmonSlot>();
     //보유한 픽셀몬 정보
     [SerializeField]
-    private List<PixelmonSlot> possessData;
+    private List<PixelmonSlot> possessData = new List<PixelmonSlot>();
     //편성된 픽셀몬 정보
     [SerializeField]
     private PixelmonSlot[] composedData = new PixelmonSlot[5];
@@ -33,11 +38,23 @@ public class PixelmonTab : MonoBehaviour
     void Start()
     {
         inven = InventoryManager.Instance;
+        dataManager = DataManager.Instance;
+        InitTab();
     }
 
-    public void InitToggle()
+    public void InitTab()
     {
-        CheckedDate();
+        foreach (var data in dataManager.pixelmonData.data)
+        {
+            PixelmonSlot slot = Instantiate(slotPrefab, contentTr);
+            slot.pixelmonData = data;
+            allData.Add(slot);
+        }
+        for (int i = 0; i < composedData.Length; i++)
+        {
+            composedData[i].pixelmonData = inven.userData.composedPixelmons[i];
+        }
+        CheckedData();
         seedCountTxt.text = inven.userData.petFood.ToString();
     }
 
@@ -51,28 +68,20 @@ public class PixelmonTab : MonoBehaviour
         inven.SetDeltaData(nameof(inven.userData.petFood), count);
         seedCountTxt.text = inven.userData.petFood.ToString();
     }
-    public void CheckedDate()
+
+    public void CheckedData()
     {
-        foreach (var data in allData)
-        {
-            if (data.pixelmonData.isPossess)
-            {
-                possessData.Add(data);
-                if(data.lockIcon.activeSelf) data.lockIcon.SetActive(false);
-            }
-            else
-            {
-                noneData.Add(data.gameObject);
-            }
-        }
+        //findall 로 널일떄만
+        possessData = allData.FindAll(obj => obj.isPossessed);
+        noneData = allData.FindAll(obj => !obj.isPossessed);
         OnProssessionToggle();
     }
 
     public void OnProssessionToggle()
     {
-        foreach (GameObject data in noneData)
+        foreach (PixelmonSlot data in noneData)
         {
-            data.gameObject.SetActive(!isOnToggle);
+            data.gameObject.SetActive(!prossessToggle.isOn);
         }
     }
 
@@ -98,12 +107,12 @@ public class PixelmonTab : MonoBehaviour
     
     public void Possess(int index)
     {
-        allData[index].pixelmonData.isPossess = true;
+        allData[index].pixelmonData.isPossessed = true;
     }
 
     public void EnrolledPixelmon(int possessIndex, PixelmonData pixelData)
     {
-        if (pixelData.isPossess)
+        if (pixelData.isPossessed)
         {
             for(int i = 0; i < possessData.Count; i++) 
             {
