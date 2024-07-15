@@ -14,6 +14,6 @@ public class EnemyChaseState : MoveState
     public override void Execute()
     {
         base.Execute();
-        MoveTowardsTarget(fsm.enemy.data.spd, fsm.enemy.data.atkRange, fsm.AttackState);
+        MoveTowardsTarget(fsm.enemy.data.spd, Player.Instance.data.atkRange, fsm.AttackState);
     }
 }

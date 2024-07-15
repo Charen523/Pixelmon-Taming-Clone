@@ -1,105 +1,26 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using UnityEngine;
 
-[Serializable]
-public class Wrapper<T>
+public class DataManager : GSpreadReader<DataManager>
 {
-    public T[] Items;
-}
+    private readonly Dictionary<string, IData> dataDics = new Dictionary<string, IData>();
 
-public class DataManager : Singleton<DataManager>
-{
-    private readonly string jsonFolderName = "GameData";
-    private readonly Dictionary<string, object> dataDictionaries = new Dictionary<string, object>();
-
-    protected override void Awake()
-    {
-        isDontDestroyOnLoad = true;
-        base.Awake();
-        LoadAllData();
-    }
-
-    private void LoadAllData()
-    {
-        //GameData폴더 Load.
-        var jsonFiles = Resources.LoadAll<TextAsset>(jsonFolderName);
-        foreach (var jsonFile in jsonFiles)
-        {
-            LoadJsonData(jsonFile);
-        }
-    }
-
-    private void LoadJsonData(TextAsset jsonData)
-    {
-        //파일 이름 = 클래스 이름
-        string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(jsonData.name);
-
-        //reflection으로 Type찾기
-        Type dataType = Type.GetType($"{fileNameWithoutExtension}");
-        if (dataType != null)
-        {
-            MethodInfo method = typeof(DataManager).GetMethod("LoadDataToDictionary", BindingFlags.NonPublic | BindingFlags.Instance);
-            MethodInfo generic = method.MakeGenericMethod(dataType);
-            generic.Invoke(this, new object[] { jsonData.text, fileNameWithoutExtension });
-        }
-        else
-        {
-            Debug.LogWarning($"{fileNameWithoutExtension}이란 이름의 Data Class가 존재하지 않습니다.");
-        }
-    }
-
-    private void LoadDataToDictionary<T>(string jsonData, string key) where T : IData
-    {
-        try
-        {
-            //json파일을 Item이라는 객체로 wrap해주기.(안하면 오류 뜸...)
-            var wrapper = JsonUtility.FromJson<Wrapper<T>>("{\"Items\":" + jsonData + "}");
-            if (wrapper == null || wrapper.Items == null)
-            {
-                Debug.LogError("json 역직렬화 실패.");
-                return;
-            }
-
-            //새 Dictionary 만들어주기
-            var dictionary = new Dictionary<string, T>();
-
-            //Dictionary에 값 할당
-            foreach (var item in wrapper.Items)
-            {
-                dictionary[item.Rcode] = item;
-            }
-
-            //만들어진 Dictionary를 또다른 Dictionary로 묶어주기
-            dataDictionaries[key] = dictionary;
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"딕셔너리 생성 중 오류발생, 오류 종류: {e.Message}");
-        }
-    }
+    public GameData<StageData> stageData;
+    public GameData<PixelmonData> pixelmonData;
+    public GameData<EnemyData> enemyData;
+    public GameData<RewardData> rewardData;
 
     public T GetData<T>(string rcode) where T : class, IData
     {
-        string key = typeof(T).Name;
-        if (dataDictionaries.TryGetValue(key, out object dictionary))
+        return (T)dataDics[rcode.Split(' ')[0]];
+    }
+
+    public override void AddDataDics<T>(List<T> datas)
+    {
+        foreach (T data in datas)
         {
-            var dict = dictionary as Dictionary<string, T>;
-            if (dict != null && dict.TryGetValue(rcode, out T data))
-            {
-                return data;
-            }
-            else
-            {
-                Debug.LogWarning($"{typeof(T).Name}에 rcode {rcode}는 없습니다.");
-            }
+            if (!dataDics.ContainsKey(data.Rcode)) if (!dataDics.ContainsKey(data.Rcode))
+                    dataDics.Add(data.Rcode, data);
         }
-        else
-        {
-            Debug.LogWarning($"{typeof(T).Name}에 대한 Dictionary가 존재하지 않습니다.");
-        }
-        return null;
     }
 }

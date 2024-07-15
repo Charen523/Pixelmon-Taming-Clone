@@ -98,7 +98,7 @@ public class StageManager : Singleton<StageManager>
     private void LoadData()
     {
         Data = DataManager.Instance.GetData<StageData>(stgRcode);
-        difficultyNum = Data.difficulty ;
+        difficultyNum = Data.difficulty;
         worldNum = Data.worldId;
         stageNum = Data.stageId;
     }

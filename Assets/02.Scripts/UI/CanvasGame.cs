@@ -9,7 +9,7 @@ public class CanvasGame : MonoBehaviour
 
     public void Awake()
     {
-        if (!GameManager.isInit) SceneManager.LoadScene("StartScene");
+        if (!GameManager.isInit) SceneManager.LoadScene("IntroScene");
     }
 
     IEnumerator Start()
@@ -17,6 +17,9 @@ public class CanvasGame : MonoBehaviour
         UILoading.Hide();
         //yield return SceneManager.LoadSceneAsync("WorldScene", LoadSceneMode.Additive);
         UIManager.SetParents(parents);
+        yield return null;
+        yield return new WaitUntil(() => DataManager.Instance.isInit);
+        yield return null;
         yield return UIManager.Show<UIGame>();
     }
 }

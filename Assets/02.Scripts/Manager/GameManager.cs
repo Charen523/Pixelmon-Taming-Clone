@@ -26,8 +26,8 @@ public class GameManager : Singleton<GameManager>
     public IEnumerator OnManagerInit()
     {
         UILoading.Show();
-        //DataManager.Instance.Init();
-        //yield return new WaitUntil(() => DataManager.Instance.isInit);
+        DataManager.Instance.Init();
+        yield return new WaitUntil(() => DataManager.Instance.isInit);
         ResourceManager.Instance.Init();
         yield return new WaitUntil(() => ResourceManager.Instance.isInit);
         isInit = true;
