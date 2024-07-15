@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using UnityEngine;
 
@@ -77,7 +78,7 @@ public class InventoryManager : Singleton<InventoryManager>
     //정보 가져오는 용도
     public List<PixelmonData> GetProssessPixelmons()
     {
-        return userData.prossessPixelmons;
+        return userData.prossessPixelmons.ToList();
     }
 }
 
