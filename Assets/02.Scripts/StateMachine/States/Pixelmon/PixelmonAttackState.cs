@@ -9,8 +9,9 @@ public class PixelmonAttackState : AttackState
         this.fsm = fsm;
     }
 
-    public override void Execute()
+    public override void Enter()
     {
+        base.Enter();
         fsm.InvokeAttack(true);
     }
 
