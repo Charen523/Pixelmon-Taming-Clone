@@ -49,7 +49,7 @@ public class ProjectileController : MonoBehaviour
     public void ResetProjectile()
     {
         rb.velocity = Vector2.zero;
-        rb.position = Vector3.zero;
+        transform.position = new Vector3(-1000, 0, 0);
         gameObject.SetActive(false);
     }
 }
