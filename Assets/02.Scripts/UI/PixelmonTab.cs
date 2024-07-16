@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,10 +14,31 @@ public class PixelmonTab : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI seedCountTxt;
 
+
+    //픽셀몬 슬롯 클릭시 활성화 오브젝트
+    public RectTransform clickPopUp;
+    [SerializeField]
+    private Button equipBtn;
+    [SerializeField]
+    private int choiceId;
+    [SerializeField]
+    private Button infoBtn;
+    [SerializeField]
+    private PixelmonPopUP infoPopUp;
+    //픽셀몬 슬롯 프리팹
     [SerializeField]
     private PixelmonSlot slotPrefab;
+    //전체 슬롯 부모 오브젝트 위치
     [SerializeField]
     private Transform contentTr;
+    [SerializeField]
+    private TextMeshProUGUI equipTxt;
+    private string equip = "장착하기";
+    private string unEquip = "해제하기";
+    public GameObject equipProcessPanel;
+
+
+    #region Info
     [Header("Info")]
     [SerializeField]
     private InventoryManager inven;
@@ -32,8 +54,8 @@ public class PixelmonTab : MonoBehaviour
     private List<PixelmonSlot> possessData = new List<PixelmonSlot>();
     //편성된 픽셀몬 정보
     [SerializeField]
-    private PixelmonSlot[] composedData = new PixelmonSlot[5];
-
+    private PixelmonSlot[] equipData = new PixelmonSlot[5];
+    #endregion
     // Start is called before the first frame update
     void Start()
     {
@@ -47,12 +69,15 @@ public class PixelmonTab : MonoBehaviour
         foreach (var data in dataManager.pixelmonData.data)
         {
             PixelmonSlot slot = Instantiate(slotPrefab, contentTr);
-            slot.pixelmonData = data;
+            slot.InitSlot(this, data);
             allData.Add(slot);
         }
-        for (int i = 0; i < composedData.Length; i++)
+        if (inven.userData.equipedPixelmons.Length > 0)
         {
-            composedData[i].pixelmonData = inven.userData.composedPixelmons[i];
+            for (int i = 0; i < equipData.Length; i++)
+            {
+                equipData[i].pixelmonData = inven.userData.equipedPixelmons[i];
+            }
         }
         CheckedData();
         seedCountTxt.text = inven.userData.petFood.ToString();
@@ -100,35 +125,54 @@ public class PixelmonTab : MonoBehaviour
 
     }
 
-    public void ChoicePixelmon()
+    public void OnClickSlot(int index, RectTransform rectTr)
     {
-
+        choiceId = index;
+        clickPopUp.gameObject.SetActive(true);
+        clickPopUp.position = rectTr.position + Vector3.down * 130;
+        if (allData[index].pixelmonData.isEquiped)
+            equipTxt.text = unEquip;
+        else
+            equipTxt.text = equip;
     }
+
     
     public void Possess(int index)
     {
         allData[index].pixelmonData.isPossessed = true;
     }
 
-    public void EnrolledPixelmon(int possessIndex, PixelmonData pixelData)
+    public void OnEquip()
     {
-        if (pixelData.isPossessed)
-        {
-            for(int i = 0; i < possessData.Count; i++) 
-            {
-                if (possessData[i].pixelmonData == pixelData)
-                {
-                    RemovePossessSlot(i);
-                    break;
-                }
-            }                           
-        }
-        possessData[possessIndex].InitSlot(pixelData);
+
     }
 
-    public void RemovePossessSlot(int possessIndex)
+
+    public void EquipedPixelmon(int slotIndex)
     {
-        possessData[possessIndex].RemoveInfo();
-        possessData[possessIndex] = null;
+        if (allData[choiceId].pixelmonData.isEquiped)
+        {
+            for(int i = 0; i < equipData.Length; i++) 
+            {
+                if (equipData[i].pixelmonData == allData[choiceId].pixelmonData)
+                {
+                    RemoveEquipSlot(i);
+                    break;
+                }
+            }
+        }
+        equipData[slotIndex].Equip(allData[choiceId].pixelmonData);
+    }
+
+    public void RemoveEquipSlot(int slotIndex)
+    {
+        equipData[slotIndex].RemoveInfo();
+        equipData[slotIndex] = null;
+    }
+
+    public void OnInfoPopUp()
+    {
+        infoPopUp.gameObject.SetActive(true);
+        infoPopUp.ShowPopUp(choiceId);
     }
 }
