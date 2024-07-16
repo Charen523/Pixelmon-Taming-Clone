@@ -21,18 +21,14 @@ public class ProjectileController : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        rb.position = startPosition;
-        rb.velocity = shootDirection.normalized * flySpeed;
-    }
-
     private void Update()
     {
+        rb.velocity = shootDirection.normalized * flySpeed;
+
         // 발사체가 일정 거리 이상 날아가면 비활성화
         if (Vector2.Distance(startPosition, rb.position) >= flyDistance)
         {
-            gameObject.SetActive(false);
+            ResetProjectile();
         }
     }
 
@@ -42,9 +38,18 @@ public class ProjectileController : MonoBehaviour
         startPosition = startPos; //날아가기 시작하는 지점.
         shootDirection = direction; //날아갈 방향.
         projectileDamage = damage; //전달할 데이터.
+        projectileDamage = 100f; //테스트용. 지워야 함.
         flyDistance = bulletRange; //날아갈 거리.
         flySpeed = speed; //날아갈 속도.
 
+        rb.position = startPosition;
+    }
 
+    // 발사체의 위치와 속도를 초기화하는 메서드
+    public void ResetProjectile()
+    {
+        rb.velocity = Vector2.zero;
+        rb.position = Vector3.zero;
+        gameObject.SetActive(false);
     }
 }

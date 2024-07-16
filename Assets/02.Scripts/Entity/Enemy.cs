@@ -44,7 +44,7 @@ public class Enemy : SerializedMonoBehaviour
         {
             ProjectileController projectile = collision.gameObject.GetComponent<ProjectileController>();
             healthSystem.TakeDamage(projectile.projectileDamage);
-            collision.gameObject.SetActive(false);
+            projectile.ResetProjectile();
         }
     }
 }

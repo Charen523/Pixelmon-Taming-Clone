@@ -44,7 +44,7 @@ public class PixelmonFSM : FSM
                 float bulletRange = 2f; //임의의 변수
 
                 GameObject projectile = PoolManager.Instance.SpawnFromPool("ATV00000");
-                projectile.GetComponent<ProjectileController>().GetAttackSign(transform.position, direction, damage, bulletRange, pixelmon.data.atkSpd);
+                projectile.GetComponent<ProjectileController>().GetAttackSign(transform.position, direction, damage, bulletRange, 1);
                 
                 yield return attackSpeed;
             }
@@ -55,10 +55,15 @@ public class PixelmonFSM : FSM
     {
         if (isAttack)
         {
-            attackCoroutine = StartCoroutine(Attack());
-        }else if (attackCoroutine != null)
+            if (attackCoroutine == null)
+            {
+                attackCoroutine = StartCoroutine(Attack());
+            }
+        }
+        else if (attackCoroutine != null)
         {
             StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
         }
     }
 }
