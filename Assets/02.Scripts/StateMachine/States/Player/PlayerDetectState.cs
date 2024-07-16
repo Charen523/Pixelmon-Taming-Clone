@@ -17,7 +17,6 @@ public class PlayerDetectState : IdleState
     public override void Enter()
     {
         base.Enter();
-        fsm.target = null;
         Player.Instance.ChangePixelmonsState(PixelmonState.Idle);
     }
 

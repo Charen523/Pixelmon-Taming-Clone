@@ -91,14 +91,6 @@ public class PlayerFSM : FSM
         while (isActiveMove)
         {
             MovementInput = joystick.Direction;
-            if(MovementInput.x < 0)
-            {
-                gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
-            }
-            else
-            {
-                gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
-            }
             yield return null;
         }
     }

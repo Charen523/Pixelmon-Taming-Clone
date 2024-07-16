@@ -42,9 +42,7 @@ public class PixelmonFSM : FSM
     {
         while (true)
         {
-            //몹이 null이 아니라면 공격 및 스킬
-            //기다리는 시간과 날아가는 시간에 대한 보정 필요!!!!!
-            if (coolTime == 0)
+            if (target != null && coolTime == 0)
             {
                 var enemies = Search(1);
                 for (int i = 0; i < enemies.Count; i++)
@@ -53,7 +51,7 @@ public class PixelmonFSM : FSM
                     float damage = pixelmon.data.atkDmg;
                     GameObject projectile = PoolManager.Instance.SpawnFromPool("ATV00000");
                     projectile.GetComponent<ProjectileController>().GetAttackSign(transform.position, direction, damage, minDistance, 5);
-                }
+                }     
             }
             yield return waitAttack;
         }
