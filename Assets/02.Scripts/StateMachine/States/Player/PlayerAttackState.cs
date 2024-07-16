@@ -16,13 +16,4 @@ public class PlayerAttackState : IdleState
         base.Enter();
         Player.Instance.ChangePixelmonsState(PixelmonState.Attack);
     }
-
-    public override void Execute()
-    {
-        //몹이 null이라면 상태 변화
-        if (fsm.target == null)
-        {
-            fsm.ChangeState(fsm.DetectState);
-        }
-    }
 }

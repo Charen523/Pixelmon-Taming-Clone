@@ -19,6 +19,7 @@ public class PlayerMoveState : MoveState
     public override void Execute()
     {
         base.Execute();
+
         // 플레이어 입력에 따라 이동
         if (fsm.isActiveMove)
         {

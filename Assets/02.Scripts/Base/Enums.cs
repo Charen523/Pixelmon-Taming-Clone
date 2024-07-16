@@ -8,7 +8,8 @@ public enum PixelmonState
 
 public enum FieldState
 {
-    Default,
+    Locked,
+    Buyable,
     Empty,
     Seeded,
     Harvest
