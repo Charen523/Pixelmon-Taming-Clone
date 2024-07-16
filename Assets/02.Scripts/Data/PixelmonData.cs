@@ -12,8 +12,8 @@ public class PixelmonData : IData
     public int rank;
     //같은 카드 중복개수
     public int count;
-    //편성 여부
-    public bool isComposed;
+    //장착 여부
+    public bool isEquiped;
     //보유 여부
     public bool isPossessed;
 
