@@ -26,7 +26,7 @@ public class FieldSlot : SerializedMonoBehaviour
     #endregion
 
     #region UI
-    [SerializeField] private Button pixelmonBtn;
+    [SerializeField] private Button pxmBtn;
     [SerializeField] private Button FieldBtn;
     
     [SerializeField] private Sprite[] fieldStatusImgs;
@@ -36,9 +36,16 @@ public class FieldSlot : SerializedMonoBehaviour
     [SerializeField] private Image FieldIcon;
 
     [SerializeField] private TextMeshProUGUI timeTxt;
+
+    private UIBase farmPxmPopup;
     #endregion
 
     public float leftTime; //시간 단위.
+
+    private async void Awake()
+    {
+        farmPxmPopup = await UIManager.Show<UIFarmPixelmonPopup>();
+    }
 
     private void Start()
     {
@@ -87,7 +94,7 @@ public class FieldSlot : SerializedMonoBehaviour
 
     private void OnBuyFieldClicked()
     {
-
+        
     }
 
     private void OnSeedFieldClicked()
@@ -99,9 +106,16 @@ public class FieldSlot : SerializedMonoBehaviour
     {
 
     }
+
+    public void ShowEquipPixelmon()
+    {
+        farmPxmPopup.SetActive(true);
+    }
+
     
+
     //패시브로 성장속도가 증가한다면 남은시간 표시가 빨리 줄어들도록 하기.
-    
+
     //pixelmon 배치된 후 농장 작업 들어가면 더 이상 못바꾸도록 버튼 비활성화 필요.
 
     //픽셀몬의 패시브 효과를 넣는걸 도와줄 메서드
