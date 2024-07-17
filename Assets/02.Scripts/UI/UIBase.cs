@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
-using UnityEngine;
+using Sirenix.OdinInspector;
 using UnityEngine.Events;
 
-public class UIBase : MonoBehaviour
+public class UIBase : SerializedMonoBehaviour
 {
+    public bool isActiveInCreated = true;
+    public bool isDestroyAtClosed = true;
     public eUIPosition uiPosition;
     public UnityAction<object[]> opened;
     public UnityAction<object[]> closed;
