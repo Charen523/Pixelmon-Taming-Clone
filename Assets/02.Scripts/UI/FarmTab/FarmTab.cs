@@ -6,7 +6,7 @@ public class FarmTab : UIBase
 {
     private InventoryManager invenManager;
 
-    private FieldSlot[] fieldSlots;
+    public FieldSlot[] fieldSlots;
     [SerializeField] private Transform fieldsParent;
 
     #region Inventory Data
@@ -40,8 +40,11 @@ public class FarmTab : UIBase
 
         for (int i = 0; i < fieldSlots.Length; i++)
         {
+            fieldSlots[i] = fieldsParent.GetChild(i).GetComponent<FieldSlot>();
             fieldSlots[i].farmTab = this;
         }
+
+        //InventoryManager.Instance.SetData("seed", 10);
     }
 
     public void ShowEquipPixelmon()
