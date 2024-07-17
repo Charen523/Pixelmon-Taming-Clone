@@ -39,8 +39,33 @@ public class UIManager : Singleton<UIManager>
             Instance.uiList.Add(ui);
         }
         ui.opened.Invoke(param);
-        ui.gameObject.SetActive(true);
+        ui.gameObject.SetActive(ui.isActiveInCreated);
+        ui.isActiveInCreated = true;
         return (T)ui;
+    }
+
+    public async static Task<UIBase> Show(string name, params object[] param)
+    {
+        var ui = Instance.uiList.Find(obj => obj.name == name);
+
+        if (ui == null)
+        {
+            var prefab = await ResourceManager.Instance.LoadAsset<UIBase>(name, eAddressableType.ui);
+            ui = Instantiate(prefab, Instance.parents[(int)prefab.uiPosition]);
+            ui.name = ui.name.Replace("(Clone)", "");
+            if (ui.uiPosition == eUIPosition.UI)
+            {
+                Instance.uiList.ForEach(obj =>
+                {
+                    if (obj.uiPosition == eUIPosition.UI) obj.gameObject.SetActive(false);
+                });
+            }
+            Instance.uiList.Add(ui);
+        }
+        ui.opened?.Invoke(param);
+        ui.gameObject.SetActive(ui.isActiveInCreated);
+        ui.isActiveInCreated = true;
+        return ui;
     }
 
     public static void Hide<T>(params object[] param) where T : UIBase
@@ -48,14 +73,33 @@ public class UIManager : Singleton<UIManager>
         var ui = Instance.uiList.Find(obj => obj.name == typeof(T).ToString());
         if (ui != null)
         {
-            Instance.uiList.Remove(ui);
-            if (ui.uiPosition == eUIPosition.UI)
-            {
-                var prevUI = Instance.uiList.FindLast(obj => obj.uiPosition == eUIPosition.UI);
-                prevUI.SetActive(true);
-            }
             ui.closed.Invoke(param);
-            Destroy(ui.gameObject);
+            if (ui.isDestroyAtClosed)
+            {
+                Instance.uiList.Remove(ui);
+                Destroy(ui.gameObject);
+            }
+            else
+            {
+                ui.SetActive(false);
+            }
+        }
+    }
+
+    public static void Hide(string name)
+    {
+        var ui = Instance.uiList.Find(obj => obj.name == name);
+        if (ui != null)
+        {
+            if (ui.isDestroyAtClosed)
+            {
+                Instance.uiList.Remove(ui);
+                Destroy(ui.gameObject);
+            }
+            else
+            {
+                ui.SetActive(false);
+            }
         }
     }
 
