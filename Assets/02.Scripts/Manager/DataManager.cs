@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using UnityEngine;
 
 public class DataManager : GSpreadReader<DataManager>
 {
@@ -9,6 +11,14 @@ public class DataManager : GSpreadReader<DataManager>
     public GameData<PixelmonData> pixelmonData;
     public GameData<EnemyData> enemyData;
     public GameData<RewardData> rewardData;
+
+    public async Task SetPixelmonData()
+    {
+        foreach (var data in pixelmonData.data)
+        {
+            data.icon = await ResourceManager.Instance.LoadAsset<Sprite>(data.rcode, eAddressableType.thumbnail);
+        }
+    }
 
     public T GetData<T>(string rcode) where T : class, IData
     {
