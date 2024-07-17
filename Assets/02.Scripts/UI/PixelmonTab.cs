@@ -150,12 +150,11 @@ public class PixelmonTab : UIBase
         allData[index].pixelmonData.isPossessed = true;
     }
 
-    public void OnEquip(int slotIndex)
+    public void OnEquip()
     {
         clickPopUp.gameObject.SetActive(false);
         equipProcessPanel.gameObject.transform.SetSiblingIndex(5);
         equipProcessPanel.GetComponent<Image>().color = new Color32(0, 0, 0, 90);
-        EquipedPixelmon(slotIndex);
     }
 
 
