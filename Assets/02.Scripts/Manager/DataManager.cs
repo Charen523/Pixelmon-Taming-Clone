@@ -11,6 +11,7 @@ public class DataManager : GSpreadReader<DataManager>
     public GameData<PixelmonData> pixelmonData;
     public GameData<EnemyData> enemyData;
     public GameData<RewardData> rewardData;
+    public GameData<EggRateData> eggRateData;
 
     public async Task SetPixelmonData()
     {
