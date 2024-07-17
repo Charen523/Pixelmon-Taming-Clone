@@ -17,6 +17,6 @@ public class UserData
     public int dungeonKeyB;
     public int dungeonKeyC;
     public PlayerData data;
-    public PixelmonData[] composedPixelmons = new PixelmonData[5];
-    public PixelmonData[] prossessPixelmons;
+    public PixelmonData[] equipedPixelmons = new PixelmonData[5];
+    public PixelmonData[] prossessedPixelmons;
 }

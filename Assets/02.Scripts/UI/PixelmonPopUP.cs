@@ -18,8 +18,7 @@ public class PixelmonPopUP : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI ComposeCount;
 
-    [SerializeField]
-    private int infoIndex = 0;
+    public int infoIndex = 0;
     [SerializeField]
     private PixelmonData data;
     // Start is called before the first frame update

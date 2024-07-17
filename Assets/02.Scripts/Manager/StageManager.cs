@@ -14,11 +14,15 @@ public class StageManager : Singleton<StageManager>
     private Spawner spawner;
     [Header("UI")]
     [SerializeField]
+    private Image StageIcon;
+    [SerializeField]
+    private Sprite[] iconSprite;
+    [SerializeField]
     private TextMeshProUGUI stageTitleTxt;
     [SerializeField]
-    private Image clearBar;
+    private Slider processivitySldr;
     [SerializeField]
-    private TextMeshProUGUI clearTxt;
+    private TextMeshProUGUI processivityTxt;
 
     [Header("난이도")]
     [SerializeField]
@@ -26,6 +30,7 @@ public class StageManager : Singleton<StageManager>
 
     [SerializeField]
     public StageData Data {get; private set;}
+    private string normalMonsterIds;
     public int spawnCount = 0;
     public int killedCount = 0;
     float stageGage;
@@ -78,6 +83,7 @@ public class StageManager : Singleton<StageManager>
         monsterDead += MonsterDead;
         GameManager.Instance.OnPlayerDie += OnPlayerDead;
         GameManager.Instance.OnStageStart += StageInitialize;
+        LoadData();
         StageInitialize();
         StartCoroutine(StageProcessivity());
     }
@@ -85,11 +91,11 @@ public class StageManager : Singleton<StageManager>
     private void SetRcode()
     {
         stgRcode = $"{stagercode}{difficultyNum}{worldNum.ToString("D2")}{stageNum.ToString("D2")}";
+        LoadData();
     }
 
     public void StageInitialize()
-    {
-        LoadData();
+    {        
         //UI초기화
         InitStageUI();
         SummonMonster();
@@ -114,24 +120,20 @@ public class StageManager : Singleton<StageManager>
     {        
         //노말 소환
         yield return normalStageCondition;
+        Player.Instance.fsm.target = null;
         if (Data.stageId == maxStageNum)
         {
             yield return waitTime;
-            stageNum++;
-            SetRcode();
-            LoadData();
-            stageTitleTxt.text = $"{SetTitleTxt()}{worldNum}- BOSS";
-            spawner.RandomSpawnPoint(Data.monsterId, Data.spawnCount);
-            clearBar.fillAmount = 1;
-            bossTimer = bossLimitTime;
-            GameManager.Instance.NotifyStageClear();
+            InitBossStage();
             //보스클리어여부
             yield return BossStageCondition;
             //넥스트
             if (isStageClear)
             {
                 isStageClear = false;
-                ToNextStage();
+                PoolManager.Instance.RemovePool(normalMonsterIds);
+                PoolManager.Instance.RemovePool(Data.monsterIds);
+                ToNextWorld();
             }
             else
             {
@@ -177,13 +179,13 @@ public class StageManager : Singleton<StageManager>
 
         bossTimer -= Time.deltaTime;
         float percent = bossTimer / bossLimitTime;
-        clearBar.fillAmount = percent;
-        clearTxt.text = string.Format("{0:F2}초", bossTimer);
+        processivitySldr.value = percent;
+        processivityTxt.text = string.Format("{0:F2}초", bossTimer);
 
         if (bossTimer <= 0)
         {
-            clearTxt.text = string.Format("0초");
-            clearBar.fillAmount = 0;
+            processivityTxt.text = string.Format("0초");
+            processivitySldr.value = 0;
             ReturnPools();
             ToNextStage(-1);
             return true;
@@ -208,10 +210,25 @@ public class StageManager : Singleton<StageManager>
     private void InitStageUI()
     {
         stageTitleTxt.text = $"{SetTitleTxt()}{worldNum}-{stageNum:D2}";
-        clearBar.fillAmount = 0;
+        StageIcon.sprite = iconSprite[0];
+        processivitySldr.value = 0;
         stageGage = 0;
         processivity = 0;
-        clearTxt.text = string.Format("0%");
+        processivityTxt.text = string.Format("0%");
+    }
+
+    private void InitBossStage()
+    {
+        normalMonsterIds = Data.monsterIds;
+        stageNum++;
+        SetRcode();
+        stageTitleTxt.text = $"{SetTitleTxt()}{worldNum}- BOSS";
+        StageIcon.sprite = iconSprite[1];
+        PoolManager.Instance.AddPool(Data.monsterIds);
+        spawner.RandomSpawnPoint(Data.monsterId, Data.spawnCount);
+        processivitySldr.value = 1;
+        bossTimer = bossLimitTime;
+        GameManager.Instance.NotifyStageClear();
     }
     private string SetTitleTxt()
     {
@@ -278,8 +295,8 @@ public class StageManager : Singleton<StageManager>
             {
                 time += Time.deltaTime;
                 stageGage = Mathf.Lerp(stageGage, processivity, time / duration);
-                clearBar.fillAmount = stageGage;
-                clearTxt.text = string.Format("{0:F2}%", stageGage * 100);
+                processivitySldr.value = stageGage;
+                processivityTxt.text = string.Format("{0:F2}%", stageGage * 100);
             }
             else
             {
@@ -297,8 +314,6 @@ public class StageManager : Singleton<StageManager>
             stageNum = 1;
         else if (stageNum <= maxStageNum)
             stageNum += index;
-        else
-            ToNextWorld(); 
         SetRcode();
     }
 
@@ -306,15 +321,23 @@ public class StageManager : Singleton<StageManager>
     {
         stageNum = 1;
         if (worldNum <= maxWorldNum)
+        {
             worldNum++;
+            SetRcode();
+            PoolManager.Instance.AddPool(Data.monsterIds);
+        }
         else
             ToNextdifficulty();
+
     }
 
     private void ToNextdifficulty()
     {
+        stageNum = 1;
         worldNum = 1;
         difficultyNum++;
+        SetRcode();
+        PoolManager.Instance.AddPool(Data.monsterIds);
     }
     #endregion
 }
