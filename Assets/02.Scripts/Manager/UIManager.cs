@@ -6,8 +6,9 @@ using UnityEngine;
 public enum eUIPosition
 {
     UI,
-    Popup,
-    Navigator
+    Tab,
+    Navigator,
+    Popup
 }
 
 public class UIManager : Singleton<UIManager>
