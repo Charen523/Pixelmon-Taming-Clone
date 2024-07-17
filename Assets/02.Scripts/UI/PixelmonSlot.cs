@@ -6,48 +6,36 @@ using UnityEngine.UI;
 public class PixelmonSlot : MonoBehaviour
 {
     public PixelmonData pixelmonData;
-    private PixelmonTab pixelmontab;
+    public PixelmonTab pixelmontab;
     [SerializeField]
-    private RectTransform rectTr;
+    protected RectTransform rectTr;
     public bool isPossessed => pixelmonData.isPossessed;
-    public GameObject lockIcon;
-    public bool isLocked = true;
     public int slotIndex;
     [SerializeField]
-    private Button slotBtn;
+    protected Button slotBtn;
     [SerializeField]
-    private Image SlotIcon;
+    protected Image slotIcon;
     // Start is called before the first frame update
 
 
-    public void InitSlot(PixelmonTab tab, PixelmonData data)
+    public virtual void InitSlot(PixelmonTab tab, PixelmonData data)
     {
         pixelmontab = tab;
         pixelmonData = data;
+        slotIcon.sprite = pixelmonData.icon;
+        slotBtn.onClick.AddListener(OnClick);
         //if (isLocked) lockIcon.SetActive(false);
     }
 
-    public void OnClick()
+    protected virtual void OnClick()
     {
-        if (pixelmontab.clickPopUp.gameObject.activeInHierarchy)
-        {
-            pixelmontab.EquipedPixelmon(gameObject.transform.GetSiblingIndex());
-        }
-        else
+        if (pixelmontab.tabState == TabState.Normal)
         {
             pixelmontab.OnClickSlot(pixelmonData.id, rectTr);
         }
-    }
-
-    public void Equip(PixelmonData data)
-    {
-        pixelmonData = data;
-        SlotIcon.sprite = data.icon;
-    }
-
-    public void RemoveInfo()
-    {
-        pixelmonData = null;
-        SlotIcon.sprite = null;
+        else if(pixelmontab.tabState == TabState.Equip)
+        {
+            pixelmontab.EquipedPixelmon(gameObject.transform.GetSiblingIndex());
+        }
     }
 }
