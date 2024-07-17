@@ -30,7 +30,6 @@ public class GameManager : Singleton<GameManager>
         yield return new WaitUntil(() => DataManager.Instance.isInit);
         ResourceManager.Instance.Init();
         yield return new WaitUntil(() => ResourceManager.Instance.isInit);
-        yield return DataManager.Instance.SetPixelmonData();
         isInit = true;
     }
 
