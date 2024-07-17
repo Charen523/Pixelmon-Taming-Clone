@@ -24,13 +24,19 @@ public class PixelmonSlot : MonoBehaviour
     {
         pixelmontab = tab;
         pixelmonData = data;
-        slotBtn.onClick.AddListener(OnClick);
         //if (isLocked) lockIcon.SetActive(false);
     }
 
     public void OnClick()
     {
-        pixelmontab.OnClickSlot(pixelmonData.id, rectTr);
+        if (pixelmontab.clickPopUp.gameObject.activeInHierarchy)
+        {
+            pixelmontab.EquipedPixelmon(gameObject.transform.GetSiblingIndex());
+        }
+        else
+        {
+            pixelmontab.OnClickSlot(pixelmonData.id, rectTr);
+        }
     }
 
     public void Equip(PixelmonData data)
