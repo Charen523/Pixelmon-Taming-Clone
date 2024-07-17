@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PixelmonTab : MonoBehaviour
+public class PixelmonTab : UIBase
 {
     [Header("UI")]
     [SerializeField]
@@ -20,9 +20,15 @@ public class PixelmonTab : MonoBehaviour
     [SerializeField]
     private Button equipBtn;
     [SerializeField]
+    private Button infoBtn;
+    public GameObject equipProcessPanel;
+    [SerializeField]
     private int choiceId;
     [SerializeField]
-    private Button infoBtn;
+    private TextMeshProUGUI equipTxt;
+    private string equip = "장착하기";
+    private string unEquip = "해제하기";
+
     [SerializeField]
     private PixelmonPopUP infoPopUp;
     //픽셀몬 슬롯 프리팹
@@ -31,12 +37,6 @@ public class PixelmonTab : MonoBehaviour
     //전체 슬롯 부모 오브젝트 위치
     [SerializeField]
     private Transform contentTr;
-    [SerializeField]
-    private TextMeshProUGUI equipTxt;
-    private string equip = "장착하기";
-    private string unEquip = "해제하기";
-    public GameObject equipProcessPanel;
-
 
     #region Info
     [Header("Info")]
@@ -130,21 +130,32 @@ public class PixelmonTab : MonoBehaviour
         choiceId = index;
         clickPopUp.gameObject.SetActive(true);
         clickPopUp.position = rectTr.position + Vector3.down * 130;
+        equipProcessPanel.gameObject.SetActive(true);
+        equipProcessPanel.gameObject.transform.SetSiblingIndex(6);
+        equipProcessPanel.GetComponent<Image>().color = new Color32(0, 0, 0, 0);
         if (allData[index].pixelmonData.isEquiped)
             equipTxt.text = unEquip;
         else
             equipTxt.text = equip;
     }
 
+    public void OnHideOverlay()
+    {
+        clickPopUp.gameObject.SetActive(false);
+        equipProcessPanel.gameObject.SetActive(false);
+    }
     
     public void Possess(int index)
     {
         allData[index].pixelmonData.isPossessed = true;
     }
 
-    public void OnEquip()
+    public void OnEquip(int slotIndex)
     {
-
+        clickPopUp.gameObject.SetActive(false);
+        equipProcessPanel.gameObject.transform.SetSiblingIndex(5);
+        equipProcessPanel.GetComponent<Image>().color = new Color32(0, 0, 0, 90);
+        EquipedPixelmon(slotIndex);
     }
 
 
