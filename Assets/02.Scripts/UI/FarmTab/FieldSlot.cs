@@ -5,9 +5,12 @@ using UnityEngine;
 
 public class FieldSlot : SerializedMonoBehaviour
 {
+    [HideInInspector] public FarmTab farmTab;
+
     #region data화 필요
-    private FieldState currentFieldState; //저장 데이터.
-    private PixelmonData pixelmonSetted;
+    //public FarmData farmData;
+    [SerializeField] private FieldState currentFieldState; //저장 데이터.
+    private PixelmonData farmer;
     #endregion
 
     #region properties
@@ -26,7 +29,6 @@ public class FieldSlot : SerializedMonoBehaviour
     #endregion
 
     #region UI
-    [SerializeField] private Button pxmBtn;
     [SerializeField] private Button FieldBtn;
     
     [SerializeField] private Sprite[] fieldStatusImgs;
@@ -41,11 +43,8 @@ public class FieldSlot : SerializedMonoBehaviour
     #endregion
 
     public float leftTime; //시간 단위.
-
-    private async void Awake()
-    {
-        farmPxmPopup = await UIManager.Show<UIFarmPixelmonPopup>();
-    }
+    public int yield; //수확량
+    
 
     private void Start()
     {
@@ -65,24 +64,27 @@ public class FieldSlot : SerializedMonoBehaviour
                 break;
             case FieldState.Buyable: //구매가능
                 FieldBtn.interactable = true;
-                //관련 함수`
-                currentSprite.sprite = fieldStatusImgs[0];
+                FieldBtn.onClick.AddListener(OnBuyFieldClicked);
+                currentSprite.sprite = fieldStatusImgs[1];
                 FieldIcon.sprite = Icons[1];
                 break;
             case FieldState.Empty: //빈 밭.
                 FieldBtn.interactable = true;
-                //관련 함수
+                FieldBtn.onClick.RemoveAllListeners();
+                FieldBtn.onClick.AddListener(OnSeedFieldClicked);
                 currentSprite.sprite = fieldStatusImgs[1];
                 FieldIcon.sprite = Icons[2];
                 break;
             case FieldState.Seeded: //작물이 심긴 밭.
                 FieldBtn.interactable = false;
+                FieldBtn.onClick.RemoveAllListeners();
                 currentSprite.sprite = fieldStatusImgs[2];
                 FieldIcon.sprite = Icons[3];
                 break;
             case FieldState.Harvest: //수확 준비된 밭.
                 //관련 함수
                 FieldBtn.interactable = true;
+                FieldBtn.onClick.AddListener(OnHarvestFieldClicked);
                 currentSprite.sprite = fieldStatusImgs[3];
                 FieldIcon.sprite = Icons[4];
                 break;
@@ -99,7 +101,10 @@ public class FieldSlot : SerializedMonoBehaviour
 
     private void OnSeedFieldClicked()
     {
-
+        if (farmTab.PlantSeed())
+        {
+            currentFieldState = FieldState.Seeded;
+        }
     }
 
     private void OnHarvestFieldClicked()
@@ -107,9 +112,13 @@ public class FieldSlot : SerializedMonoBehaviour
 
     }
 
-    public void ShowEquipPixelmon()
+    private void CalculatePassiveEffect()
     {
-        farmPxmPopup.SetActive(true);
+        if (farmer == null)
+        {
+            leftTime = 4; //2, 4, 6 중 랜덤.
+            yield = 1; //1, 3, 10 중 랜덤.
+        }
     }
 
     
@@ -120,11 +129,6 @@ public class FieldSlot : SerializedMonoBehaviour
 
     //픽셀몬의 패시브 효과를 넣는걸 도와줄 메서드
 }
-
-
-//public class ItemSlot : MonoBehaviour
-//{
-//    public ItemData item;
 
 //    public UIInventory inventory;
 //    public Button button;
