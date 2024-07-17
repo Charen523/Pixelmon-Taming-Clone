@@ -21,6 +21,12 @@ public class UIManager : Singleton<UIManager>
         Instance.parents = parents;
     }
 
+    /// <summary>
+    /// async 함수에서만 사용가능한 메서드.
+    /// </summary>
+    /// <typeparam name="T">UIBase를 상속받은 클래스 이름</typeparam>
+    /// <param name="param">()안에 뭐 없어도 됨</param>
+    /// <returns></returns>
     public async static Task<T> Show<T>(params object[] param) where T : UIBase
     {
         var ui = Instance.uiList.Find(obj => obj.name == typeof(T).ToString());
