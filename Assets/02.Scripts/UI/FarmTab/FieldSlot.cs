@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class FieldSlot : SerializedMonoBehaviour
 {
-    [HideInInspector] public FarmTab farmTab;
+    public FarmTab farmTab;
 
     #region data화 필요
     //public FarmData farmData;
