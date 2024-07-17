@@ -17,7 +17,7 @@ public class UIOverlayPanel : MonoBehaviour
         {
             if (toggle.isOn)
             {
-                toggle.isOn = false;
+                toggle.onValueChanged.Invoke(false);
 
                 if (panels != null) //임시: 아직 없는 판넬도 있어서
                 {
@@ -26,15 +26,6 @@ public class UIOverlayPanel : MonoBehaviour
 
                 gameObject.SetActive(false);
             }
-        }
-    }
-
-    public void DisableOverlay(int panelNum)
-    {
-        if (panels[panelNum] != null && panels[panelNum].activeSelf)
-        {
-            panels[panelNum].SetActive(false);
-            gameObject.SetActive(false);
         }
     }
 }
