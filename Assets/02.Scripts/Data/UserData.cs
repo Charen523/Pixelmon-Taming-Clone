@@ -8,7 +8,7 @@ public class UserData
     public string userId;
     public int money;
     public int diamond;
-    public int eggClass;
+    public int eggLv;
     public int eggCount;
     public int seed;
     public int petFood;
@@ -17,6 +17,9 @@ public class UserData
     public int dungeonKeyB;
     public int dungeonKeyC;
     public PlayerData data;
+    public int equipCount;
     public PixelmonData[] equipedPixelmons = new PixelmonData[5];
     public PixelmonData[] prossessedPixelmons;
+    public PixelmonData[] farmPixelmons = new PixelmonData[6];
+    public int[] farmTimer = new int[6];
 }
