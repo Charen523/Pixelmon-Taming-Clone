@@ -13,7 +13,7 @@ public class Player : Singleton<Player>
     [Header("LocatedPixelmon")]
     public float radius = 2.0f;
     public int currentPixelmonCount;
-    public List<Pixelmon> pixelmons = new List<Pixelmon>(5);
+    public Pixelmon[] pixelmons = new Pixelmon[5];
 
     private void Start()
     {
@@ -28,18 +28,19 @@ public class Player : Singleton<Player>
 
     public void ChangePixelmonsState(PixelmonState newState)
     {
-        foreach (Pixelmon pixelmon in pixelmons)
+        for(int i = 0;  i < pixelmons.Length; i++)
         {
+            if (pixelmons[i] == null) continue;
             switch (newState)
             {
                 case PixelmonState.Attack:
-                    pixelmon.fsm.ChangeState(pixelmon.fsm.AttackState);
+                    pixelmons[i].fsm.ChangeState(pixelmons[i].fsm.AttackState);
                     break;
                 case PixelmonState.Idle:
-                    pixelmon.fsm.ChangeState(pixelmon.fsm.IdleState);
+                    pixelmons[i].fsm.ChangeState(pixelmons[i].fsm.IdleState);
                     break;
                 case PixelmonState.Move:
-                    pixelmon.fsm.ChangeState(pixelmon.fsm.MoveState);
+                    pixelmons[i].fsm.ChangeState(pixelmons[i].fsm.MoveState);
                     break;
             }
         }
