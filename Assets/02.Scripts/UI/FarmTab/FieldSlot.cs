@@ -92,6 +92,7 @@ public class FieldSlot : SerializedMonoBehaviour
                 currentSprite.sprite = fieldStatusImgs[1];
                 FieldIcon.sprite = Icons[2];
                 /*TMP Settings*/
+                priceTxt.gameObject.SetActive(false);
                 break;
 
             case FieldState.Seeded: //작물이 심긴 밭.
