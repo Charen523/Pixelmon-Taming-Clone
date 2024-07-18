@@ -25,6 +25,16 @@ public class FarmTab : UIBase
     {
         invenManager = InventoryManager.Instance;
         farmPxmPopup = await UIManager.Show<UIFarmPixelmonPopup>();
+
+        FieldSlot[] fieldSlots = new FieldSlot[fieldsParent.childCount];
+
+        for (int i = 0; i < fieldSlots.Length; i++)
+        {
+            fieldSlots[i] = fieldsParent.GetChild(i).GetComponent<FieldSlot>();
+            fieldSlots[i].farmTab = this;
+            fieldSlots[i].myIndex = i;
+            fieldSlots[i].fieldData = invenManager.userData.fieldDatas[i];
+        }
     }
 
     private void OnEnable()
@@ -42,16 +52,26 @@ public class FarmTab : UIBase
 
     private void Start()
     {
-        FieldSlot[] fieldSlots = new FieldSlot[fieldsParent.childCount];
+        //테스트용 코드
+        InventoryManager.Instance.SetData("seed", 10);
+    }
 
-        for (int i = 0; i < fieldSlots.Length; i++)
+    private void OnDisable()
+    {
+        FieldData[] temp = new FieldData[fieldsParent.childCount];
+        for(int i = 0;i < temp.Length;i++)
         {
-            fieldSlots[i] = fieldsParent.GetChild(i).GetComponent<FieldSlot>();
-            fieldSlots[i].farmTab = this;
-            fieldSlots[i].myIndex = i;
+            FieldData tempItem = fieldSlots[i].fieldData;
+
+            if (tempItem.currentFieldState == FieldState.Seeded)
+            {
+                tempItem.lastSaveTime = System.DateTime.Now;
+            }
+
+            temp[i] = tempItem;
         }
 
-        //InventoryManager.Instance.SetData("seed", 10);
+        invenManager.SetData("fieldDatas", temp);
     }
 
     public void ShowEquipPixelmon()

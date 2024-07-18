@@ -10,21 +10,17 @@ public class FieldSlot : SerializedMonoBehaviour
     public FarmTab farmTab;
     public int myIndex;
 
-    #region data화 필요
-    //public FarmData farmData;
-    [SerializeField] private FieldState currentFieldState; //저장 데이터.
-    private PixelmonData farmer;
-    #endregion
+    public FieldData fieldData;
 
     #region properties
     public FieldState CurrentFieldState 
     {
-        get => currentFieldState;
+        get => fieldData.currentFieldState;
         set
         {
-            if (currentFieldState != value)
+            if (fieldData.currentFieldState != value)
             {
-                currentFieldState = value;
+                fieldData.currentFieldState = value;
                 CurrentFieldAction(value);
             }
         }
@@ -47,7 +43,6 @@ public class FieldSlot : SerializedMonoBehaviour
 
     public int harvestHour;
     private float leftTime;
-    private const string lastSaveTimeKey = "LastSaveTime";    
     
     public int yield; //수확량
     [SerializeField] private int price; //밭 가격
@@ -55,7 +50,9 @@ public class FieldSlot : SerializedMonoBehaviour
 
     private void Start()
     {
-        CurrentFieldAction(currentFieldState);
+        fieldData = InventoryManager.Instance.userData.fieldDatas[myIndex];
+
+        CurrentFieldAction(fieldData.currentFieldState);
 
         if (CurrentFieldState == FieldState.Seeded)
         {
@@ -63,19 +60,14 @@ public class FieldSlot : SerializedMonoBehaviour
         }
     }
 
-    private void OnApplicationQuit()
+    private void OnDisable()
     {
-        if (CurrentFieldState == FieldState.Seeded)
-        {
-            
-        }
+        
     }
 
     private void CurrentFieldAction(FieldState state)
     {
-        currentFieldState = state;
-
-        switch(currentFieldState)
+        switch(state)
         {
             case FieldState.Locked: //잠김.
                 FieldBtn.interactable = false;
@@ -157,7 +149,7 @@ public class FieldSlot : SerializedMonoBehaviour
 
     private void CalculatePassiveEffect()
     {
-        if (farmer == null)
+        if (fieldData.farmer == null)
         {
             harvestHour = 1; //2, 4, 6 중 랜덤.
             yield = 1; //1, 3, 10 중 랜덤.
