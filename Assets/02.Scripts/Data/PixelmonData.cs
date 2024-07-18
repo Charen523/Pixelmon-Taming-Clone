@@ -9,9 +9,12 @@ public class PixelmonData : IData
     //도감 넘버
     public int id;
     public string name;
+    public int lv = 1;
+    public int exp = 0;
     public int rank;
+    public int star;
     //같은 카드 중복개수
-    public int count;
+    public int currentCount;
     //장착 여부
     public bool isEquiped;
     //보유 여부
