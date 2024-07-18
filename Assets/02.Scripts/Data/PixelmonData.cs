@@ -27,7 +27,7 @@ public class PixelmonData : IData
 
     //픽셀몬 아이콘
     public Sprite icon;
-
+    public Sprite bgIcon;
 
     public UnityAction activeSkill;
     //패시브 능력
