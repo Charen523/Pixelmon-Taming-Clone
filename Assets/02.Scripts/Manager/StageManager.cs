@@ -10,35 +10,33 @@ using static UnityEngine.EventSystems.EventTrigger;
 public class StageManager : Singleton<StageManager>
 {
     [Header("소환")]
-    [SerializeField]
-    private Spawner spawner;
-    [Header("UI")]
-    [SerializeField]
-    private Image StageIcon;
-    [SerializeField]
-    private Sprite[] iconSprite;
-    [SerializeField]
-    private TextMeshProUGUI stageTitleTxt;
-    [SerializeField]
-    private Slider processivitySldr;
-    [SerializeField]
-    private TextMeshProUGUI processivityTxt;
+    [SerializeField] private Spawner spawner;
+
+    #region UI
+    [SerializeField] private Image StageIcon;
+    [SerializeField] private Sprite[] iconSprite;
+    [SerializeField] private TextMeshProUGUI stageTitleTxt;
+
+    [SerializeField] private Slider progressSldr;
+    [SerializeField] private TextMeshProUGUI progressTxt;
+
+    [SerializeField] private Slider bossTimeSldr;
+    [SerializeField] private TextMeshProUGUI bossTimeTxt;
+    #endregion
+    
+    [SerializeField] public StageData Data {get; private set;}
 
     [Header("난이도")]
-    [SerializeField]
-    private string stgRcode;
+    [SerializeField] private string stgRcode;
 
-    [SerializeField]
-    public StageData Data {get; private set;}
     private string normalMonsterIds;
     public int spawnCount = 0;
     public int killedCount = 0;
     float stageGage;
-    float processivity = 0;
+    float progress = 0;
     private float bossTimer;
     private float bossLimitTime = 30;
-    //보스 처치여부
-    public bool isStageClear = false;
+    public bool isStageClear = false; //보스 처치여부
     [SerializeField]
     public string CurrentRCode { get; private set; }
     private readonly string stagercode = "STG";
@@ -171,18 +169,20 @@ public class StageManager : Singleton<StageManager>
         if (isStageClear)
         {
             ReturnPools();
+            bossTimeSldr.gameObject.SetActive(false);
+            bossTimeTxt.gameObject.SetActive(false);
             return true;
         }
+        bossTimeSldr.gameObject.SetActive(true);
+        bossTimeTxt.gameObject.SetActive(true);
 
-        bossTimer -= Time.deltaTime;
+        bossTimer = Mathf.Max(0,  bossTimer - Time.deltaTime);
         float percent = bossTimer / bossLimitTime;
-        processivitySldr.value = percent;
-        processivityTxt.text = string.Format("{0:F2}초", bossTimer);
+        bossTimeSldr.value = percent;
+        bossTimeTxt.text = string.Format("{0:F2}", bossTimer);
 
-        if (bossTimer <= 0)
+        if (bossTimer == 0)
         {
-            processivityTxt.text = string.Format("0초");
-            processivitySldr.value = 0;
             ReturnPools();
             ToNextStage(-1);
             return true;
@@ -208,10 +208,10 @@ public class StageManager : Singleton<StageManager>
     {
         stageTitleTxt.text = $"{SetTitleTxt()}{worldNum}-{stageNum:D2}";
         StageIcon.sprite = iconSprite[0];
-        processivitySldr.value = 0;
+        progressSldr.value = 0;
         stageGage = 0;
-        processivity = 0;
-        processivityTxt.text = string.Format("0%");
+        progress = 0;
+        progressTxt.text = string.Format("0%");
     }
 
     private void InitBossStage()
@@ -223,7 +223,7 @@ public class StageManager : Singleton<StageManager>
         StageIcon.sprite = iconSprite[1];
         PoolManager.Instance.AddPool(Data.monsterIds);
         spawner.RandomSpawnPoint(Data.monsterId, Data.spawnCount);
-        processivitySldr.value = 1;
+        progressSldr.value = 1;
         bossTimer = bossLimitTime;
         GameManager.Instance.NotifyStageClear();
     }
@@ -255,7 +255,7 @@ public class StageManager : Singleton<StageManager>
         {
             killedCount++;
             spawnCount--;
-            processivity = (float)killedCount / Data.nextStageCount;
+            progress = Mathf.Min((float)killedCount / Data.nextStageCount, 100f);
             spawner.isActivatedEnemy.Remove(enemyGo);
         }
         //InventoryManager.Instance.DropItem(enemyData.rewardType, enemyData.rewardRate, enemyData.rewardValue);
@@ -284,12 +284,12 @@ public class StageManager : Singleton<StageManager>
         float duration = 0.5f;
         while (true) 
         {
-            if (processivity > stageGage)
+            if (progress > stageGage)
             {
                 time += Time.deltaTime;
-                stageGage = Mathf.Lerp(stageGage, processivity, time / duration);
-                processivitySldr.value = stageGage;
-                processivityTxt.text = string.Format("{0:F2}%", stageGage * 100);
+                stageGage = Mathf.Lerp(stageGage, progress, time / duration);
+                progressSldr.value = stageGage;
+                progressTxt.text = string.Format("{0:F2}%", stageGage * 100);
             }
             else
             {
