@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PixelmonTab : UIBase
@@ -58,8 +59,8 @@ public class PixelmonTab : UIBase
     [SerializeField]
     private PixelmonEquipSlot[] equipData = new PixelmonEquipSlot[5];
     #endregion
-    // Start is called before the first frame update
-    async void Start()
+
+    void Start()
     {
         inven = InventoryManager.Instance;
         dataManager = DataManager.Instance;
@@ -130,6 +131,11 @@ public class PixelmonTab : UIBase
 
     }
 
+    public void Possess(int index)
+    {
+        allData[index].pixelmonData.isPossessed = true;
+    }
+
     public void OnClickSlot(int index, RectTransform rectTr)
     {
         choiceId = index;
@@ -137,11 +143,16 @@ public class PixelmonTab : UIBase
         clickPopUp.position = rectTr.position + Vector3.down * 130;
         equipProcessPanel.gameObject.SetActive(true);
         equipProcessPanel.gameObject.transform.SetSiblingIndex(6);
-        equipProcessPanel.GetComponent<Image>().color = new Color32(0, 0, 0, 0);
         if (allData[index].pixelmonData.isEquiped)
+        {
+            tabState = TabState.UnEquip;
             equipTxt.text = unEquip;
+        }
         else
+        {
+            tabState = TabState.Equip;
             equipTxt.text = equip;
+        }
     }
 
     public void OnHideOverlay()
@@ -151,46 +162,47 @@ public class PixelmonTab : UIBase
         equipProcessPanel.gameObject.SetActive(false);
     }
     
-    public void Possess(int index)
-    {
-        allData[index].pixelmonData.isPossessed = true;
-    }
-
     public void OnEquip()
     {
-        tabState = TabState.Equip;
-        clickPopUp.gameObject.SetActive(false);
-        equipProcessPanel.gameObject.transform.SetSiblingIndex(5);
-        equipProcessPanel.GetComponent<Image>().color = new Color32(0, 0, 0, 90);
+        if(tabState == TabState.Equip) 
+        {
+            clickPopUp.gameObject.SetActive(false);
+            equipProcessPanel.gameObject.SetActive(true);
+            equipProcessPanel.gameObject.transform.SetSiblingIndex(5);
+        }
+        else if(tabState == TabState.UnEquip) 
+        {
+            for (int i = 0; i < equipData.Length; i++)
+            {
+                if (equipData[i].pixelmonData == allData[choiceId].pixelmonData)
+                {
+                    RemoveEquipSlot(i, choiceId);
+                    break;
+                }
+            }
+            clickPopUp.gameObject.SetActive(false);
+            equipProcessPanel.gameObject.SetActive(false);
+            tabState = TabState.Normal;
+        }
     }
 
 
     public void EquipedPixelmon(int slotIndex)
     {
-        if (allData[choiceId].pixelmonData.isEquiped)
+        if (equipData[slotIndex].pixelmonData != null)
         {
-            for(int i = 0; i < equipData.Length; i++) 
-            {
-                if (equipData[i].pixelmonData == allData[choiceId].pixelmonData)
-                {
-                    RemoveEquipSlot(i);
-                    break;
-                }
-            }
+            equipData[slotIndex].pixelmonData.isEquiped = false;
         }
-        else
-        {
-            equipData[slotIndex].Equip(allData[choiceId].pixelmonData);
-            equipProcessPanel.gameObject.SetActive(false);
-        }
+        equipData[slotIndex].Equip(allData[choiceId].pixelmonData);
+        equipProcessPanel.gameObject.SetActive(false);        
         tabState = TabState.Normal;
     }
 
-    public void RemoveEquipSlot(int slotIndex)
+    public void RemoveEquipSlot(int slotIndex, int choiceId)
     {
-        equipData[slotIndex].pixelmonData.isEquiped = false;
+        allData[choiceId].pixelmonData.isEquiped = false;
         equipData[slotIndex].UnEquip();
-        equipData[slotIndex] = null;
+        equipData[slotIndex].pixelmonData = null;
     }
 
     public void OnInfoPopUp()
@@ -203,5 +215,6 @@ public class PixelmonTab : UIBase
 public enum TabState
 {
     Normal,
-    Equip
+    Equip,
+    UnEquip
 }
