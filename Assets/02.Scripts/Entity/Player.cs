@@ -48,9 +48,10 @@ public class Player : Singleton<Player>
 
     public void SetPixelmonsTarget(GameObject target)
     {
-        foreach(Pixelmon pixelmon in pixelmons)
+        for(int i = 0;i < pixelmons.Length; i++)
         {
-            pixelmon.fsm.target = target;
+            if (pixelmons[i] == null) continue;
+            pixelmons[i].fsm.target = target;
         }
     }
 
