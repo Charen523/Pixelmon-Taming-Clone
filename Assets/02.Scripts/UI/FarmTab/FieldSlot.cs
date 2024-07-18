@@ -42,8 +42,7 @@ public class FieldSlot : SerializedMonoBehaviour
     [SerializeField] private TextMeshProUGUI priceTxt;
     #endregion
 
-    public int harvestHour;
-    public int yield; //수확량
+    Coroutine growingCoroutine;
     [SerializeField] private int price; //밭 가격
 
     private void OnEnable()
@@ -56,6 +55,7 @@ public class FieldSlot : SerializedMonoBehaviour
         CurrentFieldState = fieldData.currentFieldState;
         CurrentFieldAction(CurrentFieldState);
     }
+
     private void CurrentFieldAction(FieldState state)
     {
         switch(state)
@@ -67,6 +67,7 @@ public class FieldSlot : SerializedMonoBehaviour
                 /*UI Settings*/
                 currentSprite.sprite = fieldStatusImgs[0];
                 FieldIcon.sprite = Icons[0];
+                priceTxt.gameObject.SetActive(true);
                 break;
 
             case FieldState.Buyable: //구매가능
@@ -78,6 +79,7 @@ public class FieldSlot : SerializedMonoBehaviour
                 currentSprite.sprite = fieldStatusImgs[1];
                 FieldIcon.sprite = Icons[1];
                 /*TMP Settings*/
+                priceTxt.gameObject.SetActive(true);
                 priceTxt.text = $"가격: {price}다이아";
                 break;
 
@@ -101,7 +103,11 @@ public class FieldSlot : SerializedMonoBehaviour
                 currentSprite.sprite = fieldStatusImgs[2];
                 FieldIcon.sprite = Icons[3];
                 /*TMP Settings*/
-                StartCoroutine(plantGrowing()); //남은 시간
+                if (growingCoroutine != null)
+                {
+                    StopCoroutine(growingCoroutine);
+                }
+                growingCoroutine = StartCoroutine(plantGrowing()); //남은 시간
                 break;
 
             case FieldState.Harvest: //수확 준비된 밭.
@@ -113,6 +119,15 @@ public class FieldSlot : SerializedMonoBehaviour
                 /*UI Settings*/
                 currentSprite.sprite = fieldStatusImgs[3];
                 FieldIcon.sprite = Icons[4];
+                /*TMP Settings*/
+                if (growingCoroutine != null)
+                {
+                    StopCoroutine(growingCoroutine);
+                }
+                if (timeTxt.gameObject.activeSelf)
+                {
+                    timeTxt.gameObject.SetActive(false);
+                }
                 break;
 
             default:
@@ -141,8 +156,9 @@ public class FieldSlot : SerializedMonoBehaviour
         if (farmTab.PlantSeed())
         {
             CalculatePassiveEffect();
+            fieldData.leftTime = fieldData.yieldClass * 2 * 3600f;
+            fieldData.lastSaveTime = DateTime.Now.ToString();
             CurrentFieldState = FieldState.Seeded;
-            fieldData.leftTime = harvestHour * 3600f;
         }
         else
         {
@@ -153,16 +169,31 @@ public class FieldSlot : SerializedMonoBehaviour
 
     private void OnHarvestFieldClicked()
     {
+        int yield;
+        switch (fieldData.yieldClass)
+        {
+            case 1:
+                yield = 1;
+                break;
+            case 2:
+                yield = 3;
+                break;
+            case 3:
+                yield = 10;
+                break;
+            default:
+                Debug.LogError("Harvest Class 값이 이상함");
+                yield = 0;
+                break;
+        }
+
         farmTab.HarvestYield(yield);
+        CurrentFieldState = FieldState.Empty;
     }
 
     private void CalculatePassiveEffect()
     {
-        if (fieldData.farmer == null)
-        {
-            harvestHour = 1; //2, 4, 6 중 랜덤.
-            yield = 1; //1, 3, 10 중 랜덤.
-        }
+        fieldData.yieldClass = RandomNumGenerator();
     }
 
     private IEnumerator plantGrowing()
@@ -183,7 +214,8 @@ public class FieldSlot : SerializedMonoBehaviour
 
     private void CalculateRemainingTime()
     {
-        TimeSpan elapsed = DateTime.Now - fieldData.lastSaveTime;
+        DateTime lastTime = DateTime.Parse(fieldData.lastSaveTime);
+        TimeSpan elapsed = DateTime.Now - lastTime;
         fieldData.leftTime -= (float)elapsed.TotalSeconds;
 
         if (fieldData.leftTime <= 0)
@@ -193,31 +225,19 @@ public class FieldSlot : SerializedMonoBehaviour
     }
     private int RandomNumGenerator()
     {
-        return UnityEngine.Random.Range(0, 3);
+        int randomNum = UnityEngine.Random.Range(0, 10);
+
+        if (randomNum < 6)
+        {
+            return 1;
+        }
+        else if (randomNum < 9)
+        {
+            return 2;
+        }
+        else
+        {
+            return 3;
+        }
     }
 }
-
-//    public void Set()
-//    {
-//        icon.gameObject.SetActive(true);
-//        icon.sprite = item.icon;
-//        quatityText.text = quantity > 1 ? quantity.ToString() : string.Empty;
-
-//        if (outline != null)
-//        {
-//            outline.enabled = equipped;
-//        }
-//    }
-
-//    public void Clear()
-//    {
-//        item = null;
-//        icon.gameObject.SetActive(false);
-//        quatityText.text = string.Empty;
-//    }
-
-//    public void OnClickButton()
-//    {
-//        inventory.SelectItem(index);
-//    }
-//}
