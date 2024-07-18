@@ -4,12 +4,13 @@ using UnityEngine.UI;
 using UnityEngine;
 using System.Collections;
 using System.Threading;
+using System;
 
 public class FieldSlot : SerializedMonoBehaviour
 {
+    /*FarmTab에서 Awake 메서드로 초기화되는 변수들*/
     public FarmTab farmTab;
     public int myIndex;
-
     public FieldData fieldData;
 
     #region properties
@@ -42,75 +43,83 @@ public class FieldSlot : SerializedMonoBehaviour
     #endregion
 
     public int harvestHour;
-    private float leftTime;
-    
     public int yield; //수확량
     [SerializeField] private int price; //밭 가격
-    
 
-    private void Start()
+    private void OnEnable()
     {
-        fieldData = InventoryManager.Instance.userData.fieldDatas[myIndex];
-
-        CurrentFieldAction(fieldData.currentFieldState);
-
-        if (CurrentFieldState == FieldState.Seeded)
+        if (fieldData.currentFieldState == FieldState.Seeded)
         {
-            //CalculateRemainingTime();
+            CalculateRemainingTime(); 
         }
-    }
 
-    private void OnDisable()
-    {
-        
+        CurrentFieldState = fieldData.currentFieldState;
+        CurrentFieldAction(CurrentFieldState);
     }
-
     private void CurrentFieldAction(FieldState state)
     {
         switch(state)
         {
             case FieldState.Locked: //잠김.
+                /*Btn Settings*/
+                pxmBtn.interactable = false;
                 FieldBtn.interactable = false;
+                /*UI Settings*/
                 currentSprite.sprite = fieldStatusImgs[0];
                 FieldIcon.sprite = Icons[0];
                 break;
+
             case FieldState.Buyable: //구매가능
+                /*Btn Settings*/
+                pxmBtn.interactable = true;
                 FieldBtn.interactable = true;
                 FieldBtn.onClick.AddListener(OnBuyFieldClicked);
+                /*UI Settings*/
                 currentSprite.sprite = fieldStatusImgs[1];
                 FieldIcon.sprite = Icons[1];
+                /*TMP Settings*/
                 priceTxt.text = $"가격: {price}다이아";
                 break;
+
             case FieldState.Empty: //빈 밭.
+                /*Btn Settings*/
                 FieldBtn.interactable = true;
                 FieldBtn.onClick.RemoveAllListeners();
                 FieldBtn.onClick.AddListener(OnSeedFieldClicked);
+                /*UI Settings*/
                 currentSprite.sprite = fieldStatusImgs[1];
                 FieldIcon.sprite = Icons[2];
+                /*TMP Settings*/
                 priceTxt.gameObject.SetActive(false);
                 break;
+
             case FieldState.Seeded: //작물이 심긴 밭.
+                /*Btn Settings*/
                 pxmBtn.interactable = false;
                 FieldBtn.interactable = false;
-                FieldBtn.onClick.RemoveAllListeners();
+                /*UI Settings*/
                 currentSprite.sprite = fieldStatusImgs[2];
                 FieldIcon.sprite = Icons[3];
-                priceTxt.gameObject.SetActive(false);
+                /*TMP Settings*/
+                StartCoroutine(plantGrowing()); //남은 시간
                 break;
+
             case FieldState.Harvest: //수확 준비된 밭.
-                //관련 함수
+                /*Btn Settings*/
                 pxmBtn.interactable = true;
                 FieldBtn.interactable = true;
+                FieldBtn.onClick.RemoveAllListeners();
                 FieldBtn.onClick.AddListener(OnHarvestFieldClicked);
+                /*UI Settings*/
                 currentSprite.sprite = fieldStatusImgs[3];
                 FieldIcon.sprite = Icons[4];
-                priceTxt.gameObject.SetActive(false);
                 break;
+
             default:
+                Debug.LogError($"{myIndex}번 밭에서 잘못된 FieldState.");
                 break;
         }
     }
-
 
     private void OnBuyFieldClicked()
     {
@@ -122,6 +131,7 @@ public class FieldSlot : SerializedMonoBehaviour
         }
         else
         {
+            //TODO: 다이아 없음을 알리는 popup
             Debug.LogWarning("다이아 없음 Popup");
         }
     }
@@ -132,8 +142,7 @@ public class FieldSlot : SerializedMonoBehaviour
         {
             CalculatePassiveEffect();
             CurrentFieldState = FieldState.Seeded;
-            leftTime = harvestHour * 3600f;
-            StartCoroutine(plantGrowing(leftTime));
+            fieldData.leftTime = harvestHour * 3600f;
         }
         else
         {
@@ -144,7 +153,7 @@ public class FieldSlot : SerializedMonoBehaviour
 
     private void OnHarvestFieldClicked()
     {
-
+        farmTab.HarvestYield(yield);
     }
 
     private void CalculatePassiveEffect()
@@ -156,15 +165,15 @@ public class FieldSlot : SerializedMonoBehaviour
         }
     }
 
-    private IEnumerator plantGrowing(float countDown)
+    private IEnumerator plantGrowing()
     {
         timeTxt.gameObject.SetActive(true);
-        while (countDown > 0)
+        while (fieldData.leftTime > 0)
         {
-            countDown -= Time.deltaTime;
-            int hours = Mathf.FloorToInt(countDown / 3600f);
-            int minutes = Mathf.FloorToInt((countDown % 3600f) / 60f);
-            int seconds = Mathf.FloorToInt(countDown % 60f);
+            fieldData.leftTime -= Time.deltaTime;
+            int hours = Mathf.FloorToInt(fieldData.leftTime / 3600f);
+            int minutes = Mathf.FloorToInt((fieldData.leftTime % 3600f) / 60f);
+            int seconds = Mathf.FloorToInt(fieldData.leftTime % 60f);
             timeTxt.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
             yield return null;
         }
@@ -172,36 +181,21 @@ public class FieldSlot : SerializedMonoBehaviour
         CurrentFieldState = FieldState.Harvest;
     }
 
+    private void CalculateRemainingTime()
+    {
+        TimeSpan elapsed = DateTime.Now - fieldData.lastSaveTime;
+        fieldData.leftTime -= (float)elapsed.TotalSeconds;
+
+        if (fieldData.leftTime <= 0)
+        {
+            fieldData.currentFieldState = FieldState.Harvest;
+        }
+    }
     private int RandomNumGenerator()
     {
-        return Random.Range(0, 3);
+        return UnityEngine.Random.Range(0, 3);
     }
-
-    
-    //pixelmon 배치된 후 농장 작업 들어가면 더 이상 못바꾸도록 버튼 비활성화 필요.
-
-    //픽셀몬의 패시브 효과를 넣는걸 도와줄 메서드
 }
-
-//    public UIInventory inventory;
-//    public Button button;
-//    public Image icon;
-//    public TextMeshProUGUI quatityText;
-//    private Outline outline;
-
-//    public int index;
-//    public bool equipped;
-//    public int quantity;
-
-//    private void Awake()
-//    {
-//        outline = GetComponent<Outline>();
-//    }
-
-//    private void OnEnable()
-//    {
-//        outline.enabled = equipped;
-//    }
 
 //    public void Set()
 //    {

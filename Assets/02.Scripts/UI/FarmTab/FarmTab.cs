@@ -1,4 +1,3 @@
-using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 
@@ -21,12 +20,14 @@ public class FarmTab : UIBase
     [SerializeField] private TextMeshProUGUI foodTxt;
     #endregion
 
+    private bool isAwakeEnabled = false;
+
     private async void Awake()
     {
         invenManager = InventoryManager.Instance;
         farmPxmPopup = await UIManager.Show<UIFarmPixelmonPopup>();
 
-        FieldSlot[] fieldSlots = new FieldSlot[fieldsParent.childCount];
+        fieldSlots = new FieldSlot[fieldsParent.childCount];
 
         for (int i = 0; i < fieldSlots.Length; i++)
         {
@@ -35,6 +36,8 @@ public class FarmTab : UIBase
             fieldSlots[i].myIndex = i;
             fieldSlots[i].fieldData = invenManager.userData.fieldDatas[i];
         }
+
+        isAwakeEnabled = true;
     }
 
     private void OnEnable()
@@ -43,6 +46,14 @@ public class FarmTab : UIBase
         seedTxt.text = seedCount.ToString();
         foodTxt.text = foodCount.ToString();  
 
+        if (isAwakeEnabled)
+        {
+            for (int i = 0; i < fieldSlots.Length; i++)
+            {
+                fieldSlots[i].gameObject.SetActive(true);
+            }
+        }
+        
         //밭 해금조건 예시
         //if (fieldSlots[2].CurrentFieldState == FieldState.Locked && invenManager.userData.lv >= 99)
         //{
@@ -58,20 +69,24 @@ public class FarmTab : UIBase
 
     private void OnDisable()
     {
-        FieldData[] temp = new FieldData[fieldsParent.childCount];
-        for(int i = 0;i < temp.Length;i++)
+        if (isAwakeEnabled)
         {
-            FieldData tempItem = fieldSlots[i].fieldData;
-
-            if (tempItem.currentFieldState == FieldState.Seeded)
+            FieldData[] temp = new FieldData[fieldsParent.childCount];
+            for (int i = 0; i < temp.Length; i++)
             {
-                tempItem.lastSaveTime = System.DateTime.Now;
+                FieldData tempItem = fieldSlots[i].fieldData;
+                fieldSlots[i].gameObject.SetActive(false);
+
+                if (tempItem.currentFieldState == FieldState.Seeded)
+                {
+                    tempItem.lastSaveTime = System.DateTime.Now;
+                }
+
+                temp[i] = tempItem;
             }
 
-            temp[i] = tempItem;
-        }
-
-        invenManager.SetData("fieldDatas", temp);
+            invenManager.SetData("fieldDatas", temp);
+        }    
     }
 
     public void ShowEquipPixelmon()
@@ -90,6 +105,11 @@ public class FarmTab : UIBase
             invenManager.SetDeltaData(nameof(invenManager.userData.seed), -1);
             return true;
         }
+    }
+
+    public void HarvestYield(int yield)
+    {
+
     }
 
     public void SetFieldPixelmon(int index)
