@@ -185,6 +185,8 @@ public class StageManager : Singleton<StageManager>
         {
             ReturnPools();
             ToNextStage(-1);
+            bossTimeSldr.gameObject.SetActive(false);
+            bossTimeTxt.gameObject.SetActive(false);
             return true;
         }
         return false;
