@@ -15,7 +15,7 @@ public class PixelmonLayout : MonoBehaviour
     public Sprite defaultBg;
     private void Start()
     {
-        InventoryManager inven = InventoryManager.Instance;
+        PixelmonManager inven = PixelmonManager.Instance;
         inven.equipAction += InsertIcon;
         inven.unEquipAction += DeleteIcon;
     }
