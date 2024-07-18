@@ -42,9 +42,10 @@ public class PixelmonFSM : FSM
     {
         while (true)
         {
-            if (target != null && coolTime == 0)
+            if (coolTime == 0)
             {
                 var enemies = Search(1);
+                if (enemies.Count == 0) Player.Instance.fsm.ChangeState(Player.Instance.fsm.DetectState);
                 for (int i = 0; i < enemies.Count; i++)
                 {
                     Vector2 direction = enemies[i].transform.position - transform.position;
@@ -70,14 +71,11 @@ public class PixelmonFSM : FSM
 
     public void InvokeAttack(bool isAttack)
     {
-        if (isAttack)
+        if (isAttack && attackCoroutine == null)
         {
-            if (attackCoroutine == null)
-            {
-                attackCoroutine = StartCoroutine(Attack());
-            }
+            attackCoroutine = StartCoroutine(Attack());
         }
-        else if (attackCoroutine != null)
+        else if (!isAttack && attackCoroutine != null)
         {
             StopCoroutine(attackCoroutine);
             attackCoroutine = null;

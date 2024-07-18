@@ -16,4 +16,14 @@ public class PlayerAttackState : IdleState
         base.Enter();
         Player.Instance.ChangePixelmonsState(PixelmonState.Attack);
     }
+
+    public override void Execute()
+    {
+        base.Execute();
+        if(fsm.target == null)
+        {
+            Player.Instance.SetPixelmonsTarget(null);
+            fsm.ChangeState(fsm.DetectState);
+        }
+    }
 }

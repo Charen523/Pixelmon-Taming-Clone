@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class FSM : MonoBehaviour
 {
-    protected IState currentState;
+    public IState currentState;
 
     [Header("Animations")]
     public Animator anim;
