@@ -33,9 +33,5 @@ public class PixelmonSlot : MonoBehaviour
         {
             pixelmontab.OnClickSlot(pixelmonData.id, rectTr);
         }
-        else if(pixelmontab.tabState == TabState.Equip)
-        {
-            pixelmontab.EquipedPixelmon(gameObject.transform.GetSiblingIndex());
-        }
     }
 }
