@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -176,6 +177,7 @@ public class PixelmonTab : UIBase
             {
                 if (equipData[i].pixelmonData == allData[choiceId].pixelmonData)
                 {
+                    inven.unEquipAction?.Invoke(i);
                     RemoveEquipSlot(i, choiceId);
                     break;
                 }
@@ -194,6 +196,7 @@ public class PixelmonTab : UIBase
             equipData[slotIndex].pixelmonData.isEquiped = false;
         }
         equipData[slotIndex].Equip(allData[choiceId].pixelmonData);
+        inven.equipAction?.Invoke(slotIndex, equipData[slotIndex].pixelmonData);
         equipProcessPanel.gameObject.SetActive(false);        
         tabState = TabState.Normal;
     }
