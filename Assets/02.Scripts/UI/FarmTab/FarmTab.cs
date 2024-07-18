@@ -32,6 +32,12 @@ public class FarmTab : UIBase
         /*상단 UI 초기화*/
         seedTxt.text = seedCount.ToString();
         foodTxt.text = foodCount.ToString();  
+
+        //밭 해금조건 예시
+        //if (fieldSlots[2].CurrentFieldState == FieldState.Locked && invenManager.userData.lv >= 99)
+        //{
+        //    fieldSlots[2].CurrentFieldState = FieldState.Buyable;
+        //}
     }
 
     private void Start()
@@ -42,6 +48,7 @@ public class FarmTab : UIBase
         {
             fieldSlots[i] = fieldsParent.GetChild(i).GetComponent<FieldSlot>();
             fieldSlots[i].farmTab = this;
+            fieldSlots[i].myIndex = i;
         }
 
         //InventoryManager.Instance.SetData("seed", 10);
@@ -56,7 +63,6 @@ public class FarmTab : UIBase
     {
         if (seedCount == 0)
         {
-            //TODO: 씨앗 없으면 경고 PopUp
             return false;
         }
         else
