@@ -6,6 +6,9 @@ using UnityEngine;
 public class UserData
 { 
     public string userId;
+    public string userName;
+    public int userLv;
+    public int userExp;
     public int money;
     public int diamond;
     public int eggLv;
