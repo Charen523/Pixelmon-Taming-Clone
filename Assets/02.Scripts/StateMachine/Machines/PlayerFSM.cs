@@ -18,13 +18,12 @@ public class PlayerFSM : FSM
     #region Player Input
     public Vector2 MovementInput { get; set; }
     public FloatingJoystick joystick;
-    private Coroutine activeMovementCoroutine;
     public bool isActiveMove; //능동 움직임 플래그.
     #endregion
 
     #region Player Detect
     public float initialDetectionRadius = 4; // 초기 탐지 반경 설정
-    public float maxDetectionRadius = 10; // 최대 탐지 반경 설정
+    public float maxDetectionRadius = 8; // 최대 탐지 반경 설정
     public float radiusIncrement = 2; // 탐지 반경 증가 값
     #endregion
 
@@ -37,7 +36,6 @@ public class PlayerFSM : FSM
         DieState = new PlayerDieState(this);
         AttackState = new PlayerAttackState(this);
 
-        joystick.OnJoystickVisible += JoystickChecker;
         GameManager.Instance.OnStageClear += ReStartPlayer;
 
         ChangeState(DetectState);
@@ -64,34 +62,6 @@ public class PlayerFSM : FSM
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, DetectState.currentDetectionRadius);
-        }
-    }
-
-    public void JoystickChecker(bool isActivated)
-    {
-        if (isActivated && currentState != DieState)
-        {
-            isActiveMove = true;
-            ChangeState(MoveState);
-            activeMovementCoroutine = StartCoroutine(ActivePlayerMove());
-        }
-        else
-        {
-            if (activeMovementCoroutine != null)
-                StopCoroutine(activeMovementCoroutine);
-
-            isActiveMove = false;
-            rb.velocity = Vector2.zero;
-            ChangeState(DetectState);
-        }
-    }
-
-    private IEnumerator ActivePlayerMove()
-    {
-        while (isActiveMove)
-        {
-            MovementInput = joystick.Direction;
-            yield return null;
         }
     }
 }

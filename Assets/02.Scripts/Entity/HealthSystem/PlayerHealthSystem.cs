@@ -14,6 +14,5 @@ public class PlayerHealthSystem : HealthSystem
     protected override void NoticeDead()
     {
         Player.Instance.fsm.ChangeState(Player.Instance.fsm.DieState);
-        Player.Instance.ChangePixelmonsState(PixelmonState.Idle);
     }
 }

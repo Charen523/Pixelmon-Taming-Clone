@@ -64,12 +64,10 @@ public class StageManager : Singleton<StageManager>
     public float spawnInterval = 2f;
     private WaitUntil normalStageCondition;
     private WaitUntil BossStageCondition;
+    private WaitUntil playerTargetIsNull;
     private WaitForSeconds waitTime = new WaitForSeconds(3);
 
 
-
-    //몬스터 사망 시 넘겨받을 정보 액션
-    public event Action<EnemyData, GameObject> monsterDead;
     //스테이지 로직
     private Coroutine stageCoroutine;
 
@@ -80,7 +78,6 @@ public class StageManager : Singleton<StageManager>
     {
         normalStageCondition = new WaitUntil(() => NormalStage());
         BossStageCondition = new WaitUntil(() => CheckedBossStage());
-        monsterDead += MonsterDead;
         GameManager.Instance.OnPlayerDie += OnPlayerDead;
         GameManager.Instance.OnStageStart += StageInitialize;
         LoadData();
@@ -247,10 +244,6 @@ public class StageManager : Singleton<StageManager>
     }
     #endregion
 
-    public void OnMonsterDead(EnemyData enemyData, GameObject enemyGo)
-    {
-        monsterDead?.Invoke(enemyData, enemyGo);
-    }
     
     public void MonsterDead(EnemyData enemyData, GameObject enemyGo)
     {
