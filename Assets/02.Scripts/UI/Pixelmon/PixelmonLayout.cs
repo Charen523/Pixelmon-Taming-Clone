@@ -1,28 +1,41 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class PixelmonLayout : MonoBehaviour
 {
-    public Image thumbnailIcon;
-    public GameObject plusIcon;
-    public GameObject lockIcon;
-
-    public void InsertIcon(PixelmonData data)
+    public Image[] backgrounds;
+    public Image[] thumbnailIcon;
+    public GameObject[] plusIcon;
+    public GameObject[] lockIcon;
+    public Sprite defaultBg;
+    private void Start()
     {
-        plusIcon.SetActive(false);
-        thumbnailIcon.sprite = data.icon;
+        PixelmonManager inven = PixelmonManager.Instance;
+        inven.equipAction += InsertIcon;
+        inven.unEquipAction += DeleteIcon;
     }
 
-    public void DeleteIcon()
+    public void InsertIcon(int index, PixelmonData data)
     {
-        thumbnailIcon.sprite = null;
-        plusIcon.SetActive(true);
+        plusIcon[index].SetActive(false);
+        //backgrounds[index].sprite = data.bgIcon;
+        thumbnailIcon[index].sprite = data.icon;
     }
-    public void UnLockedIcon()
+
+    public void DeleteIcon(int index)
     {
-        lockIcon.gameObject.SetActive(false);
-        plusIcon.SetActive(true);
+        backgrounds[index].sprite = defaultBg;
+        thumbnailIcon[index].sprite = null;
+        plusIcon[index].SetActive(true);
+    }
+    public void UnLockedIcon(int index)
+    {
+        lockIcon[index].gameObject.SetActive(false);
+        plusIcon[index].SetActive(true);
     }
 }

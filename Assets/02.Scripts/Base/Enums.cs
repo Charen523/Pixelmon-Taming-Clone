@@ -21,3 +21,13 @@ public enum PassiveType
     Buff,
     Farming
 }
+
+public enum PixelmonRank
+{
+    Common,
+    Advanced,
+    Rare,
+    Heroic,
+    Legendary,
+    Unique
+}

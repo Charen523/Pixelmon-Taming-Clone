@@ -41,4 +41,13 @@ public class PixelmonEquipSlot : PixelmonSlot
         pixelmonData = null;
         slotIcon.sprite = null;
     }
+
+    protected override void OnClick()
+    {
+        base.OnClick(); 
+        if (pixelmontab.tabState == TabState.Equip)
+        {
+            pixelmontab.EquipedPixelmon(gameObject.transform.GetSiblingIndex());
+        }
+    }
 }

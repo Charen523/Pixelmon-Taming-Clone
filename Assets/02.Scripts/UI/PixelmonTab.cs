@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -46,6 +47,8 @@ public class PixelmonTab : UIBase
     [SerializeField]
     private InventoryManager inven;
     [SerializeField]
+    private PixelmonManager pixelmonManager;
+    [SerializeField]
     private DataManager dataManager;
     //전체 픽셀몬 정보
     public List<PixelmonSlot> allData = new List<PixelmonSlot>();
@@ -64,6 +67,7 @@ public class PixelmonTab : UIBase
     {
         inven = InventoryManager.Instance;
         dataManager = DataManager.Instance;
+        pixelmonManager = PixelmonManager.Instance;
         InitTab();
     }
 
@@ -176,6 +180,7 @@ public class PixelmonTab : UIBase
             {
                 if (equipData[i].pixelmonData == allData[choiceId].pixelmonData)
                 {
+                    pixelmonManager.unEquipAction?.Invoke(i);
                     RemoveEquipSlot(i, choiceId);
                     break;
                 }
@@ -194,6 +199,7 @@ public class PixelmonTab : UIBase
             equipData[slotIndex].pixelmonData.isEquiped = false;
         }
         equipData[slotIndex].Equip(allData[choiceId].pixelmonData);
+        pixelmonManager.equipAction?.Invoke(slotIndex, equipData[slotIndex].pixelmonData);
         equipProcessPanel.gameObject.SetActive(false);        
         tabState = TabState.Normal;
     }
