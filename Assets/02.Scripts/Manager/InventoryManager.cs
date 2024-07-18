@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class InventoryManager : Singleton<InventoryManager>
 {
@@ -11,6 +12,8 @@ public class InventoryManager : Singleton<InventoryManager>
     [SerializeField]
     private DataManager dataManager;
     bool isDirty;
+    public UnityAction<int, PixelmonData> equipAction;
+    public UnityAction<int> unEquipAction;
     // Start is called before the first frame update
     void Start()
     {
