@@ -1,4 +1,3 @@
-using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 
@@ -21,10 +20,24 @@ public class FarmTab : UIBase
     [SerializeField] private TextMeshProUGUI foodTxt;
     #endregion
 
+    private bool isAwakeEnabled = false;
+
     private async void Awake()
     {
         invenManager = InventoryManager.Instance;
         farmPxmPopup = await UIManager.Show<UIFarmPixelmonPopup>();
+
+        fieldSlots = new FieldSlot[fieldsParent.childCount];
+
+        for (int i = 0; i < fieldSlots.Length; i++)
+        {
+            fieldSlots[i] = fieldsParent.GetChild(i).GetComponent<FieldSlot>();
+            fieldSlots[i].farmTab = this;
+            fieldSlots[i].myIndex = i;
+            fieldSlots[i].fieldData = invenManager.userData.fieldDatas[i];
+        }
+
+        isAwakeEnabled = true;
     }
 
     private void OnEnable()
@@ -32,19 +45,48 @@ public class FarmTab : UIBase
         /*상단 UI 초기화*/
         seedTxt.text = seedCount.ToString();
         foodTxt.text = foodCount.ToString();  
+
+        if (isAwakeEnabled)
+        {
+            for (int i = 0; i < fieldSlots.Length; i++)
+            {
+                fieldSlots[i].gameObject.SetActive(true);
+            }
+        }
+        
+        //밭 해금조건 예시
+        //if (fieldSlots[2].CurrentFieldState == FieldState.Locked && invenManager.userData.lv >= 99)
+        //{
+        //    fieldSlots[2].CurrentFieldState = FieldState.Buyable;
+        //}
     }
 
     private void Start()
     {
-        FieldSlot[] fieldSlots = new FieldSlot[fieldsParent.childCount];
+        //테스트용 코드
+        InventoryManager.Instance.SetData("seed", 10);
+    }
 
-        for (int i = 0; i < fieldSlots.Length; i++)
+    private void OnDisable()
+    {
+        if (isAwakeEnabled)
         {
-            fieldSlots[i] = fieldsParent.GetChild(i).GetComponent<FieldSlot>();
-            fieldSlots[i].farmTab = this;
-        }
+            FieldData[] temp = new FieldData[fieldsParent.childCount];
+            for (int i = 0; i < temp.Length; i++)
+            {
+                FieldData tempItem = fieldSlots[i].fieldData;
+                fieldSlots[i].gameObject.SetActive(false);
 
-        //InventoryManager.Instance.SetData("seed", 10);
+                if (tempItem.currentFieldState == FieldState.Seeded)
+                {
+                    tempItem.lastSaveTime = System.DateTime.Now;
+                }
+
+                temp[i] = tempItem;
+            }
+
+            invenManager.SetData("fieldDatas", temp);
+        }    
     }
 
     public void ShowEquipPixelmon()
@@ -56,7 +98,6 @@ public class FarmTab : UIBase
     {
         if (seedCount == 0)
         {
-            //TODO: 씨앗 없으면 경고 PopUp
             return false;
         }
         else
@@ -64,6 +105,11 @@ public class FarmTab : UIBase
             invenManager.SetDeltaData(nameof(invenManager.userData.seed), -1);
             return true;
         }
+    }
+
+    public void HarvestYield(int yield)
+    {
+
     }
 
     public void SetFieldPixelmon(int index)

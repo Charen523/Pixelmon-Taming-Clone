@@ -18,8 +18,7 @@ public class UserData
     public int dungeonKeyC;
     public PlayerData data;
     public int equipCount;
-    public PixelmonData[] equipedPixelmons = new PixelmonData[5];
+    public PixelmonData[] equipedPixelmons = new PixelmonData[5]; //오타: equipped이 맞는 문법!
     public PixelmonData[] prossessedPixelmons;
-    public PixelmonData[] farmPixelmons = new PixelmonData[6];
-    public int[] farmTimer = new int[6];
+    public FieldData[] fieldDatas = new FieldData[6];
 }
