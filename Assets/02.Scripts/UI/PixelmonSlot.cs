@@ -66,8 +66,8 @@ public class PixelmonSlot : MonoBehaviour
     {
         int maxNum = GetEvolveValue();
         evolveSldr.maxValue = maxNum;
-        evolveSldr.value = pixelmonData.currentCount;
-        evolveTxt.text = string.Format("{0}/{1}", pixelmonData.currentCount, maxNum);
+        evolveSldr.value = pixelmonData.evolvedCount;
+        evolveTxt.text = string.Format("{0}/{1}", pixelmonData.evolvedCount, maxNum);
     }
 
     public int GetEvolveValue()
