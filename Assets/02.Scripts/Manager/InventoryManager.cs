@@ -17,7 +17,7 @@ public class InventoryManager : Singleton<InventoryManager>
     void Start()
     {
         dataManager = DataManager.Instance;
-        SaveManager.Instance.LoadFromPrefs(userData);
+        SaveManager.Instance.LoadData();
         StartCoroutine(ChangedValue());
         //SetData(nameof(userData.gold), 20);
     }
@@ -29,7 +29,7 @@ public class InventoryManager : Singleton<InventoryManager>
             if (isDirty)
             {
                 isDirty = false;
-                SaveManager.Instance.SaveToPrefs(userData);
+                SaveManager.Instance.SaveToJson(userData);
             }
             yield return null;
         }
