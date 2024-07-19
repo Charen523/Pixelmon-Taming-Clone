@@ -15,24 +15,24 @@ public class UIMiddleBar : UIBase
     [Header("알 뽑기")]
     public TextMeshProUGUI EggLvText;
     public TextMeshProUGUI EggCntText;
+    public int eggCount = 100;
+    public int eggLv = 1;
+    #region 알 뽑기 애니메이션
     public AnimationData Data = new AnimationData();
     public Animator BreakAnim;
     public Animator HatchAnim;
+    public GameObject HatchAnimGO;
+    public AnimationClip BreakClip;
+    #endregion
     public GameObject HatchResultPanel;
     public Image HatchedPixelmonImg;
     public Button GetPixelmonBtn;
-
-    public int eggCount = 100;
-    public int eggLv = 1;
 
     public bool isHatchedPixelmon;
     public bool isGetPixelmon;
     public PixelmonRank rank;
 
     private readonly string eggRcode = "EGG";
-
-    private bool isBreakAnimationEnded;
-    private bool isHatchAnimationEnded;
     #endregion
 
     private void Start()
@@ -79,28 +79,15 @@ public class UIMiddleBar : UIBase
         }
         else // 알 안깠음
         {
+            HatchAnimGO.SetActive(true);
+
             // 애니메이션 실행
             BreakAnim.SetBool(Data.EggBreakParameterHash, true);
             HatchAnim.SetBool(Data.EggHatchParameterHash, true);
 
-            // 화면에 표시(HatchedPixelmonImg)
-            Debug.Log($"뽑은 픽셀몬 등급(ClickEgg) : {rank}");
-
-            // 애니메이션 이벤트가 끝날 때까지 대기
-            //while (!isBreakAnimationEnded)
-            //{
-            //    yield return null;
-            //}
-
-            //while (!isHatchAnimationEnded)
-            //{
-            //    yield return null;
-            //}
-
-            //isBreakAnimationEnded = false;
-            //isHatchAnimationEnded = false;
-
-            yield return new WaitForSeconds(1.0f);
+            // 애니메이션 끝난지 체크
+            float startTime = Time.time;
+            while (Time.time - startTime < BreakClip.length) yield return null;
 
             HatchResultPanel.SetActive(true);
 
@@ -114,16 +101,6 @@ public class UIMiddleBar : UIBase
                 isHatchedPixelmon = false;
             }
         }
-    }
-
-    public void OnBreakAnimationEnd()
-    {
-        isBreakAnimationEnded = true;
-    }
-
-    public void OnHatchAnimationEnded()
-    {
-        isHatchAnimationEnded = true;
     }
 
     public PixelmonRank PerformGacha(string rcode)
@@ -169,6 +146,7 @@ public class UIMiddleBar : UIBase
         HatchAnim.SetBool(Data.EggHatchParameterHash, false);
 
         isGetPixelmon = true;
+        HatchAnimGO.SetActive(true);
         HatchResultPanel.SetActive(false);
     }
 }
