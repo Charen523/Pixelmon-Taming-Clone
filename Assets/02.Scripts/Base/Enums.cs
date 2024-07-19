@@ -27,7 +27,7 @@ public enum PixelmonRank
     Common,
     Advanced,
     Rare,
-    Heroic,
+    Epic,
     Legendary,
     Unique
 }
