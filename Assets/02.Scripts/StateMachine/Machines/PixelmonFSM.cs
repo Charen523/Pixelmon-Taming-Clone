@@ -34,7 +34,7 @@ public class PixelmonFSM : FSM
         IdleState = new IdleState(this);
         MoveState = new PixelmonMoveState(this);
         AttackState = new PixelmonAttackState(this);
-        minDistance = Player.Instance.data.atkRange;
+        minDistance = Player.Instance.data.baseAtkRange;
         ChangeState(IdleState);
     }
 
