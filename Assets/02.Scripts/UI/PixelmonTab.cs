@@ -14,7 +14,7 @@ public class PixelmonTab : UIBase
     private Toggle prossessToggle;
 
     [SerializeField]
-    private TextMeshProUGUI seedCountTxt;
+    private TextMeshProUGUI foodCountTxt;
 
 
     //픽셀몬 슬롯 클릭시 활성화 오브젝트
@@ -90,7 +90,7 @@ public class PixelmonTab : UIBase
         }
 
         CheckedData();
-        seedCountTxt.text = inven.userData.petFood.ToString();
+        foodCountTxt.text = inven.userData.petFood.ToString();
     }
 
     public void InitInfo()
@@ -101,7 +101,7 @@ public class PixelmonTab : UIBase
     public void SetPetfoodCount(int count)
     {
         inven.SetDeltaData(nameof(inven.userData.petFood), count);
-        seedCountTxt.text = inven.userData.petFood.ToString();
+        foodCountTxt.text = inven.userData.petFood.ToString();
     }
 
     public void CheckedData()
@@ -118,11 +118,6 @@ public class PixelmonTab : UIBase
         {
             data.gameObject.SetActive(!prossessToggle.isOn);
         }
-    }
-
-    public void Feeding()
-    {
-
     }
 
     public void AutoProssess()

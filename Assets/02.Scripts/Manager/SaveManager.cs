@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SaveManager : Singleton<SaveManager>
 {
-    private readonly string jsonPlayerData = "PlayerData";
+    private readonly string jsonPlayerData = "userData.json";
     private string jsonFolder;
     //[SerializeField]
     //Dictionary<string, PlayerData> PlayerDictionary = new Dictionary<string, PlayerData>();
@@ -15,7 +15,7 @@ public class SaveManager : Singleton<SaveManager>
     private string saveData = "SaveFile";
     void Start()
     {
-        jsonFolder = Application.persistentDataPath;        
+        
     }
 
     public void SaveUserData()
@@ -23,15 +23,25 @@ public class SaveManager : Singleton<SaveManager>
 
     }
 
-    public void SaveToJsonData<T>(T data, string path)
+    public void SaveToJsonData<T>(T data)
     {
-        string fileName = Path.Combine(jsonFolder, path);
-        if(!File.Exists(fileName)) 
+        string jsonData = JsonUtility.ToJson(data, true);
+        string path = Path.Combine(Application.persistentDataPath, jsonPlayerData);
+        if(!File.Exists(path)) 
         {
-            File.Create(fileName);
-        }
-        string jsonData = JsonUtility.ToJson(data);
-        File.WriteAllText(fileName, jsonData);
+            File.Create(path);
+        }       
+        File.WriteAllText(path, jsonData);
+        Debug.Log("저장");
+    }
+
+    void LoadPlayerDataFromJson()
+    {
+        // 데이터를 불러올 경로 지정
+        string path = Path.Combine(Application.dataPath, jsonPlayerData);
+        // 파일의 텍스트를 string으로 저장
+        string jsonData = File.ReadAllText(path);
+        InventoryManager.Instance.userData = JsonUtility.FromJson<UserData>(jsonData);
     }
 
 
@@ -39,6 +49,7 @@ public class SaveManager : Singleton<SaveManager>
     public void SaveToPrefs<T>(T data)
     {
         string jsonData = JsonUtility.ToJson(data);
+        //SaveToJsonData<T>(data);
         PlayerPrefs.SetString(saveData, jsonData);
     }
 
@@ -53,8 +64,8 @@ public class SaveManager : Singleton<SaveManager>
         }
         else
         {
-            InventoryManager.Instance.userData = new UserData();
-            SaveToPrefs(data);
+            LoadPlayerDataFromJson();
+            SaveToPrefs(InventoryManager.Instance.userData);
             LoadFromPrefs(data);
         }
     }
