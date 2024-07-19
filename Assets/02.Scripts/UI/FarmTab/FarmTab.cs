@@ -63,12 +63,6 @@ public class FarmTab : UIBase
         //}
     }
 
-    private void Start()
-    {
-        //테스트용 코드
-        InventoryManager.Instance.SetData("seed", 10);
-    }
-
     private void OnDisable()
     {
         if (isAwakeEnabled)
