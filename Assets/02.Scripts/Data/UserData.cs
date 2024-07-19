@@ -10,7 +10,7 @@ public class UserData
     public string userName;
     public int userLv;
     public int userExp;
-    public int money;
+    public int gold;
     public int diamond;
     public int eggLv;
     public int eggCount;

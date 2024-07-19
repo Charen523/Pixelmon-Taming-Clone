@@ -19,7 +19,7 @@ public class InventoryManager : Singleton<InventoryManager>
         dataManager = DataManager.Instance;
         SaveManager.Instance.LoadFromPrefs(userData);
         StartCoroutine(ChangedValue());
-        //SetData(nameof(userData.money), 20);
+        //SetData(nameof(userData.gold), 20);
     }
 
     IEnumerator ChangedValue()
