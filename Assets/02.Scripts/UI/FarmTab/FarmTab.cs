@@ -10,7 +10,7 @@ public class FarmTab : UIBase
 
     #region Inventory Data
     int seedCount => InventoryManager.Instance.userData.seed;
-    int foodCount => InventoryManager.Instance.userData.petFood;
+    int foodCount => InventoryManager.Instance.userData.food;
     #endregion
 
     #region UI
@@ -107,7 +107,7 @@ public class FarmTab : UIBase
     public void HarvestYield(int yield)
     {
         invenManager.SetDeltaData("petFood", yield);
-        foodTxt.text = invenManager.userData.petFood.ToString();
+        foodTxt.text = invenManager.userData.food.ToString();
     }
 
     public void SetFieldPixelmon(int index)

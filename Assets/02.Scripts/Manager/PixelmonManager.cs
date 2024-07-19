@@ -14,7 +14,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
     void Start()
     {
         inven = InventoryManager.Instance;
-        inven.userData.equipedPixelmons = new PixelmonData[5];
+        inven.userData.equippedPxms = new PixelmonData[5];
         player = Player.Instance;
         equipAction += Equipped;
         unEquipAction += UnEquipped;
@@ -25,13 +25,13 @@ public class PixelmonManager : Singleton<PixelmonManager>
     {
         for (int i = 0; i < 5; i++)
         {
-            if (inven.userData.equipedPixelmons[i] == null)
+            if (inven.userData.equippedPxms[i] == null)
             {
                 UnEquipped(i);
             }
             else
             {
-                Equipped(i, inven.userData.equipedPixelmons[i]);
+                Equipped(i, inven.userData.equippedPxms[i]);
             }
         }
     }

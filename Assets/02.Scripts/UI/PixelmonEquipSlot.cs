@@ -18,7 +18,7 @@ public class PixelmonEquipSlot : PixelmonSlot
 
     public void ChangedInfo()
     {
-        PixelmonData[] datas = InventoryManager.Instance.userData.equipedPixelmons;
+        PixelmonData[] datas = InventoryManager.Instance.userData.equippedPxms;
         if (datas.Length > gameObject.transform.GetSiblingIndex())
         {
             pixelmonData = datas[gameObject.transform.GetSiblingIndex()];

@@ -83,15 +83,15 @@ public class PixelmonTab : UIBase
 
         for (int i = 0; i < equipData.Length; i++)
         {
-            if (inven.userData.equipedPixelmons.Length > i)
+            if (inven.userData.equippedPxms.Length > i)
             {
-                equipData[i].pixelmonData = inven.userData.equipedPixelmons[i];
+                equipData[i].pixelmonData = inven.userData.equippedPxms[i];
             }
             equipData[i].pixelmontab = this;
         }
 
         CheckedData();
-        foodCountTxt.text = inven.userData.petFood.ToString();
+        foodCountTxt.text = inven.userData.food.ToString();
     }
 
     public void InitInfo()
@@ -101,8 +101,8 @@ public class PixelmonTab : UIBase
 
     public void SetPetfoodCount(int count)
     {
-        inven.SetDeltaData(nameof(inven.userData.petFood), count);
-        foodCountTxt.text = inven.userData.petFood.ToString();
+        inven.SetDeltaData(nameof(inven.userData.food), count);
+        foodCountTxt.text = inven.userData.food.ToString();
     }
 
     public void CheckedData()
