@@ -7,13 +7,13 @@ using UnityEngine;
 public class UIMiddleBar : UIBase
 {
     [Header("알 뽑기")]
-    public TextMeshProUGUI aggLvText;
-    public TextMeshProUGUI aggCountText;
-    public Animator aggAnim;
+    public TextMeshProUGUI eggLvText;
+    public TextMeshProUGUI eggCountText;
+    public Animator eggAnim;
     public GameObject EffectAnim;
 
-    public int aggCount = 100;
-    public int aggLv = 1;
+    public int eggCount = 100;
+    public int eggLv = 1;
 
     private readonly string eggRcode = "EGG";
 
@@ -22,23 +22,23 @@ public class UIMiddleBar : UIBase
         // UserData 받아와서 ㄱㄱ
         //aggCount = 100;
         //aggLv = 1; 
-        aggCountText.text = aggCount.ToString();
-        aggLvText.text = aggLv.ToString();
+        eggCountText.text = eggCount.ToString();
+        eggLvText.text = eggLv.ToString();
     }
 
-    public void OnClickAgg()
+    public void OnClickEgg()
     { 
-        if(aggCount > 0) // 코루틴으로 해야할듯
+        if(eggCount > 0) // 코루틴으로 해야할듯
         {
             // 애니메이션 실행
             // 확률에 따라 픽셀몬 랜덤뽑기
-            string levelString = aggLv.ToString("D5"); // 5자리 숫자로 변환, 빈 자리는 0으로 채움
+            string levelString = eggLv.ToString("D5"); // 5자리 숫자로 변환, 빈 자리는 0으로 채움
 
             StringBuilder sb = new StringBuilder();
             sb.Append(eggRcode);
             sb.Append(levelString);
             string rcode = sb.ToString();
-            DataManager.Instance.GetData<EggRateData>(rcode);
+            Draw(rcode);
 
             // 등장 애니메이션 실행
             // EffectAnim.SetActive(true);
@@ -49,20 +49,36 @@ public class UIMiddleBar : UIBase
         }
     }
 
-    public string Draw(string[] rarities, int[] probabilities)
+    public String Draw(string rcode)
     {
-        System.Random random = new System.Random();
-        int randomNumber = random.Next(1, 101); // 1부터 100까지의 난수를 생성
+        var data = DataManager.Instance.GetData<EggRateData>(rcode);
 
-        int cumulativeProbability = 0;
-        for (int i = 0; i < rarities.Length; i++)
+        float[] probs = { data.common, data.advanced, data.rare, data.epic, data.legendary };
+
+        // Check if probabilities sum to 100
+        float totalProb = 0;
+        foreach (float prob in probs)
         {
-            cumulativeProbability += probabilities[i];
-            if (randomNumber <= cumulativeProbability)
+            totalProb += prob;
+        }
+        if (totalProb != 100)
+        {
+            throw new InvalidOperationException("Probabilities must sum to 100.");
+        }
+
+        System.Random rnd = new System.Random();
+        int randNum = rnd.Next(1, 101); // 1부터 100까지의 난수를 생성
+
+        float cumProb = 0;
+        for (int i = 0; i < probs.Length; i++)
+        {
+            cumProb += probs[i];
+            if (randNum <= cumProb)
             {
-                return rarities[i];
+                return i.ToString();
             }
         }
-        return null; // 여기에 도달할 경우 없음
+        return null; // probabilities 배열의 모든 값의 합이 100이 아닌 경우
     }
+
 }
