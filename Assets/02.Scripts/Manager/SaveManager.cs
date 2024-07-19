@@ -49,7 +49,7 @@ public class SaveManager : Singleton<SaveManager>
     public void SaveToPrefs<T>(T data)
     {
         string jsonData = JsonUtility.ToJson(data);
-        //SaveToJsonData<T>(data);
+        SaveToJsonData<T>(data);
         PlayerPrefs.SetString(saveData, jsonData);
     }
 

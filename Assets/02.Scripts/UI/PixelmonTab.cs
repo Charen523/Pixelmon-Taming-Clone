@@ -23,7 +23,8 @@ public class PixelmonTab : UIBase
     private Button equipBtn;
     [SerializeField]
     private Button infoBtn;
-    public GameObject equipProcessPanel;
+    public GameObject equipOverlay;
+    public GameObject addViewOverlay;
     [SerializeField]
     private int choiceId;
     [SerializeField]
@@ -140,8 +141,7 @@ public class PixelmonTab : UIBase
         choiceId = index;
         clickPopUp.gameObject.SetActive(true);
         clickPopUp.position = rectTr.position + Vector3.down * 130;
-        equipProcessPanel.gameObject.SetActive(true);
-        equipProcessPanel.gameObject.transform.SetSiblingIndex(6);
+        addViewOverlay.gameObject.SetActive(false);
         if (allData[index].pixelmonData.isEquiped)
         {
             tabState = TabState.UnEquip;
@@ -158,7 +158,8 @@ public class PixelmonTab : UIBase
     {
         tabState = TabState.Normal;
         clickPopUp.gameObject.SetActive(false);
-        equipProcessPanel.gameObject.SetActive(false);
+        addViewOverlay.gameObject.SetActive(false);
+        equipOverlay.gameObject.SetActive(false);
     }
     
     public void OnEquip()
@@ -166,8 +167,7 @@ public class PixelmonTab : UIBase
         if(tabState == TabState.Equip) 
         {
             clickPopUp.gameObject.SetActive(false);
-            equipProcessPanel.gameObject.SetActive(true);
-            equipProcessPanel.gameObject.transform.SetSiblingIndex(5);
+            equipOverlay.gameObject.SetActive(true);
         }
         else if(tabState == TabState.UnEquip) 
         {
@@ -181,7 +181,6 @@ public class PixelmonTab : UIBase
                 }
             }
             clickPopUp.gameObject.SetActive(false);
-            equipProcessPanel.gameObject.SetActive(false);
             tabState = TabState.Normal;
         }
     }
@@ -189,13 +188,9 @@ public class PixelmonTab : UIBase
 
     public void EquipedPixelmon(int slotIndex)
     {
-        if (equipData[slotIndex].pixelmonData != null)
-        {
-            equipData[slotIndex].pixelmonData.isEquiped = false;
-        }
         equipData[slotIndex].Equip(allData[choiceId].pixelmonData);
         pixelmonManager.equipAction?.Invoke(slotIndex, equipData[slotIndex].pixelmonData);
-        equipProcessPanel.gameObject.SetActive(false);        
+        equipOverlay.gameObject.SetActive(false);        
         tabState = TabState.Normal;
     }
 

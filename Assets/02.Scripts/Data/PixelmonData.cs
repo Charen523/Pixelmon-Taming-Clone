@@ -11,7 +11,7 @@ public class PixelmonData : IData
     public string name;
     public int lv = 1;
     public int exp = 0;
-    public int rank;
+    public string rank;
     public int star;
     //같은 카드 중복개수
     public int currentCount;

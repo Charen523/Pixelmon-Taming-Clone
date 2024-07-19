@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PixelmonEquipSlot : PixelmonSlot
 {
+    public GameObject plusIcon;
     public GameObject lockIcon;
     public bool isLocked = true;
 
@@ -32,14 +34,18 @@ public class PixelmonEquipSlot : PixelmonSlot
     {
         pixelmonData = data;
         slotIcon.sprite = data.icon;
+        lvTxt.gameObject.SetActive(true);
+        lvTxt.text = string.Format("Lv.{0}", pixelmonData.lv);
         data.isEquiped = true;
-       
+        plusIcon.SetActive(false);
     }
 
     public void UnEquip()
     {
         pixelmonData = null;
+        lvTxt.gameObject.SetActive(false);
         slotIcon.sprite = null;
+        plusIcon.SetActive(true);
     }
 
     protected override void OnClick()
