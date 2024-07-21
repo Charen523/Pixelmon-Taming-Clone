@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
@@ -18,7 +19,7 @@ public class Player : Singleton<Player>
     private void Start()
     {
         fsm.Init();
-        LocatedPixelmon();
+        //LocatedPixelmon();
     }
 
     private void Update()
@@ -55,14 +56,16 @@ public class Player : Singleton<Player>
         }
     }
 
-    private void LocatedPixelmon()
+    public void LocatedPixelmon()
     {
+        if(currentPixelmonCount == 0) return;
         int angle = 360 / currentPixelmonCount;
         int currentAngle = -90;
+        var pxmList = pixelmons.ToList().FindAll((obj) => obj != null);
         for (int i = 0; i < currentPixelmonCount; i++)
         {
             Vector3 pos = new Vector3(Mathf.Cos(currentAngle * Mathf.Deg2Rad) * radius, Mathf.Sin(currentAngle * Mathf.Deg2Rad) * radius - 0.6f, 0);
-            pixelmons[i].transform.position = pos;
+            pxmList[i].transform.position = transform.position + pos;
             currentAngle += angle;
         }
     }

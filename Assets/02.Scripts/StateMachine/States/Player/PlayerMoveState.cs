@@ -21,13 +21,13 @@ public class PlayerMoveState : MoveState
         // 플레이어 입력에 따라 이동
         if (fsm.isActiveMove)
         {
-            fsm.rb.velocity = fsm.MovementInput * Player.Instance.data.spd;
+            fsm.rb.velocity = fsm.MovementInput * Player.Instance.data.baseSpd;
         }
         // 입력이 없을 경우 타겟을 향해 이동
         else
         {
             base.Execute();
-            MoveTowardsTarget(Player.Instance.data.spd, Player.Instance.data.atkRange, fsm.AttackState);
+            MoveTowardsTarget(Player.Instance.data.baseSpd, Player.Instance.data.baseAtkRange, fsm.AttackState);
         }
     }
 }

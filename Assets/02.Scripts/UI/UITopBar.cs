@@ -37,7 +37,7 @@ public class UITopBar : UIBase
 
     private void InitTopUIData()
     {
-        lvTxt.text = invenManager.userData.userLv.ToString();
+        lvTxt.text = $"Lv.{invenManager.userData.userLv}";
         
         userName.text = invenManager.userData.userName;
         goldTxt.text = invenManager.userData.gold.ToString();
@@ -45,6 +45,6 @@ public class UITopBar : UIBase
 
         currentExp = invenManager.userData.userExp;
         expSldr.value = currentExp / tempMaxExp;
-        expTxt.text = currentExp.ToString();
+        expTxt.text = (expSldr.value * 100).ToString("0.00") + "%";
     }
 }

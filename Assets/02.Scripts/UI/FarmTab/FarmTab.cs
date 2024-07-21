@@ -10,7 +10,7 @@ public class FarmTab : UIBase
 
     #region Inventory Data
     int seedCount => InventoryManager.Instance.userData.seed;
-    int foodCount => InventoryManager.Instance.userData.petFood;
+    int foodCount => InventoryManager.Instance.userData.food;
     #endregion
 
     #region UI
@@ -63,12 +63,6 @@ public class FarmTab : UIBase
         //}
     }
 
-    private void Start()
-    {
-        //테스트용 코드
-        InventoryManager.Instance.SetData("seed", 10);
-    }
-
     private void OnDisable()
     {
         if (isAwakeEnabled)
@@ -107,7 +101,7 @@ public class FarmTab : UIBase
     public void HarvestYield(int yield)
     {
         invenManager.SetDeltaData("petFood", yield);
-        foodTxt.text = invenManager.userData.petFood.ToString();
+        foodTxt.text = invenManager.userData.food.ToString();
     }
 
     public void SetFieldPixelmon(int index)
