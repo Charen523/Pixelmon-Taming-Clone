@@ -83,7 +83,7 @@ public class PixelmonTab : UIBase
         {
             PixelmonSlot slot = Instantiate(slotPrefab, contentTr);
             slot.InitSlot(this, dataManager.pixelmonData.data[i]);
-            if (userData.OwnedPxms[0] != null && slot.pxmData.id == userData.OwnedPxms[index].id)
+            if (userData.OwnedPxms[i] != null && slot.pxmData.id == userData.OwnedPxms[index].id)
             {
                 slot.myPxmData = userData.OwnedPxms[index++];
                 possessData.Add(slot);
@@ -147,24 +147,29 @@ public class PixelmonTab : UIBase
 
     public void Possess(int index)
     {
-        allData[index].myPxmData.isPossessed = true;
+        allData[index].myPxmData.isOwned = true;
     }
 
     public void OnClickSlot(int index, RectTransform rectTr)
     {
         choiceId = index;
         clickPopUp.gameObject.SetActive(true);
+        addViewOverlay.gameObject.SetActive(true);
         clickPopUp.position = rectTr.position + Vector3.down * 130;
-        addViewOverlay.gameObject.SetActive(false);
         if (allData[index].myPxmData.isEquiped)
         {
             tabState = TabState.UnEquip;
             equipTxt.text = unEquip;
         }
-        else
+        else if(allData[index].myPxmData.isOwned)
         {
             tabState = TabState.Equip;
             equipTxt.text = equip;
+        }
+        else
+        {
+            tabState = TabState.Empty;
+            equipTxt.text = "-";
         }
     }
 
@@ -218,6 +223,7 @@ public class PixelmonTab : UIBase
     public void OnInfoPopUp()
     {
         infoPopUp.gameObject.SetActive(true);
+        tabState = TabState.Normal;
         infoPopUp.ShowPopUp(choiceId);
     }
 }
@@ -226,5 +232,6 @@ public enum TabState
 {
     Normal,
     Equip,
-    UnEquip
+    UnEquip,
+    Empty
 }
