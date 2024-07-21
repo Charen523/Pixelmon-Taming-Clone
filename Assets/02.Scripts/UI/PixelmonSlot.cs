@@ -34,7 +34,7 @@ public class PixelmonSlot : MonoBehaviour
     public PixelmonTab pxmtab;
     public PixelmonData pxmData;
     public MyPixelmonData myPxmData;
-    public bool isPossessed => myPxmData.isPossessed;
+    public bool isOwned => myPxmData.isOwned;
     #endregion
 
     public virtual void InitSlot(PixelmonTab tab, PixelmonData data)
