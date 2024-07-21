@@ -77,11 +77,6 @@ public class InventoryManager : Singleton<InventoryManager>
         return false;
     }
 
-    //정보 가져오는 용도
-    public List<PixelmonData> GetPossessPixelmons()
-    {
-        return userData.OwnedPxms.ToList();
-    }
 
     public void SetPossessPixelmons(List<PixelmonData> data) 
     {
