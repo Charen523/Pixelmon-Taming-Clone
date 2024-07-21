@@ -9,43 +9,21 @@ public class PixelmonData : IData
     //도감 넘버
     public int id;
     public string name;
-    public int lv = 1;
-    public int exp = 0;
     public string rank;
-    public int star;
-    //같은 카드 중복개수
-    public int currentCount;
-    //장착 여부
-    public bool isEquiped;
-    //보유 여부
-    public bool isPossessed;
 
-    public float atk;
-    public float atkSpd;
-    public float sAtk;
-    public float cri;
-    public float criDmg;
-    public float atkDmg;
-    public float hit;
+    public float baseAtk;
+    public float baseCri;
+    public float baseCriDmg;
+    public float baseAtkSpd;
+    public float baseAtkDmg;
+    public float baseSAtk;
+    public float baseSCri;
+    public float baseSCriDmg;
 
     //픽셀몬 아이콘
     public Sprite icon;
     public Sprite bgIcon;
 
-    public UnityAction activeSkill;
-    //패시브 능력
-    public Trait[] trait;
-
-    string IData.Rcode => rcode;  // 명시적 인터페이스 구현
+    string IData.Rcode => rcode;
 }
 
-public class Trait
-{
-    public string rcode;
-    //패시브 능력 이름
-    public string name;
-    //픽셀몬 패시브 타입
-    public PassiveType psvType;
-    //패시브 능력치
-    public float ability;
-}

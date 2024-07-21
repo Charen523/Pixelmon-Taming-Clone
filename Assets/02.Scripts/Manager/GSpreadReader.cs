@@ -213,7 +213,7 @@ public abstract class GSpreadReader<V> : Singleton<V> where V : GSpreadReader<V>
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Debug.Log("Convert Failed");
             }

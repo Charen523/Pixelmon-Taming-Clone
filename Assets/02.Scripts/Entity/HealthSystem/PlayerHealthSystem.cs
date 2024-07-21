@@ -7,7 +7,7 @@ public class PlayerHealthSystem : HealthSystem
 
     public void InitHealth()
     {
-        maxHealth = Player.Instance.data.hp;
+        maxHealth = Player.Instance.data.baseMaxHp;
         currentHealth = maxHealth;
     }
 
