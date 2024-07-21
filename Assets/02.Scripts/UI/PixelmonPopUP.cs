@@ -46,7 +46,7 @@ public class PixelmonPopUP : MonoBehaviour
 
     private void SetData()
     {
-        data = tab.allData[infoIndex].pixelmonData;
+        data = tab.allData[infoIndex].pxmData;
         InitInfo();
     }
 

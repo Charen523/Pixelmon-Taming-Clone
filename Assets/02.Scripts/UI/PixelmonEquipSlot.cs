@@ -9,19 +9,22 @@ public class PixelmonEquipSlot : PixelmonSlot
     public GameObject plusIcon;
     public GameObject lockIcon;
     public bool isLocked = true;
-
+    public Player player;
+    public PixelmonManager pxmManager;
     private void Start()
     {
+        player = Player.Instance;
+        pxmManager = PixelmonManager.Instance;
         slotBtn.onClick.AddListener(OnClick);
         ChangedInfo();      
     }
 
     public void ChangedInfo()
     {
-        PixelmonData[] datas = InventoryManager.Instance.userData.equippedPxms;
+        MyPixelmonData[] datas = SaveManager.Instance.userData.equippedPxms;
         if (datas.Length > gameObject.transform.GetSiblingIndex())
         {
-            pixelmonData = datas[gameObject.transform.GetSiblingIndex()];
+            myPxmData = datas[gameObject.transform.GetSiblingIndex()];
         }
     }
 
@@ -30,19 +33,20 @@ public class PixelmonEquipSlot : PixelmonSlot
         base.InitSlot(tab, data);
     }
 
-    public void Equip(PixelmonData data)
-    {
-        pixelmonData = data;
-        slotIcon.sprite = data.icon;
+    public void Equip(MyPixelmonData myData)
+    { 
+        myPxmData = myData;
+        pxmData = pxmManager.FindPixelmonData(myData);
+        slotIcon.sprite = pxmData.icon;
         lvTxt.gameObject.SetActive(true);
-        lvTxt.text = string.Format("Lv.{0}", pixelmonData.lv);
-        data.isEquiped = true;
+        lvTxt.text = string.Format("Lv.{0}", myData.lv);
+        myData.isEquiped = true;
         plusIcon.SetActive(false);
     }
 
     public void UnEquip()
     {
-        pixelmonData = null;
+        pxmData = null;
         lvTxt.gameObject.SetActive(false);
         slotIcon.sprite = null;
         plusIcon.SetActive(true);
@@ -50,10 +54,13 @@ public class PixelmonEquipSlot : PixelmonSlot
 
     protected override void OnClick()
     {
-        base.OnClick(); 
-        if (pixelmontab.tabState == TabState.Equip)
+        if (pxmtab.tabState == TabState.Normal)
         {
-            pixelmontab.EquipedPixelmon(gameObject.transform.GetSiblingIndex());
+            pxmtab.OnClickSlot(pxmData.id, rectTr);
+        }
+        else if (pxmtab.tabState == TabState.Equip)
+        {
+            pxmtab.EquipedPixelmon(gameObject.transform.GetSiblingIndex());
         }
     }
 }

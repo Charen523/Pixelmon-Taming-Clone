@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Pixelmon : MonoBehaviour
 {
     public PixelmonData data;
+    public MyPixelmonData myData;
     public PixelmonFSM fsm;
     public SpriteRenderer spriteRenderer;
     public Animator animator;
