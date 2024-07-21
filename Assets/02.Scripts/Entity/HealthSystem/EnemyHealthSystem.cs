@@ -5,11 +5,6 @@ public class EnemyHealthSystem : HealthSystem
 {
     [SerializeField] private Enemy enemy;
 
-    private void OnEnable()
-    {
-        initEnemyHealth();
-    }
-
     private void Start()
     {
         if (enemy == null)
@@ -21,13 +16,11 @@ public class EnemyHealthSystem : HealthSystem
                 Debug.LogError($"{gameObject.name} 객체에 Enemy 클래스 없음!");
             }
         }
-
-        initEnemyHealth();
     }
 
-    private void initEnemyHealth()
+    public void initEnemyHealth(float hp)
     {
-        maxHealth = enemy.data.hp;
+        maxHealth = hp;
         currentHealth = maxHealth;
     }
 

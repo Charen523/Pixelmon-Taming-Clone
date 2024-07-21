@@ -23,7 +23,7 @@ public class EnemyAttackState : AttackState
         Vector2 currentPosition = fsm.rb.position;
         Vector2 targetPosition = Player.Instance.fsm.rb.position;
 
-        if (Vector2.Distance(currentPosition, targetPosition) > fsm.enemy.data.atkRange)
+        if (Vector2.Distance(currentPosition, targetPosition) > fsm.enemy.statHandler.data.atkRange)
         {
             return false;
         }

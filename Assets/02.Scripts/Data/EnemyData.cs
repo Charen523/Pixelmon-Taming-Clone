@@ -8,11 +8,13 @@ public class EnemyData : IData
     public string name;
     public string spawnWorldId;
     public bool isBoss;
+    public float spd;
     public float atk;
     public float atkRange;
     public float hp;
     public float def;
-    public float spd;
+    public float cri;
+    public float criDmg;
     public string rewardTypes;
     public string rewardRates;
     public string rewardValues;
@@ -23,8 +25,6 @@ public class EnemyData : IData
     public float[] rewardRate => Array.ConvertAll(rewardRates.Split(" "), float.Parse);
     public int[] rewardValue => Array.ConvertAll(rewardValues.Split(" "), int.Parse);
     #endregion
-
-    public float dmg;
 
     string IData.Rcode => rcode;  // 명시적 인터페이스 구현
 }
