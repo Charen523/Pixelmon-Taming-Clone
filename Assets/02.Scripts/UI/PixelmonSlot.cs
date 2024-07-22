@@ -44,7 +44,6 @@ public class PixelmonSlot : MonoBehaviour
         pxmData = data;
         slotIcon.sprite = pxmData.icon;
         slotBtn.onClick.AddListener(OnClick);
-        UpdateSlot();
         //if (isLocked) lockIcon.SetActive(false);
     }
 
@@ -80,15 +79,15 @@ public class PixelmonSlot : MonoBehaviour
         switch (myPxmData.star)
         {
             case 0:
-                return dataManager.GetData<EvolveData>(pxmData.rank).start1;
+                return dataManager.GetData<EvolveData>(pxmData.rank).star1;
             case 1:
-                return dataManager.GetData<EvolveData>(pxmData.rank).start2;
+                return dataManager.GetData<EvolveData>(pxmData.rank).star2;
             case 2:
-                return dataManager.GetData<EvolveData>(pxmData.rank).start3;
+                return dataManager.GetData<EvolveData>(pxmData.rank).star3;
             case 3:
-                return dataManager.GetData<EvolveData>(pxmData.rank).start4;
+                return dataManager.GetData<EvolveData>(pxmData.rank).star4;
             case 4:
-                return dataManager.GetData<EvolveData>(pxmData.rank).start5;
+                return dataManager.GetData<EvolveData>(pxmData.rank).star5;
             default:
                 return 0;
         }
@@ -96,9 +95,12 @@ public class PixelmonSlot : MonoBehaviour
 
     protected virtual void OnClick()
     {
-        if (pxmtab.tabState == TabState.Normal)
-        {
-            pxmtab.OnClickSlot(pxmData.id, rectTr);
-        }
+        if (myPxmData.isEquiped)
+            pxmtab.tabState = TabState.UnEquip;
+        else if(myPxmData.isOwned)
+            pxmtab.tabState = TabState.Equip;
+        else
+            pxmtab.tabState = TabState.Empty;
+        pxmtab.OnClickSlot(pxmData.id, rectTr);
     }
 }
