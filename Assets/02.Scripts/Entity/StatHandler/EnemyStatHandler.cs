@@ -27,10 +27,9 @@ public class EnemyStatHandler : MonoBehaviour
     private void OnEnable()
     {
         string curRcode = StageManager.Instance.CurrentRCode;
-        Debug.Log(curRcode);
 
         //TODO: 임시 코드. 추후 디버그로 변경해야 함.
-        if (curRcode == null)
+        if (curRcode == null || curRcode == "")
         {
             curRcode = "STG00101";
         }
@@ -41,7 +40,7 @@ public class EnemyStatHandler : MonoBehaviour
         int deltaDifficulty = (int)Mathf.Pow(2, difficulty);
         int deltaStage = stage * 2;
 
-        for (int i = 0; i < enemyStats.Length; i++)
+        for (int i = 1; i < enemyStats.Length; i++)
         {
             enemyStats[i] = enemyStats[i] * deltaDifficulty + deltaStage;
         }
