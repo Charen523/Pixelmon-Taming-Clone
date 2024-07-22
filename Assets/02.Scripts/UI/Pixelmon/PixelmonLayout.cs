@@ -1,7 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,8 +28,8 @@ public class PixelmonLayout : MonoBehaviour
             {
                 if (userdata.equippedPxms[i].isEquiped)
                     InsertIcon(i, userdata.equippedPxms[i]);
-                else
-                    UnLockedIcon(i);
+
+                UnLockedIcon(i);
             }
         }
     }

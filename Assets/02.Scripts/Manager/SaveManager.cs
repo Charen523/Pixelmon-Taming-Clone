@@ -1,14 +1,19 @@
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
+using System;
 
 public class SaveManager : Singleton<SaveManager>
 {
+    public UserData userData = new UserData();
+    [SerializeField] private DataManager dataManager;
+
     private string userPath;
     private string initPath;
 
-    public UserData userData = new UserData();
+    bool isDirty;
+
     protected override void Awake()
     {
         base.Awake();
@@ -17,51 +22,135 @@ public class SaveManager : Singleton<SaveManager>
         LoadData();
     }
 
-    public void SaveToJson<T>(T data)
+    void Start()
     {
-        if (!File.Exists(userPath))
-        {
-            File.Create(userPath);
-        }
-        string jsonData = JsonUtility.ToJson(data, true);
-        File.WriteAllText(userPath, jsonData);
+        dataManager = DataManager.Instance;
+        StartCoroutine(ChangedValue());
     }
 
-    public void SaveToJson<T>(T data, string path)
+    public void SaveToJson<T>(T data, string path = null)
     {
-        string jsonData = JsonUtility.ToJson(data, true);
-        File.WriteAllText(path, jsonData);
+        path ??= userPath;
+
+        try
+        {
+            string jsonData = JsonUtility.ToJson(data, true);
+            File.WriteAllText(path, jsonData);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"{path}에 데이터를 저장하는데 실패함: {e.Message}");
+        }
     }
 
     public void LoadData()
     {
-        if (!File.Exists(userPath))
+        if (File.Exists(userPath))
         {
-            if (!File.Exists(initPath))
-            {
-                userData = new UserData();
-                SaveToJson<UserData>(userData, initPath);
-                LoadData();
-            }
-            else
-            {
-                LoadFromJson(initPath);
-                SaveToJson<UserData>(userData, userPath);
-            }
+            LoadFromJson(userPath);
+        }
+        else if (File.Exists(initPath))
+        {
+            LoadFromJson(initPath);
+            SaveToJson(userData, userPath);
         }
         else
         {
-            LoadFromJson(userPath);
+            userData = new UserData();
+            SaveToJson(userData, initPath);
+            LoadData();
         }
     }
 
     public void LoadFromJson(string path)
     {
-        // 데이터를 불러올 경로 지정
-        string dataPath = Path.Combine(Application.persistentDataPath, path);
-        string jsonData = File.ReadAllText(dataPath);
-        // 파일의 텍스트를 string으로 저장
-        userData = JsonUtility.FromJson<UserData>(jsonData);
-        InventoryManager.Instance.userData = JsonUtility.FromJson<UserData>(jsonData);
+        try
+        {
+            string jsonData = File.ReadAllText(path);
+            userData = JsonUtility.FromJson<UserData>(jsonData);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"{path}로부터 데이터를 로드하는 데에 실패했습니다: {e.Message}");
+        }
+    }
+
+    private IEnumerator ChangedValue()
+    {
+        while (true)
+        {
+            if (isDirty)
+            {
+                isDirty = false;
+                SaveToJson(userData);
+            }
+            yield return null;
+        }
+    }
+
+    public void SetData(string field, object value)
+    {
+        var fieldInfo = userData.GetType().GetField(field);
+        if (fieldInfo != null)
+        {
+            fieldInfo.SetValue(userData, value);
+            isDirty = true;
+        }
+        else
+        {
+            Debug.LogWarning($"{field}라는 변수를 UserData에서 찾을 수 없습니다.");
+        }
+    }
+
+    /// <param name="field">nameof(userData.변수)</param>
+    /// <param name="value">데이터 변화량</param>
+    public void SetDeltaData(string field, int value)
+    {
+        var fieldInfo = userData.GetType().GetField(field);
+        if (fieldInfo != null)
+        {
+            int currentValue = (int)fieldInfo.GetValue(userData);
+            fieldInfo.SetValue(userData, currentValue + value);
+            isDirty = true;
+        }
+        else
+        {
+            Debug.LogWarning($"{field}라는 변수를 UserData에서 찾을 수 없습니다.");
+        }
+    }
+
+    public void DropItem(string[] rcodes, float[] rates ,int[] amounts)
+    {
+        for(int i = 0; i < rcodes.Length; i++) 
+        {
+            if (CheckDropRate(rates[i]))
+            {
+                SetDeltaData(dataManager.GetData<RewardData>(rcodes[i]).name, amounts[i]);
+            }
+        }
+    }
+
+    public bool CheckDropRate(float rate)
+    {
+        return UnityEngine.Random.Range(0, 100) <= rate;
+    }
+
+    public bool CheckedInventory(string field, int value)
+    {
+        var fieldInfo = userData.GetType().GetField(field);
+        if (fieldInfo != null)
+        {
+            return (int)fieldInfo.GetValue(userData) >= value;
+        }
+        else
+        {
+            Debug.LogWarning($"{field}라는 변수를 UserData에서 찾을 수 없습니다.");
+            return false;
+        }
+    }
+
+    public void SetPossessPixelmons(List<PixelmonData> data) 
+    {
+        SetData(nameof(userData.ownedPxms), data.ToArray());
     }
 }

@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class FarmTab : UIBase
 {
-    private InventoryManager invenManager;
+    private SaveManager invenManager;
 
     public FieldSlot[] fieldSlots;
     [SerializeField] private Transform fieldsParent;
 
     #region Inventory Data
-    int seedCount => InventoryManager.Instance.userData.seed;
-    int foodCount => InventoryManager.Instance.userData.food;
+    int seedCount => SaveManager.Instance.userData.seed;
+    int foodCount => SaveManager.Instance.userData.food;
     #endregion
 
     #region UI
@@ -26,7 +26,7 @@ public class FarmTab : UIBase
     {
         isAwakeEnabled = false;
 
-        invenManager = InventoryManager.Instance;
+        invenManager = SaveManager.Instance;
         farmPxmPopup = await UIManager.Show<UIFarmPixelmonPopup>();
 
         fieldSlots = new FieldSlot[fieldsParent.childCount];
