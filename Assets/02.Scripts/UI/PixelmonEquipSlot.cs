@@ -21,11 +21,15 @@ public class PixelmonEquipSlot : PixelmonSlot
 
     public void ChangedInfo()
     {
-        MyPixelmonData[] datas = SaveManager.Instance.userData.equippedPxms;
-        if (datas.Length > gameObject.transform.GetSiblingIndex())
+        slotIndex = gameObject.transform.GetSiblingIndex();
+        MyPixelmonData datas = pxmtab.userData.equippedPxms[slotIndex];
+        if (datas != null && datas.isEquiped)
         {
-            myPxmData = datas[gameObject.transform.GetSiblingIndex()];
+            myPxmData = datas;
+            Equip(myPxmData);
         }
+        else
+            myPxmData = null;
     }
 
     public override void InitSlot(PixelmonTab tab, PixelmonData data)
@@ -54,13 +58,25 @@ public class PixelmonEquipSlot : PixelmonSlot
 
     protected override void OnClick()
     {
-        if (pxmtab.tabState == TabState.Normal && pxmData != null)
+        if (myPxmData == null && pxmtab.tabState != TabState.Equip)
         {
-            pxmtab.OnClickSlot(pxmData.id, rectTr);
+            return;
+        }
+        else if (myPxmData == null && pxmtab.tabState == TabState.Equip)
+        {
+            pxmtab.EquipedPixelmon(slotIndex);
         }
         else if (pxmtab.tabState == TabState.Equip)
         {
-            pxmtab.EquipedPixelmon(gameObject.transform.GetSiblingIndex());
+            if (myPxmData.isEquiped)
+                pxmtab.RemoveEquipSlot(slotIndex, myPxmData.id);
+            pxmtab.EquipedPixelmon(slotIndex);
         }
+        else if(pxmtab.tabState != TabState.Equip)
+        {
+            pxmtab.tabState = TabState.UnEquip;
+            pxmtab.OnClickSlot(pxmData.id, rectTr);
+        }
+
     }
 }
