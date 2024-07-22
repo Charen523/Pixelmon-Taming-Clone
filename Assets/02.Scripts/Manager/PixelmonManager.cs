@@ -9,13 +9,13 @@ public class PixelmonManager : Singleton<PixelmonManager>
     public UnityAction<int> unEquipAction;
     public Pixelmon[] equippedPixelmon;
     private Player player;
-    private SaveManager saveManager;
+    private UserData userData;
     private List<PixelmonData> pxmData;
     // Start is called before the first frame update
     void Start()
     {
         pxmData = DataManager.Instance.pixelmonData.data;
-        saveManager = SaveManager.Instance;
+        userData = SaveManager.Instance.userData;
         player = Player.Instance;
         equipAction += Equipped;
         unEquipAction += UnEquipped;
@@ -26,9 +26,9 @@ public class PixelmonManager : Singleton<PixelmonManager>
     {
         for (int i = 0; i < 5; i++)
         {
-            if (saveManager.userData.equippedPxms[i].isEquiped)
+            if (userData.equippedPxms[i].isEquiped)
             { 
-                Equipped(i, saveManager.userData.equippedPxms[i]);
+                Equipped(i, userData.equippedPxms[i]);
             }
         }
     }
