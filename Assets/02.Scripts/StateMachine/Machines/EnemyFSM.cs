@@ -43,12 +43,12 @@ public class EnemyFSM : FSM
 
     public void OnEnemyAttack()
     {
-        target.GetComponent<PlayerHealthSystem>().TakeDamage(enemy.data.dmg);
+        target.GetComponent<PlayerHealthSystem>().TakeDamage(enemy.statHandler.GetDamage());
     }
 
     public void OnEnemyDead()
     {
         gameObject.SetActive(false);
-        StageManager.Instance.MonsterDead(enemy.data, gameObject);
+        StageManager.Instance.MonsterDead(enemy.statHandler.data, gameObject);
     }
 }

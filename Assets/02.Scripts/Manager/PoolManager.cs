@@ -93,10 +93,6 @@ public class PoolManager : Singleton<PoolManager>
         for (int i = 0; i < pool.size; i++)
         {
             GameObject obj = Instantiate(pool.prefab, rcodeParent);
-            if (obj.TryGetComponent(out Enemy e))
-            {
-                e.data = DataManager.Instance.GetData<EnemyData>(pool.rcode);
-            }
             obj.SetActive(false);
             objectPool.Enqueue(obj);
         }

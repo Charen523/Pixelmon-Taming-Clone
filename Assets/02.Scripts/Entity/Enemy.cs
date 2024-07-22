@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Enemy : SerializedMonoBehaviour
 {
-    public EnemyData data;
     public EnemyFSM fsm;
     public EnemyHealthSystem healthSystem;
+    public EnemyStatHandler statHandler;
 
     private void Start()
     {
@@ -29,15 +29,9 @@ public class Enemy : SerializedMonoBehaviour
             }
         }
 
-        //임시
-        data.dmg = data.atk;
         fsm.Init();
     }
-    private void Update()
-    {
-        fsm.Update();
-    }
-
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("PixelmonProjectile"))
