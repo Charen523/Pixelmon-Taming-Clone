@@ -39,7 +39,7 @@ public class SaveManager : Singleton<SaveManager>
         {
             if (!File.Exists(initPath))
             {
-                UserData userData = new UserData();
+                userData = new UserData();
                 SaveToJson<UserData>(userData, initPath);
                 LoadData();
             }
