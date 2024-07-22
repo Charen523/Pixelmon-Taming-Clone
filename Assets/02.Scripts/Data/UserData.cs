@@ -25,7 +25,7 @@ public class UserData
 
     //public int[] StatUpLvs = new int[10]; //나중에 개수 보고 바꾸기.
     public MyPixelmonData[] equippedPxms = new MyPixelmonData[5]; //string으로 바꾸기.
-    public MyPixelmonData[] OwnedPxms = new MyPixelmonData[20];
+    public MyPixelmonData[] ownedPxms = new MyPixelmonData[20];
     //public string[] OwnedActiveSkills; 만약 스킬 강화 생기면 string-> 스킬로 바꾸기.
     public FieldData[] fieldDatas = new FieldData[6];
     //public int[] DungeonLvs = new int [3];

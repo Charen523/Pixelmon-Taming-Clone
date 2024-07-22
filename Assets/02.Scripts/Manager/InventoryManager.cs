@@ -79,7 +79,7 @@ public class InventoryManager : Singleton<InventoryManager>
 
     public void SetPossessPixelmons(List<PixelmonData> data) 
     {
-        SetData(nameof(userData.OwnedPxms), data.ToArray());
+        SetData(nameof(userData.ownedPxms), data.ToArray());
     }
 }
 
