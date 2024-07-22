@@ -89,6 +89,8 @@ public class StageManager : Singleton<StageManager>
         isDontDestroyOnLoad = false;
         base.Awake();
         LoadData();
+
+        PoolManager.Instance.CheckInitActive(Data.monsterId);
     }
 
     void Start()
