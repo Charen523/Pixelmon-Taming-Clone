@@ -62,5 +62,6 @@ public class SaveManager : Singleton<SaveManager>
         string jsonData = File.ReadAllText(dataPath);
         // 파일의 텍스트를 string으로 저장
         userData = JsonUtility.FromJson<UserData>(jsonData);
+        InventoryManager.Instance.userData = JsonUtility.FromJson<UserData>(jsonData);
     }
 }

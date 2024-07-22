@@ -30,8 +30,6 @@ public class UIMiddleBar : UIBase
 
     private WaitUntil getPixelmon;
     private bool isGetPixelmon;
-
-    private readonly string eggRcode = "EGG";
     #endregion
 
     private async void Awake()
@@ -54,12 +52,7 @@ public class UIMiddleBar : UIBase
     private bool Gacha()
     {
         // 확률에 따라 등급 랜덤뽑기
-        string levelString = eggLv.ToString("D5"); // 5자리 숫자로 변환, 빈 자리는 0으로 채움
-        StringBuilder sb = new StringBuilder();
-        sb.Append(eggRcode);
-        sb.Append(levelString);
-        string rcode = sb.ToString();
-        rank = PerformGacha(rcode);
+        rank = PerformGacha(eggLv.ToString());
         Debug.Log($"뽑은 픽셀몬 등급(Gacha) : {rank}");
 
         // 등급에 해당하는 픽셀몬 랜덤뽑기
