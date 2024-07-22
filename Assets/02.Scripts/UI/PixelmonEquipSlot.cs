@@ -58,6 +58,7 @@ public class PixelmonEquipSlot : PixelmonSlot
 
     protected override void OnClick()
     {
+        if (isLocked) return;
         if (myPxmData == null && pxmtab.tabState != TabState.Equip)
         {
             return;
