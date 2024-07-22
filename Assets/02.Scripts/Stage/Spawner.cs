@@ -30,12 +30,12 @@ public class Spawner : MonoBehaviour
 
             for(int i = 0; i < rand; i++)
             {
-                if (stageManager.spawnCount == count)
+                if (stageManager.curSpawnCount == count)
                     return;
                 GameObject enemy = PoolManager.Instance.SpawnFromPool(rcode);
                 isActivatedEnemy.Add(enemy);
                 enemy.transform.position = spawnPoints[i].position;
-                stageManager.spawnCount++;
+                stageManager.curSpawnCount++;
             }
         }
     }
