@@ -139,9 +139,9 @@ public class FieldSlot : SerializedMonoBehaviour
     private void OnBuyFieldClicked()
     {
         //TODO: 구매 팝업 띄우는 것으로 대체하기
-        if (price <= InventoryManager.Instance.userData.diamond)
+        if (price <= SaveManager.Instance.userData.diamond)
         {
-            InventoryManager.Instance.SetDeltaData("diamond", -price);
+            SaveManager.Instance.SetDeltaData("diamond", -price);
             CurrentFieldState = FieldState.Empty;
         }
         else

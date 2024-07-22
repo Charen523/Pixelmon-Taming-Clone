@@ -25,13 +25,16 @@ public class PoolManager : Singleton<PoolManager>
 
         PoolDictionary = new Dictionary<string, Queue<GameObject>>();
         objectPoolParent = new GameObject("ObjectPool").transform;
+    }
 
+    private void Start()
+    {
         foreach (var pool in Pools)
         {
             if (pool.isInitActive)
             {
                 CreatePool(pool);
-            }   
+            }
         }
     }
 
@@ -98,5 +101,20 @@ public class PoolManager : Singleton<PoolManager>
         }
 
         PoolDictionary.Add(pool.rcode, objectPool);
+    }
+
+    public void CheckInitActive(string[] rCode)
+    {
+        // rCode 배열을 HashSet으로 변환
+        var rCodeSet = new HashSet<string>(rCode);
+
+        // Pools에서 rcode가 rCodeSet에 있는지 확인
+        foreach (var pool in Pools)
+        {
+            if (rCodeSet.Contains(pool.rcode))
+            {
+                pool.isInitActive = true;
+            }
+        }
     }
 }
