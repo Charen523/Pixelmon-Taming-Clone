@@ -15,6 +15,8 @@ public class PixelmonSlot : MonoBehaviour
     protected Button slotBtn;
     [SerializeField]
     protected Image slotIcon;
+    [SerializeField]
+    protected Image slotIconBg;
     #endregion
 
     #region UI
