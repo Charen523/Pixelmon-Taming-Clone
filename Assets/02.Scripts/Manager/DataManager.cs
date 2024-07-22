@@ -14,12 +14,14 @@ public class DataManager : GSpreadReader<DataManager>
     public GameData<EggRateData> eggRateData;
     public GameData<EvolveData> evolveData;
 
+    public bool isPxmInit;
     public async Task SetPixelmonData()
     {
         foreach (var data in pixelmonData.data)
         {
             data.icon = await ResourceManager.Instance.LoadAsset<Sprite>(data.rcode, eAddressableType.thumbnail);
         }
+        isPxmInit = true;
     }
 
     public T GetData<T>(string rcode) where T : class, IData
