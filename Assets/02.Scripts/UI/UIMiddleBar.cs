@@ -24,23 +24,28 @@ public class UIMiddleBar : UIBase
     public GameObject HatchAnimGO;
     public AnimationClip BreakClip;
     #endregion
-    public GameObject HatchResultPanel;
     public Image HatchedPixelmonImg;
-    public Button GetPixelmonBtn;
+    private UIBase HatchResultPopup;
+    private PixelmonRank rank;
 
-    public bool isHatchedPixelmon;
-    public bool isGetPixelmon;
-    public PixelmonRank rank;
+    private WaitUntil getPixelmon;
+    private bool isGetPixelmon;
 
     private readonly string eggRcode = "EGG";
     #endregion
 
+    private async void Awake()
+    {
+        HatchResultPopup = await UIManager.Show<UIHatchResultPopup>();
+    }
     private void Start()
     {
         //eggCount = InventoryManager.Instance.userData.eggCount;
         //eggLv = InventoryManager.Instance.userData.eggLv;
         EggCntText.text = eggCount.ToString();
         EggLvText.text = eggLv.ToString();
+
+        getPixelmon = new WaitUntil(() => isGetPixelmon == true);
 
         Data.Initialize();
         Gacha();
@@ -73,34 +78,21 @@ public class UIMiddleBar : UIBase
     {
         if (eggCount <= 0) yield break;
 
-        if (isHatchedPixelmon) // 알 이미 깠음
-        {
-            HatchResultPanel.SetActive(true);
-        }
-        else // 알 안깠음
-        {
-            HatchAnimGO.SetActive(true);
+        HatchAnimGO.SetActive(true);
+        isGetPixelmon = false;
 
-            // 애니메이션 실행
-            BreakAnim.SetBool(Data.EggBreakParameterHash, true);
-            HatchAnim.SetBool(Data.EggHatchParameterHash, true);
+        // 애니메이션 실행
+        BreakAnim.SetBool(Data.EggBreakParameterHash, true);
+        HatchAnim.SetBool(Data.EggHatchParameterHash, true);
 
-            // 애니메이션 끝난지 체크
-            float startTime = Time.time;
-            while (Time.time - startTime < BreakClip.length) yield return null;
+        // 애니메이션 끝난지 체크
+        float startTime = Time.time;
+        while (Time.time - startTime < BreakClip.length) yield return null;
 
-            HatchResultPanel.SetActive(true);
+        HatchResultPopup.SetActive(true);
 
-            if (isGetPixelmon)
-            {
-                isHatchedPixelmon = true;
-                yield return Gacha(); // 다음 알 셋팅
-            }
-            else
-            {
-                isHatchedPixelmon = false;
-            }
-        }
+        yield return getPixelmon;
+        yield return Gacha(); // 다음 알 셋팅
     }
 
     public PixelmonRank PerformGacha(string rcode)
@@ -137,16 +129,22 @@ public class UIMiddleBar : UIBase
         throw new System.Exception("확률 합 != 100");
     }
 
-    public void OnClickGetPixelmon()
-    {       
-        // 인벤토리에 넣어주기
+    public void OnClickGetPixelmon(bool isReplace)
+    {
+        if (isReplace) // 교체하기
+        {
+            Debug.Log("ReplaceBtn");
+        }
+        else // 수집하기
+        {
+            Debug.Log("CollectBtn");
+        }
 
         // 애니메이션 끄기
         BreakAnim.SetBool(Data.EggBreakParameterHash, false);
         HatchAnim.SetBool(Data.EggHatchParameterHash, false);
 
+        HatchAnimGO.SetActive(false);
         isGetPixelmon = true;
-        HatchAnimGO.SetActive(true);
-        HatchResultPanel.SetActive(false);
     }
 }

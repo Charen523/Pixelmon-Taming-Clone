@@ -22,5 +22,6 @@ public class CanvasGame : MonoBehaviour
         //GameManager.Instance.InitWorld();
         //yield return null;
         //yield return UIManager.Show<UIGame>();
+        yield return UIManager.Show<UIMiddleBar>();
     }
 }
