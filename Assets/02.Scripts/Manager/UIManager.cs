@@ -5,9 +5,9 @@ using UnityEngine;
 
 public enum eUIPosition
 {
-    UI,
-    Tab,
     Navigator,
+    Tab,
+    UI,
     Popup
 }
 
