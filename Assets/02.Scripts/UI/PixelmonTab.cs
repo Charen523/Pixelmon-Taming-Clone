@@ -16,13 +16,13 @@ public class PixelmonTab : UIBase
     [SerializeField]
     private TextMeshProUGUI foodCountTxt;
 
-
     //픽셀몬 슬롯 클릭시 활성화 오브젝트
     public RectTransform clickPopUp;
     [SerializeField]
     private Button equipBtn;
     [SerializeField]
     private Button infoBtn;
+
     public GameObject equipOverlay;
     public GameObject addViewOverlay;
     [SerializeField]
@@ -33,7 +33,7 @@ public class PixelmonTab : UIBase
     private string unEquip = "해제하기";
     public TabState tabState;
 
-
+    #region 슬롯, 팝업
     [SerializeField]
     private PixelmonPopUP infoPopUp;
     //픽셀몬 슬롯 프리팹
@@ -42,15 +42,18 @@ public class PixelmonTab : UIBase
     //전체 슬롯 부모 오브젝트 위치
     [SerializeField]
     private Transform contentTr;
+    #endregion
 
-    #region Info
-    [Header("Info")]
-    [SerializeField]
-    private InventoryManager inven;
+    #region 매니저
     [SerializeField]
     private PixelmonManager pixelmonManager;
     [SerializeField]
     private DataManager dataManager;
+    #endregion
+
+    #region Info
+    [Header("Info")]
+    public UserData userData;
     //전체 픽셀몬 정보
     public List<PixelmonSlot> allData = new List<PixelmonSlot>();
     //미보유 픽셀몬 정보
@@ -66,7 +69,7 @@ public class PixelmonTab : UIBase
 
     void Start()
     {
-        inven = InventoryManager.Instance;
+        userData = SaveManager.Instance.userData;
         dataManager = DataManager.Instance;
         pixelmonManager = PixelmonManager.Instance;
         InitTab();
@@ -74,24 +77,35 @@ public class PixelmonTab : UIBase
 
     public void InitTab()
     {
-        foreach (var data in dataManager.pixelmonData.data)
+        int index = 0;
+        for (int i = 0; i < dataManager.pixelmonData.data.Count; i++)
         {
             PixelmonSlot slot = Instantiate(slotPrefab, contentTr);
-            slot.InitSlot(this, data);
+            slot.InitSlot(this, dataManager.pixelmonData.data[i]);
+            if (userData.ownedPxms[i] != null && slot.pxmData.id == userData.ownedPxms[index].id)
+            {
+                slot.myPxmData = userData.ownedPxms[index++];
+                slot.UpdateSlot();
+                possessData.Add(slot);
+            }
+            else
+            {
+                noneData.Add(slot);
+            }
             allData.Add(slot);
         }
 
         for (int i = 0; i < equipData.Length; i++)
         {
-            if (inven.userData.equipedPixelmons.Length > i)
+            if (userData.equippedPxms.Length > i)
             {
-                equipData[i].pixelmonData = inven.userData.equipedPixelmons[i];
+                equipData[i].myPxmData = userData.equippedPxms[i];
             }
-            equipData[i].pixelmontab = this;
+            equipData[i].pxmtab = this;
         }
 
         CheckedData();
-        foodCountTxt.text = inven.userData.petFood.ToString();
+        foodCountTxt.text = userData.food.ToString();
     }
 
     public void InitInfo()
@@ -101,15 +115,15 @@ public class PixelmonTab : UIBase
 
     public void SetPetfoodCount(int count)
     {
-        inven.SetDeltaData(nameof(inven.userData.petFood), count);
-        foodCountTxt.text = inven.userData.petFood.ToString();
+        //inven.SetDeltaData(nameof(inven.userData.food), count);
+        //foodCountTxt.text = inven.userData.food.ToString();
     }
 
     public void CheckedData()
     {
         //findall 로 널일떄만
-        possessData = allData.FindAll(obj => obj.isPossessed);
-        noneData = allData.FindAll(obj => !obj.isPossessed);
+        //possessData = allData.FindAll(obj => obj.isPossessed);
+        //noneData = allData.FindAll(obj => !obj.isPossessed);
         OnProssessionToggle();
     }
 
@@ -133,25 +147,21 @@ public class PixelmonTab : UIBase
 
     public void Possess(int index)
     {
-        allData[index].pixelmonData.isPossessed = true;
+        allData[index].myPxmData.isOwned = true;
     }
 
     public void OnClickSlot(int index, RectTransform rectTr)
     {
         choiceId = index;
+        addViewOverlay.gameObject.SetActive(true);
         clickPopUp.gameObject.SetActive(true);
         clickPopUp.position = rectTr.position + Vector3.down * 130;
-        addViewOverlay.gameObject.SetActive(false);
-        if (allData[index].pixelmonData.isEquiped)
-        {
-            tabState = TabState.UnEquip;
+        if (tabState == TabState.UnEquip)
             equipTxt.text = unEquip;
-        }
-        else
-        {
-            tabState = TabState.Equip;
+        else if(tabState == TabState.Equip)
             equipTxt.text = equip;
-        }
+        else
+            equipTxt.text = "-";
     }
 
     public void OnHideOverlay()
@@ -164,16 +174,18 @@ public class PixelmonTab : UIBase
     
     public void OnEquip()
     {
-        if(tabState == TabState.Equip) 
+        
+        if (tabState == TabState.Equip) 
         {
             clickPopUp.gameObject.SetActive(false);
             equipOverlay.gameObject.SetActive(true);
+            addViewOverlay.gameObject.SetActive(false);
         }
         else if(tabState == TabState.UnEquip) 
         {
             for (int i = 0; i < equipData.Length; i++)
             {
-                if (equipData[i].pixelmonData == allData[choiceId].pixelmonData)
+                if (equipData[i].pxmData == allData[choiceId].pxmData)
                 {
                     pixelmonManager.unEquipAction?.Invoke(i);
                     RemoveEquipSlot(i, choiceId);
@@ -182,28 +194,36 @@ public class PixelmonTab : UIBase
             }
             clickPopUp.gameObject.SetActive(false);
             tabState = TabState.Normal;
+            addViewOverlay.gameObject.SetActive(false);
+        }
+        else
+        {
+
         }
     }
 
 
     public void EquipedPixelmon(int slotIndex)
     {
-        equipData[slotIndex].Equip(allData[choiceId].pixelmonData);
-        pixelmonManager.equipAction?.Invoke(slotIndex, equipData[slotIndex].pixelmonData);
+        equipData[slotIndex].Equip(allData[choiceId].myPxmData);
+        pixelmonManager.equipAction?.Invoke(slotIndex, equipData[slotIndex].myPxmData);
         equipOverlay.gameObject.SetActive(false);        
         tabState = TabState.Normal;
     }
 
     public void RemoveEquipSlot(int slotIndex, int choiceId)
     {
-        allData[choiceId].pixelmonData.isEquiped = false;
+        allData[choiceId].myPxmData.isEquiped = false;
         equipData[slotIndex].UnEquip();
-        equipData[slotIndex].pixelmonData = null;
+        equipData[slotIndex].pxmData = null;
+        equipData[slotIndex].myPxmData = null;
+        addViewOverlay.SetActive(false);
     }
 
     public void OnInfoPopUp()
     {
         infoPopUp.gameObject.SetActive(true);
+        tabState = TabState.Normal;
         infoPopUp.ShowPopUp(choiceId);
     }
 }
@@ -212,5 +232,6 @@ public enum TabState
 {
     Normal,
     Equip,
-    UnEquip
+    UnEquip,
+    Empty
 }

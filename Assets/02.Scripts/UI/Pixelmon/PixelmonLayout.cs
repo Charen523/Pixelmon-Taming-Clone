@@ -15,16 +15,16 @@ public class PixelmonLayout : MonoBehaviour
     public Sprite defaultBg;
     private void Start()
     {
-        PixelmonManager inven = PixelmonManager.Instance;
-        inven.equipAction += InsertIcon;
-        inven.unEquipAction += DeleteIcon;
+        PixelmonManager pxmManager = PixelmonManager.Instance;
+        pxmManager.equipAction += InsertIcon;
+        pxmManager.unEquipAction += DeleteIcon;
     }
 
-    public void InsertIcon(int index, PixelmonData data)
+    public void InsertIcon(int index, MyPixelmonData data)
     {
         plusIcon[index].SetActive(false);
         //backgrounds[index].sprite = data.bgIcon;
-        thumbnailIcon[index].sprite = data.icon;
+        thumbnailIcon[index].sprite = PixelmonManager.Instance.FindPixelmonData(data).icon;
     }
 
     public void DeleteIcon(int index)

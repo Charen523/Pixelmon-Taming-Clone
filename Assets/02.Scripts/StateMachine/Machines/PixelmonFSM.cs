@@ -34,7 +34,7 @@ public class PixelmonFSM : FSM
         IdleState = new IdleState(this);
         MoveState = new PixelmonMoveState(this);
         AttackState = new PixelmonAttackState(this);
-        minDistance = Player.Instance.data.atkRange;
+        minDistance = Player.Instance.data.baseAtkRange;
         ChangeState(IdleState);
     }
 
@@ -49,7 +49,7 @@ public class PixelmonFSM : FSM
                 for (int i = 0; i < enemies.Count; i++)
                 {
                     Vector2 direction = enemies[i].transform.position - transform.position;
-                    float damage = pixelmon.data.atkDmg;
+                    float damage = pixelmon.data.baseAtkDmg;
                     GameObject projectile = PoolManager.Instance.SpawnFromPool("ATV00000");
                     projectile.GetComponent<ProjectileController>().GetAttackSign(transform.position, direction, damage, minDistance, 10);
                 }

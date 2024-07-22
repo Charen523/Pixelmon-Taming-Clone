@@ -17,7 +17,6 @@ public class InventoryManager : Singleton<InventoryManager>
     void Start()
     {
         dataManager = DataManager.Instance;
-        SaveManager.Instance.LoadFromPrefs(userData);
         StartCoroutine(ChangedValue());
         //SetData(nameof(userData.gold), 20);
     }
@@ -29,7 +28,7 @@ public class InventoryManager : Singleton<InventoryManager>
             if (isDirty)
             {
                 isDirty = false;
-                SaveManager.Instance.SaveToPrefs(userData);
+                SaveManager.Instance.SaveToJson(userData);
             }
             yield return null;
         }
@@ -77,15 +76,10 @@ public class InventoryManager : Singleton<InventoryManager>
         return false;
     }
 
-    //정보 가져오는 용도
-    public List<PixelmonData> GetPossessPixelmons()
-    {
-        return userData.prossessedPixelmons.ToList();
-    }
 
     public void SetPossessPixelmons(List<PixelmonData> data) 
     {
-        SetData(nameof(userData.prossessedPixelmons), data.ToArray());
+        SetData(nameof(userData.ownedPxms), data.ToArray());
     }
 }
 

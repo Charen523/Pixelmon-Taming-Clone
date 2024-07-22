@@ -6,18 +6,18 @@ using UnityEngine.UI;
 
 public class PixelmonSlot : MonoBehaviour
 {
+    private DataManager dataManager;
+
+    #region 슬롯정보
     [SerializeField]
     protected RectTransform rectTr;
     [SerializeField]
     protected Button slotBtn;
     [SerializeField]
     protected Image slotIcon;
+    #endregion
 
-    public PixelmonData pixelmonData;
-    public PixelmonTab pixelmontab;
-    public TextMeshProUGUI propertyEffectTxt;
-    public bool isPossessed => pixelmonData.isPossessed;
-
+    #region UI
     public int slotIndex;
     [SerializeField]
     protected TextMeshProUGUI lvTxt;
@@ -25,28 +25,32 @@ public class PixelmonSlot : MonoBehaviour
     private Slider evolveSldr;
     [SerializeField]
     private TextMeshProUGUI evolveTxt;
+    public TextMeshProUGUI propertyEffectTxta;
     [SerializeField]
     protected GameObject[] stars;
+    #endregion
 
-    private DataManager dataManager;
-    // Start is called before the first frame update
-
+    #region 데이터
+    public PixelmonTab pxmtab;
+    public PixelmonData pxmData;
+    public MyPixelmonData myPxmData;
+    public bool isOwned => myPxmData.isOwned;
+    #endregion
 
     public virtual void InitSlot(PixelmonTab tab, PixelmonData data)
     {
         dataManager = DataManager.Instance;
-        pixelmontab = tab;
-        pixelmonData = data;
-        slotIcon.sprite = pixelmonData.icon;
+        pxmtab = tab;
+        pxmData = data;
+        slotIcon.sprite = pxmData.icon;
         slotBtn.onClick.AddListener(OnClick);
-        UpdateSlot();
         //if (isLocked) lockIcon.SetActive(false);
     }
 
     public virtual void UpdateSlot()
     {
-        slotIcon.sprite = pixelmonData.icon;
-        lvTxt.text = string.Format("Lv.{0}", pixelmonData.lv);
+        slotIcon.sprite = pxmData.icon;
+        lvTxt.text = string.Format("Lv.{0}", myPxmData.lv);
         SetStars();
         SetEvolveSldr();
     }
@@ -55,7 +59,7 @@ public class PixelmonSlot : MonoBehaviour
     {
         if (stars.Length > 0)
         {
-            for (int i = 0; i < pixelmonData.star; i++)
+            for (int i = 0; i < myPxmData.star; i++)
             {
                 stars[i].SetActive(true);
             }
@@ -66,24 +70,24 @@ public class PixelmonSlot : MonoBehaviour
     {
         int maxNum = GetEvolveValue();
         evolveSldr.maxValue = maxNum;
-        evolveSldr.value = pixelmonData.currentCount;
-        evolveTxt.text = string.Format("{0}/{1}", pixelmonData.currentCount, maxNum);
+        evolveSldr.value = myPxmData.evolvedCount;
+        evolveTxt.text = string.Format("{0}/{1}", myPxmData.evolvedCount, maxNum);
     }
 
     public int GetEvolveValue()
     {
-        switch (pixelmonData.star)
+        switch (myPxmData.star)
         {
             case 0:
-                return dataManager.GetData<EvolveData>(pixelmonData.rank).start1;
+                return dataManager.GetData<EvolveData>(pxmData.rank).star1;
             case 1:
-                return dataManager.GetData<EvolveData>(pixelmonData.rank).start2;
+                return dataManager.GetData<EvolveData>(pxmData.rank).star2;
             case 2:
-                return dataManager.GetData<EvolveData>(pixelmonData.rank).start3;
+                return dataManager.GetData<EvolveData>(pxmData.rank).star3;
             case 3:
-                return dataManager.GetData<EvolveData>(pixelmonData.rank).start4;
+                return dataManager.GetData<EvolveData>(pxmData.rank).star4;
             case 4:
-                return dataManager.GetData<EvolveData>(pixelmonData.rank).start5;
+                return dataManager.GetData<EvolveData>(pxmData.rank).star5;
             default:
                 return 0;
         }
@@ -91,9 +95,12 @@ public class PixelmonSlot : MonoBehaviour
 
     protected virtual void OnClick()
     {
-        if (pixelmontab.tabState == TabState.Normal)
-        {
-            pixelmontab.OnClickSlot(pixelmonData.id, rectTr);
-        }
+        if (myPxmData.isEquiped)
+            pxmtab.tabState = TabState.UnEquip;
+        else if(myPxmData.isOwned)
+            pxmtab.tabState = TabState.Equip;
+        else
+            pxmtab.tabState = TabState.Empty;
+        pxmtab.OnClickSlot(pxmData.id, rectTr);
     }
 }
