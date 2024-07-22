@@ -53,8 +53,7 @@ public class PixelmonTab : UIBase
 
     #region Info
     [Header("Info")]
-    [SerializeField]
-    private UserData userData;
+    public UserData userData;
     //전체 픽셀몬 정보
     public List<PixelmonSlot> allData = new List<PixelmonSlot>();
     //미보유 픽셀몬 정보
@@ -83,9 +82,10 @@ public class PixelmonTab : UIBase
         {
             PixelmonSlot slot = Instantiate(slotPrefab, contentTr);
             slot.InitSlot(this, dataManager.pixelmonData.data[i]);
-            if (userData.OwnedPxms[i] != null && slot.pxmData.id == userData.OwnedPxms[index].id)
+            if (userData.ownedPxms[i] != null && slot.pxmData.id == userData.ownedPxms[index].id)
             {
-                slot.myPxmData = userData.OwnedPxms[index++];
+                slot.myPxmData = userData.ownedPxms[index++];
+                slot.UpdateSlot();
                 possessData.Add(slot);
             }
             else
@@ -153,24 +153,15 @@ public class PixelmonTab : UIBase
     public void OnClickSlot(int index, RectTransform rectTr)
     {
         choiceId = index;
-        clickPopUp.gameObject.SetActive(true);
         addViewOverlay.gameObject.SetActive(true);
+        clickPopUp.gameObject.SetActive(true);
         clickPopUp.position = rectTr.position + Vector3.down * 130;
-        if (allData[index].myPxmData.isEquiped)
-        {
-            tabState = TabState.UnEquip;
+        if (tabState == TabState.UnEquip)
             equipTxt.text = unEquip;
-        }
-        else if(allData[index].myPxmData.isOwned)
-        {
-            tabState = TabState.Equip;
+        else if(tabState == TabState.Equip)
             equipTxt.text = equip;
-        }
         else
-        {
-            tabState = TabState.Empty;
             equipTxt.text = "-";
-        }
     }
 
     public void OnHideOverlay()
@@ -183,10 +174,12 @@ public class PixelmonTab : UIBase
     
     public void OnEquip()
     {
-        if(tabState == TabState.Equip) 
+        
+        if (tabState == TabState.Equip) 
         {
             clickPopUp.gameObject.SetActive(false);
             equipOverlay.gameObject.SetActive(true);
+            addViewOverlay.gameObject.SetActive(false);
         }
         else if(tabState == TabState.UnEquip) 
         {
@@ -201,6 +194,11 @@ public class PixelmonTab : UIBase
             }
             clickPopUp.gameObject.SetActive(false);
             tabState = TabState.Normal;
+            addViewOverlay.gameObject.SetActive(false);
+        }
+        else
+        {
+
         }
     }
 
@@ -218,6 +216,8 @@ public class PixelmonTab : UIBase
         allData[choiceId].myPxmData.isEquiped = false;
         equipData[slotIndex].UnEquip();
         equipData[slotIndex].pxmData = null;
+        equipData[slotIndex].myPxmData = null;
+        addViewOverlay.SetActive(false);
     }
 
     public void OnInfoPopUp()
