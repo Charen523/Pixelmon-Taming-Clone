@@ -1,18 +1,15 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class StageManager : Singleton<StageManager>
 {
-    [Header("소환")]
+    [SerializeField] public StageData Data {get; private set;}
     [SerializeField] private Spawner spawner;
 
     #region UI
+    [Header("Stage UI")]
     [SerializeField] private Image StageIcon;
     [SerializeField] private Sprite[] iconSprite;
     [SerializeField] private TextMeshProUGUI stageTitleTxt;
@@ -24,11 +21,11 @@ public class StageManager : Singleton<StageManager>
     [SerializeField] private TextMeshProUGUI bossTimeTxt;
     #endregion
     
-    [SerializeField] public StageData Data {get; private set;}
 
     [Header("난이도")]
     [SerializeField] private string stgRcode;
 
+    #region Spawn Monsters
     private string normalMonsterIds;
     public int spawnCount = 0;
     public int killedCount = 0;
@@ -37,34 +34,30 @@ public class StageManager : Singleton<StageManager>
     private float bossTimer;
     private float bossLimitTime = 30;
     public bool isStageClear = false; //보스 처치여부
-    [SerializeField]
-    public string CurrentRCode { get; private set; }
+    #endregion
+
+    #region Current Stage
+    public string CurrentRcode { get; private set; }
     private readonly string stagercode = "STG";
-    [SerializeField]
-    private int difficultyNum;
-    [SerializeField]
-    private int maxDifficultyNum;
+    
+    public int difficultyNum;
 
-    [SerializeField]
-    private int worldNum;
-    [SerializeField]
-    private int maxWorldNum = 10;
+    [SerializeField] private int worldNum;
+    [SerializeField] private int maxWorldNum = 10;
 
-    [SerializeField]
-    private int stageNum;
-    [SerializeField]
-    private int maxStageNum = 5;
+    public int stageNum;
+    [SerializeField] private int maxStageNum = 5;
+    #endregion
 
-
+    #region Time Interval
     //리스폰 현재시간
     private float intervalTimer = 0;
-    //리스폰 대기시간
-    public float spawnInterval = 2f;
+    public readonly float spawnInterval = 2f; //스폰 간격
     private WaitUntil normalStageCondition;
     private WaitUntil BossStageCondition;
     private WaitUntil playerTargetIsNull;
     private WaitForSeconds waitTime = new WaitForSeconds(3);
-
+    #endregion
 
     //스테이지 로직
     private Coroutine stageCoroutine;
@@ -72,15 +65,29 @@ public class StageManager : Singleton<StageManager>
     //플레이어 사망 중복 호출 방지 플래그
     private bool isPlayerDeadHandled = false;
 
+    protected override void Awake()
+    {
+        isDontDestroyOnLoad = false;
+        base.Awake();
+        LoadData();
+    }
+
     void Start()
     {
         normalStageCondition = new WaitUntil(() => NormalStage());
         BossStageCondition = new WaitUntil(() => CheckedBossStage());
         GameManager.Instance.OnPlayerDie += OnPlayerDead;
         GameManager.Instance.OnStageStart += StageInitialize;
-        LoadData();
         StageInitialize();
         StartCoroutine(StageProcessivity());
+    }
+
+    private void LoadData()
+    {
+        Data = DataManager.Instance.GetData<StageData>(stgRcode);
+        difficultyNum = Data.difficulty;
+        worldNum = Data.worldId;
+        stageNum = Data.stageId;
     }
 
     private void SetRcode()
@@ -96,15 +103,6 @@ public class StageManager : Singleton<StageManager>
         SummonMonster();
     }
 
-    private void LoadData()
-    {
-        Data = DataManager.Instance.GetData<StageData>(stgRcode);
-        difficultyNum = Data.difficulty;
-        worldNum = Data.worldId;
-        stageNum = Data.stageId;
-    }
-
-
     #region 몬스터소환
     private void SummonMonster()
     {
@@ -112,10 +110,10 @@ public class StageManager : Singleton<StageManager>
     }
 
     public IEnumerator StartStage()
-    {        
-        //노말 소환
-        yield return normalStageCondition;
+    {
+        yield return normalStageCondition; //노말 소환
         Player.Instance.fsm.target = null;
+
         if (Data.stageId == maxStageNum)
         {
             yield return waitTime;
@@ -173,6 +171,7 @@ public class StageManager : Singleton<StageManager>
             bossTimeTxt.gameObject.SetActive(false);
             return true;
         }
+
         bossTimeSldr.gameObject.SetActive(true);
         bossTimeTxt.gameObject.SetActive(true);
 
@@ -189,9 +188,9 @@ public class StageManager : Singleton<StageManager>
             bossTimeTxt.gameObject.SetActive(false);
             return true;
         }
+
         return false;
     }
-
 
     private void ReturnPools()
     {
@@ -208,7 +207,7 @@ public class StageManager : Singleton<StageManager>
     #region UI세팅
     private void InitStageUI()
     {
-        stageTitleTxt.text = $"{SetTitleTxt()}{worldNum}-{stageNum:D2}";
+        stageTitleTxt.text = $"{SetTitleTxt()}{worldNum}-{stageNum}";
         StageIcon.sprite = iconSprite[0];
         progressSldr.value = 0;
         stageGage = 0;
@@ -229,6 +228,7 @@ public class StageManager : Singleton<StageManager>
         bossTimer = bossLimitTime;
         GameManager.Instance.NotifyStageClear();
     }
+
     private string SetTitleTxt()
     {
         switch (difficultyNum)
@@ -243,41 +243,6 @@ public class StageManager : Singleton<StageManager>
                 Debug.Log("난이도 미설정");
                 return "히든";
         }       
-    }
-    #endregion
-
-    
-    public void MonsterDead(EnemyData enemyData, GameObject enemyGo)
-    {
-        if (enemyData.isBoss)
-        {
-            isStageClear = true;
-        }
-        else
-        {
-            killedCount++;
-            spawnCount--;
-            progress = Mathf.Min((float)killedCount / Data.nextStageCount, 100f);
-            spawner.isActivatedEnemy.Remove(enemyGo);
-        }
-        //InventoryManager.Instance.DropItem(enemyData.rewardType, enemyData.rewardRate, enemyData.rewardValue);
-    }
-
-    public void OnPlayerDead()
-    {
-        if (isPlayerDeadHandled) return;
-
-        isPlayerDeadHandled = true;
-        
-        if (stageCoroutine != null)
-        {
-            StopCoroutine(stageCoroutine);
-        }
-
-        ReturnPools();
-        ToNextStage(-1);
-
-        isPlayerDeadHandled = false;
     }
 
     IEnumerator StageProcessivity()
@@ -301,6 +266,8 @@ public class StageManager : Singleton<StageManager>
             yield return null;
         }
     }
+    #endregion
+
 
     #region 다음 스테이지
     public void ToNextStage(int index = 1)
@@ -333,6 +300,41 @@ public class StageManager : Singleton<StageManager>
         difficultyNum++;
         SetRcode();
         PoolManager.Instance.AddPool(Data.monsterIds);
+    }
+    #endregion
+
+    #region Death Events
+    public void MonsterDead(EnemyData enemyData, GameObject enemyGo)
+    {
+        if (enemyData.isBoss)
+        {
+            isStageClear = true;
+        }
+        else
+        {
+            killedCount++;
+            spawnCount--;
+            progress = Mathf.Min((float)killedCount / Data.nextStageCount, 100f);
+            spawner.isActivatedEnemy.Remove(enemyGo);
+        }
+        //InventoryManager.Instance.DropItem(enemyData.rewardType, enemyData.rewardRate, enemyData.rewardValue);
+    }
+
+    public void OnPlayerDead()
+    {
+        if (isPlayerDeadHandled) return;
+
+        isPlayerDeadHandled = true;
+        
+        if (stageCoroutine != null)
+        {
+            StopCoroutine(stageCoroutine);
+        }
+
+        ReturnPools();
+        ToNextStage(-1);
+
+        isPlayerDeadHandled = false;
     }
     #endregion
 }
