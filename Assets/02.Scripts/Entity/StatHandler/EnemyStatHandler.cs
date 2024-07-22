@@ -26,7 +26,7 @@ public class EnemyStatHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        string curRcode = StageManager.Instance.CurrentRCode;
+        string curRcode = StageManager.Instance.CurrentRcode;
 
         //TODO: 임시 코드. 추후 디버그로 변경해야 함.
         if (curRcode == null || curRcode == "")
