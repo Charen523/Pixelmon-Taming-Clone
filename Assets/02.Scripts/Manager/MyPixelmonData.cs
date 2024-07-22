@@ -18,7 +18,7 @@ public class MyPixelmonData
     //장착 여부
     public bool isEquiped;
     //보유 여부
-    public bool isPossessed;
+    public bool isOwned;
 
     public UnityAction activeSkill;
     //패시브 능력

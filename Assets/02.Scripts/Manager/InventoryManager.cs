@@ -17,7 +17,6 @@ public class InventoryManager : Singleton<InventoryManager>
     void Start()
     {
         dataManager = DataManager.Instance;
-        SaveManager.Instance.LoadData();
         StartCoroutine(ChangedValue());
         //SetData(nameof(userData.gold), 20);
     }
@@ -80,7 +79,7 @@ public class InventoryManager : Singleton<InventoryManager>
 
     public void SetPossessPixelmons(List<PixelmonData> data) 
     {
-        SetData(nameof(userData.OwnedPxms), data.ToArray());
+        SetData(nameof(userData.ownedPxms), data.ToArray());
     }
 }
 

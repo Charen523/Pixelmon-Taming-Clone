@@ -14,6 +14,7 @@ public class SaveManager : Singleton<SaveManager>
         base.Awake();
         initPath = Path.Combine(Application.dataPath, "initData.json");
         userPath = Path.Combine(Application.persistentDataPath, "userData.json");
+        LoadData();
     }
 
     public void SaveToJson<T>(T data)
@@ -38,7 +39,7 @@ public class SaveManager : Singleton<SaveManager>
         {
             if (!File.Exists(initPath))
             {
-                UserData userData = new UserData();
+                userData = new UserData();
                 SaveToJson<UserData>(userData, initPath);
                 LoadData();
             }
@@ -60,6 +61,6 @@ public class SaveManager : Singleton<SaveManager>
         string dataPath = Path.Combine(Application.persistentDataPath, path);
         string jsonData = File.ReadAllText(dataPath);
         // 파일의 텍스트를 string으로 저장
-        InventoryManager.Instance.userData = JsonUtility.FromJson<UserData>(jsonData);
+        userData = JsonUtility.FromJson<UserData>(jsonData);
     }
 }
