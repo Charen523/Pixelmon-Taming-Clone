@@ -60,7 +60,7 @@ public class Player : Singleton<Player>
     {
         if(currentPixelmonCount == 0) return;
         int angle = 360 / currentPixelmonCount;
-        int currentAngle = -90;
+        int currentAngle = 90 * currentPixelmonCount;
         var pxmList = pixelmons.ToList().FindAll((obj) => obj != null);
         for (int i = 0; i < currentPixelmonCount; i++)
         {
