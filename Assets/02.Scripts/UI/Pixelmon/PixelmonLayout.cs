@@ -10,9 +10,8 @@ public class PixelmonLayout : MonoBehaviour
 {
     public Image[] backgrounds;
     public Image[] thumbnailIcon;
-    public GameObject[] plusIcon;
-    public GameObject[] lockIcon;
-    public Sprite defaultBg;
+    public Image[] stateIcon;
+
     PixelmonManager pxmManager;
     IEnumerator Start()
     {
@@ -28,31 +27,32 @@ public class PixelmonLayout : MonoBehaviour
         UserData userdata = SaveManager.Instance.userData;
         for(int i = 0; i < backgrounds.Length; i++) 
         {
-            if (userdata.isLockedSlot[i])
+            if (!userdata.isLockedSlot[i])
             {
-                lockIcon[i].SetActive(false);
                 if (userdata.equippedPxms[i].isEquiped)
                     InsertIcon(i, userdata.equippedPxms[i]);
+                else
+                    UnLockedIcon(i);
             }
         }
     }
 
     public void InsertIcon(int index, MyPixelmonData data)
     {
-        plusIcon[index].SetActive(false);
-        //backgrounds[index].sprite = data.bgIcon;
+        stateIcon[index].gameObject.SetActive(false);
+        backgrounds[index].sprite = pxmManager.FindPixelmonData(data).bgIcon;
+        thumbnailIcon[index].gameObject.SetActive(true);
         thumbnailIcon[index].sprite = pxmManager.FindPixelmonData(data).icon;
     }
 
     public void DeleteIcon(int index)
     {
-        backgrounds[index].sprite = defaultBg;
-        thumbnailIcon[index].sprite = null;
-        plusIcon[index].SetActive(true);
+        backgrounds[index].sprite = pxmManager.defaultBg;
+        thumbnailIcon[index].gameObject.SetActive(false);
+        stateIcon[index].gameObject.SetActive(true);
     }
     public void UnLockedIcon(int index)
     {
-        lockIcon[index].gameObject.SetActive(false);
-        plusIcon[index].SetActive(true);
+        stateIcon[index].sprite = pxmManager.plusIcon;
     }
 }

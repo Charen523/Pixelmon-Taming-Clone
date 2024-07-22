@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,10 +8,15 @@ public class PixelmonManager : Singleton<PixelmonManager>
 {
     public UnityAction<int, MyPixelmonData> equipAction;
     public UnityAction<int> unEquipAction;
-    public Pixelmon[] equippedPixelmon;
+    public UnityAction<int> unLockAction;
+
     private Player player;
     private UserData userData;
     private List<PixelmonData> pxmData;
+    public Pixelmon[] equippedPixelmon;
+
+    public Sprite plusIcon;
+    public Sprite defaultBg;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,10 +33,12 @@ public class PixelmonManager : Singleton<PixelmonManager>
         for (int i = 0; i < 5; i++)
         {
             if (userData.equippedPxms[i].isEquiped)
-            { 
-                Equipped(i, userData.equippedPxms[i]);
+            {
+                
+                Equipped(i, userData.equippedPxms[i]); 
             }
         }
+        player.LocatedPixelmon();
     }
 
     private void Equipped(int index, MyPixelmonData myData)
@@ -41,7 +49,6 @@ public class PixelmonManager : Singleton<PixelmonManager>
         player.pixelmons[index].data = pxmData[myData.id];
         player.pixelmons[index].fsm.ChangeState(player.fsm.currentState);
         player.currentPixelmonCount++;
-        player.LocatedPixelmon();
         //inven.SetData("equipedPixelmons", player.pixelmons);
     }
 
@@ -57,6 +64,6 @@ public class PixelmonManager : Singleton<PixelmonManager>
 
     public PixelmonData FindPixelmonData(MyPixelmonData myData)
     {
-        return DataManager.Instance.pixelmonData.data.Find((obj) => obj.id == myData.id);
+        return DataManager.Instance.pixelmonData.data[myData.id];
     }
 }
