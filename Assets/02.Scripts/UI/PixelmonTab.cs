@@ -187,8 +187,7 @@ public class PixelmonTab : UIBase
             {
                 if (equipData[i].pxmData == allData[choiceId].pxmData)
                 {
-                    pixelmonManager.unEquipAction?.Invoke(i);
-                    RemoveEquipSlot(i, choiceId);
+                    UnEquipSlot(i, choiceId);
                     break;
                 }
             }
@@ -211,8 +210,9 @@ public class PixelmonTab : UIBase
         tabState = TabState.Normal;
     }
 
-    public void RemoveEquipSlot(int slotIndex, int choiceId)
+    public void UnEquipSlot(int slotIndex, int choiceId)
     {
+        pixelmonManager.unEquipAction?.Invoke(slotIndex);
         allData[choiceId].myPxmData.isEquiped = false;
         equipData[slotIndex].UnEquip();
         equipData[slotIndex].pxmData = null;
