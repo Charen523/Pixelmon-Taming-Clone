@@ -241,7 +241,7 @@ public class StageManager : Singleton<StageManager>
     #region UI세팅
     private void InitStageUI()
     {
-        stageTitleTxt.text = $"{SetDiffTxt()}{worldNum}-{stageNum}";
+        stageTitleTxt.text = $"{SetDiffTxt()} {worldNum}-{stageNum}";
         StageIcon.sprite = iconSprite[0];
         prevProgress = killCount / (float)Data.nextStageCount;
         curProgress = prevProgress;
@@ -251,7 +251,7 @@ public class StageManager : Singleton<StageManager>
 
     private void InitBossStg()
     {
-        stageTitleTxt.text = $"{SetDiffTxt()}{worldNum}-BOSS";
+        stageTitleTxt.text = $"{SetDiffTxt()} {worldNum}-BOSS";
         StageIcon.sprite = iconSprite[1];
         progressSldr.value = 1; //TODO: 보스 HealthSystem과 연결.
         progressTxt.text = "100%";
