@@ -43,7 +43,7 @@ public class StageManager : Singleton<StageManager>
         {
             if (_currentRcode == null || _currentRcode == "")
             {
-                _currentRcode = InventoryManager.Instance.userData.curStageRcode;
+                _currentRcode = SaveManager.Instance.userData.curStageRcode;
             }
 
             return _currentRcode;
@@ -52,7 +52,7 @@ public class StageManager : Singleton<StageManager>
         private set
         {
             _currentRcode = value;
-            InventoryManager.Instance.SetData("curStageRcode", value);
+            SaveManager.Instance.SetData("curStageRcode", value);
         }
     }
     
@@ -116,7 +116,7 @@ public class StageManager : Singleton<StageManager>
         diffNum = Data.difficulty;
         worldNum = Data.worldId;
         stageNum = Data.stageId;
-        killCount = InventoryManager.Instance.userData.curStageCount;
+        killCount = SaveManager.Instance.userData.curStageCount;
     }
 
     private void SetRcode()
@@ -311,7 +311,7 @@ public class StageManager : Singleton<StageManager>
     #region Next Stage/World/Diff
     public void ToNextStage(int index = 1)
     {
-        InventoryManager.Instance.SetData("curStageCount", 0);
+        SaveManager.Instance.SetData("curStageCount", 0);
 
         if (index == -1)
             stageNum = 1;
@@ -358,8 +358,8 @@ public class StageManager : Singleton<StageManager>
             curProgress = Mathf.Min((float)killCount / Data.nextStageCount, 100f);
             spawner.isActivatedEnemy.Remove(enemyGo);
         }
-        InventoryManager.Instance.DropItem(enemyData.rewardType, enemyData.rewardRate, enemyData.rewardValue);
-        InventoryManager.Instance.SetDeltaData("curStageCount", 1);
+        SaveManager.Instance.DropItem(enemyData.rewardType, enemyData.rewardRate, enemyData.rewardValue);
+        SaveManager.Instance.SetDeltaData("curStageCount", 1);
     }
 
     public void OnPlayerDead()

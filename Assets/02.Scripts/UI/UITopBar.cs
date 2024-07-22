@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class UITopBar : UIBase
 {
-    private InventoryManager invenManager;
+    private SaveManager invenManager;
 
     #region User Info UI
     [SerializeField] private Image characImg;
@@ -27,7 +27,7 @@ public class UITopBar : UIBase
 
     private void Awake()
     {
-        invenManager = InventoryManager.Instance;
+        invenManager = SaveManager.Instance;
     }
 
     private void Start()
