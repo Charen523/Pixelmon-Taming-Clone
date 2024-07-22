@@ -10,27 +10,24 @@ public class PixelmonManager : Singleton<PixelmonManager>
     public Pixelmon[] equippedPixelmon;
     private Player player;
     private SaveManager saveManager;
+    private List<PixelmonData> pxmData;
     // Start is called before the first frame update
     void Start()
     {
+        pxmData = DataManager.Instance.pixelmonData.data;
         saveManager = SaveManager.Instance;
-        saveManager.userData.equippedPxms = new MyPixelmonData[5];
         player = Player.Instance;
         equipAction += Equipped;
         unEquipAction += UnEquipped;
-        //InitEquippedPixelmon();
+        InitEquippedPixelmon();
     }
     
     private void InitEquippedPixelmon()
     {
         for (int i = 0; i < 5; i++)
         {
-            if (saveManager.userData.equippedPxms[i] == null)
-            {
-                UnEquipped(i);
-            }
-            else
-            {
+            if (saveManager.userData.equippedPxms[i].isEquiped)
+            { 
                 Equipped(i, saveManager.userData.equippedPxms[i]);
             }
         }
@@ -41,6 +38,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
         player.pixelmons[index] = equippedPixelmon[index];
         player.pixelmons[index].gameObject.SetActive(true);
         player.pixelmons[index].myData = myData;
+        player.pixelmons[index].data = pxmData[myData.id];
         player.pixelmons[index].fsm.ChangeState(player.fsm.currentState);
         player.currentPixelmonCount++;
         player.LocatedPixelmon();
