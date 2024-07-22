@@ -28,12 +28,6 @@ public class EnemyStatHandler : MonoBehaviour
     {
         string curRcode = StageManager.Instance.CurrentRcode;
 
-        //TODO: 임시 코드. 추후 디버그로 변경해야 함.
-        if (curRcode == null || curRcode == "")
-        {
-            curRcode = "STG00101";
-        }
-
         int difficulty = int.Parse(curRcode.Substring(3, 1));
         int stage = int.Parse(curRcode.Substring(6, 2));
 
