@@ -130,6 +130,7 @@ public class StageManager : Singleton<StageManager>
     {
         if (isBossStage)
         {
+            yield return null; //없음 서순차이로 보스 소환 안됨.
             InitBossStage();
             yield return proceedBossStg;
             bossTimeSldr.gameObject.SetActive(false);

@@ -48,35 +48,6 @@ public class PoolManager : Singleton<PoolManager>
         return obj;
     }
 
-    //public void RemovePool(string rcode)
-    //{
-    //    if (!PoolDictionary.ContainsKey(rcode))
-    //    {
-    //        Debug.LogWarning($"{rcode}를 가진 Pool이 PoolDictionary에 없습니다.");
-    //        return;
-    //    }
-
-    //    // 해당 rcode의 부모 오브젝트 삭제
-    //    Transform parentTransform = PoolDictionary[rcode].Peek().transform.parent;
-    //    Destroy(parentTransform.gameObject);
-
-    //    // Dictionary에서 rcode 제거
-    //    PoolDictionary.Remove(rcode);
-    //}
-
-    //public void AddPool(string rcode)
-    //{
-    //    Pool pool = Pools.FirstOrDefault(pool => pool.rcode == rcode);
-        
-    //    if (pool == null)
-    //    {
-    //        Debug.LogWarning("해당하는 Pool의 rcode가 존재하지 않습니다!");
-    //        return;
-    //    }
-
-    //    CreatePool(pool);
-    //}
-
     private void CreatePool(Pool pool)
     {
         if (PoolDictionary.ContainsKey(pool.rcode))
