@@ -7,11 +7,6 @@ public class CanvasGame : MonoBehaviour
 {
     [SerializeField] private List<Transform> parents;
 
-    public void Awake()
-    {
-        if (!GameManager.isInit) SceneManager.LoadScene("IntroScene");
-    }
-
     IEnumerator Start()
     {
         UILoading.Hide();
