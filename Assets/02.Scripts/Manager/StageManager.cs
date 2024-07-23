@@ -86,8 +86,6 @@ public class StageManager : Singleton<StageManager>
         isDontDestroyOnLoad = false;
         base.Awake();
         InitData();
-
-        PoolManager.Instance.CheckInitActive(Data.monsterId);
     }
 
     void Start()
@@ -95,7 +93,6 @@ public class StageManager : Singleton<StageManager>
         proceedNormalStg = new WaitUntil(() => NormalStage());
         proceedBossStg = new WaitUntil(() => BossStage());
         GameManager.Instance.OnPlayerDie += OnPlayerDead;
-        GameManager.Instance.OnStageStart += InitStage;
 
         InitStage();
         StartCoroutine(SetProgressBar());
@@ -117,7 +114,8 @@ public class StageManager : Singleton<StageManager>
     }
 
     public void InitStage()
-    {        
+    {
+        GameManager.Instance.NotifyStageStart();
         InitStageUI();
         SummonMonster();
     }
@@ -130,43 +128,40 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator StartStage()
     {
-        while (true)
+        if (isBossStage)
         {
-            if (isBossStage)
+            InitBossStage();
+            yield return proceedBossStg;
+            bossTimeSldr.gameObject.SetActive(false);
+
+            if (isBossCleared)
             {
-                InitBossStage();
-                yield return proceedBossStg;
-                bossTimeSldr.gameObject.SetActive(false);
+                //현재 월드의 Normal Monster Pool 삭제.
+                //foreach (var monsterId in monsterIds)
+                //{
+                //    PoolManager.Instance.RemovePool(monsterId);
+                //}
 
-                if (isBossCleared)
-                {
-                    //현재 월드의 Normal Monster Pool 삭제.
-                    foreach (var monsterId in monsterIds)
-                    {
-                        PoolManager.Instance.RemovePool(monsterId);
-                    }
-
-                    isBossCleared = false;
-                    ToNextWorld();
-                }
-                else
-                {
-                    ToNextStage(false);
-                    GameManager.Instance.NotifyStageTimeOut();
-                }
+                isBossCleared = false;
+                ToNextWorld();
             }
             else
             {
-                yield return proceedNormalStg;
-
-                ToNextStage();
-                GameManager.Instance.NotifyStageClear();
+                ToNextStage(false);
+                GameManager.Instance.NotifyStageTimeOut();
             }
-
-            Player.Instance.fsm.target = null; //target 초기화
-            yield return nextStageInterval;
-            InitStage();
         }
+        else
+        {
+            yield return proceedNormalStg;
+
+            ToNextStage();
+            GameManager.Instance.NotifyStageClear();
+        }
+
+        Player.Instance.fsm.target = null; //target 초기화
+        yield return nextStageInterval;
+        InitStage();
     }
 
     /// <summary>
@@ -179,6 +174,11 @@ public class StageManager : Singleton<StageManager>
         {
             // Stage Clear
             ResetSpawnedEnemy();
+            return true;
+        }
+
+        if (isBossStage)
+        {
             return true;
         }
 
@@ -199,7 +199,7 @@ public class StageManager : Singleton<StageManager>
 
     private void InitBossStage()
     {
-        PoolManager.Instance.AddPool(Data.monsterIds);
+        //PoolManager.Instance.AddPool(Data.monsterIds);
         spawner.RandomSpawnPoint(Data.monsterId, Data.spawnCount);
         bossLeftTime = bossLimitTime;
     }
@@ -217,7 +217,7 @@ public class StageManager : Singleton<StageManager>
         bossTimeSldr.value = percent;
         bossTimeTxt.text = string.Format("{0:F2}", bossLeftTime);
 
-        if (bossLeftTime == 0)
+        if (bossLeftTime == 0 || isPlayerDead)
         {
             ResetSpawnedEnemy();
             return true;
@@ -334,7 +334,7 @@ public class StageManager : Singleton<StageManager>
 
         foreach (var monsterId in monsterIds)
         {
-            PoolManager.Instance.AddPool(monsterId);
+            //PoolManager.Instance.AddPool(monsterId);
         }
     }
     #endregion
@@ -370,8 +370,17 @@ public class StageManager : Singleton<StageManager>
 
         ResetSpawnedEnemy();
         ToNextStage(false);
+        Player.Instance.fsm.target = null; //target 초기화
+        bossTimeSldr.gameObject.SetActive(false);
+        StartCoroutine(DelayedInitStage());
 
         isPlayerDead = false;
+    }
+
+    private IEnumerator DelayedInitStage()
+    {
+        yield return new WaitForSeconds(3);
+        InitStage();
     }
     #endregion
 }
