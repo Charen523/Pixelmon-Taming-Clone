@@ -62,8 +62,8 @@ public class PixelmonManager : Singleton<PixelmonManager>
         //inven.SetData("equipedPixelmons", player.pixelmons);
     }
 
-    public PixelmonData FindPixelmonData(MyPixelmonData myData)
+    public PixelmonData FindPixelmonData(int id)
     {
-        return DataManager.Instance.pixelmonData.data[myData.id];
+        return DataManager.Instance.pixelmonData.data[id];
     }
 }

@@ -65,8 +65,7 @@ public class Player : Singleton<Player>
         switch (currentPixelmonCount)
         {
             case 2:
-            case 3:
-                currentAngle = 90;
+                currentAngle = 0;
                 break;
             case 4:
                 currentAngle = 45;
