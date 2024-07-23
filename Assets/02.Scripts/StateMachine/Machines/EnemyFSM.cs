@@ -30,7 +30,7 @@ public class EnemyFSM : FSM
             }
         }
 
-        target = Player.Instance.gameObject;  
+        target = Player.Instance.HitPosition;
     }
     public void Init()
     {
@@ -44,7 +44,7 @@ public class EnemyFSM : FSM
 
     public void OnEnemyAttack()
     {
-        target.GetComponent<PlayerHealthSystem>().TakeDamage(enemy.statHandler.GetDamage());
+        Player.Instance.healthSystem.TakeDamage(enemy.statHandler.GetDamage());
     }
 
     public void OnEnemyDead()

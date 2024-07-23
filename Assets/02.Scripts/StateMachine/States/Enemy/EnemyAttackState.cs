@@ -32,7 +32,7 @@ public class EnemyAttackState : AttackState
     private bool IsAttackRange()
     {
         Vector2 currentPosition = fsm.rb.position;
-        Vector2 targetPosition = Player.Instance.fsm.rb.position;
+        Vector2 targetPosition = Player.Instance.HitPosition.transform.position;
 
         if (Vector2.Distance(currentPosition, targetPosition) > fsm.enemy.statHandler.data.atkRange)
         {

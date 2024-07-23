@@ -10,6 +10,7 @@ public class Player : Singleton<Player>
     public PlayerData data;
     public PlayerFSM fsm;
     public PlayerHealthSystem healthSystem;
+    public GameObject HitPosition;
 
     [Header("LocatedPixelmon")]
     public float radius = 2.0f;
