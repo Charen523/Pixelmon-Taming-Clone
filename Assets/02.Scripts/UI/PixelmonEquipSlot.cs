@@ -47,7 +47,7 @@ public class PixelmonEquipSlot : PixelmonSlot
     public void Equip(MyPixelmonData myData)
     { 
         myPxmData = myData;
-        pxmData = pxmManager.FindPixelmonData(myData);
+        pxmData = pxmManager.FindPixelmonData(myData.id);
         slotIcon.gameObject.SetActive(true);
         slotIcon.sprite = pxmData.icon;
         slotIconBg.sprite = pxmData.bgIcon;

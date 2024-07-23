@@ -37,9 +37,9 @@ public class PixelmonLayout : MonoBehaviour
     public void InsertIcon(int index, MyPixelmonData data)
     {
         stateIcon[index].gameObject.SetActive(false);
-        backgrounds[index].sprite = pxmManager.FindPixelmonData(data).bgIcon;
+        backgrounds[index].sprite = pxmManager.FindPixelmonData(data.id).bgIcon;
         thumbnailIcon[index].gameObject.SetActive(true);
-        thumbnailIcon[index].sprite = pxmManager.FindPixelmonData(data).icon;
+        thumbnailIcon[index].sprite = pxmManager.FindPixelmonData(data.id).icon;
     }
 
     public void DeleteIcon(int index)
