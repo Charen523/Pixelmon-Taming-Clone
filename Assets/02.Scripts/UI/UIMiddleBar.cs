@@ -21,6 +21,7 @@ public class UIMiddleBar : UIBase
     public GameObject HatchAnimGO;
     public AnimationClip BreakClip;
     #endregion
+    public PixelmonRank rank;
     public Image HatchedPixelmonImg;
     private UIBase HatchResultPopup;
 
@@ -49,7 +50,7 @@ public class UIMiddleBar : UIBase
     private bool Gacha()
     {
         // 확률에 따라 픽셀몬 등급 랜덤뽑기
-        PixelmonRank rank = PerformGacha(eggLv.ToString());
+        rank = PerformGacha(eggLv.ToString());
 
         // 알 색상 변경
 
