@@ -13,6 +13,7 @@ public class DataManager : GSpreadReader<DataManager>
     public GameData<RewardData> rewardData;
     public GameData<EggRateData> eggRateData;
     public GameData<EvolveData> evolveData;
+    public Sprite[] bgIcons;
 
     public bool isPxmInit;
     public async Task SetPixelmonData()
@@ -20,6 +21,29 @@ public class DataManager : GSpreadReader<DataManager>
         foreach (var data in pixelmonData.data)
         {
             data.icon = await ResourceManager.Instance.LoadAsset<Sprite>(data.rcode, eAddressableType.thumbnail);
+            switch (data.rank)
+            {
+                case "Common":
+                    data.bgIcon = bgIcons[0];
+                    break;
+                case "Advanced":
+                    data.bgIcon = bgIcons[1];
+                    break;
+                case "Rare":
+                    data.bgIcon = bgIcons[2];
+                    break;
+                case "Epic":
+                    data.bgIcon = bgIcons[3];
+                    break;
+                case "Legendary":
+                    data.bgIcon = bgIcons[4];
+                    break;
+                case "Unique":
+                    data.bgIcon = bgIcons[5];
+                    break;
+                default:
+                    break;
+            }
         }
         isPxmInit = true;
     }

@@ -45,6 +45,7 @@ public class PixelmonSlot : MonoBehaviour
         pxmtab = tab;
         pxmData = data;
         slotIcon.sprite = pxmData.icon;
+        slotIconBg.sprite = pxmData.bgIcon;
         slotBtn.onClick.AddListener(OnClick);
         //if (isLocked) lockIcon.SetActive(false);
     }
@@ -52,6 +53,7 @@ public class PixelmonSlot : MonoBehaviour
     public virtual void UpdateSlot()
     {
         slotIcon.sprite = pxmData.icon;
+        slotIconBg.sprite = pxmData.bgIcon;
         lvTxt.text = string.Format("Lv.{0}", myPxmData.lv);
         SetStars();
         SetEvolveSldr();
