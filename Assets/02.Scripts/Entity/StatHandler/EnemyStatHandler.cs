@@ -47,11 +47,11 @@ public class EnemyStatHandler : MonoBehaviour
 
         if (isCri > cri) //크리x
         {
-            return enemyStats[(int)EnemyStat.CriDmg];
+            return enemyStats[(int)EnemyStat.Atk];
         }
         else //크리
         {
-            return enemyStats[(int)EnemyStat.Atk];
+            return enemyStats[(int)EnemyStat.CriDmg];
         }
     }
 }
