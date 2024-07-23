@@ -93,6 +93,7 @@ public class StageManager : Singleton<StageManager>
     void Start()
     {
         proceedNormalStg = new WaitUntil(() => NormalStage());
+        proceedBossStg = new WaitUntil(() => BossStage());
         GameManager.Instance.OnPlayerDie += OnPlayerDead;
         GameManager.Instance.OnStageStart += InitStage;
 
