@@ -5,7 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class Pool
 {
-    public bool isInitActive;
     public string tag;
     public string rcode;
     public GameObject prefab;
@@ -31,10 +30,7 @@ public class PoolManager : Singleton<PoolManager>
     {
         foreach (var pool in Pools)
         {
-            if (pool.isInitActive)
-            {
-                CreatePool(pool);
-            }
+            CreatePool(pool);
         }
     }
 
@@ -52,34 +48,34 @@ public class PoolManager : Singleton<PoolManager>
         return obj;
     }
 
-    public void RemovePool(string rcode)
-    {
-        if (!PoolDictionary.ContainsKey(rcode))
-        {
-            Debug.LogWarning($"{rcode}를 가진 Pool이 PoolDictionary에 없습니다.");
-            return;
-        }
+    //public void RemovePool(string rcode)
+    //{
+    //    if (!PoolDictionary.ContainsKey(rcode))
+    //    {
+    //        Debug.LogWarning($"{rcode}를 가진 Pool이 PoolDictionary에 없습니다.");
+    //        return;
+    //    }
 
-        // 해당 rcode의 부모 오브젝트 삭제
-        Transform parentTransform = PoolDictionary[rcode].Peek().transform.parent;
-        Destroy(parentTransform.gameObject);
+    //    // 해당 rcode의 부모 오브젝트 삭제
+    //    Transform parentTransform = PoolDictionary[rcode].Peek().transform.parent;
+    //    Destroy(parentTransform.gameObject);
 
-        // Dictionary에서 rcode 제거
-        PoolDictionary.Remove(rcode);
-    }
+    //    // Dictionary에서 rcode 제거
+    //    PoolDictionary.Remove(rcode);
+    //}
 
-    public void AddPool(string rcode)
-    {
-        Pool pool = Pools.FirstOrDefault(pool => pool.rcode == rcode);
+    //public void AddPool(string rcode)
+    //{
+    //    Pool pool = Pools.FirstOrDefault(pool => pool.rcode == rcode);
         
-        if (pool == null)
-        {
-            Debug.LogWarning("해당하는 Pool의 rcode가 존재하지 않습니다!");
-            return;
-        }
+    //    if (pool == null)
+    //    {
+    //        Debug.LogWarning("해당하는 Pool의 rcode가 존재하지 않습니다!");
+    //        return;
+    //    }
 
-        CreatePool(pool);
-    }
+    //    CreatePool(pool);
+    //}
 
     private void CreatePool(Pool pool)
     {
@@ -101,20 +97,5 @@ public class PoolManager : Singleton<PoolManager>
         }
 
         PoolDictionary.Add(pool.rcode, objectPool);
-    }
-
-    public void CheckInitActive(string[] rCode)
-    {
-        // rCode 배열을 HashSet으로 변환
-        var rCodeSet = new HashSet<string>(rCode);
-
-        // Pools에서 rcode가 rCodeSet에 있는지 확인
-        foreach (var pool in Pools)
-        {
-            if (rCodeSet.Contains(pool.rcode))
-            {
-                pool.isInitActive = true;
-            }
-        }
     }
 }

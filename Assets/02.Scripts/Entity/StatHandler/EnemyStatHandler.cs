@@ -32,11 +32,10 @@ public class EnemyStatHandler : MonoBehaviour
         int stage = int.Parse(curRcode.Substring(6, 2));
 
         int deltaDifficulty = (int)Mathf.Pow(2, difficulty);
-        int deltaStage = stage * 2;
 
         for (int i = 1; i < enemyStats.Length; i++)
         {
-            enemyStats[i] = enemyStats[i] * deltaDifficulty + deltaStage;
+            enemyStats[i] = enemyStats[i] * deltaDifficulty;
         }
         enemy.healthSystem.initEnemyHealth(enemyStats[(int)EnemyStat.MaxHp]);
     }
