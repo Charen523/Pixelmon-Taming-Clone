@@ -8,8 +8,9 @@ public class Pixelmon : MonoBehaviour
     public PixelmonData data;
     public MyPixelmonData myData;
     public PixelmonFSM fsm;
+    public PixelmonStatus status;
     public SpriteRenderer spriteRenderer;
-    public Animator animator;
+
     private void Start()
     {
         fsm.InitStates();
@@ -17,5 +18,12 @@ public class Pixelmon : MonoBehaviour
     private void Update()
     {
         fsm.Update();
+    }
+
+    public void InitPxm()
+    {
+        if(status == null)
+            status = new PixelmonStatus();
+        status.InitStatus(data, myData);
     }
 }

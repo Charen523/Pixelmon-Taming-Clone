@@ -15,8 +15,8 @@ public class PixelmonData : IData
     public float baseCri;
     public float baseCriDmg;
     public float baseAtkSpd;
-    public float baseAtkDmg;
-    public float baseSAtk;
+    public float baseDmg;
+    public float baseSDmg;
     public float baseSCri;
     public float baseSCriDmg;
 
