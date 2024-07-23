@@ -26,35 +26,38 @@ public class UIHatchResultPopup : UIBase
     [SerializeField] private Image pixelmonImg;
     [SerializeField] private Button rePlaceBtn;
     private UIMiddleBar uiMiddleBar;
+    public UserData userData;
+    private bool isOwnedPxm;
 
     private void OnEnable()
     {
         #region UI 셋팅
         uiMiddleBar = UIManager.Get<UIMiddleBar>();
+        rateTxt.text = uiMiddleBar.rank.ToString();
         rateBg.sprite = PxmRankImgUtil.GetRankImage(uiMiddleBar.rank, rateBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
         pixelmonBg.sprite = PxmRankImgUtil.GetRankImage(uiMiddleBar.rank, pixelmonBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
         pixelmonImg.sprite = uiMiddleBar.HatchedPixelmonImg.sprite;
         #endregion
-    }
 
-    public void OnClickGetPixelmon(bool isReplace)
-    {
-        var userData = SaveManager.Instance.userData;
+        userData = SaveManager.Instance.userData;
 
         #region 이미 가지고 있는 픽셀몬인지 체크
-        bool isOwnedPxm = false;
+        isOwnedPxm = false;
         foreach (var data in userData.ownedPxms)
         {
-            if(uiMiddleBar.HatchPxmData.rcode == data.rcode)
+            if (uiMiddleBar.HatchPxmData.rcode == data.rcode)
             {
                 isOwnedPxm = true; break;
             }
         }
 
-        if(isOwnedPxm) rePlaceBtn.gameObject.SetActive(true);
+        if (isOwnedPxm) rePlaceBtn.gameObject.SetActive(true);
         else rePlaceBtn.gameObject.SetActive(false);
         #endregion
+    }
 
+    public void OnClickGetPixelmon(bool isReplace)
+    {
         if (isReplace && isOwnedPxm == true) // 교체하기(교체 및 수집)
         {
             Debug.Log("ReplaceBtn");

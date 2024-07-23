@@ -78,7 +78,6 @@ public class UIMiddleBar : UIBase
 
         HatchPxmData = randData[UnityEngine.Random.Range(0, randData.Count)];
         HatchedPixelmonImg.sprite = HatchPxmData.icon;
-        Debug.Log("[이름] : " + HatchPxmData.name + " [등급] : " + HatchPxmData.rank);
 
         // 확률에 따라 픽셀몬 능력치 등급 랜덤뽑기
 
