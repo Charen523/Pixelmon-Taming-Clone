@@ -23,11 +23,11 @@ public class UIMiddleBar : UIBase
     #endregion
     public PixelmonRank rank;
     public Image HatchedPixelmonImg;
-    private UIBase HatchResultPopup;
+    public PixelmonData HatchPxmData;
 
+    private UIBase HatchResultPopup;
     private WaitUntil getPixelmon;
     private bool isGetPixelmon;
-    private PixelmonData hatchPxmData;
     #endregion
 
     private async void Awake()
@@ -42,6 +42,7 @@ public class UIMiddleBar : UIBase
         EggLvText.text = eggLv.ToString();
 
         getPixelmon = new WaitUntil(() => isGetPixelmon == true);
+        HatchedPixelmonImg.gameObject.SetActive(false);
 
         Data.Initialize();
         Gacha();
@@ -66,8 +67,9 @@ public class UIMiddleBar : UIBase
             }
         }
 
-        hatchPxmData = randData[UnityEngine.Random.Range(0, randData.Count)];
-        Debug.Log("[이름] : " + hatchPxmData.name + " [등급] : " + hatchPxmData.rank);
+        HatchPxmData = randData[UnityEngine.Random.Range(0, randData.Count)];
+        HatchedPixelmonImg.sprite = HatchPxmData.icon;
+        Debug.Log("[이름] : " + HatchPxmData.name + " [등급] : " + HatchPxmData.rank);
 
         // 확률에 따라 픽셀몬 능력치 등급 랜덤뽑기
 
@@ -82,7 +84,7 @@ public class UIMiddleBar : UIBase
     public IEnumerator ClickEgg()
     {
         if (eggCount <= 0) yield break;
-
+        
         HatchAnimGO.SetActive(true);
         isGetPixelmon = false;
 
@@ -94,6 +96,7 @@ public class UIMiddleBar : UIBase
         float startTime = Time.time;
         while (Time.time - startTime < BreakClip.length) yield return null;
 
+        HatchedPixelmonImg.gameObject.SetActive(true);
         HatchResultPopup.SetActive(true);
 
         yield return getPixelmon;
@@ -135,19 +138,11 @@ public class UIMiddleBar : UIBase
 
     public void OnClickGetPixelmon(bool isReplace)
     {
-        if (isReplace) // 교체하기(교체 및 수집)
-        {
-            Debug.Log("ReplaceBtn");
-        }
-        else // 수집하기
-        {
-            Debug.Log("CollectBtn");
-        }
-
         // 애니메이션 끄기
         BreakAnim.SetBool(Data.EggBreakParameterHash, false);
         HatchAnim.SetBool(Data.EggHatchParameterHash, false);
 
+        HatchedPixelmonImg.gameObject.SetActive(false);
         HatchAnimGO.SetActive(false);
         isGetPixelmon = true;
     }

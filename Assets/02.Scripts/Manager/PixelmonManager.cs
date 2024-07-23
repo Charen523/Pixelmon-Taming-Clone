@@ -48,6 +48,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
         player.pixelmons[index].myData = myData;
         player.pixelmons[index].data = pxmData[myData.id];
         player.pixelmons[index].fsm.ChangeState(player.fsm.currentState);
+        //player.pixelmons[index].InitPxm();
         player.currentPixelmonCount++;
         //inven.SetData("equipedPixelmons", player.pixelmons);
     }
