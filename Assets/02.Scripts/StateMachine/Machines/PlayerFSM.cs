@@ -36,7 +36,9 @@ public class PlayerFSM : FSM
         DieState = new PlayerDieState(this);
         AttackState = new PlayerAttackState(this);
 
-        GameManager.Instance.OnStageClear += ReStartPlayer;
+        GameManager.Instance.OnStageStart += ReStartPlayer;
+        //GameManager.Instance.OnStageClear += ReStartPlayer;
+        GameManager.Instance.OnStageTimeOut += StageTimeOut;
 
         ChangeState(DetectState);
     }
@@ -45,6 +47,11 @@ public class PlayerFSM : FSM
     {
         Player.Instance.healthSystem.InitHealth();
         ChangeState(DetectState);
+    }
+
+    public void StageTimeOut()
+    {
+        ChangeState(FailState);
     }
 
     public void NotifyPlayerDie()
