@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
-using System.Security.Cryptography;
-using System.Text;
+using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,10 +23,10 @@ public class UIMiddleBar : UIBase
     #endregion
     public Image HatchedPixelmonImg;
     private UIBase HatchResultPopup;
-    private PixelmonRank rank;
 
     private WaitUntil getPixelmon;
     private bool isGetPixelmon;
+    private PixelmonData hatchPxmData;
     #endregion
 
     private async void Awake()
@@ -38,8 +35,8 @@ public class UIMiddleBar : UIBase
     }
     private void Start()
     {
-        //eggCount = InventoryManager.Instance.userData.eggCount;
-        //eggLv = InventoryManager.Instance.userData.eggLv;
+        eggCount = SaveManager.Instance.userData.eggCount;
+        eggLv = SaveManager.Instance.userData.eggLv;
         EggCntText.text = eggCount.ToString();
         EggLvText.text = eggLv.ToString();
 
@@ -52,13 +49,26 @@ public class UIMiddleBar : UIBase
     private bool Gacha()
     {
         // 확률에 따라 픽셀몬 등급 랜덤뽑기
-        rank = PerformGacha(eggLv.ToString());
-        Debug.Log($"뽑은 픽셀몬 등급(Gacha) : {rank}");
+        PixelmonRank rank = PerformGacha(eggLv.ToString());
+
+        // 알 색상 변경
 
         // 등급에 해당하는 픽셀몬 랜덤뽑기
-        // 확률에 따라 픽셀몬 능력치 등급 랜덤뽑기
+        var data = DataManager.Instance.pixelmonData.data;
+        List<PixelmonData> randData = new List<PixelmonData>(data.Count);
 
-        // 알 색상 변경 
+        for (int i = 0; i < data.Count; i++)
+        {
+            if (data[i].rank == rank.ToString())
+            {
+                randData.Add(data[i]);
+            }
+        }
+
+        hatchPxmData = randData[UnityEngine.Random.Range(0, randData.Count)];
+        Debug.Log("[이름] : " + hatchPxmData.name + " [등급] : " + hatchPxmData.rank);
+
+        // 확률에 따라 픽셀몬 능력치 등급 랜덤뽑기
 
         return true;
     }
@@ -106,9 +116,8 @@ public class UIMiddleBar : UIBase
             Debug.LogError("확률 합 != 100");
         }
         #endregion
-
-        System.Random rnd = new System.Random();
-        int randNum = rnd.Next(100, 10001); // 1부터 100까지의 난수를 생성
+        
+        int randNum = UnityEngine.Random.Range(100, 10001);
 
         float cumProb = 0;
         for (int i = 0; i < probs.Length; i++)
