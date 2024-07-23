@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class MyPixelmonData
 {
     //도감 넘버
+    public string rcode;
     public int id;
     public int lv = 1;
     public int exp = 0;

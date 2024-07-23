@@ -51,11 +51,12 @@ public class UIMiddleBar : UIBase
 
     private bool Gacha()
     {
-        // 확률에 따라 등급 랜덤뽑기
+        // 확률에 따라 픽셀몬 등급 랜덤뽑기
         rank = PerformGacha(eggLv.ToString());
         Debug.Log($"뽑은 픽셀몬 등급(Gacha) : {rank}");
 
         // 등급에 해당하는 픽셀몬 랜덤뽑기
+        // 확률에 따라 픽셀몬 능력치 등급 랜덤뽑기
 
         // 알 색상 변경 
 
@@ -124,7 +125,7 @@ public class UIMiddleBar : UIBase
 
     public void OnClickGetPixelmon(bool isReplace)
     {
-        if (isReplace) // 교체하기
+        if (isReplace) // 교체하기(교체 및 수집)
         {
             Debug.Log("ReplaceBtn");
         }
