@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [System.Serializable]
-public class RateBg
+public class PixelmonBg
 {
     public PixelmonRank rank;
     public Sprite img;
@@ -13,7 +13,7 @@ public class RateBg
 
 public class UIHatchResultPopup : UIBase
 {
-    [SerializeField] private List<RateBg> RateBgs;
+    [SerializeField] private List<PixelmonBg> PixelmonBgs;
     [SerializeField] private Image pixelmonBg;
     [SerializeField] private Image pixelmonImg;
     [SerializeField] private Button rePlaceBtn;
@@ -30,11 +30,11 @@ public class UIHatchResultPopup : UIBase
 
     public Sprite GetCommonRankImage(PixelmonRank rank)
     {
-        foreach (RateBg rateBg in RateBgs)
+        foreach (PixelmonBg bg in PixelmonBgs)
         {
-            if (rateBg.rank == rank)
+            if (bg.rank == rank)
             {
-                return rateBg.img;
+                return bg.img;
             }
         }
         return null; // 해당 rank가 없을 경우 null 반환
