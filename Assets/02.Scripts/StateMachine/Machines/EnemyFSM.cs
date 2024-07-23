@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class EnemyFSM : FSM
 {
-    public Enemy enemy;   
+    public Enemy enemy;
+    public GameObject enemyCollision;
 
     #region Enemy States
     public IdleState IdleState { get; private set; }
