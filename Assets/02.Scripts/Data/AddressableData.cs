@@ -10,7 +10,8 @@ public enum eAddressableType
     prefab,
     thumbnail,
     ui,
-    data,
+    animator,
+    data
 }
 
 public enum eAssetType
