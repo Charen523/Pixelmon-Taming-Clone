@@ -12,6 +12,7 @@ public class MyPixelmonData
     public int id;
     public int lv = 1;
     public int exp = 0;
+    public int[] statRank;
     public int star;
     //같은 카드 중복개수
     public int evolvedCount;
