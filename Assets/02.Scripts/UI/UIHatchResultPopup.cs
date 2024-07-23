@@ -1,19 +1,27 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+
 [System.Serializable]
-public class PixelmonBg
+public class RateBg : BaseBg
 {
-    public PixelmonRank rank;
-    public Sprite img;
-    public List<Dictionary<PixelmonRank, Sprite>> bgs;
+}
+
+[System.Serializable]
+public class PixelmonBg : BaseBg
+{
 }
 
 public class UIHatchResultPopup : UIBase
 {
-    [SerializeField] private List<PixelmonBg> PixelmonBgs;
+    [SerializeField] private List<RateBg> rateBgs;
+    [SerializeField] private List<PixelmonBg> pixelmonBgs;
+    [SerializeField] private TextMeshProUGUI rateTxt;
+    [SerializeField] private Image rateBg;
     [SerializeField] private Image pixelmonBg;
     [SerializeField] private Image pixelmonImg;
     [SerializeField] private Button rePlaceBtn;
@@ -23,21 +31,10 @@ public class UIHatchResultPopup : UIBase
     {
         #region UI 셋팅
         uiMiddleBar = UIManager.Get<UIMiddleBar>();
-        pixelmonBg.sprite = GetCommonRankImage(uiMiddleBar.rank);
+        rateBg.sprite = PxmRankImgUtil.GetRankImage(uiMiddleBar.rank, rateBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
+        pixelmonBg.sprite = PxmRankImgUtil.GetRankImage(uiMiddleBar.rank, pixelmonBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
         pixelmonImg.sprite = uiMiddleBar.HatchedPixelmonImg.sprite;
         #endregion
-    }
-
-    public Sprite GetCommonRankImage(PixelmonRank rank)
-    {
-        foreach (PixelmonBg bg in PixelmonBgs)
-        {
-            if (bg.rank == rank)
-            {
-                return bg.img;
-            }
-        }
-        return null; // 해당 rank가 없을 경우 null 반환
     }
 
     public void OnClickGetPixelmon(bool isReplace)

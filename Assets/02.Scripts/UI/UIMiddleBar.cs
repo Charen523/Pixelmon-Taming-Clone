@@ -5,7 +5,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-
+[System.Serializable]
+public class EggImg : BaseBg
+{
+}
 public class UIMiddleBar : UIBase
 {
     #region 알 뽑기
@@ -21,9 +24,13 @@ public class UIMiddleBar : UIBase
     public GameObject HatchAnimGO;
     public AnimationClip BreakClip;
     #endregion
-    public PixelmonRank rank;
+    #region UI
+    public List<EggImg> eggImgs;
+    public Image EggImg;
     public Image HatchedPixelmonImg;
+    public PixelmonRank rank;
     public PixelmonData HatchPxmData;
+    #endregion
 
     private UIBase HatchResultPopup;
     private WaitUntil getPixelmon;
@@ -54,6 +61,8 @@ public class UIMiddleBar : UIBase
         rank = PerformGacha(eggLv.ToString());
 
         // 알 색상 변경
+        EggImg.gameObject.SetActive(true);
+        EggImg.sprite = PxmRankImgUtil.GetRankImage(rank, eggImgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
 
         // 등급에 해당하는 픽셀몬 랜덤뽑기
         var data = DataManager.Instance.pixelmonData.data;
@@ -84,12 +93,13 @@ public class UIMiddleBar : UIBase
     public IEnumerator ClickEgg()
     {
         if (eggCount <= 0) yield break;
-        
+
+        EggImg.gameObject.SetActive(false);
         HatchAnimGO.SetActive(true);
         isGetPixelmon = false;
 
         // 애니메이션 실행
-        BreakAnim.SetBool(Data.EggBreakParameterHash, true);
+        BreakAnim.SetInteger(Data.EggBreakParameterHash, (int)rank);
         HatchAnim.SetBool(Data.EggHatchParameterHash, true);
 
         // 애니메이션 끝난지 체크
@@ -138,8 +148,7 @@ public class UIMiddleBar : UIBase
 
     public void OnClickGetPixelmon(bool isReplace)
     {
-        // 애니메이션 끄기
-        BreakAnim.SetBool(Data.EggBreakParameterHash, false);
+        BreakAnim.SetInteger(Data.EggBreakParameterHash, -1);
         HatchAnim.SetBool(Data.EggHatchParameterHash, false);
 
         HatchedPixelmonImg.gameObject.SetActive(false);
