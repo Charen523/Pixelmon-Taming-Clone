@@ -27,6 +27,7 @@ public class UITopBar : UIBase
     #region Coroutine
     private Coroutine goldCoroutine;
     private Coroutine gemCoroutine;
+    private Coroutine expCoroutine;
     #endregion
 
     private void Awake()
@@ -59,7 +60,7 @@ public class UITopBar : UIBase
                 UpdateExpUI();
                 break;
             case 1:
-                UpdateRewardTxt();
+                UpdateRewardUI();
                 break;
             default:
                 Debug.LogWarning("업데이트 인덱스 오류");
@@ -67,7 +68,7 @@ public class UITopBar : UIBase
         }
     }
 
-    public void UpdateRewardTxt()
+    public void UpdateRewardUI()
     {
         string newGoldTxt = saveManager.userData.gold.ToString();
         if (goldTxt.text != newGoldTxt)
@@ -76,7 +77,7 @@ public class UITopBar : UIBase
             {
                 StopCoroutine(goldCoroutine);
             }
-            goldCoroutine = StartCoroutine(AnimateTextChange(goldTxt, int.Parse(goldTxt.text), int.Parse(newGoldTxt)));
+            goldCoroutine = StartCoroutine(UIUtils.AnimateTextChange(goldTxt, int.Parse(goldTxt.text), int.Parse(newGoldTxt)));
         }
 
         string newGemTxt = saveManager.userData.diamond.ToString();
@@ -86,12 +87,14 @@ public class UITopBar : UIBase
             {
                 StopCoroutine(gemCoroutine);
             }
-            gemCoroutine = StartCoroutine(AnimateTextChange(gemTxt, int.Parse(gemTxt.text), int.Parse(newGemTxt)));
+            gemCoroutine = StartCoroutine(UIUtils.AnimateTextChange(gemTxt, int.Parse(gemTxt.text), int.Parse(newGemTxt)));
         }
     }
 
     public void UpdateExpUI()
     {
+        int startExp = currentExp;
+
         while (currentExp > tempMaxExp)
         {
             saveManager.SetDeltaData("userExp", -tempMaxExp);
@@ -99,23 +102,15 @@ public class UITopBar : UIBase
             lvTxt.text = $"Lv.{saveManager.userData.userLv}";
         }
 
-        expSldr.value = currentExp / tempMaxExp;
+        int endExp = currentExp;
+
+        if (expCoroutine != null)
+        {
+            StopCoroutine(expCoroutine);
+        }
+
+        expCoroutine = StartCoroutine(UIUtils.AnimateSliderChange(expSldr, startExp, endExp, tempMaxExp));
         expTxt.text = (expSldr.value * 100).ToString("0.00") + "%";
     }
 
-    private IEnumerator AnimateTextChange(TextMeshProUGUI textElement, int startValue, int endValue)
-    {
-        float duration = 0.5f;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            int currentValue = (int)Mathf.Lerp(startValue, endValue, elapsed / duration);
-            textElement.text = currentValue.ToString();
-            yield return null;
-        }
-
-        textElement.text = endValue.ToString();
-    }
 }

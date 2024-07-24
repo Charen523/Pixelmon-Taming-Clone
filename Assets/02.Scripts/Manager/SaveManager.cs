@@ -131,17 +131,14 @@ public class SaveManager : Singleton<SaveManager>
                 string itemName = dataManager.GetData<RewardData>(rcodes[i]).name;
                 SetDeltaData(itemName, amounts[i]);
 
-                switch (itemName)
+                if (itemName == "userExp")
                 {
-                    case "exp":
-                        UpdateUI.Invoke(0);
-                        break;
-                    case "gold":
-                    case "diamond":
-                        UpdateUI.Invoke(1);
-                        break;
-                    default:
-                        break;
+                    UpdateUI.Invoke(0);
+                }
+
+                if (itemName == "gold" || itemName == "diamond")
+                {
+                    UpdateUI.Invoke(1);
                 }
             }
         }
