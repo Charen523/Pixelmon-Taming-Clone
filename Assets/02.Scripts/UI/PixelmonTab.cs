@@ -1,3 +1,4 @@
+using DG.Tweening.Core.Easing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -46,6 +47,7 @@ public class PixelmonTab : UIBase
     #endregion
 
     #region 매니저
+    public SaveManager saveManager;
     [SerializeField]
     private PixelmonManager pixelmonManager;
     [SerializeField]
@@ -60,7 +62,7 @@ public class PixelmonTab : UIBase
     //미보유 픽셀몬 정보
     public List<PixelmonSlot> noneData = new List<PixelmonSlot>();
     //보유한 픽셀몬 정보
-    public List<PixelmonSlot> possessData = new List<PixelmonSlot>();
+    public List<PixelmonSlot> ownedData = new List<PixelmonSlot>();
     //편성된 픽셀몬 정보
     [SerializeField]
     private PixelmonEquipSlot[] equipData = new PixelmonEquipSlot[5];
@@ -68,7 +70,8 @@ public class PixelmonTab : UIBase
 
     private async void Awake()
     {
-        userData = SaveManager.Instance.userData;
+        saveManager = SaveManager.Instance;
+        userData = saveManager.userData;
         dataManager = DataManager.Instance;
         pixelmonManager = PixelmonManager.Instance;
         pixelmonManager.pxmTab = this;
@@ -87,7 +90,7 @@ public class PixelmonTab : UIBase
             if (userData.ownedPxms[i] != null && userData.ownedPxms[i].isOwned)
             {
                 slot.myPxmData = userData.ownedPxms[index++];
-                possessData.Add(slot);
+                ownedData.Add(slot);
                 slot.UpdateSlot();
             }
             else
@@ -137,22 +140,23 @@ public class PixelmonTab : UIBase
         }
     }
 
-    public void AutoProssess()
+    public void AutoEvolved()
     {
+        foreach (var data in ownedData)
+        {
+            if (data.myPxmData.isAdvancable)
+            {
 
-    }
-
-    public void AutoCompose()
-    {
-
+            }
+        }
     }
 
     public void GetPixelmon(int index)
     {
-        if (!possessData.Contains(allData[index]))
+        if (!ownedData.Contains(allData[index]))
         {
             allData[index].myPxmData.isOwned = true;
-            possessData.Add(allData[index]);
+            ownedData.Add(allData[index]);
             noneData.Remove(allData[index]);
         }
         allData[index].UpdateSlot();
@@ -178,6 +182,7 @@ public class PixelmonTab : UIBase
         clickPopUp.gameObject.SetActive(false);
         addViewOverlay.gameObject.SetActive(false);
         equipOverlay.gameObject.SetActive(false);
+        infoPopUp.gameObject.SetActive(false);
     }
     
     public void OnEquip()
