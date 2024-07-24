@@ -52,8 +52,12 @@ public class PixelmonSlot : MonoBehaviour
 
     public virtual void UpdateSlot()
     {
-        slotIcon.sprite = pxmData.icon;
-        slotIconBg.sprite = pxmData.bgIcon;
+        myPxmData = SaveManager.Instance.userData.ownedPxms[pxmData.id];
+        slotIcon.color = Color.white;
+        slotIconBg.color = Color.white;
+        lvTxt.gameObject.SetActive(true);
+        evolveSldr.gameObject.SetActive(true);
+
         lvTxt.text = string.Format("Lv.{0}", myPxmData.lv);
         SetStars();
         SetEvolveSldr();
@@ -76,6 +80,11 @@ public class PixelmonSlot : MonoBehaviour
         evolveSldr.maxValue = maxNum;
         evolveSldr.value = myPxmData.evolvedCount;
         evolveTxt.text = string.Format("{0}/{1}", myPxmData.evolvedCount, maxNum);
+        if (myPxmData.evolvedCount >= maxNum)
+        {
+            myPxmData.isAdvancable = true;
+            SaveManager.Instance.UpdatePixelmonData(myPxmData.id, "isAdvancable", true);
+        }
     }
 
     public int GetEvolveValue()
