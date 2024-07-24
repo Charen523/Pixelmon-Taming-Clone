@@ -117,12 +117,13 @@ public class PixelmonSlot : MonoBehaviour
         pxmtab.OnClickSlot(pxmData.id, rectTr);
     }
 
-    private void OnEvolved()
+    public void OnEvolved()
     {
         //pxmtab.userData.ownedPxms[myPxmData.id].isAdvancable = false;
         pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "isAdvancable", false);
         pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "star", ++myPxmData.star);
         pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "evolvedCount", 0);
         SetStars();
+        SetEvolveSldr();
     }
 }
