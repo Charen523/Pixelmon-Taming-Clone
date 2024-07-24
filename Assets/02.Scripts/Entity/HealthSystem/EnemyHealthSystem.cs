@@ -24,6 +24,12 @@ public class EnemyHealthSystem : HealthSystem
         currentHealth = maxHealth;
     }
 
+    public override void TakeDamage(float delta)
+    {
+        def = enemy.statHandler.enemyDef;
+        base.TakeDamage(delta);
+    }
+
     protected override void NoticeDead()
     {
         enemy.fsm.ChangeState(enemy.fsm.DieState);
