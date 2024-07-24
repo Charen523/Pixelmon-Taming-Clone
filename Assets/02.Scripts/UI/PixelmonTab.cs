@@ -33,6 +33,7 @@ public class PixelmonTab : UIBase
     private string unEquip = "해제하기";
     public TabState tabState;
 
+    public UnityAction<int> unLockAction;
     #region 슬롯, 팝업
     [SerializeField]
     private PixelmonPopUP infoPopUp;
@@ -57,22 +58,23 @@ public class PixelmonTab : UIBase
     //전체 픽셀몬 정보
     public List<PixelmonSlot> allData = new List<PixelmonSlot>();
     //미보유 픽셀몬 정보
-    [SerializeField]
-    private List<PixelmonSlot> noneData = new List<PixelmonSlot>();
+    public List<PixelmonSlot> noneData = new List<PixelmonSlot>();
     //보유한 픽셀몬 정보
-    [SerializeField]
-    private List<PixelmonSlot> possessData = new List<PixelmonSlot>();
+    public List<PixelmonSlot> possessData = new List<PixelmonSlot>();
     //편성된 픽셀몬 정보
     [SerializeField]
     private PixelmonEquipSlot[] equipData = new PixelmonEquipSlot[5];
     #endregion
 
-    void Start()
+    private async void Awake()
     {
         userData = SaveManager.Instance.userData;
         dataManager = DataManager.Instance;
         pixelmonManager = PixelmonManager.Instance;
+        pixelmonManager.pxmTab = this;
+        unLockAction += GetPixelmon;
         InitTab();
+        infoPopUp = await UIManager.Show<PixelmonPopUP>();
     }
 
     public void InitTab()
@@ -82,11 +84,11 @@ public class PixelmonTab : UIBase
         {
             PixelmonSlot slot = Instantiate(slotPrefab, contentTr);
             slot.InitSlot(this, dataManager.pixelmonData.data[i]);
-            if (userData.ownedPxms[i] != null && slot.pxmData.id == userData.ownedPxms[index].id)
+            if (userData.ownedPxms[i] != null && userData.ownedPxms[i].isOwned)
             {
                 slot.myPxmData = userData.ownedPxms[index++];
-                slot.UpdateSlot();
                 possessData.Add(slot);
+                slot.UpdateSlot();
             }
             else
             {
@@ -145,9 +147,15 @@ public class PixelmonTab : UIBase
 
     }
 
-    public void Possess(int index)
+    public void GetPixelmon(int index)
     {
-        allData[index].myPxmData.isOwned = true;
+        if (!possessData.Contains(allData[index]))
+        {
+            allData[index].myPxmData.isOwned = true;
+            possessData.Add(allData[index]);
+            noneData.Remove(allData[index]);
+        }
+        allData[index].UpdateSlot();
     }
 
     public void OnClickSlot(int index, RectTransform rectTr)
@@ -222,8 +230,8 @@ public class PixelmonTab : UIBase
 
     public void OnInfoPopUp()
     {
-        infoPopUp.gameObject.SetActive(true);
         tabState = TabState.Normal;
+        infoPopUp.gameObject.SetActive(true);
         infoPopUp.ShowPopUp(choiceId);
     }
 }

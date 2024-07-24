@@ -1,3 +1,5 @@
+using DG.Tweening.Core.Easing;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
@@ -9,9 +11,13 @@ public class PixelmonEquipSlot : PixelmonSlot
 {
     public Player player;
     public PixelmonManager pxmManager;
-
+    public SaveManager saveManager;
     public bool isLocked = true;
     public Image stateIcon;
+    private void Awake()
+    {
+        saveManager = SaveManager.Instance;
+    }
 
     private void Start()
     {
@@ -55,6 +61,9 @@ public class PixelmonEquipSlot : PixelmonSlot
         lvTxt.gameObject.SetActive(true);
         lvTxt.text = string.Format("Lv.{0}", myData.lv);
         myData.isEquiped = true;
+
+        saveManager.userData.equippedPxms[slotIndex] = myData;
+        saveManager.SetData("equippedPxms", saveManager.userData.equippedPxms);
     }
 
     public void UnEquip()
@@ -64,6 +73,9 @@ public class PixelmonEquipSlot : PixelmonSlot
         slotIconBg.sprite = pxmManager.defaultBg;
         stateIcon.gameObject.SetActive(true);
         lvTxt.gameObject.SetActive(false);
+
+        saveManager.userData.equippedPxms[myPxmData.id] = null;
+        saveManager.SetData("equippedPxms", saveManager.userData.equippedPxms);
     }
 
     protected override void OnClick()

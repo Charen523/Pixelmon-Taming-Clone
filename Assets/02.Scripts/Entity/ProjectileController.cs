@@ -13,17 +13,20 @@ public class ProjectileController : SerializedMonoBehaviour
     private Vector2 shootDirection;
     private float flyDistance;
     private float flySpeed;
-
+    private bool isShoot;
+    private Vector3 pos;
     private void Awake()
     {
         if (rb == null)
         {
             rb = GetComponent<Rigidbody2D>();
         }
+        pos = new Vector3(-1000, 0, 0);
     }
 
     private void Update()
     {
+        if(!isShoot) return;
         rb.velocity = shootDirection.normalized * flySpeed;
 
         // 발사체가 일정 거리 이상 날아가면 비활성화
@@ -43,13 +46,15 @@ public class ProjectileController : SerializedMonoBehaviour
         flySpeed = speed; //날아갈 속도.
 
         rb.position = startPosition;
+        isShoot = true; 
     }
 
     // 발사체의 위치와 속도를 초기화하는 메서드
     public void ResetProjectile()
     {
         rb.velocity = Vector2.zero;
-        transform.position = new Vector3(-1000, 0, 0);
+        isShoot = false;
+        transform.position = pos;
         gameObject.SetActive(false);
     }
 }
