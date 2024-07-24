@@ -53,6 +53,13 @@ public class PlayerFSM : FSM
         ChangeState(FailState);
     }
 
+    public void NotifyTimeOut()
+    {
+        target = null;
+        ReStartPlayer();
+        StageManager.Instance.InitStage();
+    }
+
     public void NotifyPlayerDie()
     {
         ReStartPlayer();
