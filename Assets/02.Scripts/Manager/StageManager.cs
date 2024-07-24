@@ -246,7 +246,7 @@ public class StageManager : Singleton<StageManager>
             stageTitleTxt.text = $"{SetDiffTxt()} {worldNum}-BOSS";
             StageIcon.sprite = iconSprite[1];
             progressSldr.value = 1; // TODO: 보스 HealthSystem과 연결.
-            progressTxt.text = "100%";
+            progressTxt.text = "100.00%";
             bossTimeSldr.gameObject.SetActive(true);
         }
         else
@@ -272,7 +272,7 @@ public class StageManager : Singleton<StageManager>
         };
     }
 
-    IEnumerator SetProgressBar() 
+    private IEnumerator SetProgressBar() 
     {
         float time = 0;
         float duration = 0.5f;
@@ -292,6 +292,16 @@ public class StageManager : Singleton<StageManager>
             
             yield return null;
         }
+    }
+
+    public Slider GetBossSlider()
+    {
+        return progressSldr;
+    }
+
+    public TextMeshProUGUI GetBossHpText()
+    {
+        return progressTxt;
     }
     #endregion
 
