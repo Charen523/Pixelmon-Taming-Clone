@@ -26,10 +26,7 @@ public class EnemyStatHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        string curRcode = StageManager.Instance.CurrentRcode;
-
-        int difficulty = int.Parse(curRcode.Substring(3, 1));
-        int stage = int.Parse(curRcode.Substring(6, 2));
+        int difficulty = SaveManager.Instance.userData.curDifficulty;
 
         int deltaDifficulty = (int)Mathf.Pow(2, difficulty);
 

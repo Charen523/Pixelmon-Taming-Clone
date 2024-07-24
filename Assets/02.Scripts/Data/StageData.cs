@@ -7,7 +7,6 @@ public class StageData : IData
     public string rcode;
 
     #region json keys
-    public int difficulty;
     public int worldId;
     public int stageId;
     public int spawnCount;
