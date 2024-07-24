@@ -60,7 +60,7 @@ public class StageManager : Singleton<StageManager>
     [Header("Current Stage")]
     private readonly string stageCodeName = "STG";
     
-    public int diffNum;
+    public int diffNum => SaveManager.Instance.userData.curDifficulty;
 
     [SerializeField] private int worldNum;
     [SerializeField] private readonly int maxWorldNum = 10;
@@ -101,7 +101,6 @@ public class StageManager : Singleton<StageManager>
     private void InitData()
     {
         Data = DataManager.Instance.GetData<StageData>(CurrentRcode);
-        diffNum = Data.difficulty;
         worldNum = Data.worldId;
         stageNum = Data.stageId;
         killCount = SaveManager.Instance.userData.curStageCount;
@@ -109,7 +108,7 @@ public class StageManager : Singleton<StageManager>
 
     private void ResetRcode()
     {
-        CurrentRcode = $"{stageCodeName}{diffNum}{worldNum.ToString("D2")}{stageNum.ToString("D2")}";
+        CurrentRcode = $"{stageCodeName}{0}{worldNum.ToString("D2")}{stageNum.ToString("D2")}";
         Data = DataManager.Instance.GetData<StageData>(CurrentRcode);
     }
 
@@ -247,7 +246,7 @@ public class StageManager : Singleton<StageManager>
             stageTitleTxt.text = $"{SetDiffTxt()} {worldNum}-BOSS";
             StageIcon.sprite = iconSprite[1];
             progressSldr.value = 1; // TODO: 보스 HealthSystem과 연결.
-            progressTxt.text = "100%";
+            progressTxt.text = "100.00%";
             bossTimeSldr.gameObject.SetActive(true);
         }
         else
@@ -273,7 +272,7 @@ public class StageManager : Singleton<StageManager>
         };
     }
 
-    IEnumerator SetProgressBar() 
+    private IEnumerator SetProgressBar() 
     {
         float time = 0;
         float duration = 0.5f;
@@ -294,8 +293,17 @@ public class StageManager : Singleton<StageManager>
             yield return null;
         }
     }
-    #endregion
 
+    public Slider GetBossSlider()
+    {
+        return progressSldr;
+    }
+
+    public TextMeshProUGUI GetBossHpText()
+    {
+        return progressTxt;
+    }
+    #endregion
 
     #region Next Stage/World/Diff
     public void ToNextStage(bool isClear = true)
@@ -321,22 +329,17 @@ public class StageManager : Singleton<StageManager>
     {
         stageNum = 1;
 
-        if (worldNum <= maxWorldNum)
+        if (worldNum < maxWorldNum)
         {
             worldNum++;
         }
         else
         {
             worldNum = 1;
-            diffNum++;
+            SaveManager.Instance.SetDeltaData("curDifficulty", 1);
         }
 
         ResetRcode();
-
-        foreach (var monsterId in monsterIds)
-        {
-            //PoolManager.Instance.AddPool(monsterId);
-        }
     }
     #endregion
 

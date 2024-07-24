@@ -11,7 +11,7 @@ public abstract class HealthSystem : SerializedMonoBehaviour
     protected float maxHealth;
     protected float currentHealth;
 
-    private void Update()
+    protected virtual void Update()
     {
         hpBar.fillAmount = currentHealth / maxHealth;
     }

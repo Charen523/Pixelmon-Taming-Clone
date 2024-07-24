@@ -20,6 +20,7 @@ public class UserData
     public int eggCount = 10;
 
     public string curStageRcode = "STG00101";
+    public int curDifficulty = 0;
     public int curStageCount = 0;
 
     //public string curQuestRode;
