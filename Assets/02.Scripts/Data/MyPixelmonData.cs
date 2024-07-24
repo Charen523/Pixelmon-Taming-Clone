@@ -24,7 +24,7 @@ public class MyPixelmonData
 
     public UnityAction activeSkill;
     //패시브 능력
-    public PsvSkill[] trait;
+    public PsvSkill[] psvSkill;
 }
 
 public class PsvSkill
