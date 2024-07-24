@@ -11,10 +11,12 @@ public class MyPixelmonData
     public int lv = 1;
     public int exp = 0;
     public int[] statRank;
-    public int star;
+    public int star = 0;
+    //진화 가능 여부
+    public bool isAdvancable;
     //같은 카드 중복개수
-    public int evolvedCount;
-
+    public int evolvedCount = 0;
+    
     //장착 여부
     public bool isEquiped;
     //보유 여부
