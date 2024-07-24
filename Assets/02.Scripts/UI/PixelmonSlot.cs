@@ -82,8 +82,8 @@ public class PixelmonSlot : MonoBehaviour
         evolveTxt.text = string.Format("{0}/{1}", myPxmData.evolvedCount, maxNum);
         if (myPxmData.evolvedCount >= maxNum)
         {
-            myPxmData.isAdvancable = true;
-            SaveManager.Instance.UpdatePixelmonData(myPxmData.id, "isAdvancable", true);
+            pxmtab.userData.ownedPxms[myPxmData.id].isAdvancable = true;
+            pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "isAdvancable", true);
         }
     }
 
@@ -115,5 +115,14 @@ public class PixelmonSlot : MonoBehaviour
         else
             pxmtab.tabState = TabState.Empty;
         pxmtab.OnClickSlot(pxmData.id, rectTr);
+    }
+
+    private void OnEvolved()
+    {
+        //pxmtab.userData.ownedPxms[myPxmData.id].isAdvancable = false;
+        pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "isAdvancable", false);
+        pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "star", ++myPxmData.star);
+        pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "evolvedCount", 0);
+        SetStars();
     }
 }
