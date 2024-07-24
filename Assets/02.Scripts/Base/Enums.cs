@@ -31,13 +31,3 @@ public enum PixelmonRank
     Legendary,
     Unique
 }
-
-public enum EnemyStat
-{
-    Spd,
-    Atk,
-    MaxHp,
-    Def,
-    Cri,
-    CriDmg
-}

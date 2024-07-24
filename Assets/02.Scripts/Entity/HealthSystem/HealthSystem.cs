@@ -10,6 +10,7 @@ public abstract class HealthSystem : SerializedMonoBehaviour
     /*체력변수*/
     protected float maxHealth;
     protected float currentHealth;
+    protected float def;
 
     protected virtual void Update()
     {
@@ -26,8 +27,9 @@ public abstract class HealthSystem : SerializedMonoBehaviour
 
     public virtual void TakeDamage(float delta)
     {
-        currentHealth = MathF.Max(0, currentHealth - delta);
-        PoolManager.Instance.SpawnFromPool<DamageText>("TXT00001").ShowDamageText((int)delta, gameObject.transform.position);        
+        float damage = Mathf.Max(0, delta - def);
+        currentHealth = MathF.Max(0, currentHealth - damage);
+        PoolManager.Instance.SpawnFromPool<DamageText>("TXT00001").ShowDamageText((int)damage, gameObject.transform.position);        
         if (currentHealth == 0)
         {
             NoticeDead();
