@@ -76,9 +76,9 @@ public class UIMiddleBar : UIBase
 
         #region 확률에 따라 픽셀몬 능력치 등급 랜덤뽑기
         // 공격력
-        var gachaResult = PerformAbilityGacha();
-        float atkResult = HatchPxmData.baseAtk * ((float)gachaResult.RandValue / 100);
-        AbilityDic.Add("Attack", Tuple.Create(gachaResult.DropRcode, atkResult));
+        //var gachaResult = PerformAbilityGacha();
+        //float atkResult = HatchPxmData.baseAtk * ((float)gachaResult.RandValue / 100);
+        //AbilityDic.Add("Attack", Tuple.Create(gachaResult.DropRcode, atkResult));
         
         // 패시브
 

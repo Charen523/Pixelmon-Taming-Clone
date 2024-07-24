@@ -34,4 +34,17 @@ public static class UIUtils
 
         slider.value = (float)endValue / maxValue;
     }
+
+    public static string TranslateRank(PixelmonRank rank)
+    {
+        switch (rank)
+        {
+            case PixelmonRank.Common: return "일반";
+            case PixelmonRank.Advanced: return "고급";
+            case PixelmonRank.Rare: return "희귀";
+            case PixelmonRank.Epic: return "영웅";
+            case PixelmonRank.Legendary: return "전설";
+        }
+        return null;
+    }
 }

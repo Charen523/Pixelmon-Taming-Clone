@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,20 +26,20 @@ public class UIHatchResultPopup : UIBase
     [SerializeField] private Image pixelmonImg;
     #endregion
     #region 능력치 ui
-    [SerializeField] private TextMeshProUGUI atkRate;
-    [SerializeField] private TextMeshProUGUI atkTxt;
-    [SerializeField] private TextMeshProUGUI passiveRate;
+    //[SerializeField] private TextMeshProUGUI atkRate;
+    //[SerializeField] private TextMeshProUGUI atkTxt;
+    //[SerializeField] private TextMeshProUGUI passiveRate;
     [SerializeField] private TextMeshProUGUI passiveTxt;
-    [SerializeField] private TextMeshProUGUI ownEffectRate;
+    //[SerializeField] private TextMeshProUGUI ownEffectRate;
     [SerializeField] private TextMeshProUGUI ownEffectTxt;
     #endregion
+    [SerializeField] private TextMeshProUGUI pxmName;
     [SerializeField] private Button rePlaceBtn;
 
     private UIMiddleBar uiMiddleBar;
     private UserData userData;
     private SaveManager saveManager;
     private bool isOwnedPxm;
-    private int id;
 
     private void OnEnable()
     {
@@ -46,13 +47,14 @@ public class UIHatchResultPopup : UIBase
         userData = SaveManager.Instance.userData;
         uiMiddleBar = UIManager.Get<UIMiddleBar>();
         #region UI 셋팅        
-        rateTxt.text = uiMiddleBar.rank.ToString();
+        pxmName.text = uiMiddleBar.HatchPxmData.name;
+        rateTxt.text = UIUtils.TranslateRank(uiMiddleBar.rank);
         rateBg.sprite = PxmRankImgUtil.GetRankImage(uiMiddleBar.rank, rateBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
         pixelmonBg.sprite = PxmRankImgUtil.GetRankImage(uiMiddleBar.rank, pixelmonBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
         pixelmonImg.sprite = uiMiddleBar.HatchedPixelmonImg.sprite;
 
-        atkRate.text = uiMiddleBar.AbilityDic["Attack"].Item1;
-        atkTxt.text = uiMiddleBar.AbilityDic["Attack"].Item2.ToString();       
+        //atkRate.text = uiMiddleBar.AbilityDic["Attack"].Item1;
+        //atkTxt.text = uiMiddleBar.AbilityDic["Attack"].Item2.ToString();       
         #endregion        
 
         #region 이미 가지고 있는 픽셀몬인지 체크
@@ -62,7 +64,6 @@ public class UIHatchResultPopup : UIBase
             if (uiMiddleBar.HatchPxmData.rcode == data.rcode)
             {
                 isOwnedPxm = true; 
-                id = data.id;
                 break;
             }
         }
