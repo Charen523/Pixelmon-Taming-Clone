@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections;
 using System.Threading;
 using System;
+using System.Numerics;
 
 public class FieldSlot : SerializedMonoBehaviour
 {

@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Numerics;
 
 public class SaveManager : Singleton<SaveManager>
 {
+    public event Action<int> UpdateUI;
+
     public UserData userData = new UserData();
     [SerializeField] private DataManager dataManager;
 
@@ -119,13 +122,24 @@ public class SaveManager : Singleton<SaveManager>
         }
     }
 
-    public void DropItem(string[] rcodes, float[] rates ,int[] amounts)
+    public void GetRewards(string[] rcodes, int[] amounts, float[] rates = null)
     {
         for(int i = 0; i < rcodes.Length; i++) 
         {
             if (CheckDropRate(rates[i]))
             {
-                SetDeltaData(dataManager.GetData<RewardData>(rcodes[i]).name, amounts[i]);
+                string itemName = dataManager.GetData<RewardData>(rcodes[i]).name;
+                SetDeltaData(itemName, amounts[i]);
+
+                if (itemName == "userExp")
+                {
+                    UpdateUI.Invoke(0);
+                }
+
+                if (itemName == "gold" || itemName == "diamond")
+                {
+                    UpdateUI.Invoke(1);
+                }
             }
         }
     }
@@ -135,22 +149,22 @@ public class SaveManager : Singleton<SaveManager>
         return UnityEngine.Random.Range(0, 100) <= rate;
     }
 
-    public bool CheckedInventory(string field, int value)
+    /// <summary>
+    /// 주의: OwnedPixelmon만 바꿀 수 있는 메서드.
+    /// </summary>
+    /// <param name="index">owned에서 픽셀몬 데이터를 고칠 수 있는 index.</param>
+    /// <param name="field">바꿀 myPixelmonData의 필드명.</param>
+    /// <param name="value">새로 대입할 value</param>
+    public void UpdatePixelmonData(int index, string field, object value)
     {
-        var fieldInfo = userData.GetType().GetField(field);
-        if (fieldInfo != null)
+        if (index >= 0 && index < userData.ownedPxms.Length)
         {
-            return (int)fieldInfo.GetValue(userData) >= value;
+            userData.ownedPxms[index].UpdateField(field, value);
+            isDirty = true;
         }
         else
         {
-            Debug.LogWarning($"{field}라는 변수를 UserData에서 찾을 수 없습니다.");
-            return false;
+            Debug.LogWarning($"유효하지 않은 인덱스: {index}");
         }
-    }
-
-    public void SetPossessPixelmons(List<PixelmonData> data) 
-    {
-        SetData(nameof(userData.ownedPxms), data.ToArray());
     }
 }
