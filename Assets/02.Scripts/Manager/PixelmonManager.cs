@@ -8,10 +8,12 @@ public class PixelmonManager : Singleton<PixelmonManager>
 {
     public UnityAction<int, MyPixelmonData> equipAction;
     public UnityAction<int> unEquipAction;
-    public UnityAction<int> unLockAction;
+
+    public PixelmonTab pxmTab;
 
     private Player player;
     private UserData userData;
+    private SaveManager saveManager;
     private List<PixelmonData> pxmData;
     public Pixelmon[] equippedPixelmon;
 
@@ -21,7 +23,8 @@ public class PixelmonManager : Singleton<PixelmonManager>
     void Start()
     {
         pxmData = DataManager.Instance.pixelmonData.data;
-        userData = SaveManager.Instance.userData;
+        saveManager = SaveManager.Instance;
+        userData = saveManager.userData;
         player = Player.Instance;
         equipAction += Equipped;
         unEquipAction += UnEquipped;
@@ -38,19 +41,20 @@ public class PixelmonManager : Singleton<PixelmonManager>
                 Equipped(i, userData.equippedPxms[i]); 
             }
         }
-        player.LocatedPixelmon();
+        //player.LocatedPixelmon();
     }
 
-    private void Equipped(int index, MyPixelmonData myData)
+    private async void Equipped(int index, MyPixelmonData myData)
     {
         player.pixelmons[index] = equippedPixelmon[index];
         player.pixelmons[index].gameObject.SetActive(true);
         player.pixelmons[index].myData = myData;
         player.pixelmons[index].data = pxmData[myData.id];
         player.pixelmons[index].fsm.ChangeState(player.fsm.currentState);
+        player.pixelmons[index].fsm.anim.runtimeAnimatorController = await ResourceManager.Instance.LoadAsset<RuntimeAnimatorController>(myData.rcode, eAddressableType.animator);
         //player.pixelmons[index].InitPxm();
         player.currentPixelmonCount++;
-        //inven.SetData("equipedPixelmons", player.pixelmons);
+        player.LocatedPixelmon();
     }
 
     private void UnEquipped(int index)
@@ -60,7 +64,13 @@ public class PixelmonManager : Singleton<PixelmonManager>
         player.pixelmons[index]= null;
         player.currentPixelmonCount--;
         player.LocatedPixelmon();
-        //inven.SetData("equipedPixelmons", player.pixelmons);
+
+        saveManager.SetData("equippedPxms", userData.equippedPxms);
+    }
+
+    public void UnLockedPixelmon(int index)
+    {
+        pxmTab.unLockAction?.Invoke(index);
     }
 
     public PixelmonData FindPixelmonData(int id)
