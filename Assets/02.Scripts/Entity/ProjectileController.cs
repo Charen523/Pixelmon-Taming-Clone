@@ -1,8 +1,9 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileController : MonoBehaviour
+public class ProjectileController : SerializedMonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
 
@@ -38,7 +39,6 @@ public class ProjectileController : MonoBehaviour
         startPosition = startPos; //날아가기 시작하는 지점.
         shootDirection = direction; //날아갈 방향.
         projectileDamage = damage; //전달할 데이터.
-        projectileDamage = 100f; //테스트용. 지워야 함.
         flyDistance = bulletRange; //날아갈 거리.
         flySpeed = speed; //날아갈 속도.
 

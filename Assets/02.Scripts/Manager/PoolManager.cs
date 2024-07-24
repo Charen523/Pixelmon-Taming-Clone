@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,14 +8,14 @@ public class Pool
 {
     public string tag;
     public string rcode;
-    public GameObject prefab;
+    public SerializedMonoBehaviour prefab;
     public int size;
 }
 
 public class PoolManager : Singleton<PoolManager>
 {
     public List<Pool> Pools;
-    public Dictionary<string, Queue<GameObject>> PoolDictionary;
+    public Dictionary<string, Queue<SerializedMonoBehaviour>> PoolDictionary;
     private Transform objectPoolParent;
 
     protected override void Awake()
@@ -22,7 +23,7 @@ public class PoolManager : Singleton<PoolManager>
         isDontDestroyOnLoad = false;
         base.Awake();
 
-        PoolDictionary = new Dictionary<string, Queue<GameObject>>();
+        PoolDictionary = new Dictionary<string, Queue<SerializedMonoBehaviour>>();
         objectPoolParent = new GameObject("ObjectPool").transform;
     }
 
@@ -32,9 +33,10 @@ public class PoolManager : Singleton<PoolManager>
         {
             CreatePool(pool);
         }
+
     }
 
-    public GameObject SpawnFromPool(string rcode)
+    public SerializedMonoBehaviour SpawnFromPool(string rcode)
     {
         if (!PoolDictionary.ContainsKey(rcode))
         {
@@ -42,10 +44,24 @@ public class PoolManager : Singleton<PoolManager>
             return null;
         }
 
-        GameObject obj = PoolDictionary[rcode].Dequeue();
+        SerializedMonoBehaviour obj = PoolDictionary[rcode].Dequeue();
         PoolDictionary[rcode].Enqueue(obj);
-        obj.SetActive(true);
+        obj.gameObject.SetActive(true);
         return obj;
+    }
+
+    public T SpawnFromPool<T>(string rcode) where T : SerializedMonoBehaviour
+    {
+        if (!PoolDictionary.ContainsKey(rcode))
+        {
+            Debug.LogWarning($"{rcode}를 가진 Pool이 PoolDictionary에 없습니다!");
+            return default;
+        }
+
+        SerializedMonoBehaviour obj = PoolDictionary[rcode].Dequeue();
+        PoolDictionary[rcode].Enqueue(obj);
+        obj.gameObject.SetActive(true);
+        return (T)obj;
     }
 
     private void CreatePool(Pool pool)
@@ -56,14 +72,20 @@ public class PoolManager : Singleton<PoolManager>
             return;
         }
 
-        Queue<GameObject> objectPool = new Queue<GameObject>();
+        Queue<SerializedMonoBehaviour> objectPool = new Queue<SerializedMonoBehaviour>();
         Transform rcodeParent = new GameObject(pool.rcode).transform;
-        rcodeParent.SetParent(objectPoolParent);
+        if (pool.tag == "DamageTxt")
+        {
+            rcodeParent.SetParent(UIManager.Instance.canvas.transform);
+        }
+        else
+            rcodeParent.SetParent(objectPoolParent);
+
 
         for (int i = 0; i < pool.size; i++)
         {
-            GameObject obj = Instantiate(pool.prefab, rcodeParent);
-            obj.SetActive(false);
+            SerializedMonoBehaviour obj = Instantiate(pool.prefab, rcodeParent);
+            obj.gameObject.SetActive(false);
             objectPool.Enqueue(obj);
         }
 

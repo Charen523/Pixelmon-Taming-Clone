@@ -24,13 +24,9 @@ public class UIMiddleBar : UIBase
     public GameObject HatchAnimGO;
     public AnimationClip BreakClip;
     #endregion
-    #region UI
-    public List<EggImg> eggImgs;
-    public Image EggImg;
     public Image HatchedPixelmonImg;
     public PixelmonRank rank;
     public PixelmonData HatchPxmData;
-    #endregion
 
     private UIBase HatchResultPopup;
     private WaitUntil getPixelmon;
@@ -59,10 +55,6 @@ public class UIMiddleBar : UIBase
     {
         // 확률에 따라 픽셀몬 등급 랜덤뽑기
         rank = PerformGacha(eggLv.ToString());
-
-        // 알 색상 변경
-        EggImg.gameObject.SetActive(true);
-        EggImg.sprite = PxmRankImgUtil.GetRankImage(rank, eggImgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
 
         // 등급에 해당하는 픽셀몬 랜덤뽑기
         var data = DataManager.Instance.pixelmonData.data;
@@ -93,7 +85,6 @@ public class UIMiddleBar : UIBase
     {
         if (eggCount <= 0) yield break;
 
-        EggImg.gameObject.SetActive(false);
         HatchAnimGO.SetActive(true);
         isGetPixelmon = false;
 
