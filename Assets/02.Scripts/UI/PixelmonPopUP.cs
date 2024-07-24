@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class PixelmonPopUP : UIBase
 {
     [SerializeField]
-    private PixelmonTab tab;
+    private PixelmonTab pxmTab;
     [Header("UI")]
     [SerializeField]
     private Image infoIcon;
@@ -27,8 +27,9 @@ public class PixelmonPopUP : UIBase
         
     }
 
-    public void ShowPopUp(int dataIndex)
+    public void ShowPopUp(int dataIndex, PixelmonTab tab)
     {
+        pxmTab = tab; 
         infoIndex = dataIndex;
         SetData();
     }
@@ -46,7 +47,7 @@ public class PixelmonPopUP : UIBase
 
     private void SetData()
     {
-        data = tab.allData[infoIndex].pxmData;
+        data = pxmTab.allData[infoIndex].pxmData;
         InitInfo();
     }
 
