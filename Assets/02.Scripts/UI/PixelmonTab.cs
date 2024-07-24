@@ -140,13 +140,14 @@ public class PixelmonTab : UIBase
         }
     }
 
-    public void AutoEvolved()
+    public void OnAutoEvolved()
     {
         foreach (var data in ownedData)
         {
             if (data.myPxmData.isAdvancable)
             {
-
+                data.OnEvolved();
+                Debug.Log($"{data.myPxmData.id} 합성완료");
             }
         }
     }
@@ -237,7 +238,7 @@ public class PixelmonTab : UIBase
     {
         tabState = TabState.Normal;
         infoPopUp.gameObject.SetActive(true);
-        infoPopUp.ShowPopUp(choiceId);
+        infoPopUp.ShowPopUp(choiceId, this);
     }
 }
 
