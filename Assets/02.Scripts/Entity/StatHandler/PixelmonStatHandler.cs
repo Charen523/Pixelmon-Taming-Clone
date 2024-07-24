@@ -69,7 +69,7 @@ public static class PixelmonStatHandler
 
         if (isSkill)
         {
-            SetDamage(status.Dmg);
+            SetDamage(status.SDmg);
             if (IsCritical(status.Cri + status.SCri))
             {
                 
@@ -81,7 +81,7 @@ public static class PixelmonStatHandler
         }
         else
         {
-            SetDamage(status.SDmg);
+            SetDamage(status.Dmg);
             if (IsCritical(status.Cri))
             {
 
@@ -96,7 +96,7 @@ public static class PixelmonStatHandler
 
     public static int SetDamage(float ability)
     {
-        int damage = 0;
+        int damage = (int)ability;
 
         return damage;
     }
