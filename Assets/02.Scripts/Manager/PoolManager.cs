@@ -77,6 +77,7 @@ public class PoolManager : Singleton<PoolManager>
         if (pool.tag == "DamageTxt")
         {
             rcodeParent.SetParent(UIManager.Instance.canvas.transform);
+            rcodeParent.gameObject.transform.SetAsFirstSibling();
         }
         else
             rcodeParent.SetParent(objectPoolParent);
