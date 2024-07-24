@@ -20,7 +20,7 @@ public static class UIUtils
         textElement.text = endValue.ToString();
     }
 
-    public static IEnumerator AnimateSliderChange(Slider slider, int startValue, int endValue, int maxValue, string suffix = "%", float duration = 0.5f)
+    public static IEnumerator AnimateSliderChange(Slider slider, int startValue, int endValue, int maxValue, float duration = 0.5f)
     {
         float elapsed = 0f;
 

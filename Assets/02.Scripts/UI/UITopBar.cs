@@ -109,8 +109,9 @@ public class UITopBar : UIBase
             StopCoroutine(expCoroutine);
         }
 
-        expCoroutine = StartCoroutine(UIUtils.AnimateSliderChange(expSldr, startExp, endExp, tempMaxExp));
-        expTxt.text = (expSldr.value * 100).ToString("0.00") + "%";
-    }
+        float tempExp = currentExp / (float)tempMaxExp;
 
+        expCoroutine = StartCoroutine(UIUtils.AnimateSliderChange(expSldr, startExp, endExp, tempMaxExp, 1));
+        expTxt.text = (tempExp * 100).ToString("0.00") + "%";
+    }
 }
