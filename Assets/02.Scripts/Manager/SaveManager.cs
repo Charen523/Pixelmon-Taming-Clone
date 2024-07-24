@@ -122,23 +122,6 @@ public class SaveManager : Singleton<SaveManager>
         }
     }
 
-    /// <param name="field">nameof(userData.변수)</param>
-    /// <param name="value">데이터 변화량</param>
-    public void SetDeltaData(string field, BigInteger value)
-    {
-        var fieldInfo = userData.GetType().GetField(field);
-        if (fieldInfo != null)
-        {
-            BigInteger currentValue = (BigInteger)fieldInfo.GetValue(userData);
-            fieldInfo.SetValue(userData, currentValue + value);
-            isDirty = true;
-        }
-        else
-        {
-            Debug.LogWarning($"{field}라는 변수를 UserData에서 찾을 수 없습니다.");
-        }
-    }
-
     public void GetRewards(string[] rcodes, int[] amounts, float[] rates = null)
     {
         for(int i = 0; i < rcodes.Length; i++) 
@@ -146,25 +129,16 @@ public class SaveManager : Singleton<SaveManager>
             if (CheckDropRate(rates[i]))
             {
                 string itemName = dataManager.GetData<RewardData>(rcodes[i]).name;
-
-                if (itemName == "gold" || itemName == "diamond")
-                {
-                    BigInteger itemValue = amounts[i];
-                    SetDeltaData(itemName, itemValue);
-                }
-                else
-                {
-                    SetDeltaData(itemName, amounts[i]);
-                }
+                SetDeltaData(itemName, amounts[i]);
 
                 switch (itemName)
                 {
                     case "exp":
-                        UpdateUI(0);
+                        UpdateUI.Invoke(0);
                         break;
                     case "gold":
                     case "diamond":
-                        UpdateUI(1);
+                        UpdateUI.Invoke(1);
                         break;
                     default:
                         break;
@@ -176,20 +150,6 @@ public class SaveManager : Singleton<SaveManager>
     public bool CheckDropRate(float rate)
     {
         return UnityEngine.Random.Range(0, 100) <= rate;
-    }
-
-    public bool CheckedInventory(string field, int value)
-    {
-        var fieldInfo = userData.GetType().GetField(field);
-        if (fieldInfo != null)
-        {
-            return (int)fieldInfo.GetValue(userData) >= value;
-        }
-        else
-        {
-            Debug.LogWarning($"{field}라는 변수를 UserData에서 찾을 수 없습니다.");
-            return false;
-        }
     }
 
     /// <summary>

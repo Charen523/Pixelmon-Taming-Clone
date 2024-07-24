@@ -44,7 +44,7 @@ public class FieldSlot : SerializedMonoBehaviour
     #endregion
 
     Coroutine growingCoroutine;
-    [SerializeField] private BigInteger price; //밭 가격
+    [SerializeField] private int price; //밭 가격
 
     private void OnEnable()
     {
