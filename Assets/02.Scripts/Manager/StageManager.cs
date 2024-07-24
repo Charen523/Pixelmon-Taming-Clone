@@ -93,6 +93,7 @@ public class StageManager : Singleton<StageManager>
         proceedNormalStg = new WaitUntil(() => NormalStage());
         proceedBossStg = new WaitUntil(() => BossStage());
         GameManager.Instance.OnPlayerDie += OnPlayerDead;
+        GameManager.Instance.OnStageStart += StartDelayedInitStage;
 
         InitStage();
         StartCoroutine(SetProgressBar());
@@ -114,7 +115,6 @@ public class StageManager : Singleton<StageManager>
 
     public void InitStage()
     {
-        GameManager.Instance.NotifyStageStart();
         InitStageUI();
         SummonMonster();
     }
@@ -375,15 +375,18 @@ public class StageManager : Singleton<StageManager>
         ResetSpawnedEnemy();
         ToNextStage(false);
         Player.Instance.fsm.target = null; //target 초기화
-        bossTimeSldr.gameObject.SetActive(false);
-        StartCoroutine(DelayedInitStage());
+        bossTimeSldr.gameObject.SetActive(false);       
+    }
 
-        isPlayerDead = false;
+    private void StartDelayedInitStage()
+    {
+        StartCoroutine(DelayedInitStage());
     }
 
     private IEnumerator DelayedInitStage()
     {
         yield return new WaitForSeconds(3);
+        isPlayerDead = false;
         InitStage();
     }
     #endregion
