@@ -32,7 +32,7 @@ public class Spawner : MonoBehaviour
             {
                 if (stageManager.curSpawnCount == count)
                     return;
-                GameObject enemy = PoolManager.Instance.SpawnFromPool(rcode);
+                GameObject enemy = PoolManager.Instance.SpawnFromPool(rcode).gameObject;
                 isActivatedEnemy.Add(enemy);
                 enemy.transform.position = spawnPoints[i].position;
                 stageManager.curSpawnCount++;
