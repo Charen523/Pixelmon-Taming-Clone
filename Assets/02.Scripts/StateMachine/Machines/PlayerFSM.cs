@@ -36,8 +36,7 @@ public class PlayerFSM : FSM
         DieState = new PlayerDieState(this);
         AttackState = new PlayerAttackState(this);
 
-        GameManager.Instance.OnStageStart += ReStartPlayer;
-        //GameManager.Instance.OnStageClear += ReStartPlayer;
+        GameManager.Instance.OnStageClear += ReStartPlayer;
         GameManager.Instance.OnStageTimeOut += StageTimeOut;
 
         ChangeState(DetectState);
@@ -56,9 +55,9 @@ public class PlayerFSM : FSM
 
     public void NotifyPlayerDie()
     {
+        ReStartPlayer();
         GameManager.Instance.NotifyStageStart();
         joystick.gameObject.SetActive(true);
-        ReStartPlayer();
     }
 
 
