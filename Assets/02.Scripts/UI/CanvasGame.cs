@@ -12,6 +12,7 @@ public class CanvasGame : MonoBehaviour
         UILoading.Hide();
         //yield return SceneManager.LoadSceneAsync("WorldScene", LoadSceneMode.Additive);
         UIManager.SetParents(parents);
+        UIManager.SetCanvas(transform);
         yield return null;
         yield return new WaitUntil(() => DataManager.Instance.isInit);
         //GameManager.Instance.InitWorld();

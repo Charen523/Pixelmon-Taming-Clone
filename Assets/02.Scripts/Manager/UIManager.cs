@@ -13,12 +13,19 @@ public enum eUIPosition
 
 public class UIManager : Singleton<UIManager>
 {
+    public Transform canvas;
     [SerializeField] private List<Transform> parents;
+    
     private List<UIBase> uiList = new List<UIBase>();
 
     public static void SetParents(List<Transform> parents)
     {
         Instance.parents = parents;
+    }
+
+    public static void SetCanvas(Transform canvas)
+    {
+        Instance.canvas = canvas;
     }
 
     /// <summary>
