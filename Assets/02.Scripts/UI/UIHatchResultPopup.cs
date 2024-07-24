@@ -36,10 +36,13 @@ public class UIHatchResultPopup : UIBase
 
     private UIMiddleBar uiMiddleBar;
     private UserData userData;
+    private SaveManager saveManager;
     private bool isOwnedPxm;
+    private int id;
 
     private void OnEnable()
     {
+        saveManager = SaveManager.Instance;
         userData = SaveManager.Instance.userData;
         uiMiddleBar = UIManager.Get<UIMiddleBar>();
         #region UI 셋팅        
@@ -58,7 +61,9 @@ public class UIHatchResultPopup : UIBase
         {
             if (uiMiddleBar.HatchPxmData.rcode == data.rcode)
             {
-                isOwnedPxm = true; break;
+                isOwnedPxm = true; 
+                id = data.id;
+                break;
             }
         }
 
@@ -67,19 +72,36 @@ public class UIHatchResultPopup : UIBase
         #endregion
     }
 
-    public void OnClickGetPixelmon(bool isReplace)
+    public void OnClickGetPixelmon(bool isReplaceBtn)
     {
-        if (isReplace && isOwnedPxm == true) // 교체하기(교체 및 수집)
+        if (isReplaceBtn && isOwnedPxm == true) // 교체하기(교체 및 수집)
         {
             Debug.Log("ReplaceBtn");
         }
         else // 수집하기
         {
             Debug.Log("CollectBtn");
+            if (!isOwnedPxm)
+                GetFirst();
+            else
+                GetRepetition();
         }
-
-        uiMiddleBar.OnClickGetPixelmon(isReplace);
+        uiMiddleBar.OnClickGetPixelmon(isReplaceBtn);
 
         SetActive(false);
+    }
+
+    private void GetFirst()
+    {
+        saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "rcode", uiMiddleBar.HatchPxmData.rcode);
+        saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "id", uiMiddleBar.HatchPxmData.id);
+        saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "isOwned", true);
+        PixelmonManager.Instance.UnLockedPixelmon(uiMiddleBar.HatchPxmData.id);
+    }
+
+    private void GetRepetition()
+    {
+        saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "evolvedCount", ++userData.ownedPxms[uiMiddleBar.HatchPxmData.id].evolvedCount);
+        PixelmonManager.Instance.UnLockedPixelmon(uiMiddleBar.HatchPxmData.id);
     }
 }
