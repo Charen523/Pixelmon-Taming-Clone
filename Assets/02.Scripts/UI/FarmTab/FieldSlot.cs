@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections;
 using System.Threading;
 using System;
+using System.Numerics;
 
 public class FieldSlot : SerializedMonoBehaviour
 {
@@ -43,7 +44,7 @@ public class FieldSlot : SerializedMonoBehaviour
     #endregion
 
     Coroutine growingCoroutine;
-    [SerializeField] private int price; //밭 가격
+    [SerializeField] private BigInteger price; //밭 가격
 
     private void OnEnable()
     {

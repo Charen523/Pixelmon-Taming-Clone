@@ -25,6 +25,19 @@ public class MyPixelmonData
     public UnityAction activeSkill;
     //패시브 능력
     public PsvSkill[] trait;
+
+    public void UpdateField(string fieldName, object value)
+    {
+        var fieldInfo = GetType().GetField(fieldName);
+        if (fieldInfo != null)
+        {
+            fieldInfo.SetValue(this, value);
+        }
+        else
+        {
+            Debug.LogWarning($"{fieldName}라는 변수를 MyPixelmonData에서 찾을 수 없습니다.");
+        }
+    }
 }
 
 public class PsvSkill

@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 
 [Serializable]
 public class UserData
@@ -6,8 +7,8 @@ public class UserData
     public string userId;
     public string userName = "Name한글";
 
-    public int gold = 1000;
-    public int diamond = 100;
+    public BigInteger gold = 1000;
+    public BigInteger diamond = 100;
     public int seed = 10;
     public int food = 10;
     //public int key;
