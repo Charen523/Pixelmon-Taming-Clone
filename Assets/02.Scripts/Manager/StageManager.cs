@@ -1,5 +1,6 @@
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -93,7 +94,7 @@ public class StageManager : Singleton<StageManager>
         proceedNormalStg = new WaitUntil(() => NormalStage());
         proceedBossStg = new WaitUntil(() => BossStage());
         GameManager.Instance.OnPlayerDie += OnPlayerDead;
-        GameManager.Instance.OnStageStart += StartDelayedInitStage;
+        GameManager.Instance.OnStageStart += DelayedInitStage;
 
         InitStage();
         StartCoroutine(SetProgressBar());
@@ -149,6 +150,7 @@ public class StageManager : Singleton<StageManager>
             {
                 ToNextStage(false);
                 GameManager.Instance.NotifyStageTimeOut();
+                yield break;
             }
         }
         else
@@ -378,14 +380,8 @@ public class StageManager : Singleton<StageManager>
         bossTimeSldr.gameObject.SetActive(false);       
     }
 
-    private void StartDelayedInitStage()
+    private void DelayedInitStage()
     {
-        StartCoroutine(DelayedInitStage());
-    }
-
-    private IEnumerator DelayedInitStage()
-    {
-        yield return new WaitForSeconds(3);
         isPlayerDead = false;
         InitStage();
     }
