@@ -100,7 +100,7 @@ public class FarmTab : UIBase
 
     public void HarvestYield(int yield)
     {
-        invenManager.SetDeltaData("petFood", yield);
+        invenManager.SetDeltaData("food", yield);
         foodTxt.text = invenManager.userData.food.ToString();
     }
 

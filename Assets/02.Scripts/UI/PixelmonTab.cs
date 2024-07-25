@@ -118,7 +118,7 @@ public class PixelmonTab : UIBase
 
     }
 
-    public void SetPetfoodCount(int count)
+    public void SetfoodCount(int count)
     {
         //inven.SetDeltaData(nameof(inven.userData.food), count);
         //foodCountTxt.text = inven.userData.food.ToString();
