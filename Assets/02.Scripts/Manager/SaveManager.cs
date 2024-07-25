@@ -113,6 +113,16 @@ public class SaveManager : Singleton<SaveManager>
             int currentValue = (int)fieldInfo.GetValue(userData);
             fieldInfo.SetValue(userData, currentValue + value);
             isDirty = true;
+
+            if (field == "userExp")
+            {
+                UpdateUI.Invoke(0);
+            }
+
+            if (field == "gold" || field == "diamond")
+            {
+                UpdateUI.Invoke(1);
+            }
         }
         else
         {
@@ -128,16 +138,6 @@ public class SaveManager : Singleton<SaveManager>
             {
                 string itemName = dataManager.GetData<RewardData>(rcodes[i]).name;
                 SetDeltaData(itemName, amounts[i]);
-
-                if (itemName == "userExp")
-                {
-                    UpdateUI.Invoke(0);
-                }
-
-                if (itemName == "gold" || itemName == "diamond")
-                {
-                    UpdateUI.Invoke(1);
-                }
             }
         }
     }
