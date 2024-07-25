@@ -74,7 +74,7 @@ public class PixelmonEquipSlot : PixelmonSlot
         stateIcon.gameObject.SetActive(true);
         lvTxt.gameObject.SetActive(false);
 
-        saveManager.userData.equippedPxms[myPxmData.id] = null;
+        saveManager.userData.equippedPxms[slotIndex] = null;
         saveManager.SetData("equippedPxms", saveManager.userData.equippedPxms);
     }
 
