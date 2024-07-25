@@ -11,10 +11,22 @@ public class EnemyAttackState : AttackState
         this.fsm = fsm;
     }
 
+    public override void Enter()
+    {
+        fsm.rb.bodyType = RigidbodyType2D.Kinematic;
+        base.Enter();
+    }
+
     public override void Execute()
     {
         if (!IsAttackRange())
             fsm.ChangeState(fsm.ChaseState);
+    }
+
+    public override void Exit()
+    {
+        fsm.rb.bodyType = RigidbodyType2D.Dynamic;
+        base.Exit();
     }
 
     private bool IsAttackRange()
