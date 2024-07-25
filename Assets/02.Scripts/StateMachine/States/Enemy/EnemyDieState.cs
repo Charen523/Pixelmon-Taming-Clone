@@ -1,5 +1,4 @@
-
-using System.Collections;
+using UnityEngine;
 
 public class EnemyDieState : DieState
 {
@@ -13,13 +12,13 @@ public class EnemyDieState : DieState
 
     public override void Enter()
     {
-        fsm.enemyCollision.SetActive(false);
+        fsm.rb.bodyType = RigidbodyType2D.Kinematic;
         base.Enter();
     }
 
     public override void Exit()
     {
-        fsm.enemyCollision.SetActive(false);
+        fsm.rb.bodyType = RigidbodyType2D.Dynamic;
         base.Exit();
     }
 }

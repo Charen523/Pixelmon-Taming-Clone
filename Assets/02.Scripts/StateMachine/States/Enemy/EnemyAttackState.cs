@@ -13,7 +13,7 @@ public class EnemyAttackState : AttackState
 
     public override void Enter()
     {
-        fsm.enemyCollision.SetActive(false);
+        fsm.rb.bodyType = RigidbodyType2D.Kinematic;
         base.Enter();
     }
 
@@ -25,7 +25,7 @@ public class EnemyAttackState : AttackState
 
     public override void Exit()
     {
-        fsm.enemyCollision.SetActive(true);
+        fsm.rb.bodyType = RigidbodyType2D.Dynamic;
         base.Exit();
     }
 
