@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class FarmTab : UIBase
 {
-    private SaveManager invenManager;
-
+    private SaveManager saveManager;
+    
     public FieldSlot[] fieldSlots;
     [SerializeField] private Transform fieldsParent;
 
-    #region Inventory Data
+    #region User Data
     int seedCount => SaveManager.Instance.userData.seed;
     int foodCount => SaveManager.Instance.userData.food;
     #endregion
@@ -26,7 +26,7 @@ public class FarmTab : UIBase
     {
         isAwakeEnabled = false;
 
-        invenManager = SaveManager.Instance;
+        saveManager = SaveManager.Instance;
         farmPxmPopup = await UIManager.Show<UIFarmPixelmonPopup>();
 
         fieldSlots = new FieldSlot[fieldsParent.childCount];
@@ -36,7 +36,7 @@ public class FarmTab : UIBase
             fieldSlots[i] = fieldsParent.GetChild(i).GetComponent<FieldSlot>();
             fieldSlots[i].farmTab = this;
             fieldSlots[i].myIndex = i;
-            fieldSlots[i].fieldData = invenManager.userData.fieldDatas[i];
+            fieldSlots[i].fieldData = saveManager.userData.fieldDatas[i];
         }
 
         isAwakeEnabled = true;
@@ -61,6 +61,26 @@ public class FarmTab : UIBase
         //{
         //    fieldSlots[2].CurrentFieldState = FieldState.Buyable;
         //}
+    }
+
+    private void Start()
+    {
+        UIManager.Instance.UpdateUI += UpdateFieldUI;
+    }
+
+    private void UpdateFieldUI(DirtyUI dirtyUI)
+    {
+        switch (dirtyUI)
+        {
+            case DirtyUI.Seed:
+                seedTxt.text = seedCount.ToString();
+                break;
+            case DirtyUI.Food:
+                foodTxt.text = foodCount.ToString();
+                break;
+            default:
+                break;
+        }
     }
 
     private void OnDisable()
@@ -88,25 +108,18 @@ public class FarmTab : UIBase
     {
         if (seedCount == 0)
         {
-            return false;
+            return false; //씨앗 없다는 팝업 띄우기
         }
         else
         {
-            invenManager.SetDeltaData(nameof(invenManager.userData.seed), -1);
-            seedTxt.text = seedCount.ToString();
+            saveManager.SetDeltaData(nameof(saveManager.userData.seed), -1);
             return true;
         }
     }
 
     public void HarvestYield(int yield)
     {
-        invenManager.SetDeltaData("food", yield);
-        foodTxt.text = invenManager.userData.food.ToString();
-    }
-
-    public void SetFieldPixelmon(int index)
-    {
-
+        saveManager.SetDeltaData(nameof(saveManager.userData.food), yield);
     }
 
     private void SaveFieldData()
@@ -125,6 +138,6 @@ public class FarmTab : UIBase
             temp[i] = tempItem;
         }
 
-        invenManager.SetData("fieldDatas", temp);
+        saveManager.SetData("fieldDatas", temp);
     }
 }
