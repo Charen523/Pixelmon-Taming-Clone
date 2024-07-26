@@ -35,7 +35,7 @@ public static class UIUtils
         slider.value = (float)endValue / maxValue;
     }
 
-    public static string TranslateRank(PixelmonRank rank)
+    public static string TranslateRank(this PixelmonRank rank)
     {
         switch (rank)
         {
