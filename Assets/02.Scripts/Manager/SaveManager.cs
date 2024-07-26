@@ -2,18 +2,18 @@ using System.IO;
 using System.Collections;
 using UnityEngine;
 using System;
+using System.Threading.Tasks;
 
 public class SaveManager : Singleton<SaveManager>
 {
-    public event Action<int> UpdateUI;
-
     public UserData userData = new UserData();
     [SerializeField] private DataManager dataManager;
 
     private string userPath;
     private string initPath;
 
-    bool isDirty;
+    private static bool isDirty;
+    private WaitUntil CheckDirty = new WaitUntil(() => isDirty);
 
     protected override void Awake()
     {
@@ -80,13 +80,16 @@ public class SaveManager : Singleton<SaveManager>
     {
         while (true)
         {
-            if (isDirty)
-            {
-                isDirty = false;
-                SaveToJson(userData);
-            }
-            yield return null;
+            yield return CheckDirty;
+
+            isDirty = false;
+            SaveDataAsync();
         }
+    }
+
+    private async void SaveDataAsync()
+    {
+        await Task.Run(() => SaveToJson(userData));
     }
 
     public void SetData(string field, object value)
@@ -96,10 +99,11 @@ public class SaveManager : Singleton<SaveManager>
         {
             fieldInfo.SetValue(userData, value);
             isDirty = true;
+            UIManager.Instance.InvokeUIChange(field);
         }
         else
         {
-            Debug.LogWarning($"{field}라는 변수를 UserData에서 찾을 수 없습니다.");
+            Debug.LogWarning($"{field} 변수를 UserData에서 찾을 수 없습니다.");
         }
     }
 
@@ -113,20 +117,11 @@ public class SaveManager : Singleton<SaveManager>
             int currentValue = (int)fieldInfo.GetValue(userData);
             fieldInfo.SetValue(userData, currentValue + value);
             isDirty = true;
-
-            if (field == "userExp")
-            {
-                UpdateUI.Invoke(0);
-            }
-
-            if (field == "gold" || field == "diamond")
-            {
-                UpdateUI.Invoke(1);
-            }
+            UIManager.Instance.InvokeUIChange(field);
         }
         else
         {
-            Debug.LogWarning($"{field}라는 변수를 UserData에서 찾을 수 없습니다.");
+            Debug.LogWarning($"{field} 변수를 UserData에서 찾을 수 없습니다.");
         }
     }
 
@@ -134,7 +129,7 @@ public class SaveManager : Singleton<SaveManager>
     {
         for(int i = 0; i < rcodes.Length; i++) 
         {
-            if (CheckDropRate(rates[i]))
+            if (rates == null || CheckDropRate(rates[i]))
             {
                 string itemName = dataManager.GetData<RewardData>(rcodes[i]).name;
                 SetDeltaData(itemName, amounts[i]);
