@@ -31,3 +31,13 @@ public enum PixelmonRank
     Legendary,
     Unique
 }
+
+public enum DirtyUI
+{
+    Gold,
+    Diamond,
+    Seed,
+    Food,
+    UserExp,
+    EggCount
+}
