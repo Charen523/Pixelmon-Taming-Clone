@@ -1,4 +1,3 @@
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,7 +37,7 @@ public class UITopBar : UIBase
     private void Start()
     {
         InitTopUIData();
-        saveManager.UpdateUI += UpdateTopUI;
+        UIManager.Instance.UpdateUI += UpdateTopUI;
     }
 
     private void InitTopUIData()
@@ -52,23 +51,25 @@ public class UITopBar : UIBase
         UpdateExpUI();
     }
 
-    private void UpdateTopUI(int index)
+    private void UpdateTopUI(DirtyUI dirtyUI)
     {
-        switch(index)
+        switch(dirtyUI)
         {
-            case 0:
+            case DirtyUI.Gold:
+                UpdateGoldUI();
+                break;
+            case DirtyUI.Diamond:
+                UpdateDiamondUI();
+                break;
+            case DirtyUI.UserExp:
                 UpdateExpUI();
                 break;
-            case 1:
-                UpdateRewardUI();
-                break;
             default:
-                Debug.LogWarning("업데이트 인덱스 오류");
                 break;
         }
     }
 
-    public void UpdateRewardUI()
+    public void UpdateGoldUI()
     {
         string newGoldTxt = saveManager.userData.gold.ToString();
         if (goldTxt.text != newGoldTxt)
@@ -79,7 +80,10 @@ public class UITopBar : UIBase
             }
             goldCoroutine = StartCoroutine(UIUtils.AnimateTextChange(goldTxt, int.Parse(goldTxt.text), int.Parse(newGoldTxt)));
         }
+    }
 
+    public void UpdateDiamondUI()
+    {
         string newGemTxt = saveManager.userData.diamond.ToString();
         if (gemTxt.text != newGemTxt)
         {

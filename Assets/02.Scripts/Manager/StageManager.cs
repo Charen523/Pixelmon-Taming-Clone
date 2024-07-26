@@ -1,6 +1,5 @@
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -118,6 +117,10 @@ public class StageManager : Singleton<StageManager>
     {
         InitStageUI();
         SummonMonster();
+        if (isBossStage)
+        {
+            StartCoroutine(SetProgressBar());
+        }
     }
 
     #region 몬스터소환
@@ -276,22 +279,15 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator SetProgressBar() 
     {
-        float time = 0;
         float duration = 0.5f;
-        while (true) 
+        while (true)
         {
             if (curProgress > prevProgress)
             {
-                time += Time.deltaTime;
-                prevProgress = Mathf.Lerp(prevProgress, curProgress, time / duration);
-                progressSldr.value = prevProgress;
-                progressTxt.text = string.Format("{0:F2}%", prevProgress * 100);
+                StartCoroutine(UIUtils.AnimateSliderChange(progressSldr, (int)(prevProgress * 100), (int)(curProgress * 100), 100, duration));
+                progressTxt.text = string.Format("{0:F2}%", curProgress * 100);
+                prevProgress = curProgress;
             }
-            else
-            {
-                time = 0;
-            }
-            
             yield return null;
         }
     }

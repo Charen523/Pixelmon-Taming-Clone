@@ -17,11 +17,13 @@ public class ProjectileController : SerializedMonoBehaviour
     private Vector3 pos;
     private void Awake()
     {
+        pos = new Vector3(-1000, 0, 0);
+        gameObject.transform.position = pos;
+
         if (rb == null)
         {
             rb = GetComponent<Rigidbody2D>();
         }
-        pos = new Vector3(-1000, 0, 0);
     }
 
     private void Update()

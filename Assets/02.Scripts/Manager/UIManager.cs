@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum eUIPosition
@@ -13,6 +13,8 @@ public enum eUIPosition
 
 public class UIManager : Singleton<UIManager>
 {
+    public event Action<DirtyUI> UpdateUI;
+
     public Transform canvas;
     [SerializeField] private List<Transform> parents;
     
@@ -125,5 +127,13 @@ public class UIManager : Singleton<UIManager>
     public static bool IsOpened<T>() where T : UIBase
     {
         return Instance.uiList.Exists(obj => obj.name == typeof(T).ToString());
+    }
+
+    public void InvokeUIChange(string field)
+    {
+        if (Enum.TryParse(field, true, out DirtyUI dirtyUI))
+        {//두 번째 인자: 대소문자 무시
+            UpdateUI?.Invoke(dirtyUI);
+        }
     }
 }
