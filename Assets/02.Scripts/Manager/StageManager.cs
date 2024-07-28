@@ -194,7 +194,7 @@ public class StageManager : Singleton<StageManager>
             // 몬스터 최대치 미만 추가 소환
             if (curSpawnCount < Data.spawnCount)
             {
-                spawner.RandomSpawnPoint(Data.monsterId, Data.spawnCount);
+                spawner.SpawnRandomMonsters(Data.monsterId, Data.spawnCount);
                 curInterval = 0;
             }
         }
@@ -205,7 +205,7 @@ public class StageManager : Singleton<StageManager>
     private void InitBossStage()
     {
         //PoolManager.Instance.AddPool(Data.monsterIds);
-        spawner.RandomSpawnPoint(Data.monsterId, Data.spawnCount);
+        spawner.SpawnRandomMonsters(Data.monsterId, Data.spawnCount);
         bossLeftTime = bossLimitTime;
     }
 
