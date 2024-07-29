@@ -194,7 +194,7 @@ public class StageManager : Singleton<StageManager>
             // 몬스터 최대치 미만 추가 소환
             if (curSpawnCount < Data.spawnCount)
             {
-                spawner.SpawnRandomMonsters(Data.monsterId, Data.spawnCount);
+                spawner.SpawnMonsterTroop(Data.monsterId, Data.spawnCount);
                 curInterval = 0;
             }
         }
@@ -205,7 +205,7 @@ public class StageManager : Singleton<StageManager>
     private void InitBossStage()
     {
         //PoolManager.Instance.AddPool(Data.monsterIds);
-        spawner.SpawnRandomMonsters(Data.monsterId, Data.spawnCount);
+        spawner.SpawnMonsterTroop(Data.monsterId, Data.spawnCount);
         bossLeftTime = bossLimitTime;
     }
 
@@ -235,7 +235,7 @@ public class StageManager : Singleton<StageManager>
     {
         foreach (var enemy in spawner.isActivatedEnemy)
         {
-            enemy.SetActive(false);            
+            enemy.gameObject.SetActive(false);            
         }
         spawner.isActivatedEnemy.Clear();
         curSpawnCount = 0;
@@ -342,8 +342,10 @@ public class StageManager : Singleton<StageManager>
     #endregion
 
     #region Death Events
-    public void MonsterDead(EnemyData enemyData, GameObject enemyGo)
+    public void MonsterDead(Enemy enemy)
     {
+        EnemyData enemyData = enemy.statHandler.data;
+
         if (enemyData.isBoss)
         {
             isBossCleared = true;
@@ -353,7 +355,7 @@ public class StageManager : Singleton<StageManager>
             killCount++;
             curSpawnCount--;
             curProgress = Mathf.Min((float)killCount / Data.nextStageCount, 100f);
-            spawner.isActivatedEnemy.Remove(enemyGo);
+            spawner.isActivatedEnemy.Remove(enemy);
         }
         SaveManager.Instance.GetRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
         SaveManager.Instance.SetDeltaData("curStageCount", 1);

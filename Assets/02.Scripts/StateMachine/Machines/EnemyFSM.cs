@@ -50,6 +50,6 @@ public class EnemyFSM : FSM
     public void OnEnemyDead()
     {
         gameObject.SetActive(false);
-        StageManager.Instance.MonsterDead(enemy.statHandler.data, gameObject);
+        StageManager.Instance.MonsterDead(enemy);
     }
 }
