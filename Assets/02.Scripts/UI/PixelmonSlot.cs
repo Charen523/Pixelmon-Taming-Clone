@@ -21,15 +21,12 @@ public class PixelmonSlot : MonoBehaviour
 
     #region UI
     public int slotIndex;
-    [SerializeField]
-    protected TextMeshProUGUI lvTxt;
-    [SerializeField]
-    private Slider evolveSldr;
-    [SerializeField]
-    private TextMeshProUGUI evolveTxt;
-    public TextMeshProUGUI propertyEffectTxta;
-    [SerializeField]
-    protected GameObject[] stars;
+    [SerializeField] protected TextMeshProUGUI lvTxt;
+    [SerializeField] private Slider evolveSldr;
+    [SerializeField] private TextMeshProUGUI evolveTxt;
+    [SerializeField] protected GameObject[] stars;
+    public GameObject equipIcon;
+    public TextMeshProUGUI propertyEffectTxt;
     #endregion
 
     #region 데이터
