@@ -34,7 +34,17 @@ public class UIPixelmonPopUp : UIBase
     [SerializeField] private Button equipBtn;
     [SerializeField] private TextMeshProUGUI equipTxt;
     [SerializeField] private Button feedingBtn;
+    [SerializeField] private GameObject feedingArrow;
     [SerializeField] private Button evolvedBtn;
+    [SerializeField] private GameObject evolvedArrow;
+
+    [SerializeField] private TextMeshProUGUI atkValue;
+    [SerializeField] private TextMeshProUGUI traitType;
+    [SerializeField] private TextMeshProUGUI traitValue;
+    [SerializeField] private TextMeshProUGUI[] psvRank;
+    [SerializeField] private TextMeshProUGUI[] psvName;
+    [SerializeField] private TextMeshProUGUI[] psvValue;
+    [SerializeField] private TextMeshProUGUI[] ownEffectValue;
 
     [SerializeField] private TextMeshProUGUI infoBoxTxt;
     [SerializeField] private TextMeshProUGUI feedCount;
@@ -99,7 +109,6 @@ public class UIPixelmonPopUp : UIBase
         InitInfo();
     }
 
-
     private void InitInfo()
     {
         var rank = (PixelmonRank)SetRankSprite(data.rank);
@@ -109,6 +118,8 @@ public class UIPixelmonPopUp : UIBase
         pxmIcon.sprite = data.icon;
         lvTxt.text = string.Format($"{myData.lv}/50");
         SetStars();
+        SetEquippedEffect();
+        SetOwnedEffect();
     }
 
     public void OnEquip()
@@ -128,22 +139,14 @@ public class UIPixelmonPopUp : UIBase
 
     public void OnFeeding()
     {
-        if (myData.exp >= maxExp) return;
-
-        if (saveManager.userData.food > 0)
+        if (saveManager.userData.food >= myData.maxExp)
         {
-            saveManager.SetDeltaData("food", -1);
-            saveManager.UpdatePixelmonData(myData.id, "exp", myData.exp + foodPerExp);
+            saveManager.SetDeltaData("food", saveManager.userData.food - myData.maxExp);
             pxmTab.SetfoodCount();
-            if (myData.exp >= maxExp)
-            {
-                saveManager.UpdatePixelmonData(myData.id, "lv", ++myData.lv);
-                saveManager.UpdatePixelmonData(myData.id, "exp", myData.exp - maxExp);
-                lvTxt.text = string.Format($"{myData.lv}/50");
-                pxmTab.allData[myData.id].SetPxmLv();
-                Debug.Log("레벨 업!");
-            }
-            Debug.Log("먹이를 주었다.");
+            saveManager.UpdatePixelmonData(myData.id, "lv", ++myData.lv);
+            lvTxt.text = string.Format($"{myData.lv}/50");
+            pxmTab.allData[myData.id].SetPxmLv();
+            Debug.Log("레벨 업!");
         }
         else
         {
@@ -189,5 +192,25 @@ public class UIPixelmonPopUp : UIBase
             default:
                 return 0;
         }
+    }
+
+    public void SetEquippedEffect()
+    {
+        atkValue.text = myData.atkValue.ToString();
+        traitType.text = myData.traitType;
+        traitValue.text = myData.psvSkill.ToString();
+        for (int i = 0; i < psvName.Length; i++)
+        {
+            if (psvName == null) break;
+            psvRank[i].text = myData.psvSkill[i].psvRank;
+            psvName[i].text = myData.psvSkill[i].psvName;
+            psvValue[i].text = myData.psvSkill[i].psvValue.ToString();
+        }
+    }
+
+    public void SetOwnedEffect()
+    {
+        for(int i = 0; i < ownEffectValue.Length; i++) 
+            ownEffectValue[i].text = myData.ownEffectValue[i].ToString();
     }
 }

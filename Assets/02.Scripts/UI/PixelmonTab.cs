@@ -176,18 +176,18 @@ public class PixelmonTab : UIBase
     public void EquipedPixelmon(int slotIndex)
     {
         equipData[slotIndex].Equip(allData[choiceId].myPxmData);
+        allData[choiceId].equipIcon.SetActive(true);
         pixelmonManager.equipAction?.Invoke(slotIndex, equipData[slotIndex].myPxmData);
         equipOverlay.gameObject.SetActive(false);        
-        tabState = TabState.Normal;
+        //tabState = TabState.Normal;
     }
 
     public void UnEquipSlot(int slotIndex, int choiceId)
     {
         pixelmonManager.unEquipAction?.Invoke(slotIndex);
         allData[choiceId].myPxmData.isEquipped = false;
+        allData[choiceId].equipIcon.SetActive(false);
         equipData[slotIndex].UnEquip();
-        equipData[slotIndex].pxmData = null;
-        equipData[slotIndex].myPxmData = null;
     }
 
     public void OnInfoPopUp(int id)
