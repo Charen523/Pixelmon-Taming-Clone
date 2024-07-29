@@ -32,7 +32,7 @@ public class PixelmonEquipSlot : PixelmonSlot
         slotIndex = gameObject.transform.GetSiblingIndex();
         MyPixelmonData datas = pxmtab.userData.equippedPxms[slotIndex];
         isLocked = pxmtab.userData.isLockedSlot[slotIndex];
-        if (datas != null && datas.isEquiped)
+        if (datas != null && datas.isEquipped)
         {
             stateIcon.sprite = pxmManager.plusIcon;
             myPxmData = datas;
@@ -60,7 +60,7 @@ public class PixelmonEquipSlot : PixelmonSlot
         stateIcon.gameObject.SetActive(false);
         lvTxt.gameObject.SetActive(true);
         lvTxt.text = string.Format("Lv.{0}", myData.lv);
-        myData.isEquiped = true;
+        myData.isEquipped = true;
 
         saveManager.userData.equippedPxms[slotIndex] = myData;
         saveManager.SetData("equippedPxms", saveManager.userData.equippedPxms);
@@ -92,16 +92,14 @@ public class PixelmonEquipSlot : PixelmonSlot
         }
         else if (pxmtab.tabState == TabState.Equip)
         {
-            if (myPxmData.isEquiped)
+            if (myPxmData.isEquipped)
                 pxmtab.UnEquipSlot(slotIndex, myPxmData.id);
             pxmtab.EquipedPixelmon(slotIndex);
             player.LocatedPixelmon();
         }
         else if(pxmtab.tabState != TabState.Equip)
         {
-            pxmtab.tabState = TabState.UnEquip;
-            pxmtab.OnClickSlot(pxmData.id, rectTr);
+            base.OnClick();
         }
-
     }
 }
