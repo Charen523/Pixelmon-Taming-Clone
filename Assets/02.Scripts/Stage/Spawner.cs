@@ -3,44 +3,61 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public GameObject points;
-    public Collider2D spawnArea;
-    public Collider2D cleanArea;
-
-    [SerializeField]
     private StageManager stageManager;
-    public List<GameObject> isActivatedEnemy = new List<GameObject>();
+    private Camera cam;
 
-    public void RandomSpawnPoint(string[] rcodes, int count)
+    public GameObject points;
+    [SerializeField] private Collider2D spawnArea;
+    [SerializeField]private Collider2D cleanArea;
+
+    public List<Enemy> isActivatedEnemy = new List<Enemy>();
+
+    private void Awake()
     {
-        Vector2 RandomPosition;
+        stageManager = StageManager.Instance;   
+        cam = Camera.main;
+    }
 
+    public async void SpawnMonsterTroop(string[] rcodes, int totalCount)
+    {
+        if (stageManager.curSpawnCount >= totalCount) return;
+
+        //이번에 스폰될 몬스터의 종류
+        int randEnemyType = Random.Range(0, rcodes.Length);
+        EnemyData curEnemy = DataManager.Instance.GetData<EnemyData>($"{rcodes[randEnemyType]}");
+
+        //이번에 스폰될 몬스터의 마리 수
+        int maxSpawnNum = Mathf.Min(totalCount - stageManager.curSpawnCount + 1, 6);
+        int randSpawnCount = Random.Range(1, maxSpawnNum);
+        
+        //이번에 스폰될 몬스터의 위치
+        Vector2 RandomPos;
         do
         {
-            RandomPosition = GetRandomPositionCollider(spawnArea);
+            RandomPos = GetRandomPos(spawnArea);
         }
-        while (cleanArea.bounds.Contains(RandomPosition));
+        while (cleanArea.bounds.Contains(RandomPos));
 
-        points.transform.position = RandomPosition;
+        points.transform.position = RandomPos;
         Transform[] spawnPoints = points.GetComponentsInChildren<Transform>();
 
-        foreach(var rcode in rcodes)
-        {
-            int rand = Random.Range(1, 4);
 
-            for(int i = 0; i < rand; i++)
-            {
-                if (stageManager.curSpawnCount == count)
-                    return;
-                GameObject enemy = PoolManager.Instance.SpawnFromPool(rcode).gameObject;
-                isActivatedEnemy.Add(enemy);
-                enemy.transform.position = spawnPoints[i].position;
-                stageManager.curSpawnCount++;
-            }
+        //실제 소환
+        for (int i = 0; i < randSpawnCount; i++)
+        {
+            if (i >= spawnPoints.Length) break;
+
+            Enemy enemy = PoolManager.Instance.SpawnFromPool<Enemy>("Enemy");
+            enemy.transform.position = spawnPoints[i].position;
+            enemy.fsm.anim.runtimeAnimatorController = await ResourceManager.Instance.LoadAsset<RuntimeAnimatorController>(curEnemy.rcode, eAddressableType.animator);
+            enemy.statHandler.data = curEnemy;
+            enemy.statHandler.UpdateEnemyStats();
+            isActivatedEnemy.Add(enemy);
+            stageManager.curSpawnCount++;
         }
     }
 
-    Vector2 GetRandomPositionCollider(Collider2D collider)
+    private Vector2 GetRandomPos(Collider2D collider)
     {
         Bounds bounds = collider.bounds;
         return new Vector2(Random.Range(bounds.min.x, bounds.max.x), (Random.Range(bounds.min.y, bounds.max.y)));

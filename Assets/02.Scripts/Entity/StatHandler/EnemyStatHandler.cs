@@ -1,7 +1,5 @@
 using UnityEngine;
 
-
-
 public class EnemyStatHandler : MonoBehaviour
 {
     [SerializeField]private Enemy enemy;
@@ -16,27 +14,16 @@ public class EnemyStatHandler : MonoBehaviour
     public float enemyCriDmg;
     #endregion
 
-    private void Awake()
-    {
-        data = DataManager.Instance.GetData<EnemyData>(transform.parent.name);
-        enemyAtk = data.atk;
-        enemyMaxHp = data.hp;
-        enemyDef = data.def;
-        enemyCri = data.cri;
-        enemyCriDmg = data.criDmg;
-    }
-
-    private void OnEnable()
+    public void UpdateEnemyStats()
     {
         int difficulty = SaveManager.Instance.userData.curDifficulty;
+        int deltaDiff = (int)Mathf.Pow(2, difficulty);
 
-        int deltaDifficulty = (int)Mathf.Pow(2, difficulty);
-
-        enemyAtk = data.atk * deltaDifficulty;
-        enemyMaxHp = data.hp * deltaDifficulty;
-        enemyDef = data.def * deltaDifficulty;
-        enemyCri = data.cri * deltaDifficulty;
-        enemyCriDmg = data.criDmg * deltaDifficulty;
+        enemyAtk = data.atk * deltaDiff;
+        enemyMaxHp = data.hp * deltaDiff;
+        enemyDef = data.def * deltaDiff;
+        enemyCri = data.cri * deltaDiff;
+        enemyCriDmg = data.criDmg * deltaDiff;
 
         enemy.healthSystem.initEnemyHealth(enemyMaxHp);
     }
