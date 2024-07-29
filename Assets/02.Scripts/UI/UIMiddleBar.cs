@@ -32,8 +32,8 @@ public class UIMiddleBar : UIBase
     public PixelmonData HatchPxmData;
     public Dictionary<string, Tuple<string, float>> AbilityDic = new Dictionary<string, Tuple<string, float>>();
 
-    private UIBase HatchResultPopup;
-    private UIBase EggLvPopup;
+    private UIHatchResultPopup HatchResultPopup;
+    private UIEggLvPopup EggLvPopup;
     private WaitUntil getPixelmon;
     private bool isGetPixelmon;
     #endregion
@@ -206,9 +206,13 @@ public class UIMiddleBar : UIBase
         isGetPixelmon = true;
     }
 
-    public void OnClickEggLv()
+    public void OnClickEggLvBtn()
     {
         EggLvPopup.SetActive(true);
+        if (eggLv % 5 == 0)
+        {
+            Instantiate<GameObject>(EggLvPopup.LvUpGauge, EggLvPopup.Gauges);
+        }
     }
 
     public void OnClickAutoBtn()
