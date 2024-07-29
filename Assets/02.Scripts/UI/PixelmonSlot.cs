@@ -58,9 +58,14 @@ public class PixelmonSlot : MonoBehaviour
         lvTxt.gameObject.SetActive(true);
         evolveSldr.gameObject.SetActive(true);
 
-        lvTxt.text = string.Format("Lv.{0}", myPxmData.lv);
+        SetPxmLv();
         SetStars();
         SetEvolveSldr();
+    }
+
+    public void SetPxmLv()
+    {
+        lvTxt.text = string.Format("Lv.{0}", myPxmData.lv);
     }
 
     public void SetStars()
@@ -108,18 +113,11 @@ public class PixelmonSlot : MonoBehaviour
 
     protected virtual void OnClick()
     {
-        if (myPxmData.isEquiped)
-            pxmtab.tabState = TabState.UnEquip;
-        else if(myPxmData.isOwned)
-            pxmtab.tabState = TabState.Equip;
-        else
-            pxmtab.tabState = TabState.Empty;
-        pxmtab.OnClickSlot(pxmData.id, rectTr);
+        pxmtab.OnInfoPopUp(pxmData.id);
     }
 
     public void OnEvolved()
     {
-        //pxmtab.userData.ownedPxms[myPxmData.id].isAdvancable = false;
         pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "isAdvancable", false);
         pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "evolvedCount", myPxmData.evolvedCount - GetEvolveValue());
         pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "star", ++myPxmData.star);

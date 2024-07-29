@@ -35,7 +35,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
     {
         for (int i = 0; i < 5; i++)
         {
-            if (userData.equippedPxms[i].isEquiped)
+            if (userData.equippedPxms[i].isEquipped)
             {
                 
                 Equipped(i, userData.equippedPxms[i]); 
