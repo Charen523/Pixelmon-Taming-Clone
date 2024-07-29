@@ -26,7 +26,7 @@ public class PixelmonLayout : MonoBehaviour
         {
             if (!userdata.isLockedSlot[i])
             {
-                if (userdata.equippedPxms[i].isEquiped)
+                if (userdata.equippedPxms[i].isEquipped)
                     InsertIcon(i, userdata.equippedPxms[i]);
 
                 UnLockedIcon(i);
