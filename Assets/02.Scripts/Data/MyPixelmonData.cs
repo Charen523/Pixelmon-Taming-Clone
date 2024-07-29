@@ -9,7 +9,7 @@ public class MyPixelmonData
     public string rcode;
     public int id;
     public int lv = 1;
-    public int exp = 0;
+    public int maxExp = 10;
     public int[] statRank;
     public int star = 0;
     //진화 가능 여부
@@ -23,8 +23,16 @@ public class MyPixelmonData
     public bool isOwned;
 
     public UnityAction activeSkill;
+
+    //공격수치
+    public float atkValue;
+    //특성타입
+    public string traitType;
+    public float traitValue;
     //패시브 능력
-    public PsvSkill[] trait;
+    public PsvSkill[] psvSkill = new PsvSkill[4];
+    //보유효과
+    public float[] ownEffectValue = new float[2];
 
     public void UpdateField(string fieldName, object value)
     {
@@ -40,13 +48,10 @@ public class MyPixelmonData
     }
 }
 
+[Serializable]
 public class PsvSkill
 {
-    public string rcode;
-    //패시브 능력 이름
-    public string name;
-    //픽셀몬 패시브 타입
-    public PassiveType psvType;
-    //패시브 능력치
-    public float ability;
+    public string psvRank;
+    public string psvName;
+    public float psvValue;
 }
