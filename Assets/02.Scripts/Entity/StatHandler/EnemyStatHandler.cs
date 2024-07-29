@@ -14,16 +14,8 @@ public class EnemyStatHandler : MonoBehaviour
     public float enemyCriDmg;
     #endregion
 
-    private void OnEnable()
+    public void UpdateEnemyStats()
     {
-        UpdateEnemyStats();
-    }
-
-    private void UpdateEnemyStats()
-    {
-        //TODO: 받아오는 방식 변경: 위치는 Spawner or StageManager.
-        data = DataManager.Instance.GetData<EnemyData>(transform.parent.name);
-
         int difficulty = SaveManager.Instance.userData.curDifficulty;
         int deltaDiff = (int)Mathf.Pow(2, difficulty);
 
