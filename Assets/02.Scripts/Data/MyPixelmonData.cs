@@ -30,7 +30,7 @@ public class MyPixelmonData
     public string traitType;
     public float traitValue;
     //패시브 능력
-    public PsvSkill[] psvSkill = new PsvSkill[4];
+    public PsvSkill[] psvSkill = new PsvSkill[1];
     //보유효과
     public float[] ownEffectValue = new float[2];
 
