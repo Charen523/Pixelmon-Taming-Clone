@@ -22,8 +22,7 @@ public class Pixelmon : MonoBehaviour
 
     public void InitPxm()
     {
-        if(status == null)
-            status = new PixelmonStatus();
-        status.InitStatus(data, myData);
+        data.status = status.InitStatus(data, myData);
+        fsm.ChangeState(Player.Instance.fsm.currentState);
     }
 }
