@@ -18,7 +18,7 @@ public class MyPixelmonData
     public int evolvedCount = 0;
     
     //장착 여부
-    public bool isEquiped;
+    public bool isEquipped;
     //보유 여부
     public bool isOwned;
 
