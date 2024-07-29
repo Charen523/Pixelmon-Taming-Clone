@@ -25,8 +25,7 @@ public enum AbilityType
     AddDmg,
     AddSDmg,
     AddSCri,
-    AddSCriDmg,
-    End
+    AddSCriDmg
 }
 
 public enum PassiveType

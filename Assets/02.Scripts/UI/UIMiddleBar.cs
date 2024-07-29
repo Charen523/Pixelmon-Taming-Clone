@@ -209,10 +209,6 @@ public class UIMiddleBar : UIBase
     public void OnClickEggLvBtn()
     {
         EggLvPopup.SetActive(true);
-        if (eggLv % 5 == 0)
-        {
-            Instantiate<GameObject>(EggLvPopup.LvUpGauge, EggLvPopup.Gauges);
-        }
     }
 
     public void OnClickAutoBtn()
