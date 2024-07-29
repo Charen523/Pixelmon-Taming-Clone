@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class StageManager : Singleton<StageManager>
 {
+    private SaveManager saveManager;
+
     public StageData Data {get; private set;}
     [SerializeField] private Spawner spawner;
 
@@ -60,7 +62,7 @@ public class StageManager : Singleton<StageManager>
     [Header("Current Stage")]
     private readonly string stageCodeName = "STG";
     
-    public int diffNum => SaveManager.Instance.userData.curDifficulty;
+    public int diffNum => saveManager.userData.curDifficulty;
 
     [SerializeField] private int worldNum;
     [SerializeField] private readonly int maxWorldNum = 10;
@@ -85,6 +87,8 @@ public class StageManager : Singleton<StageManager>
     {
         isDontDestroyOnLoad = false;
         base.Awake();
+
+        saveManager = SaveManager.Instance;
         InitData();
     }
 
@@ -104,7 +108,7 @@ public class StageManager : Singleton<StageManager>
         Data = DataManager.Instance.GetData<StageData>(CurrentRcode);
         worldNum = Data.worldId;
         stageNum = Data.stageId;
-        killCount = SaveManager.Instance.userData.curStageCount;
+        killCount = saveManager.userData.curStageCount;
     }
 
     private void ResetRcode()
@@ -179,6 +183,7 @@ public class StageManager : Singleton<StageManager>
         {
             // Stage Clear
             ResetSpawnedEnemy();
+            saveManager.GetRewards(Data.rewardType, Data.rewardValue);
             return true;
         }
 
@@ -214,6 +219,7 @@ public class StageManager : Singleton<StageManager>
         if (isBossCleared)
         {
             ResetSpawnedEnemy();
+            saveManager.GetRewards(Data.rewardType, Data.rewardValue);
             return true;
         }
 
@@ -306,7 +312,7 @@ public class StageManager : Singleton<StageManager>
     #region Next Stage/World/Diff
     public void ToNextStage(bool isClear = true)
     {
-        SaveManager.Instance.SetData("curStageCount", 0);
+        saveManager.SetData("curStageCount", 0);
 
         if (!isClear)
         {
@@ -334,7 +340,7 @@ public class StageManager : Singleton<StageManager>
         else
         {
             worldNum = 1;
-            SaveManager.Instance.SetDeltaData("curDifficulty", 1);
+            saveManager.SetDeltaData("curDifficulty", 1);
         }
 
         ResetRcode();
@@ -357,8 +363,8 @@ public class StageManager : Singleton<StageManager>
             curProgress = Mathf.Min((float)killCount / Data.nextStageCount, 100f);
             spawner.isActivatedEnemy.Remove(enemy);
         }
-        SaveManager.Instance.GetRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
-        SaveManager.Instance.SetDeltaData("curStageCount", 1);
+        saveManager.GetRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
+        saveManager.SetDeltaData("curStageCount", 1);
     }
 
     public void OnPlayerDead()
