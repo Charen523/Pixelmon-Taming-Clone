@@ -69,6 +69,7 @@ public class PixelmonEquipSlot : PixelmonSlot
     public void UnEquip()
     {
         pxmData = null;
+        myPxmData = null;
         slotIcon.gameObject.SetActive(false);
         slotIconBg.sprite = pxmManager.defaultBg;
         stateIcon.gameObject.SetActive(true);
