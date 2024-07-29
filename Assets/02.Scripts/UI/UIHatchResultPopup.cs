@@ -48,9 +48,9 @@ public class UIHatchResultPopup : UIBase
         uiMiddleBar = UIManager.Get<UIMiddleBar>();
         #region UI 셋팅        
         pxmName.text = uiMiddleBar.HatchPxmData.name;
-        rateTxt.text = UIUtils.TranslateRank(uiMiddleBar.rank);
-        rateBg.sprite = PxmRankImgUtil.GetRankImage(uiMiddleBar.rank, rateBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
-        pixelmonBg.sprite = PxmRankImgUtil.GetRankImage(uiMiddleBar.rank, pixelmonBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
+        rateTxt.text = UIUtils.TranslateRank(uiMiddleBar.Rank);
+        rateBg.sprite = PxmRankImgUtil.GetRankImage(uiMiddleBar.Rank, rateBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
+        pixelmonBg.sprite = PxmRankImgUtil.GetRankImage(uiMiddleBar.Rank, pixelmonBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
         pixelmonImg.sprite = uiMiddleBar.HatchedPixelmonImg.sprite;
 
         //atkRate.text = uiMiddleBar.AbilityDic["Attack"].Item1;

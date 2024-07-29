@@ -12,13 +12,15 @@ public class EggImg : BaseBg
 }
 public class UIMiddleBar : UIBase
 {
-    #region 알 뽑기
+    #region 알 뽑기 필드
     [Header("알 뽑기")]
+    #region 소환 레벨, 알 개수
     public TextMeshProUGUI EggLvText;
     public TextMeshProUGUI EggCntText;
     public int eggCount = 100;
     public int eggLv = 1;
-    #region 알 뽑기 애니메이션
+    #endregion
+    #region 애니메이션
     public AnimationData Data = new AnimationData();
     public Animator BreakAnim;
     public Animator HatchAnim;
@@ -26,11 +28,12 @@ public class UIMiddleBar : UIBase
     public AnimationClip BreakClip;
     #endregion
     public Image HatchedPixelmonImg;
-    public PixelmonRank rank;
+    public PixelmonRank Rank;
     public PixelmonData HatchPxmData;
     public Dictionary<string, Tuple<string, float>> AbilityDic = new Dictionary<string, Tuple<string, float>>();
 
     private UIBase HatchResultPopup;
+    private UIBase EggLvPopup;
     private WaitUntil getPixelmon;
     private bool isGetPixelmon;
     #endregion
@@ -38,6 +41,7 @@ public class UIMiddleBar : UIBase
     private async void Awake()
     {
         HatchResultPopup = await UIManager.Show<UIHatchResultPopup>();
+        EggLvPopup = await UIManager.Show<UIEggLvPopup>();
     }
     private void Start()
     {
@@ -56,7 +60,7 @@ public class UIMiddleBar : UIBase
     private bool Gacha()
     {
         #region 확률에 따라 픽셀몬 등급 랜덤뽑기
-        rank = PerformPxmGacha(eggLv.ToString());
+        Rank = PerformPxmGacha(eggLv.ToString());
 
         // 등급에 해당하는 픽셀몬 랜덤뽑기
         var pxmData = DataManager.Instance.pixelmonData.data;
@@ -64,7 +68,7 @@ public class UIMiddleBar : UIBase
 
         for (int i = 0; i < pxmData.Count; i++)
         {
-            if (pxmData[i].rank == rank.ToString())
+            if (pxmData[i].rank == Rank.ToString())
             {
                 randPxmData.Add(pxmData[i]);
             }
@@ -101,7 +105,7 @@ public class UIMiddleBar : UIBase
         isGetPixelmon = false;
 
         // 애니메이션 실행
-        BreakAnim.SetInteger(Data.EggBreakParameterHash, (int)rank);
+        BreakAnim.SetInteger(Data.EggBreakParameterHash, (int)Rank);
         HatchAnim.SetBool(Data.EggHatchParameterHash, true);
 
         // 애니메이션 끝난지 체크
@@ -200,5 +204,14 @@ public class UIMiddleBar : UIBase
         HatchAnimGO.SetActive(false);
         AbilityDic.Clear();
         isGetPixelmon = true;
+    }
+
+    public void OnClickEggLv()
+    {
+        EggLvPopup.SetActive(true);
+    }
+
+    public void OnClickAutoBtn()
+    {
     }
 }
