@@ -1,6 +1,5 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -33,28 +32,13 @@ public class PoolManager : Singleton<PoolManager>
         {
             CreatePool(pool);
         }
-
-    }
-
-    public SerializedMonoBehaviour SpawnFromPool(string rcode)
-    {
-        if (!PoolDictionary.ContainsKey(rcode))
-        {
-            Debug.LogWarning($"{rcode}를 가진 Pool이 PoolDictionary에 없습니다!");
-            return null;
-        }
-
-        SerializedMonoBehaviour obj = PoolDictionary[rcode].Dequeue();
-        PoolDictionary[rcode].Enqueue(obj);
-        obj.gameObject.SetActive(true);
-        return obj;
     }
 
     public T SpawnFromPool<T>(string rcode) where T : SerializedMonoBehaviour
     {
         if (!PoolDictionary.ContainsKey(rcode))
         {
-            Debug.LogWarning($"{rcode}를 가진 Pool이 PoolDictionary에 없습니다!");
+            Debug.LogWarning($"{rcode}를 가진 {typeof(T)}이 PoolDictionary에 없습니다!");
             return default;
         }
 
