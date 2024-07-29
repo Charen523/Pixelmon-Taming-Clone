@@ -1,10 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System;
 
+[Serializable]
 public class PixelmonStatus
 {
     #region 능력치
+    public float perAtk;
+    public float lvAtkRate;
+
     public float Atk;
     public float Cri;
     public float CriDmg;
