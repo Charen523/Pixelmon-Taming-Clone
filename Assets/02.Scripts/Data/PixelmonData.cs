@@ -11,6 +11,9 @@ public class PixelmonData : IData
     public string name;
     public string rank;
 
+    public float perAtk;
+    public float lvAtkRate;
+
     public float baseAtk;
     public float baseCri;
     public float baseCriDmg;
@@ -20,7 +23,7 @@ public class PixelmonData : IData
     public float baseSCri;
     public float baseSCriDmg;
 
-    public PixelmonStatus status;
+    public PixelmonStatus status = new PixelmonStatus();
 
     //픽셀몬 아이콘
     public Sprite icon;
