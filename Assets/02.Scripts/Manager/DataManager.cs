@@ -13,6 +13,7 @@ public class DataManager : GSpreadReader<DataManager>
     public GameData<EggRateData> eggRateData;
     public GameData<EvolveData> evolveData;
     public GameData<AbilityRateData> abilityRateData;
+    public GameData<BasePsvData> basePsvData;
     public Sprite[] bgIcons;
 
     public bool isPxmInit;

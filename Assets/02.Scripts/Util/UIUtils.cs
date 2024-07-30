@@ -49,6 +49,30 @@ public static class UIUtils
         return null;
     }
 
+    public static string TranslateTraitEnum(this TraitType trait)
+    {
+        switch (trait)
+        {
+            case TraitType.AddDmg: return "일반 데미지";
+            case TraitType.AddCriDmg: return "일반 치명타 데미지";
+            case TraitType.AddSDmg: return "스킬 데미지";
+            case TraitType.AddSCriDmg: return "스킬 치명타 데미지";
+        }
+        return null;
+    }
+
+    public static string TranslateTraitString(this string trait)
+    {
+        switch (trait)
+        {
+            case "AddDmg": return "일반 데미지";
+            case "AddCriDmg": return "일반 치명타 데미지";
+            case "AddSDmg": return "스킬 데미지";
+            case "AddSCriDmg": return "스킬 치명타 데미지";
+        }
+        return null;
+    }
+
     public static int GetEvolveValue(MyPixelmonData myData, PixelmonData data)
     {
         switch (myData.star)

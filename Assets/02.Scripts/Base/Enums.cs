@@ -15,6 +15,14 @@ public enum FieldState
     Harvest
 }
 
+public enum TraitType
+{
+    AddDmg,
+    AddCriDmg,
+    AddSDmg,
+    AddSCriDmg
+}
+
 public enum AbilityType
 {
     Attack,

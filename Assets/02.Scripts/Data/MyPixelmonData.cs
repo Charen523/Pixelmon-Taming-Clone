@@ -24,11 +24,11 @@ public class MyPixelmonData
 
     public UnityAction activeSkill;
 
-    public string atkRank;
     //공격수치
+    public string atkRank;
     public float atkValue;
-    public string traitRank;
     //특성타입
+    public string traitRank;
     public string traitType;
     public float traitValue;
     //패시브 능력

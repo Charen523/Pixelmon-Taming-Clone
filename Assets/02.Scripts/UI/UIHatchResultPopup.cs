@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Xml.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.PlayerSettings;
 
 [System.Serializable]
 public class RateBg : BaseBg
@@ -17,60 +19,110 @@ public class PixelmonBg : BaseBg
 
 public class UIHatchResultPopup : UIBase
 {
-    #region 등급 ui
+    #region 등급 UI
+    [Header("등급 UI")]
     [SerializeField] private List<RateBg> rateBgs;
     [SerializeField] private List<PixelmonBg> pixelmonBgs;
+    [SerializeField] private TextMeshProUGUI pxmName;
     [SerializeField] private TextMeshProUGUI rateTxt;
     [SerializeField] private Image rateBg;
     [SerializeField] private Image pixelmonBg;
     [SerializeField] private Image pixelmonImg;
     #endregion
-    #region 능력치 ui
-    //[SerializeField] private TextMeshProUGUI atkRate;
-    //[SerializeField] private TextMeshProUGUI atkTxt;
-    //[SerializeField] private TextMeshProUGUI passiveRate;
-    [SerializeField] private TextMeshProUGUI passiveTxt;
-    //[SerializeField] private TextMeshProUGUI ownEffectRate;
-    [SerializeField] private TextMeshProUGUI ownEffectTxt;
+    #region 능력치 UI
+    [Header("능력치 UI")]
+    [SerializeField] private TextMeshProUGUI NewAtkValueTxt;
+    [SerializeField] private TextMeshProUGUI TraitTypeTxt;
+    [SerializeField] private TextMeshProUGUI NewTraitValueTxt;
+
+    [SerializeField] private UIPxmPsv[] Psv = new UIPxmPsv[4];
+
+    [SerializeField] private TextMeshProUGUI OwnHpValueTxt;
+    [SerializeField] private TextMeshProUGUI OwnDefenseValueTxt;
     #endregion
-    [SerializeField] private TextMeshProUGUI pxmName;
     [SerializeField] private Button rePlaceBtn;
 
     private UIMiddleBar uiMiddleBar;
-    private UserData userData;
-    private SaveManager saveManager;
+    private UserData userData => SaveManager.Instance.userData;
+    private SaveManager saveManager => SaveManager.Instance;
+    private MyPixelmonData hatchedPxmData;
     private bool isOwnedPxm;
 
     private void OnEnable()
     {
-        saveManager = SaveManager.Instance;
-        userData = SaveManager.Instance.userData;
         uiMiddleBar = UIManager.Get<UIMiddleBar>();
-        #region UI 셋팅        
+
+        #region 소환된 픽셀몬 정보 UI        
         pxmName.text = uiMiddleBar.HatchPxmData.name;
         rateTxt.text = UIUtils.TranslateRank(uiMiddleBar.Rank);
         rateBg.sprite = PxmRankImgUtil.GetRankImage(uiMiddleBar.Rank, rateBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
         pixelmonBg.sprite = PxmRankImgUtil.GetRankImage(uiMiddleBar.Rank, pixelmonBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
         pixelmonImg.sprite = uiMiddleBar.HatchedPixelmonImg.sprite;
-
-        //atkRate.text = uiMiddleBar.AbilityDic["Attack"].Item1;
-        //atkTxt.text = uiMiddleBar.AbilityDic["Attack"].Item2.ToString();       
         #endregion        
 
-        #region 이미 가지고 있는 픽셀몬인지 체크
+        #region 이미 가지고 있는 픽셀몬인지 체크 & 픽셀몬 능력치 UI
         isOwnedPxm = false;
         foreach (var data in userData.ownedPxms)
         {
             if (uiMiddleBar.HatchPxmData.rcode == data.rcode)
             {
-                isOwnedPxm = true; 
+                isOwnedPxm = true;
+                hatchedPxmData = data;
                 break;
             }
         }
 
-        if (isOwnedPxm) rePlaceBtn.gameObject.SetActive(true);
-        else rePlaceBtn.gameObject.SetActive(false);
+        if (isOwnedPxm)
+        {
+            rePlaceBtn.gameObject.SetActive(true);
+            OwnedPxmUI();
+        }
+        else
+        {
+            rePlaceBtn.gameObject.SetActive(false);
+            SetFirstPsvValue();
+            FirstPxmUI();
+        }
+
+        NewAtkValueTxt.text = uiMiddleBar.HatchPxmData.basePerAtk.ToString();
+        TraitTypeTxt.text = uiMiddleBar.HatchPxmData.trait.TranslateTraitString();
+        NewTraitValueTxt.text = uiMiddleBar.HatchPxmData.traitValue.ToString();
+        OwnHpValueTxt.text = uiMiddleBar.HatchPxmData.basePerHp.ToString();
+        OwnDefenseValueTxt.text = uiMiddleBar.HatchPxmData.basePerDef.ToString();
         #endregion
+    }
+    private void OwnedPxmUI()
+    {
+        Psv[0].NewPsvRankTxt.gameObject.SetActive(true);
+        Psv[0].OldPsvValueTxt.gameObject.SetActive(true);
+        Psv[0].ArrowImg.gameObject.SetActive(true);
+        for (int i = 1; i <= 3; i++)
+        {
+            Psv[i].gameObject.SetActive(i * 2 - 1 <= hatchedPxmData.star);
+        }
+    }
+
+    private void SetFirstPsvValue()
+    {
+        var basePsvData = RandAbilityUtil.RandAilityData();
+        var randAbility = RandAbilityUtil.PerformAbilityGacha((AbilityType)basePsvData.psvEnum, basePsvData.maxRate);
+        Psv[0].PsvName = basePsvData.rcode;
+        Psv[0].NewPsvRank = randAbility.AbilityRank;
+        Psv[0].NewPsvValue = randAbility.AbilityValue;
+    }
+    private void FirstPxmUI()
+    {
+        Psv[0].PsvNameTxt.text = Psv[0].PsvName;
+        Psv[0].OldPsvRankTxt.text = Psv[0].NewPsvRank.ToString();
+        Psv[0].NewPsvValueTxt.text = new StringBuilder().Append(Psv[0].NewPsvValue).Append('%').ToString();
+
+        Psv[0].NewPsvRankTxt.gameObject.SetActive(false);
+        Psv[0].OldPsvValueTxt.gameObject.SetActive(false);
+        Psv[0].ArrowImg.gameObject.SetActive(false);
+        for (int i = 1; i <= 3; i++)
+        {
+            Psv[i].gameObject.SetActive(false);
+        }
     }
 
     public void OnClickGetPixelmon(bool isReplaceBtn)
