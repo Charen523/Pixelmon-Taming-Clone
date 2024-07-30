@@ -14,22 +14,22 @@ public class UserData
     //public int key;
 
     public int userLv = 1;
-    public int userExp = 10;
+    public int userExp = 0;
 
     public int eggLv = 1;
-    public int eggCount = 10;
+    public int eggCount = 3;
 
     public string curStageRcode = "STG00101";
     public int curDifficulty = 0;
     public int curStageCount = 0;
 
-    //public string curQuestRode;
+    //public string curQuestRcode;
 
-    //public int[] StatUpLvs = new int[10]; //나중에 개수 보고 바꾸기.
+    public int[] UpgradeLvs = { 1, 1, 1, 1, 1, 1, 1, 1 };
     public bool[] isLockedSlot = {false, false, false, true, true};
-    public MyPixelmonData[] equippedPxms = new MyPixelmonData[5]; //string으로 바꾸기.
+    public MyPixelmonData[] equippedPxms = new MyPixelmonData[5];
     public MyPixelmonData[] ownedPxms = new MyPixelmonData[20];
     //public string[] OwnedActiveSkills; 만약 스킬 강화 생기면 string-> 스킬로 바꾸기.
     public FieldData[] fieldDatas = new FieldData[6];
-    //public int[] DungeonLvs = new int [3];
+    //public int[] DungeonLvs = { 1, 1, 1 };
 }
