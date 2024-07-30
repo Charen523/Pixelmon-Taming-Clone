@@ -1,39 +1,33 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class PixelmonStatHandler
 {
-    public static PixelmonStatus InitStatus(this PixelmonStatus status, PixelmonData data, MyPixelmonData myData)
-    {
-        
-        status.Atk = SetStatus(data.perAtk, myData.lv, data.lvAtkRate);
-        status.Cri = SetPercentStatus(data.baseCri, myData.lv, 0, 10);
-        status.CriDmg = SetStatus(data.baseCriDmg, myData.lv, 0, 10);
-        status.AtkSpd = SetPercentStatus(data.baseAtkSpd, myData.lv, 0, 10);
-        status.Dmg = SetStatus(data.baseDmg, myData.lv, 0, 10);
-        status.SDmg = SetPercentStatus(data.baseSDmg, myData.lv, 0, 10);
-        status.SCri = SetStatus(data.baseSCri, myData.lv, 0, 10);
-        status.SCriDmg = SetPercentStatus(data.baseSCriDmg, myData.lv, 0, 10);
-        return status;
+    public static void InitStatus(this PixelmonStatus status, PixelmonData data, MyPixelmonData myData)
+    {   
+        status.perAtk = SetStatus(data.perAtk, myData.lv, data.lvAtkRate);
+        status.Atk = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.Atk, myData.FindType(AbilityType.Attack));
+        status.Cri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Cri, myData.FindType(AbilityType.AddCri));
+        status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.AddCriDmg));
+        status.Dmg = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.Dmg, myData.FindType(AbilityType.AddDmg));
+        status.SDmg = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.SDmg, myData.FindType(AbilityType.AddSDmg));
+        status.SCri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.AddSCri));
+        status.SCriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.AddSCri));
     }
 
     public static float SetStatus(float perAtk, int lv, float lvAtkRate)
     {
-        return perAtk + (lv - 1) * lvAtkRate;
+        return (perAtk + lv * lvAtkRate);
     }
 
-
-    //일반수치 데이터 수정 필요
-    public static float SetStatus(float baseStat, int lv, float statUpLv, float statValue)
+    public static float SetMultiStatus(float upgradeAtk, float psvAtk)
     {
-        //baseStat* statRank / 100 + (1 + (lv - 1) * 0.1f) + (statUpLv * statValue);
-        return baseStat;
+        return upgradeAtk * psvAtk;
     }
 
-    //퍼센트 수치 데이터 수정 필요
-    public static float SetPercentStatus(float baseStat, int lv, float statUpLv, float statValue)
+    public static float SetPlusStatus(float upgradeAtk, float psvAtk)
     {
-        //(baseStat * statRank * (1 + ((lv - 1) * 0.1f) + (statUpLv * statValue)) / 100);
-        return baseStat;
+        return upgradeAtk + psvAtk;
     }
 
     public static void StatusUp(this PixelmonStatus status, string field, float stat, StatusType type = StatusType.Add)
@@ -57,97 +51,95 @@ public static class PixelmonStatHandler
         }
     }
 
-    public static void PxmLvUpgrade(this PixelmonStatus status, MyPixelmonData myData)
+    public static void PxmLvUp(this PixelmonStatus status, MyPixelmonData myData)
     {
-        var saveManager = SaveManager.Instance;
-        saveManager.SetDeltaData("exp", 0);
-        saveManager.SetDeltaData("lv", ++myData.lv);
+        SaveManager.Instance.SetDeltaData("lv", ++myData.lv);
         if (myData.lv % 10 == 0)
         {
-            saveManager.SetDeltaData("maxExp", (int)(myData.maxExp * 1.5f));
+            SaveManager.Instance.SetDeltaData("maxExp", (int)(myData.maxExp * 1.5f));
         }
         else
         {
-            saveManager.SetDeltaData("maxExp", (int)(myData.maxExp * 1.1f));
+            SaveManager.Instance.SetDeltaData("maxExp", (int)(myData.maxExp * 1.1f));
         }
     }
 
-    public static void PxmStarUpgrade(this PixelmonStatus status, MyPixelmonData myData)
+    public static void PxmStarUp(this PixelmonStatus status, MyPixelmonData myData)
     {
         if ((myData.star & 1) == 0)
         {
-            //보유수치 상승
+            if (myData.star / 2 == 1)
+            {
+                //보유수치 상승
+                for (int i = 0; i < myData.ownEffectValue.Length; i++)
+                    myData.ownEffectValue[i] += 10;
+            }
+            else
+            {
+                for (int i = 0; i < myData.ownEffectValue.Length; i++)
+                    myData.ownEffectValue[i] += 30;
+            }
         }
         else
         {
-            //
+            PsvSkill newSkill = new PsvSkill();
+            myData.psvSkill.Add(newSkill);
         }
 
         if(myData.star == 5) 
-        { 
+        {
             //패시브 룰렛기능 오픈
         }
     }
 
-    public static void PxmPsvEffect(this PixelmonStatus status)
+    public static List<PsvSkill> PxmPsvEffect(this PixelmonStatus status, MyPixelmonData myData, bool[] isLocked)
     {
-
-    }
-    
-    public static int GetTotalDamage(this PixelmonStatus status, bool isSkill = false)
-    {
-        int totalDamage = (int)status.Atk;
-
-        if (isSkill)
+        List<PsvSkill> newSkills = new List<PsvSkill>();
+        for (int i = 0; i < myData.psvSkill.Count; i++)
         {
-            SetDamage(status.SDmg);
-            if (IsCritical(status.Cri + status.SCri))
+            if (!isLocked[i])
             {
-                
+                PsvSkill newSkill = new PsvSkill();
+                int randType = Random.Range(0, 7);
+                newSkill.psvType = (AbilityType)randType;
+                //TODO : 수치 값 랜덤 후 대입
+                newSkills.Add(newSkill);
             }
             else
             {
-
+                newSkills.Add(myData.psvSkill[i]);
             }
+        }       
+        return newSkills;
+    }
+    
+    public static float GetTotalDamage(this PixelmonStatus status, MyPixelmonData myData ,bool isSkill = false)
+    {
+        float dealDmg;
+        if (isSkill)
+        {
+            if (IsCritical(status.Cri + status.SCri))
+                dealDmg =  status.perAtk * (status.Atk + status.SDmg) * (status.SCriDmg + status.CriDmg);
+            else
+                dealDmg = status.perAtk * (status.Atk + status.SDmg);
         }
         else
         {
-            SetDamage(status.Dmg);
             if (IsCritical(status.Cri))
-            {
-
-            }
+                dealDmg = status.perAtk * (status.Atk + status.Dmg) * status.CriDmg;
             else
-            {
-
-            }
+                dealDmg = status.perAtk * (status.Atk + status.Dmg);
         }
-        return totalDamage;
+        //버프가 있다면 dealDmg *= 1;
+
+        return dealDmg;
     }
 
-    public static int SetDamage(float ability)
-    {
-        int damage = (int)ability;
-
-        return damage;
-    }
 
     public static bool IsCritical(float rate)
     {
         return Random.Range(0, 10000) <= rate * 100;
     }
-}
-
-public enum PxmStatus
-{
-    Atk,
-    Cri,
-    CriDmg,
-    AtkSpd,
-    AtkDmg,
-    SDmg,
-    SCri,
-    SCriDmg
 }
 
 public enum StatusType
