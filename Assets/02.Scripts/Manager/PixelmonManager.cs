@@ -9,13 +9,14 @@ public class PixelmonManager : Singleton<PixelmonManager>
     public UnityAction<int, MyPixelmonData> equipAction;
     public UnityAction<int> unEquipAction;
 
+    private SaveManager saveManager;
+    private UserData userData;
+    private Player player;
     public PixelmonTab pxmTab;
 
-    private Player player;
-    private UserData userData;
-    private SaveManager saveManager;
     private List<PixelmonData> pxmData;
     public Pixelmon[] equippedPixelmon;
+    public PixelmonStatus upgradeStatus = new PixelmonStatus();
 
     public Sprite plusIcon;
     public Sprite defaultBg;
