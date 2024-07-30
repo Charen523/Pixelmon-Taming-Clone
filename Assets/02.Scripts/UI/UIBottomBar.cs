@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 enum eTabs
 {
-    UIStatusupTab,
+    UIUpgradeTab,
     UIPixelmonTab,
     UISkilltab,
     UIFarmTab,
