@@ -8,7 +8,7 @@ public class Pixelmon : MonoBehaviour
     public PixelmonData data;
     public MyPixelmonData myData;
     public PixelmonFSM fsm;
-    public PixelmonStatus status;
+    public PixelmonStatus status = new PixelmonStatus();
     public SpriteRenderer spriteRenderer;
 
     private void Start()
@@ -22,7 +22,7 @@ public class Pixelmon : MonoBehaviour
 
     public void InitPxm()
     {
-        data.status = status.InitStatus(data, myData);
+        status.InitStatus(data, myData);
         fsm.ChangeState(Player.Instance.fsm.currentState);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -30,7 +31,7 @@ public class MyPixelmonData
     public string traitType;
     public float traitValue;
     //패시브 능력
-    public PsvSkill[] psvSkill = new PsvSkill[1];
+    public List<PsvSkill> psvSkill = new List<PsvSkill>();
     //보유효과
     public float[] ownEffectValue = new float[2];
 
@@ -46,11 +47,22 @@ public class MyPixelmonData
             Debug.LogWarning($"{fieldName}라는 변수를 MyPixelmonData에서 찾을 수 없습니다.");
         }
     }
+
+    public float FindType(AbilityType type)
+    {
+        var myType = psvSkill.Find((obj) => obj.psvType == type);
+        if(myType != null)
+        {
+            return 1;
+        }
+        return myType.psvValue;
+    }
 }
 
 [Serializable]
 public class PsvSkill
 {
+    public AbilityType psvType;
     public string psvRank;
     public string psvName;
     public float psvValue;

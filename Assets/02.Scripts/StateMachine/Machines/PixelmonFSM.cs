@@ -49,7 +49,7 @@ public class PixelmonFSM : FSM
                 for (int i = 0; i < enemies.Count; i++)
                 {
                     Vector2 direction = enemies[i].transform.position - transform.position;
-                    float damage = pixelmon.status.GetTotalDamage();
+                    float damage = pixelmon.status.GetTotalDamage(pixelmon.myData);
                     PoolManager.Instance.SpawnFromPool<ProjectileController>("ATV00000").GetAttackSign(transform.position, direction, damage, minDistance, 10);
                 };
             }
