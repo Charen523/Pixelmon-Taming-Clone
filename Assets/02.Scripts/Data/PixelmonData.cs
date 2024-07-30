@@ -23,8 +23,6 @@ public class PixelmonData : IData
     public float baseSCri;
     public float baseSCriDmg;
 
-    public PixelmonStatus status = new PixelmonStatus();
-
     //픽셀몬 아이콘
     public Sprite icon;
     public Sprite bgIcon;
