@@ -11,17 +11,14 @@ public class PixelmonData : IData
     public string name;
     public string rank;
 
-    public float perAtk;
+    public float basePerAtk;
     public float lvAtkRate;
-
-    public float baseAtk = 1;
-    public float baseCri = 0;
-    public float baseCriDmg = 0;
-    public float baseAtkSpd = 1;
-    public float baseDmg = 0;
-    public float baseSDmg = 0;
-    public float baseSCri = 0;
-    public float baseSCriDmg = 0;
+    public string trait;
+    public float traitValue;
+    public float basePerHp;
+    public float lvHpRate;
+    public float basePerDef;
+    public float lvDefRate;
 
     //픽셀몬 아이콘
     public Sprite icon;

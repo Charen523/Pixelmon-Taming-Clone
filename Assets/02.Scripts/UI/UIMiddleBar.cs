@@ -13,7 +13,6 @@ public class EggImg : BaseBg
 public class UIMiddleBar : UIBase
 {
     #region 알 뽑기 필드
-    [Header("알 뽑기")]
     #region 소환 레벨, 알 개수
     public TextMeshProUGUI EggLvText;
     public TextMeshProUGUI EggCntText;
@@ -27,10 +26,9 @@ public class UIMiddleBar : UIBase
     public GameObject HatchAnimGO;
     public AnimationClip BreakClip;
     #endregion
-    public Image HatchedPixelmonImg;
     public PixelmonRank Rank;
+    public Image HatchedPixelmonImg;
     public PixelmonData HatchPxmData;
-    public Dictionary<string, Tuple<string, float>> AbilityDic = new Dictionary<string, Tuple<string, float>>();
 
     private UIHatchResultPopup HatchResultPopup;
     private UIEggLvPopup EggLvPopup;
@@ -77,18 +75,6 @@ public class UIMiddleBar : UIBase
         HatchPxmData = randPxmData[UnityEngine.Random.Range(0, randPxmData.Count)];
         HatchedPixelmonImg.sprite = HatchPxmData.icon;
         #endregion
-
-        #region 확률에 따라 픽셀몬 능력치 등급 랜덤뽑기
-        // 공격력
-        //var gachaResult = PerformAbilityGacha();
-        //float atkResult = HatchPxmData.baseAtk * ((float)gachaResult.RandValue / 100);
-        //AbilityDic.Add("Attack", Tuple.Create(gachaResult.DropRcode, atkResult));
-        
-        // 패시브
-
-        // 보유 효과
-        #endregion
-
         return true;
     }
 
@@ -118,7 +104,6 @@ public class UIMiddleBar : UIBase
         yield return getPixelmon;
         yield return Gacha(); // 다음 알 셋팅
     }
-
     public PixelmonRank PerformPxmGacha(string rcode)
     {
         var data = DataManager.Instance.GetData<EggRateData>(rcode);
@@ -152,49 +137,6 @@ public class UIMiddleBar : UIBase
         throw new System.Exception("확률 합 != 100");
     }
 
-    public (string DropRcode, int RandValue) PerformAbilityGacha()
-    {
-        var data = DataManager.Instance.abilityRateData.data;
-
-        #region 확률 합이 100인지 체크
-        float totalProb = 0;
-        foreach (var prob in data)
-        {
-            totalProb += prob.dropRate;
-        }
-        if (totalProb != 100)
-        {
-            Debug.LogError("확률 합 != 100");
-            return (null, 0); // 확률 합이 100이 아닐 때 null과 0 반환
-        }
-        #endregion
-
-        #region 능력치 등급 랜덤(rocde)
-        int randProb = UnityEngine.Random.Range(100, 10001);
-        float cumProb = 0;
-        string dropRcode = null;
-
-        foreach (var prob in data)
-        {
-            cumProb += prob.dropRate * 100;
-            if (randProb <= cumProb)
-            {
-                dropRcode = prob.rcode;
-                break;
-            }
-        }
-        #endregion
-
-        #region 능력치값 랜덤(min~max)
-       
-        var dropData = DataManager.Instance.GetData<AbilityRateData>(dropRcode);
-        int randValue = UnityEngine.Random.Range(dropData.min, dropData.max + 1);
-        Debug.Log(randValue);
-        #endregion
-
-        return (dropRcode, randValue);
-    }
-
     public void OnClickGetPixelmon(bool isReplace)
     {
         BreakAnim.SetInteger(Data.EggBreakParameterHash, -1);
@@ -202,7 +144,6 @@ public class UIMiddleBar : UIBase
         
         HatchedPixelmonImg.gameObject.SetActive(false);
         HatchAnimGO.SetActive(false);
-        AbilityDic.Clear();
         isGetPixelmon = true;
     }
 

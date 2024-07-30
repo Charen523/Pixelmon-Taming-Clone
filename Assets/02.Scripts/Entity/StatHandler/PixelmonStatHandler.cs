@@ -5,7 +5,7 @@ public static class PixelmonStatHandler
 {
     public static void InitStatus(this PixelmonStatus status, PixelmonData data, MyPixelmonData myData)
     {   
-        status.perAtk = SetStatus(data.perAtk, myData.lv, data.lvAtkRate);
+        status.perAtk = SetStatus(data.basePerAtk, myData.lv, data.lvAtkRate);
         status.Atk = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.Atk, myData.FindType(AbilityType.Attack));
         status.Cri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Cri, myData.FindType(AbilityType.PSVCri));
         status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.PSVCriDmg));

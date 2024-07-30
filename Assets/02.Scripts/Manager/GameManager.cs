@@ -30,9 +30,13 @@ public class GameManager : Singleton<GameManager>
         yield return new WaitUntil(() => DataManager.Instance.isInit);
         ResourceManager.Instance.Init();
         yield return new WaitUntil(() => ResourceManager.Instance.isInit);
-        DataManager.Instance.SetPixelmonData();
+        InitData();
         yield return new WaitUntil(() => DataManager.Instance.isPxmInit);
         isInit = true;
+    }
+    public async void InitData()
+    {
+        await DataManager.Instance.SetPixelmonData();
     }
 
     //public async void InitWorld()
