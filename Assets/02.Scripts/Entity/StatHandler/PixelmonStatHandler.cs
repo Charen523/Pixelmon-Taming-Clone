@@ -119,14 +119,14 @@ public static class PixelmonStatHandler
         if (isSkill)
         {
             if (IsCritical(status.Cri + status.SCri))
-                dealDmg =  status.perAtk * (status.Atk + status.SDmg) * (status.SCriDmg + status.CriDmg);
+                dealDmg =  status.perAtk * (status.Atk + status.SDmg) * (100 + status.SCriDmg + status.CriDmg)/100;
             else
                 dealDmg = status.perAtk * (status.Atk + status.SDmg);
         }
         else
         {
             if (IsCritical(status.Cri))
-                dealDmg = status.perAtk * (status.Atk + status.Dmg) * status.CriDmg;
+                dealDmg = status.perAtk * (status.Atk + status.Dmg) * (100 + status.CriDmg)/100;
             else
                 dealDmg = status.perAtk * (status.Atk + status.Dmg);
         }
