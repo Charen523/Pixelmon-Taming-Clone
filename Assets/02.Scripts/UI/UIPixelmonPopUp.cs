@@ -155,6 +155,7 @@ public class UIPixelmonPopUp : UIBase
             saveManager.UpdatePixelmonData(myData.id, "lv", ++myData.lv);
             lvTxt.text = string.Format($"{myData.lv}/50");
             pxmTab.allData[myData.id].SetPxmLv();
+            SetFoodCount();
             Debug.Log("레벨 업!");
         }
         else
@@ -167,7 +168,7 @@ public class UIPixelmonPopUp : UIBase
     {
         curFoodCount.text = saveManager.userData.food.ToString();
         demandFoodCount.text = myData.maxExp.ToString();
-        if (saveManager.userData.food >= myData.maxExp)
+        if (saveManager.userData.food >= myData.maxExp && myData.isOwned)
         {
             curFoodCount.color = Color.yellow;
             feedingArrow.SetActive(true);
@@ -181,9 +182,10 @@ public class UIPixelmonPopUp : UIBase
 
     public void OnEvovled()
     {
-        if (!myData.isOwned) return;
+        if (!myData.isOwned || !myData.isAdvancable) return;
         pxmTab.allData[myData.id].OnEvolved();
         SetStars();
+        SetEvolvedCount();
         Debug.Log("합성완료(팝업)");
     }
 
