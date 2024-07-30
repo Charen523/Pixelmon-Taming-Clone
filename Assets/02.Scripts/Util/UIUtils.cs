@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Xml.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,5 +47,24 @@ public static class UIUtils
             case PixelmonRank.Legendary: return "전설";
         }
         return null;
+    }
+
+    public static int GetEvolveValue(MyPixelmonData myData, PixelmonData data)
+    {
+        switch (myData.star)
+        {
+            case 0:
+                return DataManager.Instance.GetData<EvolveData>(data.rank).star1;
+            case 1:    
+                return DataManager.Instance.GetData<EvolveData>(data.rank).star2;
+            case 2:    
+                return DataManager.Instance.GetData<EvolveData>(data.rank).star3;
+            case 3:    
+                return DataManager.Instance.GetData<EvolveData>(data.rank).star4;
+            case 4:    
+                return DataManager.Instance.GetData<EvolveData>(data.rank).star5;
+            default:
+                return 0;
+        }
     }
 }

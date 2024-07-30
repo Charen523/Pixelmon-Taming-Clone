@@ -19,13 +19,16 @@ public enum AbilityType
 {
     Attack,
     Trait,
-    BaseAtkSpd,
-    AddCri,
-    AddCriDmg,
-    AddDmg,
-    AddSDmg,
-    AddSCri,
-    AddSCriDmg
+    PSVAtk,
+    PSVCri,
+    PSVCriDmg,
+    PSVAtkSpd,
+    PSVDmg,
+    PSVSDmg,
+    PSVSCri,
+    PSVSCriDmg,
+    PlayerHP,
+    PlayerDefense
 }
 
 public enum PassiveType

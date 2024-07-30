@@ -179,7 +179,7 @@ public class PixelmonTab : UIBase
         allData[choiceId].equipIcon.SetActive(true);
         pixelmonManager.equipAction?.Invoke(slotIndex, equipData[slotIndex].myPxmData);
         equipOverlay.gameObject.SetActive(false);        
-        //tabState = TabState.Normal;
+        tabState = TabState.Normal;
     }
 
     public void UnEquipSlot(int slotIndex, int choiceId)

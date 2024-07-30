@@ -11,7 +11,6 @@ public class MyPixelmonData
     public int id;
     public int lv = 1;
     public int maxExp = 10;
-    public int[] statRank;
     public int star = 0;
     //진화 가능 여부
     public bool isAdvancable;
@@ -25,8 +24,10 @@ public class MyPixelmonData
 
     public UnityAction activeSkill;
 
+    public string atkRank;
     //공격수치
     public float atkValue;
+    public string traitRank;
     //특성타입
     public string traitType;
     public float traitValue;
@@ -51,7 +52,7 @@ public class MyPixelmonData
     public float FindType(AbilityType type)
     {
         var myType = psvSkill.Find((obj) => obj.psvType == type);
-        if(myType != null)
+        if(myType == null)
         {
             return 1;
         }
