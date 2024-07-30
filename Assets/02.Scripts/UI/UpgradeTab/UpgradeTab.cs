@@ -8,10 +8,18 @@ public class UpgradeTab : UIBase
 
     #region UI
     [SerializeField] private UpgradeSlot[] upgradeSlots;
+
+    private int mulValue;
     #endregion
 
     private void Start()
     {
         upgradeStat = PixelmonManager.Instance.upgradeStatus;
+    }
+
+
+    public void CurrentToggle(int toggleIndex)
+    {
+        mulValue = toggleIndex;
     }
 }
