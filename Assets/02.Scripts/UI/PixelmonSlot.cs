@@ -78,7 +78,7 @@ public class PixelmonSlot : MonoBehaviour
 
     public void SetEvolveSldr()
     {
-        int maxNum = GetEvolveValue();
+        int maxNum = UIUtils.GetEvolveValue(myPxmData, pxmData);
         evolveSldr.maxValue = maxNum;
         evolveSldr.value = myPxmData.evolvedCount;
         evolveTxt.text = string.Format("{0}/{1}", myPxmData.evolvedCount, maxNum);
@@ -89,24 +89,7 @@ public class PixelmonSlot : MonoBehaviour
         }
     }
 
-    public int GetEvolveValue()
-    {
-        switch (myPxmData.star)
-        {
-            case 0:
-                return dataManager.GetData<EvolveData>(pxmData.rank).star1;
-            case 1:
-                return dataManager.GetData<EvolveData>(pxmData.rank).star2;
-            case 2:
-                return dataManager.GetData<EvolveData>(pxmData.rank).star3;
-            case 3:
-                return dataManager.GetData<EvolveData>(pxmData.rank).star4;
-            case 4:
-                return dataManager.GetData<EvolveData>(pxmData.rank).star5;
-            default:
-                return 0;
-        }
-    }
+
 
     protected virtual void OnClick()
     {
@@ -116,7 +99,7 @@ public class PixelmonSlot : MonoBehaviour
     public void OnEvolved()
     {
         pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "isAdvancable", false);
-        pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "evolvedCount", myPxmData.evolvedCount - GetEvolveValue());
+        pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "evolvedCount", myPxmData.evolvedCount - UIUtils.GetEvolveValue(myPxmData, pxmData));
         pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "star", ++myPxmData.star);
         SetStars();
         SetEvolveSldr();
