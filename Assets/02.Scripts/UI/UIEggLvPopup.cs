@@ -33,11 +33,13 @@ public class UIEggLvPopup : UIBase
         lvUpGaugesQueue.Enqueue(gauge1);
         lvUpGaugesQueue.Enqueue(gauge2);
 
-        userData = SaveManager.Instance.userData;
+        
+        
     }
 
     private void OnEnable()
     {
+        userData = SaveManager.Instance.userData;
         price = (int)Mathf.Pow(5000, userData.eggLv);
     }
 
