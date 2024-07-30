@@ -7,12 +7,12 @@ public static class PixelmonStatHandler
     {   
         status.perAtk = SetStatus(data.perAtk, myData.lv, data.lvAtkRate);
         status.Atk = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.Atk, myData.FindType(AbilityType.Attack));
-        status.Cri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Cri, myData.FindType(AbilityType.AddCri));
-        status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.AddCriDmg));
-        status.Dmg = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.Dmg, myData.FindType(AbilityType.AddDmg));
-        status.SDmg = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.SDmg, myData.FindType(AbilityType.AddSDmg));
-        status.SCri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.AddSCri));
-        status.SCriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.AddSCri));
+        status.Cri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Cri, myData.FindType(AbilityType.PSVCri));
+        status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.PSVCriDmg));
+        status.Dmg = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.Dmg, myData.FindType(AbilityType.PSVDmg));
+        status.SDmg = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.SDmg, myData.FindType(AbilityType.PSVSDmg));
+        status.SCri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCri));
+        status.SCriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCriDmg));
     }
 
     public static float SetStatus(float perAtk, int lv, float lvAtkRate)
