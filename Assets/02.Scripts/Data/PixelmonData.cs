@@ -14,14 +14,14 @@ public class PixelmonData : IData
     public float perAtk;
     public float lvAtkRate;
 
-    public float baseAtk;
-    public float baseCri;
-    public float baseCriDmg;
-    public float baseAtkSpd;
-    public float baseDmg;
-    public float baseSDmg;
-    public float baseSCri;
-    public float baseSCriDmg;
+    public float baseAtk = 1;
+    public float baseCri = 0;
+    public float baseCriDmg = 0;
+    public float baseAtkSpd = 1;
+    public float baseDmg = 0;
+    public float baseSDmg = 0;
+    public float baseSCri = 0;
+    public float baseSCriDmg = 0;
 
     //픽셀몬 아이콘
     public Sprite icon;
