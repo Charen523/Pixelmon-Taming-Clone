@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Xml.Linq;
 using TMPro;
 using UnityEngine;
@@ -92,7 +93,7 @@ public class UIHatchResultPopup : UIBase
     }
     private void OwnedPxmUI()
     {
-        Psv[0].OldPsvRankTxt.gameObject.SetActive(true);
+        Psv[0].NewPsvRankTxt.gameObject.SetActive(true);
         Psv[0].OldPsvValueTxt.gameObject.SetActive(true);
         Psv[0].ArrowImg.gameObject.SetActive(true);
         for (int i = 1; i <= 3; i++)
@@ -105,15 +106,17 @@ public class UIHatchResultPopup : UIBase
     {
         var basePsvData = RandAbilityUtil.RandAilityData();
         var randAbility = RandAbilityUtil.PerformAbilityGacha((AbilityType)basePsvData.psvEnum, basePsvData.maxRate);
+        Psv[0].PsvName = basePsvData.rcode;
         Psv[0].NewPsvRank = randAbility.AbilityRank;
         Psv[0].NewPsvValue = randAbility.AbilityValue;
     }
     private void FirstPxmUI()
     {
-        Psv[0].NewPsvRankTxt.text = Psv[0].NewPsvRank.ToString();
-        Psv[0].NewPsvValueTxt.text = Psv[0].NewPsvValue.ToString();
+        Psv[0].PsvNameTxt.text = Psv[0].PsvName;
+        Psv[0].OldPsvRankTxt.text = Psv[0].NewPsvRank.ToString();
+        Psv[0].NewPsvValueTxt.text = new StringBuilder().Append(Psv[0].NewPsvValue).Append('%').ToString();
 
-        Psv[0].OldPsvRankTxt.gameObject.SetActive(false);
+        Psv[0].NewPsvRankTxt.gameObject.SetActive(false);
         Psv[0].OldPsvValueTxt.gameObject.SetActive(false);
         Psv[0].ArrowImg.gameObject.SetActive(false);
         for (int i = 1; i <= 3; i++)

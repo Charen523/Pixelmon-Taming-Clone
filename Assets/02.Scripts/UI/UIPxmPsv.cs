@@ -7,11 +7,13 @@ using UnityEngine.UI;
 public class UIPxmPsv : MonoBehaviour
 {
     public TextMeshProUGUI OldPsvRankTxt;
+    public TextMeshProUGUI PsvNameTxt;
     public TextMeshProUGUI OldPsvValueTxt;
     public Image ArrowImg;
     public TextMeshProUGUI NewPsvRankTxt;
     public TextMeshProUGUI NewPsvValueTxt;
 
+    public string PsvName;
     public string NewPsvRank;
     public float NewPsvValue;
 }
