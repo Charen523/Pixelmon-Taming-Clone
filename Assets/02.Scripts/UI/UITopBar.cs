@@ -45,7 +45,7 @@ public class UITopBar : UIBase
         lvTxt.text = $"Lv.{saveManager.userData.userLv}";
         
         userName.text = saveManager.userData.userName;
-        goldTxt.text = saveManager.userData.gold.ToString();
+        UpdateGoldUI();
         gemTxt.text = saveManager.userData.diamond.ToString();
 
         UpdateExpUI();
@@ -71,15 +71,7 @@ public class UITopBar : UIBase
 
     public void UpdateGoldUI()
     {
-        string newGoldTxt = saveManager.userData.gold.ToString();
-        if (goldTxt.text != newGoldTxt)
-        {
-            if (goldCoroutine != null)
-            {
-                StopCoroutine(goldCoroutine);
-            }
-            goldCoroutine = StartCoroutine(UIUtils.AnimateTextChange(goldTxt, int.Parse(goldTxt.text), int.Parse(newGoldTxt)));
-        }
+        goldTxt.text = CalculateTool.NumFormatter(saveManager.userData.gold);
     }
 
     public void UpdateDiamondUI()
