@@ -21,6 +21,7 @@ public class UserData
 
     public int eggLv = 1;
     public int eggCount = 3;
+    public int fullGaugeCnt = 0;
 
     public string curStageRcode = "STG00101";
     public int curDifficulty = 0;

@@ -6,12 +6,10 @@ public class LvUpGauge : MonoBehaviour
 {
     public GameObject Empty;
     public GameObject Full;
-    public bool IsFull;
 
     public void GaugeUp()
     {
         Empty.SetActive(false);
         Full.SetActive(true);
-        IsFull = true;
     }
 }

@@ -6,42 +6,52 @@ using UnityEngine.UI;
 
 public class UIEggLvPopup : UIBase
 {
-    public Button GaugeUpBtn;
-    public Button LvUpBtn;
-    public Transform Gauges;
-    public LvUpGauge LvUpGauge;
-    public TextMeshProUGUI Desc;
+    #region [SerializeField] private 필드
+    [SerializeField] private TextMeshProUGUI Desc;
 
-    // LvUpGauge를 보관하는 리스트와 사용 순서를 관리하는 큐
-    private List<LvUpGauge> lvUpGaugesList = new List<LvUpGauge>();
-    private Queue<LvUpGauge> lvUpGaugesQueue = new Queue<LvUpGauge>();
+    [SerializeField] private Button GaugeUpBtn;
+    [SerializeField] private TextMeshProUGUI PriceTxt;
+
+    [SerializeField] private Button LvUpBtn;
+
+    [SerializeField] private Transform Gauges;
+    [SerializeField] private LvUpGauge LvUpGauge;   
+    #endregion
+
+    #region private 필드
+    private List<LvUpGauge> lvUpGauges = new List<LvUpGauge>();
 
     private string[] descs = { "Lv업 게이지", "Lv업 중" };
-    private int gaugeCnt = 1;
+    private bool isLvUpMode;
     private int price;
     private UserData userData => SaveManager.Instance.userData;
 
-
     private int baseGoldCost = 100; // 기본 골드 소모량
     private int increaseRate = 50; // 골드 증가율
-
+    #endregion
 
     private void Start()
     {
         LvUpGauge gauge1 = Instantiate(LvUpGauge, Gauges);
         LvUpGauge gauge2 = Instantiate(LvUpGauge, Gauges);
 
-        // 리스트와 큐에 추가
-        lvUpGaugesList.Add(gauge1);
-        lvUpGaugesList.Add(gauge2);
-
-        lvUpGaugesQueue.Enqueue(gauge1);
-        lvUpGaugesQueue.Enqueue(gauge2);   
+        lvUpGauges.Add(gauge1);
+        lvUpGauges.Add(gauge2);
     }
 
     public void SetPopup()
     {
-        price = CalculateLevelUpCost(userData.eggLv);
+        if (!isLvUpMode) // Lv업 게이지
+        {
+            Desc.text = descs[0];
+            price = CalculateLevelUpCost(userData.eggLv);
+            PriceTxt.text = price.ToString();
+            LvUpBtn.interactable = false;
+        }
+        else // Lv업 중
+        {
+            Desc.text = descs[1];
+        }      
     }
 
     public int CalculateLevelUpCost(int level)
@@ -54,16 +64,17 @@ public class UIEggLvPopup : UIBase
     public void OnClickGaugeUpBtn()
     {
         if (userData.gold >= price)
+            lvUpGauges[userData.fullGaugeCnt++].GaugeUp();
+
+        if(userData.fullGaugeCnt == lvUpGauges.Count)
         {
-            // 큐의 앞쪽 요소를 확인하고 처리
-            LvUpGauge gauge = lvUpGaugesQueue.Peek();
-            if (!gauge.IsFull)
-            {
-                gauge.GaugeUp();
-                // 큐의 앞쪽 요소를 제거하고 다시 추가하여 순서를 유지
-                lvUpGaugesQueue.Dequeue();
-                lvUpGaugesQueue.Enqueue(gauge);
-            }
+            LvUpBtn.interactable = true;
+            GaugeUpBtn.interactable = false;
         }
+    }
+
+    public void OnClickLvUpBtn()
+    {
+        SaveManager.Instance.SetDeltaData(nameof(userData.eggLv), 1);
     }
 }
