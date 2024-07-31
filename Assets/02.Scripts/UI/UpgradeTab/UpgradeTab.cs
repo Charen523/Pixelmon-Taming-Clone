@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class UpgradeTab : UIBase
@@ -10,51 +9,14 @@ public class UpgradeTab : UIBase
 
     #region UI
     [SerializeField] private UpgradeSlot[] upgradeSlots;
-
-
     #endregion
 
     #region Tab Fields & Properties
 
-    private int _mulValue;
-    private int MulValue
-    {
-        get
-        {
-            return _mulValue;
-        }
-        set
-        {
-            if (_mulValue != value)
-            {
-                _mulValue = value;
-            }
-        }
-    }
+    private int mulValue;
 
-    public int[] UpgradeLvs
-    {
-        get
-        {
-            return SaveManager.Instance.userData.UpgradeLvs;
-        }
-
-        set
-        {
-            SaveManager.Instance.SetData(nameof(SaveManager.Instance.userData.UpgradeLvs), value);
-        }
-    }
-    public int this[int index]
-    {
-        get
-        {
-            return UpgradeLvs[index];
-        }
-        set
-        {
-            UpgradeLvs[index] = value;
-        }
-    }
+    private int[] upgradeLvs => SaveManager.Instance.userData.UpgradeLvs;
+    
     #endregion
 
     private void Awake()
@@ -62,6 +24,8 @@ public class UpgradeTab : UIBase
         for (int i = 0; i < upgradeSlots.Length; i++)
         {
             upgradeSlots[i].upgradeTab = this;
+            upgradeSlots[i].slotIndex = (UpgradeIndex)i;
+            upgradeSlots[i].CurLv = upgradeLvs[i];
         }
     }
 
@@ -70,9 +34,13 @@ public class UpgradeTab : UIBase
         upgradeStat = PixelmonManager.Instance.upgradeStatus;
     }
 
-
     public void CurrentToggle(int toggleIndex)
     {
-        MulValue = toggleIndex;
+        mulValue = toggleIndex;
+
+        for (int i = 0; i < upgradeSlots.Length; i++)
+        {
+            upgradeSlots[i].CalculatePrice(mulValue);
+        }
     }
 }

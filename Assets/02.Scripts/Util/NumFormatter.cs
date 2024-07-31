@@ -1,10 +1,10 @@
 public static class NumberFormatter
 {
-    public static string FormatIntNum(int number)
+    public static string FormatIntNum(float number)
     {
         if (number < 1000)
         {
-            return number.ToString();
+            return number.ToString("0.##");
         }
 
         int alphabetIndex = 0;

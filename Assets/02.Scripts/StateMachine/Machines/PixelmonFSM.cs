@@ -1,11 +1,7 @@
-
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class PixelmonFSM : FSM
 {
@@ -19,7 +15,7 @@ public class PixelmonFSM : FSM
     #endregion
 
     Coroutine attackCoroutine;
-    float attackSpeed = 1;
+    float attackSpeed = 2f; //패시브 쪽에서 만약 관련 패시브 보유한 픽셀몬이 장착되면 여기서 빼주기.
     WaitUntil waitAttack;
     float coolTime = 0;
     float minDistance;
@@ -50,7 +46,7 @@ public class PixelmonFSM : FSM
                 {
                     Vector2 direction = enemies[i].transform.position - transform.position;
                     float damage = pixelmon.status.GetTotalDamage(pixelmon.myData);
-                    PoolManager.Instance.SpawnFromPool<ProjectileController>("ATV00000").GetAttackSign(transform.position, direction, damage, minDistance, 10);
+                    PoolManager.Instance.SpawnFromPool<ProjectileController>("ATV00000").GetAttackSign(transform.position, direction, damage, minDistance, 1 / attackSpeed * 5);
                 };
             }
             yield return waitAttack;

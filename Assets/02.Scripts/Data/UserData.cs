@@ -26,7 +26,7 @@ public class UserData
 
     //public string curQuestRcode;
 
-    public int[] UpgradeLvs = { 1, 1, 1, 1, 1, 1, 1, 1 };
+    public int[] UpgradeLvs = { 1, 1, 1, 1, 1, 1, 1};
     public bool[] isLockedSlot = {false, false, false, true, true};
     public MyPixelmonData[] equippedPxms = new MyPixelmonData[5];
     public MyPixelmonData[] ownedPxms = new MyPixelmonData[20];
