@@ -6,7 +6,7 @@ public class AtkUpgradeSlot : UpgradeSlot
     protected override void SetTxt()
     {
         slotLevelTxt.text = "Lv." + CurLv.ToString();
-        slotValueTxt.text = CalculateTool.NumFormatter(Mathf.RoundToInt(CurValue * 10)); //출력할 때만 * 10 값으로: 픽셀몬 기본공격값.
+        slotValueTxt.text = CalculateTool.NumFormatter(Mathf.RoundToInt(CurValue));
         SetGoldTxt();
     }
     #endregion
@@ -14,12 +14,12 @@ public class AtkUpgradeSlot : UpgradeSlot
     #region Value
     protected override float CalculateValue(int reachLv)
     {
-        throw new System.NotImplementedException();
+        return reachLv;
     }
     #endregion
 
     #region Price
-    public override void CalculatePrice(int mulValue)
+    public override void CalculatePrice(int mulValue) //next 3종 새로고침.
     {
         curMulValue = mulValue;
 
@@ -29,22 +29,25 @@ public class AtkUpgradeSlot : UpgradeSlot
         }
         else
         {
-            curBtnLv = CurLv + mulValue;
-            curBtnPrice = CalculateTool.GetAtkTotalPrice(CurLv, curBtnLv);
+            nextLv = CurLv + mulValue;
+            nextValue = CalculateValue(nextLv);
+            nextPrice = CalculateTool.GetAtkTotalPrice(CurLv, nextLv);
         }
-
         SetGoldTxt();
     }
 
     protected override void FindMaxPrice()
     {
-        curBtnLv = CurLv;
+        nextLv = CurLv;
         do
         {
-            curBtnLv++;
-            curBtnPrice = CalculateTool.GetAtkTotalPrice(CurLv, curBtnLv);
+            nextLv++;
+            nextPrice = CalculateTool.GetAtkTotalPrice(CurLv, nextLv);
         }
-        while (CalculateTool.GetAtkTotalPrice(CurLv, curBtnLv + 1) <= curGold);
+        while (CalculateTool.GetAtkTotalPrice(CurLv, nextLv + 1) <= ownGold);
+
+        nextValue = CalculateValue(nextLv);
+        SetGoldTxt();
     }
     #endregion
 }
