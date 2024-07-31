@@ -7,7 +7,7 @@ public static class SequenceTool
         return startValue + ((reachLv - startLv) * commonDiff);
     }
 
-    public static float SumRateSeries(float startValue, int startLv, int reachLv, float multiplier = 1)
+    public static float SumRateSeries(float startValue, int startLv, int reachLv, float multiplier)
     {
         return startValue * (Mathf.Pow(multiplier, reachLv - startLv) - 1) / (multiplier - 1);
     }
