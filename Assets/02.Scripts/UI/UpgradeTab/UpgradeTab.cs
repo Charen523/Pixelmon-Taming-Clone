@@ -25,7 +25,6 @@ public class UpgradeTab : UIBase
         for (int i = 0; i < upgradeSlots.Length; i++)
         {
             upgradeSlots[i].upgradeTab = this;
-            upgradeSlots[i].slotIndex = (UpgradeIndex)i;
             upgradeSlots[i].CurLv = upgradeLvs[i];
         }
     }
@@ -47,6 +46,8 @@ public class UpgradeTab : UIBase
 
     public void SetUpgradeLvs(int index, int curLv)
     {
-        SaveManager.Instance.userData.UpgradeLvs[index] = curLv;
+        int[] newUpgradeLvs = SaveManager.Instance.userData.UpgradeLvs;
+        newUpgradeLvs[index] = curLv;
+        SaveManager.Instance.SetData(nameof(SaveManager.Instance.userData.UpgradeLvs), newUpgradeLvs);
     }
 }
