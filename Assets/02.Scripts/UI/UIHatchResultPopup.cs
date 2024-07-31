@@ -30,9 +30,9 @@ public class UIHatchResultPopup : UIBase
     #endregion
     #region 능력치 UI
     [Header("능력치 UI")]
-    [SerializeField] private TextMeshProUGUI NewAtkValueTxt;
+    [SerializeField] private TextMeshProUGUI AtkValueTxt;
     [SerializeField] private TextMeshProUGUI TraitTypeTxt;
-    [SerializeField] private TextMeshProUGUI NewTraitValueTxt;
+    [SerializeField] private TextMeshProUGUI TraitValueTxt;
 
     [SerializeField] private UIPxmPsv[] Psv = new UIPxmPsv[4];
 
@@ -56,9 +56,15 @@ public class UIHatchResultPopup : UIBase
         rateBg.sprite = PxmRankImgUtil.GetRankImage(uiMiddleBar.Rank, rateBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
         pixelmonBg.sprite = PxmRankImgUtil.GetRankImage(uiMiddleBar.Rank, pixelmonBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
         pixelmonImg.sprite = uiMiddleBar.HatchedPixelmonImg.sprite;
-        #endregion        
+        #endregion
 
         #region 이미 가지고 있는 픽셀몬인지 체크 & 픽셀몬 능력치 UI
+        AtkValueTxt.text = uiMiddleBar.HatchPxmData.basePerAtk.ToString("F2");
+        TraitTypeTxt.text = uiMiddleBar.HatchPxmData.trait.TranslateTraitString();
+        TraitValueTxt.text = uiMiddleBar.HatchPxmData.traitValue.ToString("F2");
+        OwnHpValueTxt.text = uiMiddleBar.HatchPxmData.basePerHp.ToString("F2");
+        OwnDefenseValueTxt.text = uiMiddleBar.HatchPxmData.basePerDef.ToString("F2");
+
         isOwnedPxm = false;
         foreach (var data in userData.ownedPxms)
         {
@@ -82,12 +88,6 @@ public class UIHatchResultPopup : UIBase
             SetFirstPsvValue();
             FirstPxmUI();
         }
-
-        NewAtkValueTxt.text = uiMiddleBar.HatchPxmData.basePerAtk.ToString("F2");
-        TraitTypeTxt.text = uiMiddleBar.HatchPxmData.trait.TranslateTraitString();
-        NewTraitValueTxt.text = uiMiddleBar.HatchPxmData.traitValue.ToString("F2");
-        OwnHpValueTxt.text = uiMiddleBar.HatchPxmData.basePerHp.ToString("F2");
-        OwnDefenseValueTxt.text = uiMiddleBar.HatchPxmData.basePerDef.ToString("F2");
         #endregion
     }
 
@@ -148,6 +148,7 @@ public class UIHatchResultPopup : UIBase
     {
         if (isReplaceBtn && isOwnedPxm == true) // 교체하기(교체 및 수집)
         {
+            ReplacePsv();
         }
         else // 수집하기
         {
@@ -192,6 +193,10 @@ public class UIHatchResultPopup : UIBase
     private void GetRepetition()
     {
         saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "evolvedCount", ++userData.ownedPxms[uiMiddleBar.HatchPxmData.id].evolvedCount);
+    }
+
+    private void ReplacePsv()
+    {
         List<PsvSkill> newPsvs = new List<PsvSkill>();
         for (int i = 0; i < hatchedPxmData.psvSkill.Count; i++)
         {
@@ -204,6 +209,5 @@ public class UIHatchResultPopup : UIBase
             });
         }
         saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "psvSkill", newPsvs);
-        PixelmonManager.Instance.UnLockedPixelmon(uiMiddleBar.HatchPxmData.id);
     }
 }
