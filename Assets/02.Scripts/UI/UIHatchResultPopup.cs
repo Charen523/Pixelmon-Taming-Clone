@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,11 +46,10 @@ public class UIHatchResultPopup : UIBase
     private SaveManager saveManager => SaveManager.Instance;
     private MyPixelmonData hatchedPxmData;
     private bool isOwnedPxm;
-
-    private void OnEnable()
+    
+    public void SetPopup()
     {
         uiMiddleBar = UIManager.Get<UIMiddleBar>();
-
         #region 소환된 픽셀몬 정보 UI        
         pxmName.text = uiMiddleBar.HatchPxmData.name;
         rateTxt.text = UIUtils.TranslateRank(uiMiddleBar.Rank);
@@ -67,7 +65,7 @@ public class UIHatchResultPopup : UIBase
             if (uiMiddleBar.HatchPxmData.rcode == data.rcode)
             {
                 isOwnedPxm = true;
-                hatchedPxmData = data;
+                hatchedPxmData = data;                
                 break;
             }
         }
@@ -75,6 +73,7 @@ public class UIHatchResultPopup : UIBase
         if (isOwnedPxm)
         {
             rePlaceBtn.gameObject.SetActive(true);
+            SetNewPsvValue();
             OwnedPxmUI();
         }
         else
@@ -84,21 +83,40 @@ public class UIHatchResultPopup : UIBase
             FirstPxmUI();
         }
 
-        NewAtkValueTxt.text = uiMiddleBar.HatchPxmData.basePerAtk.ToString();
+        NewAtkValueTxt.text = uiMiddleBar.HatchPxmData.basePerAtk.ToString("F2");
         TraitTypeTxt.text = uiMiddleBar.HatchPxmData.trait.TranslateTraitString();
-        NewTraitValueTxt.text = uiMiddleBar.HatchPxmData.traitValue.ToString();
-        OwnHpValueTxt.text = uiMiddleBar.HatchPxmData.basePerHp.ToString();
-        OwnDefenseValueTxt.text = uiMiddleBar.HatchPxmData.basePerDef.ToString();
+        NewTraitValueTxt.text = uiMiddleBar.HatchPxmData.traitValue.ToString("F2");
+        OwnHpValueTxt.text = uiMiddleBar.HatchPxmData.basePerHp.ToString("F2");
+        OwnDefenseValueTxt.text = uiMiddleBar.HatchPxmData.basePerDef.ToString("F2");
         #endregion
     }
+
+    private void SetNewPsvValue()
+    {
+        for (int i = 0; i < hatchedPxmData.psvSkill.Count; i++)
+        {
+            var psvData = DataManager.Instance.GetData<BasePsvData>(hatchedPxmData.psvSkill[i].psvName);
+            var randAbility = RandAbilityUtil.PerformAbilityGacha(hatchedPxmData.psvSkill[i].psvType, psvData.maxRate);
+            Psv[i].NewPsvRank = randAbility.AbilityRank;
+            Psv[i].NewPsvValue = randAbility.AbilityValue;
+        }
+    }
+
     private void OwnedPxmUI()
     {
         Psv[0].NewPsvRankTxt.gameObject.SetActive(true);
         Psv[0].OldPsvValueTxt.gameObject.SetActive(true);
         Psv[0].ArrowImg.gameObject.SetActive(true);
-        for (int i = 1; i <= 3; i++)
+        for (int i = 0; i <= hatchedPxmData.psvSkill.Count; i++)
         {
-            Psv[i].gameObject.SetActive(i * 2 - 1 <= hatchedPxmData.star);
+            Psv[i].gameObject.SetActive(true);
+
+            Psv[i].OldPsvRankTxt.text = hatchedPxmData.psvSkill[i].psvRank;
+            Psv[i].PsvNameTxt.text = hatchedPxmData.psvSkill[i].psvName;
+            Psv[i].OldPsvValueTxt.text = new StringBuilder().Append(hatchedPxmData.psvSkill[i].psvValue.ToString("F2")).Append('%').ToString();
+
+            Psv[i].NewPsvRankTxt.text = Psv[i].NewPsvRank.ToString();
+            Psv[i].NewPsvValueTxt.text = new StringBuilder().Append(Psv[i].NewPsvValue.ToString("F2")).Append('%').ToString();
         }
     }
 
@@ -106,6 +124,7 @@ public class UIHatchResultPopup : UIBase
     {
         var basePsvData = RandAbilityUtil.RandAilityData();
         var randAbility = RandAbilityUtil.PerformAbilityGacha((AbilityType)basePsvData.psvEnum, basePsvData.maxRate);
+        Psv[0].PsvType = (AbilityType)basePsvData.psvEnum;
         Psv[0].PsvName = basePsvData.rcode;
         Psv[0].NewPsvRank = randAbility.AbilityRank;
         Psv[0].NewPsvValue = randAbility.AbilityValue;
@@ -114,7 +133,7 @@ public class UIHatchResultPopup : UIBase
     {
         Psv[0].PsvNameTxt.text = Psv[0].PsvName;
         Psv[0].OldPsvRankTxt.text = Psv[0].NewPsvRank.ToString();
-        Psv[0].NewPsvValueTxt.text = new StringBuilder().Append(Psv[0].NewPsvValue).Append('%').ToString();
+        Psv[0].NewPsvValueTxt.text = new StringBuilder().Append(Psv[0].NewPsvValue.ToString("F2")).Append('%').ToString();
 
         Psv[0].NewPsvRankTxt.gameObject.SetActive(false);
         Psv[0].OldPsvValueTxt.gameObject.SetActive(false);
@@ -129,11 +148,9 @@ public class UIHatchResultPopup : UIBase
     {
         if (isReplaceBtn && isOwnedPxm == true) // 교체하기(교체 및 수집)
         {
-            Debug.Log("ReplaceBtn");
         }
         else // 수집하기
         {
-            Debug.Log("CollectBtn");
             if (!isOwnedPxm)
                 GetFirst();
             else
@@ -146,15 +163,47 @@ public class UIHatchResultPopup : UIBase
 
     private void GetFirst()
     {
+        #region Init Value
+        List<PsvSkill> firstPsv = new List<PsvSkill>();
+        firstPsv.Add(new PsvSkill
+        {
+            psvType = Psv[0].PsvType,
+            psvName = Psv[0].PsvName,
+            psvRank = Psv[0].NewPsvRank,
+            psvValue = Psv[0].NewPsvValue
+        });
+
+        float[] ownEffectValue = { uiMiddleBar.HatchPxmData.basePerHp, uiMiddleBar.HatchPxmData.basePerDef };
+        #endregion
+
+        #region Update Value
         saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "rcode", uiMiddleBar.HatchPxmData.rcode);
         saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "id", uiMiddleBar.HatchPxmData.id);
         saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "isOwned", true);
+        saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "atkValue", uiMiddleBar.HatchPxmData.basePerAtk);
+        saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "traitType", uiMiddleBar.HatchPxmData.trait.TranslateTraitString());
+        saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "traitValue", uiMiddleBar.HatchPxmData.traitValue);
+        saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "psvSkill", firstPsv);
+        saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "ownEffectValue", ownEffectValue);
         PixelmonManager.Instance.UnLockedPixelmon(uiMiddleBar.HatchPxmData.id);
+        #endregion
     }
 
     private void GetRepetition()
     {
         saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "evolvedCount", ++userData.ownedPxms[uiMiddleBar.HatchPxmData.id].evolvedCount);
+        List<PsvSkill> newPsvs = new List<PsvSkill>();
+        for (int i = 0; i < hatchedPxmData.psvSkill.Count; i++)
+        {
+            newPsvs.Add(new PsvSkill
+            {
+                psvType = hatchedPxmData.psvSkill[i].psvType,
+                psvName = hatchedPxmData.psvSkill[i].psvName,
+                psvRank = Psv[i].NewPsvRank,
+                psvValue = Psv[i].NewPsvValue
+            });
+        }
+        saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "psvSkill", newPsvs);
         PixelmonManager.Instance.UnLockedPixelmon(uiMiddleBar.HatchPxmData.id);
     }
 }

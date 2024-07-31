@@ -58,7 +58,7 @@ public class DataManager : GSpreadReader<DataManager>
 
     public T GetData<T>(string rcode) where T : class, IData
     {
-        return (T)dataDics[rcode.Split(' ')[0]];
+        return (T)dataDics[rcode];
     }
 
     public override void AddDataDics<T>(List<T> datas)

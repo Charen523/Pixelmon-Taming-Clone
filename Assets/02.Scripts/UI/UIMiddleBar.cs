@@ -100,6 +100,7 @@ public class UIMiddleBar : UIBase
 
         HatchedPixelmonImg.gameObject.SetActive(true);
         HatchResultPopup.SetActive(true);
+        HatchResultPopup.SetPopup();
 
         yield return getPixelmon;
         yield return Gacha(); // 다음 알 셋팅
