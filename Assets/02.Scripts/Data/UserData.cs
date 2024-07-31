@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 [Serializable]
@@ -29,6 +30,9 @@ public class UserData
     public bool[] isLockedSlot = {false, false, false, true, true};
     public MyPixelmonData[] equippedPxms = new MyPixelmonData[5];
     public MyPixelmonData[] ownedPxms = new MyPixelmonData[20];
+
+    public int[] equippedSkills = new int[5];
+    public List<MyAtvData> ownedSkills = new List<MyAtvData>();
     //public string[] OwnedActiveSkills; 만약 스킬 강화 생기면 string-> 스킬로 바꾸기.
     public FieldData[] fieldDatas = new FieldData[6];
     //public int[] DungeonLvs = { 1, 1, 1 };

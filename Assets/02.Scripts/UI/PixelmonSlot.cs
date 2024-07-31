@@ -13,10 +13,8 @@ public class PixelmonSlot : MonoBehaviour
     protected RectTransform rectTr;
     [SerializeField]
     protected Button slotBtn;
-    [SerializeField]
-    protected Image slotIcon;
-    [SerializeField]
-    protected Image slotIconBg;
+    public Image slotIcon;
+    public Image slotIconBg;
     #endregion
 
     #region UI
@@ -54,10 +52,13 @@ public class PixelmonSlot : MonoBehaviour
         slotIconBg.color = Color.white;
         lvTxt.gameObject.SetActive(true);
         evolveSldr.gameObject.SetActive(true);
-
+        
         SetPxmLv();
         SetStars();
         SetEvolveSldr();
+        if(myPxmData.isEquipped)
+            equipIcon.SetActive(true);
+        else equipIcon.SetActive(false);
     }
 
     public void SetPxmLv()
