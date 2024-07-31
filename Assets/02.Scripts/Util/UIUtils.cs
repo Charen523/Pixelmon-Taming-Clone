@@ -92,20 +92,22 @@ public static class UIUtils
         }
     }
 
+    
     public static int GetEvolveValue(MyAtvData myData, ActiveData data)
     {
-        switch (data.rank)
+        string rankTxt = string.Format("{0}Rank", data.rank);
+        switch (myData.lv / 10)
         {
-            case "C":
-                return DataManager.Instance.GetData<EvolveData>(data.rank).star1;
-            case "B":
-                return DataManager.Instance.GetData<EvolveData>(data.rank).star2;
-            case "A":
-                return DataManager.Instance.GetData<EvolveData>(data.rank).star3;
-            case "S":
-                return DataManager.Instance.GetData<EvolveData>(data.rank).star4;
-            case "SS":
-                return DataManager.Instance.GetData<EvolveData>(data.rank).star5;
+            case 0:
+                return DataManager.Instance.GetData<EvolveData>(rankTxt).star1;
+            case 1:
+                return DataManager.Instance.GetData<EvolveData>(rankTxt).star2;
+            case 2:
+                return DataManager.Instance.GetData<EvolveData>(rankTxt).star3;
+            case 3:
+                return DataManager.Instance.GetData<EvolveData>(rankTxt).star4;
+            case 4:
+                return DataManager.Instance.GetData<EvolveData>(rankTxt).star5;
             default:
                 return 0;
         }
