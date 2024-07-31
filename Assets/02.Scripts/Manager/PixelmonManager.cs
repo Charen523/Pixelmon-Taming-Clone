@@ -37,13 +37,13 @@ public class PixelmonManager : Singleton<PixelmonManager>
     {
         int[] upgradeArr = userData.UpgradeLvs;
 
-        upgradeStatus.Atk = SequenceTool.SumRateSeries(1, 0, upgradeArr[0], 1.616f);
-        upgradeStatus.Cri = SequenceTool.SumDiffSeries(0, 0, upgradeArr[1], 0.05f);
-        upgradeStatus.CriDmg = SequenceTool.SumDiffSeries(0, 0, upgradeArr[2], 0.5f);
-        upgradeStatus.Dmg = SequenceTool.SumDiffSeries(0, 0, upgradeArr[3], 0.1f);
-        upgradeStatus.SDmg = SequenceTool.SumDiffSeries(0, 0, upgradeArr[4], 0.2f);
-        upgradeStatus.SCri = SequenceTool.SumDiffSeries(0, 0, upgradeArr[5], 0.025f);
-        upgradeStatus.SCriDmg = SequenceTool.SumDiffSeries(0, 0, upgradeArr[6], 0.3f);
+        upgradeStatus.Atk = upgradeArr[0];
+        upgradeStatus.Cri = upgradeArr[1] * 0.05f;
+        upgradeStatus.CriDmg = upgradeArr[2] * 0.5f;
+        upgradeStatus.Dmg = upgradeArr[3] * 0.1f;
+        upgradeStatus.SDmg = upgradeArr[4] * 0.2f;
+        upgradeStatus.SCri = upgradeArr[5] * 0.025f;
+        upgradeStatus.SCriDmg = upgradeArr[6] * 0.3f;
     }
 
     private void InitEquippedPixelmon()
