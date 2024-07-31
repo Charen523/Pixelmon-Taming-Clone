@@ -100,7 +100,7 @@ public class UIMiddleBar : UIBase
 
         HatchedPixelmonImg.gameObject.SetActive(true);
         HatchResultPopup.SetActive(true);
-        HatchResultPopup.SetPopup();
+        HatchResultPopup.SetPopup(this);
 
         yield return getPixelmon;
         yield return Gacha(); // 다음 알 셋팅
@@ -151,6 +151,7 @@ public class UIMiddleBar : UIBase
     public void OnClickEggLvBtn()
     {
         EggLvPopup.SetActive(true);
+        EggLvPopup.SetPopup();
     }
 
     public void OnClickAutoBtn()

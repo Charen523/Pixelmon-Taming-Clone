@@ -47,9 +47,9 @@ public class UIHatchResultPopup : UIBase
     private MyPixelmonData hatchedPxmData;
     private bool isOwnedPxm;
     
-    public void SetPopup()
+    public void SetPopup(UIMiddleBar middleBar)
     {
-        uiMiddleBar = UIManager.Get<UIMiddleBar>();
+        uiMiddleBar = middleBar;
         #region 소환된 픽셀몬 정보 UI        
         pxmName.text = uiMiddleBar.HatchPxmData.name;
         rateTxt.text = UIUtils.TranslateRank(uiMiddleBar.Rank);

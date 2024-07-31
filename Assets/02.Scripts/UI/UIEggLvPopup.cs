@@ -19,7 +19,12 @@ public class UIEggLvPopup : UIBase
     private string[] descs = { "Lv업 게이지", "Lv업 중" };
     private int gaugeCnt = 1;
     private int price;
-    private UserData userData;
+    private UserData userData => SaveManager.Instance.userData;
+
+
+    private int baseGoldCost = 100; // 기본 골드 소모량
+    private int increaseRate = 50; // 골드 증가율
+
 
     private void Start()
     {
@@ -31,16 +36,19 @@ public class UIEggLvPopup : UIBase
         lvUpGaugesList.Add(gauge2);
 
         lvUpGaugesQueue.Enqueue(gauge1);
-        lvUpGaugesQueue.Enqueue(gauge2);
-
-        
-        
+        lvUpGaugesQueue.Enqueue(gauge2);   
     }
 
-    private void OnEnable()
+    public void SetPopup()
     {
-        userData = SaveManager.Instance.userData;
-        price = (int)Mathf.Pow(5000, userData.eggLv);
+        price = CalculateLevelUpCost(userData.eggLv);
+    }
+
+    public int CalculateLevelUpCost(int level)
+    {
+        // 계차 수열 방식으로 골드 소모량 계산
+        int goldCost = baseGoldCost + (level * (level + 1) / 2) * increaseRate;
+        return goldCost;
     }
 
     public void OnClickGaugeUpBtn()
