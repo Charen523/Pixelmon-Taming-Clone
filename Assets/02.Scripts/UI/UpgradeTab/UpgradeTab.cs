@@ -1,11 +1,12 @@
 using System;
+using System.Numerics;
 using UnityEngine;
 
 public class UpgradeTab : UIBase
 {
     private PixelmonStatus upgradeStat;
 
-    private int currentGold => SaveManager.Instance.userData.gold;
+    private BigInteger currentGold => SaveManager.Instance.userData.gold;
 
     #region UI
     [SerializeField] private UpgradeSlot[] upgradeSlots;
@@ -42,5 +43,10 @@ public class UpgradeTab : UIBase
         {
             upgradeSlots[i].CalculatePrice(mulValue);
         }
+    }
+
+    public void SetUpgradeLvs(int index, int curLv)
+    {
+        SaveManager.Instance.userData.UpgradeLvs[index] = curLv;
     }
 }

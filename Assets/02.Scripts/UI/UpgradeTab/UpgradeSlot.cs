@@ -1,3 +1,4 @@
+using System.Numerics;
 using TMPro;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ public class UpgradeSlot : MonoBehaviour
     [SerializeField] private GameObject GoldBtn; //만렙일 떄 비활성화
     #endregion
 
-    [SerializeField] protected float multiplier = 1.616f;
+    [SerializeField] protected float multiplier = 1.1f;
     [SerializeField] private float commonDiff;
 
     private int _curLv;
@@ -46,8 +47,7 @@ public class UpgradeSlot : MonoBehaviour
             if (_curLv != value)
             {
                 _curLv = value;
-                //UpgradeTab쪽의 배열 업데이트 실행
-                curLvPrice = MultiplyPrice(_curLv + 1);
+                upgradeTab.SetUpgradeLvs((int)slotIndex, value);
             }
 
             SetTxt();
@@ -56,7 +56,7 @@ public class UpgradeSlot : MonoBehaviour
     private int curBtnLv;
 
     /*upgrade Stat 수치.*/
-    private float _curValue;
+    [SerializeField] private float _curValue => CurLv;
     public float CurValue
     {
         get
@@ -65,15 +65,16 @@ public class UpgradeSlot : MonoBehaviour
         }
         set
         {
-            _curValue = value;
-            SetUpgradeStat(value);
+            //SetUpgradeStat(value);
         }
     }
     protected float nextValue;
 
-    private int curGold => SaveManager.Instance.userData.gold;
-    private int curLvPrice;
-    private int curBtnPrice;
+    private BigInteger curGold => SaveManager.Instance.userData.gold;
+    private BigInteger curLvPrice => CalculateTool.GetPrice(CurLv);
+    private BigInteger curBtnPrice;
+
+    private int curMulValue = 1;
 
     private void Start()
     {
@@ -85,10 +86,24 @@ public class UpgradeSlot : MonoBehaviour
     {
         curBtnLv = CurLv + 1;
 
-        CurValue = CalculateValue(CurLv);
+        if (CurLv == 1)
+        {
+            if (slotIndex == UpgradeIndex.Atk)
+            {
+                CurValue = 1;
+            }
+            else
+            {
+                CurValue = 0;
+            }
+        }
+        else
+        {
+            CurValue = CalculateValue(CurLv);
+        }
         nextValue = CalculateValue(curBtnLv);
 
-
+        CalculatePrice(curMulValue);
     }
 
     #region UI Methods
@@ -96,22 +111,28 @@ public class UpgradeSlot : MonoBehaviour
     {
         if (curBtnPrice <= curGold)
         {
-            SaveManager.Instance.SetDeltaData(nameof(SaveManager.Instance.userData.gold), -curBtnPrice);
+            SaveManager.Instance.SetGold(-curBtnPrice, true);
             CurLv = curBtnLv;
+            CalculatePrice(curMulValue);
+            SetTxt();
             //레벨 오르고 새로운 가격 PixelmonTab으로 보내고 BtnPrice 새로 계산.
         }
-    }
-    
-    protected virtual void SetTxt()
-    {
-        slotLevelTxt.text = "Lv." + CurLv.ToString();
-        slotValueTxt.text = NumberFormatter.FormatIntNum(CurValue) + "%";
-        SetGold();
+        else
+        {
+            Debug.LogWarning("돈 부족함!");
+        }
     }
 
-    protected void SetGold()
+    protected virtual void SetTxt()
     {
-        slotGoldTxt.text = NumberFormatter.FormatIntNum(curBtnPrice) + " G";
+        slotLevelTxt.text = "Lv. " + CurLv.ToString();
+        slotValueTxt.text = CurValue + "%";
+        SetGoldTxt();
+    }
+
+    protected void SetGoldTxt()
+    {
+        slotGoldTxt.text = CalculateTool.NumFormatter(curBtnPrice);
     }
     #endregion
 
@@ -122,7 +143,7 @@ public class UpgradeSlot : MonoBehaviour
         var upgradeStatType = PixelmonManager.Instance.upgradeStatus.GetType();
         var fieldInfo = upgradeStatType.GetField(fieldname);
         fieldInfo.SetValue(PixelmonManager.Instance.upgradeStatus, value);
-        
+
         //테스트용
         //Debug.Log(fieldInfo.GetValue(PixelmonManager.Instance.upgradeStatus));
     }
@@ -131,11 +152,11 @@ public class UpgradeSlot : MonoBehaviour
     {
         if (slotIndex == UpgradeIndex.Atk)
         {
-            return SequenceTool.SumRateSeries(CurValue, CurLv, reachLv, multiplier);
+            return CalculateTool.SumRateSeries(CurValue, CurLv, reachLv, multiplier);
         }
         else
         {
-            return SequenceTool.SumDiffSeries(CurValue, CurLv, reachLv, commonDiff);
+            return CalculateTool.SumDiffSeries(CurValue, CurLv, reachLv, commonDiff);
         }
     }
     #endregion
@@ -143,37 +164,30 @@ public class UpgradeSlot : MonoBehaviour
     #region Price Methods
     public void CalculatePrice(int mulValue)
     {
+        curMulValue = mulValue;
+
         if (mulValue == 0)
         {
-            curBtnPrice = MaxPrice();
+            FindMaxPrice();
         }
         else
         {
             curBtnLv = CurLv + mulValue;
-            curBtnPrice = MultiplyPrice(curBtnLv);
+            curBtnPrice = CalculateTool.GetTotalPrice(CurLv, curBtnLv);
         }
 
-        SetGold();
+        SetGoldTxt();
     }
-    
-    private int MultiplyPrice(int reachLv)
-    {
-        float totalCost = curLvPrice * (Mathf.Pow(multiplier, reachLv - CurLv) - 1) / (multiplier - 1);
-        return (int)totalCost;
-    }
-    
-    private int MaxPrice()
-    {
-        int btnPrice = curLvPrice;
-        curBtnLv = CurLv + 1;
 
-        while (btnPrice < curGold)
+    private void FindMaxPrice()
+    {
+        curBtnLv = CurLv;
+        do
         {
-            btnPrice = (int)(btnPrice * multiplier);
             curBtnLv++;
-        }
-
-        return btnPrice;
+            curBtnPrice = CalculateTool.GetTotalPrice(CurLv, curBtnLv);
+        } 
+        while (CalculateTool.GetTotalPrice(CurLv, curBtnLv + 1) <= curGold);
     }
     #endregion
 }
