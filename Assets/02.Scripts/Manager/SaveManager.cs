@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using System;
 using System.Threading.Tasks;
+using System.Numerics;
 
 public class SaveManager : Singleton<SaveManager>
 {
@@ -49,11 +50,13 @@ public class SaveManager : Singleton<SaveManager>
         if (File.Exists(userPath))
         {
             LoadFromJson(userPath);
+            userData.gold = BigInteger.Parse(userData._gold);
         }
         else if (File.Exists(initPath))
         {
             LoadFromJson(initPath);
             SaveToJson(userData, userPath);
+            userData.gold = BigInteger.Parse(userData._gold);
         }
         else
         {
@@ -123,6 +126,22 @@ public class SaveManager : Singleton<SaveManager>
         {
             Debug.LogWarning($"{field} 변수를 UserData에서 찾을 수 없습니다.");
         }
+    }
+
+    public void SetGold(BigInteger value, bool isDelta = false)
+    {
+        if (isDelta)
+        {
+            userData.gold += value;
+            userData._gold = userData.gold.ToString();
+        }
+        else
+        {
+            userData.gold = value;
+            userData._gold = value.ToString();
+        }
+
+        UIManager.Instance.InvokeUIChange(nameof(userData.gold));
     }
 
     public void GetRewards(string[] rcodes, int[] amounts, float[] rates = null)
