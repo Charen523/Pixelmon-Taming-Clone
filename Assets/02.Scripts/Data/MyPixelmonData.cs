@@ -25,10 +25,8 @@ public class MyPixelmonData
     public UnityAction activeSkill;
 
     //공격수치
-    public string atkRank;
     public float atkValue;
     //특성타입
-    public string traitRank;
     public string traitType;
     public float traitValue;
     //패시브 능력
@@ -52,7 +50,7 @@ public class MyPixelmonData
     public float FindType(AbilityType type)
     {
         var myType = psvSkill.Find((obj) => obj.psvType == type);
-        if(myType == null)
+        if (myType == null)
         {
             return 1;
         }

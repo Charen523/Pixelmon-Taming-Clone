@@ -30,9 +30,7 @@ public class UIPixelmonPopUp : UIBase
     [SerializeField] private Image pxmIcon;
     [SerializeField] private TextMeshProUGUI lvTxt;
 
-    [SerializeField] private TextMeshProUGUI atkRank;
     [SerializeField] private TextMeshProUGUI atkValue;
-    [SerializeField] private TextMeshProUGUI traitRank;
     [SerializeField] private TextMeshProUGUI traitType;
     [SerializeField] private TextMeshProUGUI traitValue;
 
@@ -239,9 +237,7 @@ public class UIPixelmonPopUp : UIBase
 
     public void SetStartEffect()
     {
-        atkRank.text = myData.atkRank;
         atkValue.text = string.Format("{0:F2}%",myData.atkValue);
-        traitRank.text = myData.traitRank;
         traitType.text = myData.traitType;
         traitValue.text = string.Format("{0:F2}%", myData.traitValue);
     }
