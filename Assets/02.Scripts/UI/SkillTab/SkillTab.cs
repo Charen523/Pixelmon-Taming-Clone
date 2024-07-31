@@ -47,7 +47,6 @@ public class SkillTab : UIBase
         userData = saveManager.userData;
         dataManager = DataManager.Instance;
         skillManager = SkillManager.Instance;
-
         InitTab();
         infoPopUp = await UIManager.Show<UISkillPopUp>();
     }
@@ -55,15 +54,16 @@ public class SkillTab : UIBase
     public void InitTab()
     {
         int index = 0;
-        for (int i = 0; i < dataManager.pixelmonData.data.Count; i++)
+         
+        for (int i = 0; i < dataManager.activeData.data.Count; i++)
         {
             SkillSlot slot = Instantiate(slotPrefab, contentTr);
-            //slot.InitSlot(this, dataManager.pixelmonData.data[i]);
-            if (userData.ownedPxms[i] != null && userData.ownedPxms[i].isOwned)
+            slot.InitSlot(this, dataManager.activeData.data[i]);
+            if (userData.ownedSkills.Count != 0 && userData.ownedSkills[i].isOwned)
             {
-                //slot.myPxmData = userData.ownedPxms[index++];
+                slot.myData = userData.ownedSkills[index++];
                 ownedData.Add(slot);
-                //slot.UpdateSlot();
+                slot.UpdateSlot();
             }
             else
             {
@@ -74,11 +74,12 @@ public class SkillTab : UIBase
 
         for (int i = 0; i < equipData.Length; i++)
         {
-            if (userData.equippedPxms.Length > i)
+            if (userData.equippedPxms.Length > i && userData.equippedPxms[i].isEquipped)
             {
-                //equipData[i].myPxmData = userData.equippedPxms[i];
+                equipData[i].myPxmData = userData.equippedPxms[i];
+                equipData[i].myAtvData = allData[userData.equippedSkills[i]].myData;
             }
-            //equipData[i].pxmtab = this;
+            equipData[i].skillTab = this;
         }
 
         OnOwnedToggle();
@@ -95,5 +96,22 @@ public class SkillTab : UIBase
     public void OnSkillPopUp()
     {
         infoPopUp.gameObject.SetActive(true);
+    }
+
+    public void OnEquip()
+    {
+
+    }
+
+    public void OnAllLvUp()
+    {
+        foreach (var data in ownedData)
+        {
+            if (data.myData.isAdvancable)
+            {
+                data.OnEvolved();
+                Debug.Log($"{data.myData.id} 합성완료");
+            }
+        }
     }
 }
