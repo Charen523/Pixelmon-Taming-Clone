@@ -146,7 +146,7 @@ public class SkillTab : UIBase, IPointerDownHandler
         }
         else
         {
-            allData[pxmLayout.dataIndex].UnEquipAction();
+            //allData[pxmLayout.dataInde].UnEquipAction();
         }
     }
 
