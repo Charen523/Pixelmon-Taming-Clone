@@ -1,8 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Linq;
 using TMPro;
-using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -247,7 +244,7 @@ public class UIPixelmonPopUp : UIBase
         //패시브 최대개수 4개
         for (int i = 0; i < 4; i++)
         {
-            if (i < myData.psvSkill.Count)
+            if (i < myData.psvSkill.Count && myData.psvSkill[i].psvName != null)
             {
                 psvObjects[i].SetActive(true);
                 psvRank[i].text = myData.psvSkill[i].psvRank;
