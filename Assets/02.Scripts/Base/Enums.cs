@@ -65,3 +65,11 @@ public enum DirtyUI
     UserExp,
     EggCount
 }
+
+public enum TabState
+{
+    Normal,
+    Equip,
+    UnEquip,
+    Empty
+}
