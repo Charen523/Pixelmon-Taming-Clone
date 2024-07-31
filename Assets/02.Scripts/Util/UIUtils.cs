@@ -91,4 +91,23 @@ public static class UIUtils
                 return 0;
         }
     }
+
+    public static int GetEvolveValue(MyAtvData myData, ActiveData data)
+    {
+        switch (data.rank)
+        {
+            case "C":
+                return DataManager.Instance.GetData<EvolveData>(data.rank).star1;
+            case "B":
+                return DataManager.Instance.GetData<EvolveData>(data.rank).star2;
+            case "A":
+                return DataManager.Instance.GetData<EvolveData>(data.rank).star3;
+            case "S":
+                return DataManager.Instance.GetData<EvolveData>(data.rank).star4;
+            case "SS":
+                return DataManager.Instance.GetData<EvolveData>(data.rank).star5;
+            default:
+                return 0;
+        }
+    }
 }

@@ -160,4 +160,17 @@ public class SaveManager : Singleton<SaveManager>
             Debug.LogWarning($"유효하지 않은 인덱스: {index}");
         }
     }
+
+    public void UpdateSkillData(int index, string field, object value)
+    {
+        if (index >= 0 && index < userData.ownedSkills.Count)
+        {
+            userData.ownedSkills[index].UpdateField(field, value);
+            isDirty = true;
+        }
+        else
+        {
+            Debug.LogWarning($"유효하지 않은 인덱스: {index}");
+        }
+    }
 }

@@ -36,7 +36,7 @@ public class GameManager : Singleton<GameManager>
     }
     public async void InitData()
     {
-        await DataManager.Instance.SetPixelmonData();
+        await DataManager.Instance.SetBaseData();
     }
 
     //public async void InitWorld()
