@@ -29,9 +29,23 @@ public class PixelmonManager : Singleton<PixelmonManager>
         player = Player.Instance;
         equipAction += Equipped;
         unEquipAction += UnEquipped;
+        InitUpgradeStatus();
         InitEquippedPixelmon();
     }
     
+    private void InitUpgradeStatus()
+    {
+        int[] upgradeArr = userData.UpgradeLvs;
+
+        upgradeStatus.Atk = SequenceTool.SumRateSeries(1, 1, upgradeArr[0], 1.616f);
+        upgradeStatus.Cri = SequenceTool.SumDiffSeries(0, 1, upgradeArr[1], 0.05f);
+        upgradeStatus.CriDmg = SequenceTool.SumDiffSeries(0, 1, upgradeArr[2], 0.5f);
+        upgradeStatus.Dmg = SequenceTool.SumDiffSeries(0, 1, upgradeArr[3], 0.1f);
+        upgradeStatus.SDmg = SequenceTool.SumDiffSeries(0, 1, upgradeArr[4], 0.2f);
+        upgradeStatus.SCri = SequenceTool.SumDiffSeries(0, 1, upgradeArr[5], 0.025f);
+        upgradeStatus.SCriDmg = SequenceTool.SumDiffSeries(0, 1, upgradeArr[6], 0.3f);
+    }
+
     private void InitEquippedPixelmon()
     {
         for (int i = 0; i < 5; i++)
