@@ -1,12 +1,26 @@
+using UnityEngine;
+
 public class OtherUpgradeSlot : UpgradeSlot
 {
+   [SerializeField] private float commonDiff;
+
+    #region UI
     protected override void SetTxt()
     {
         slotLevelTxt.text = "Lv. " + CurLv.ToString();
         slotValueTxt.text = CurValue + "%";
         SetGoldTxt();
     }
+    #endregion
 
+    #region Value
+    protected override float CalculateValue(int reachLv)
+    {
+        return reachLv * commonDiff;
+    }
+    #endregion
+
+    #region Price
     public override void CalculatePrice(int mulValue)
     {
         curMulValue = mulValue;
@@ -17,8 +31,9 @@ public class OtherUpgradeSlot : UpgradeSlot
         }
         else
         {
-            curBtnLv = CurLv + mulValue;
-            curBtnPrice = CalculateTool.GetAtkTotalPrice(CurLv, curBtnLv);
+            nextLv = CurLv + mulValue;
+            nextValue = CalculateValue(nextLv);
+            nextPrice = CalculateTool.GetTotalRatioPrice(CurLv, nextLv);
         }
 
         SetGoldTxt();
@@ -26,12 +41,16 @@ public class OtherUpgradeSlot : UpgradeSlot
 
     protected override void FindMaxPrice()
     {
-        curBtnLv = CurLv;
+        nextLv = CurLv;
         do
         {
-            curBtnLv++;
-            curBtnPrice = CalculateTool.GetAtkTotalPrice(CurLv, curBtnLv);
+            nextLv++;
+            nextPrice = CalculateTool.GetTotalRatioPrice(CurLv, nextLv);
         }
-        while (CalculateTool.GetAtkTotalPrice(CurLv, curBtnLv + 1) <= curGold);
+        while (CalculateTool.GetTotalRatioPrice(CurLv, nextLv + 1) <= ownGold);
+
+        nextValue = CalculateValue(nextLv);
+        SetGoldTxt();
     }
+    #endregion
 }
