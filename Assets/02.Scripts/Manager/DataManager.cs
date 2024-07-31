@@ -14,10 +14,11 @@ public class DataManager : GSpreadReader<DataManager>
     public GameData<EvolveData> evolveData;
     public GameData<AbilityRateData> abilityRateData;
     public GameData<BasePsvData> basePsvData;
+    public GameData<ActiveData> activeData;
     public Sprite[] bgIcons;
-
+    
     public bool isPxmInit;
-    public async Task SetPixelmonData()
+    public async Task SetBaseData()
     {
         foreach (var data in pixelmonData.data)
         {
@@ -46,6 +47,12 @@ public class DataManager : GSpreadReader<DataManager>
                     break;
             }
         }
+
+        foreach (var data in activeData.data)
+        {
+            data.icon = await ResourceManager.Instance.LoadAsset<Sprite>(data.rcode, eAddressableType.thumbnail);
+        }
+
         isPxmInit = true;
     }
 
