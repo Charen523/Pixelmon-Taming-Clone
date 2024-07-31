@@ -1,5 +1,5 @@
+using System;
 using System.Numerics;
-using UnityEngine;
 
 public static class CalculateTool
 {
@@ -31,22 +31,7 @@ public static class CalculateTool
 
         return totalPrice;
     }
-    #endregion
 
-    #region 등차수열
-    public static float GetFloatDiffSeries(int lv, float startValue, float diff)
-    {
-        if (startValue <= 0)
-        {
-            return 0;
-        }
-
-        return startValue + diff * (lv - 1);
-    }
-
-    #endregion
-
-    #region 등비수열
     public static BigInteger GetRatioPrice(int lv)
     {
         if (lv <= 0)
@@ -55,7 +40,8 @@ public static class CalculateTool
         }
 
         int basePrice = 1000;
-        BigInteger price = Mathf.RoundToInt( basePrice * Mathf.Pow(1.1f, lv - 1));
+        BigInteger factor = new BigInteger(Math.Pow(1.1, lv - 1));
+        BigInteger price = basePrice * factor;
         return price;
     }
 
@@ -66,12 +52,12 @@ public static class CalculateTool
         for (int i = startLv; i < endLv; i++)
         {
             totalPrice += GetRatioPrice(i);
+            Console.WriteLine(totalPrice);
         }
 
         return totalPrice;
     }
     #endregion
-    
 
     #region Translator
     /// <param name="number">float 값을 넣을 때는 Mathf.RoundToInt를 이용할 것.</param>
@@ -83,7 +69,7 @@ public static class CalculateTool
         }
 
         int alphabetIndex = 0;
-        
+
         while (number >= 1000000 && alphabetIndex < 26)
         {
             number /= 1000;
