@@ -3,18 +3,8 @@ using UnityEngine;
 
 public static class CalculateTool
 {
-    public static float SumDiffSeries(float startValue, int startLv, int reachLv, float commonDiff = 1)
-    {
-        return startValue + ((reachLv - startLv) * commonDiff);
-    }
-
-    public static float SumRateSeries(float startValue, int startLv, int reachLv, float multiplier)
-    {
-        return startValue * (Mathf.Pow(multiplier, reachLv - startLv) - 1) / (multiplier - 1);
-    }
-
-    #region Price Calculator
-    public static BigInteger GetPrice(int level)
+    #region Atk Price Calculator
+    public static BigInteger GetAtkPrice(int level)
     {
         if (level <= 0)
         {
@@ -30,18 +20,58 @@ public static class CalculateTool
         return price;
     }
 
-    public static BigInteger GetTotalPrice(int startLv, int endLv)
+    public static BigInteger GetAtkTotalPrice(int startLv, int endLv)
     {
         BigInteger totalPrice = 0;
 
         for (int i = startLv; i < endLv; i++)
         {
-            totalPrice += GetPrice(i);
+            totalPrice += GetAtkPrice(i);
         }
 
         return totalPrice;
     }
     #endregion
+
+    #region 등차수열
+    public static float GetFloatDiffSeries(int lv, float startValue, float diff)
+    {
+        if (startValue <= 0)
+        {
+            return 0;
+        }
+
+        return startValue + diff * (lv - 1);
+    }
+
+    #endregion
+
+    #region 등비수열
+    public static BigInteger GetRatioPrice(int lv)
+    {
+        if (lv <= 0)
+        {
+            return 0;
+        }
+
+        int basePrice = 1000;
+        BigInteger price = Mathf.RoundToInt( basePrice * Mathf.Pow(1.1f, lv - 1));
+        return price;
+    }
+
+    public static BigInteger GetTotalRatioPrice(int startLv, int endLv)
+    {
+        BigInteger totalPrice = 0;
+
+        for (int i = startLv; i < endLv; i++)
+        {
+            totalPrice += GetRatioPrice(i);
+        }
+
+        return totalPrice;
+    }
+    #endregion
+    
 
     #region Translator
     /// <param name="number">float 값을 넣을 때는 Mathf.RoundToInt를 이용할 것.</param>

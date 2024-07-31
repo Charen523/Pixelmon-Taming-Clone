@@ -13,7 +13,7 @@ public enum UpgradeIndex
     SCriDmg
 }
 
-public class UpgradeSlot : MonoBehaviour
+public abstract class UpgradeSlot : MonoBehaviour
 {
     public UpgradeTab upgradeTab;
     public UpgradeIndex slotIndex;
@@ -71,7 +71,7 @@ public class UpgradeSlot : MonoBehaviour
     protected float nextValue;
 
     private BigInteger curGold => SaveManager.Instance.userData.gold;
-    private BigInteger curLvPrice => CalculateTool.GetPrice(CurLv);
+    private BigInteger curLvPrice => CalculateTool.GetAtkPrice(CurLv);
     private BigInteger curBtnPrice;
 
     private int curMulValue = 1;
@@ -123,12 +123,7 @@ public class UpgradeSlot : MonoBehaviour
         }
     }
 
-    protected virtual void SetTxt()
-    {
-        slotLevelTxt.text = "Lv. " + CurLv.ToString();
-        slotValueTxt.text = CurValue + "%";
-        SetGoldTxt();
-    }
+    protected abstract void SetTxt();
 
     protected void SetGoldTxt()
     {
@@ -143,51 +138,13 @@ public class UpgradeSlot : MonoBehaviour
         var upgradeStatType = PixelmonManager.Instance.upgradeStatus.GetType();
         var fieldInfo = upgradeStatType.GetField(fieldname);
         fieldInfo.SetValue(PixelmonManager.Instance.upgradeStatus, value);
-
-        //테스트용
-        //Debug.Log(fieldInfo.GetValue(PixelmonManager.Instance.upgradeStatus));
     }
 
-    protected virtual float CalculateValue(int reachLv)
-    {
-        if (slotIndex == UpgradeIndex.Atk)
-        {
-            return CalculateTool.SumRateSeries(CurValue, CurLv, reachLv, multiplier);
-        }
-        else
-        {
-            return CalculateTool.SumDiffSeries(CurValue, CurLv, reachLv, commonDiff);
-        }
-    }
+    protected abstract float CalculateValue(int reachLv);
     #endregion
 
     #region Price Methods
-    public void CalculatePrice(int mulValue)
-    {
-        curMulValue = mulValue;
-
-        if (mulValue == 0)
-        {
-            FindMaxPrice();
-        }
-        else
-        {
-            curBtnLv = CurLv + mulValue;
-            curBtnPrice = CalculateTool.GetTotalPrice(CurLv, curBtnLv);
-        }
-
-        SetGoldTxt();
-    }
-
-    private void FindMaxPrice()
-    {
-        curBtnLv = CurLv;
-        do
-        {
-            curBtnLv++;
-            curBtnPrice = CalculateTool.GetTotalPrice(CurLv, curBtnLv);
-        } 
-        while (CalculateTool.GetTotalPrice(CurLv, curBtnLv + 1) <= curGold);
-    }
+    public abstract void CalculatePrice(int mulValue);
+    protected abstract void FindMaxPrice();
     #endregion
 }
