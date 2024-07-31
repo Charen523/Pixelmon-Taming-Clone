@@ -4,7 +4,7 @@ public static class NumberFormatter
     {
         if (number < 1000)
         {
-            return number.ToString();
+            return number.ToString("0.##");
         }
 
         int alphabetIndex = 0;
