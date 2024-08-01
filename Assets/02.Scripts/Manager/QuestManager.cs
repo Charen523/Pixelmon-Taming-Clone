@@ -44,9 +44,9 @@ public class QuestManager : Singleton<QuestManager>
         int status;
         int goal = 1;
 
-        if (!int.TryParse(curQGoal, out goal))
+        if (!int.TryParse(curQData.goal, out goal))
         {
-            status = (curQStatus == curQGoal)? 1 : 0;
+            status = (curQStatus == curQData.goal) ? 1 : 0; //클리어 판독기로 변경.
         }
         else
         {
