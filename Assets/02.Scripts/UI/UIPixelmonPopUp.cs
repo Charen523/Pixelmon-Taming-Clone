@@ -27,6 +27,11 @@ public class UIPixelmonPopUp : UIBase
     [SerializeField] private Image pxmIcon;
     [SerializeField] private TextMeshProUGUI lvTxt;
 
+    [SerializeField] private Button skillBtn;
+    [SerializeField] private GameObject[] objSkill;
+    [SerializeField] private Image skillIcon;
+    [SerializeField] private TextMeshProUGUI skillName;
+
     [SerializeField] private TextMeshProUGUI atkValue;
     [SerializeField] private TextMeshProUGUI traitType;
     [SerializeField] private TextMeshProUGUI traitValue;
@@ -238,6 +243,23 @@ public class UIPixelmonPopUp : UIBase
         traitType.text = myData.traitType;
         traitValue.text = string.Format("{0:F2}%", myData.traitValue);
     }
+
+    public void SetPxmSkill()
+    {
+        if (myData.atvSkillId != -1)
+        {
+            objSkill[0].SetActive(true);
+            objSkill[1].SetActive(false);
+            skillIcon.sprite = SkillManager.Instance.skillTab.allData[myData.atvSkillId].atvData.icon;
+            skillName.text = SkillManager.Instance.skillTab.allData[myData.atvSkillId].atvData.name;
+        }
+        else
+        {
+            objSkill[0].SetActive(false);
+            objSkill[1].SetActive(true);
+        }
+    }
+
 
     public void SetPsvEffect()
     {
