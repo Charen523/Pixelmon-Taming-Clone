@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,18 +27,20 @@ public class UIEggLvPopup : UIBase
     #endregion
 
     #region Lv업 중
-    [SerializeField] private GameObject Time;
+    [SerializeField] private GameObject Clock;
     [SerializeField] private GameObject Skip;
     [SerializeField] private TextMeshProUGUI TimeTxt;
     private float totalTime => userData.eggLv * 1800f; // 레벨*30분
+    private float remainingTime;
     #endregion
 
     private string[] descs = { "Lv업 게이지", "Lv업 중" };       
-    private UserData userData => SaveManager.Instance.userData;
+    private SaveManager SaveManager;
+    private UserData userData;
 
     private void Start()
     {
-        Debug.Log("start fullGaugeCnt : " + userData.fullGaugeCnt);
+        Debug.Log("Start userData.isLvUpMode : " + userData.isLvUpMode);
         UpdateLvAndRateUI();
 
         if (userData.isLvUpMode) // Lv업 중
@@ -49,9 +53,15 @@ public class UIEggLvPopup : UIBase
         }
     }
 
-    public void SetPopup()
+    private void OnEnable()
     {
-  
+        SaveManager = SaveManager.Instance;
+        userData = SaveManager.userData;
+        Debug.Log("OnEnable userData.isLvUpMode : " + userData.isLvUpMode);
+        if (userData.isLvUpMode) // Lv업 중
+        {
+            StartCoroutine(UpdateTimer());
+        }
     }
 
     public int CalculateLevelUpCost(int level)
@@ -74,18 +84,6 @@ public class UIEggLvPopup : UIBase
         }
     }
 
-    public void OnClickLvUpBtn()
-    {
-        SaveManager.Instance.SetDeltaData(nameof(userData.eggLv), 1);
-        SaveManager.Instance.SetData(nameof(userData.fullGaugeCnt), 0);
-
-        UpdateLvAndRateUI();
-        SetLvUpMode();
-
-        if (userData.eggLv / 5 == 0)
-            lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
-    }
-
     private void UpdateLvAndRateUI()
     {
         CurLvNum.text = userData.eggLv.ToString();
@@ -94,12 +92,12 @@ public class UIEggLvPopup : UIBase
 
     private void SetGaugeMode()
     {
-        SaveManager.Instance.SetData(nameof(userData.isLvUpMode), false);
+        SaveManager.SetData(nameof(userData.isLvUpMode), false);
         Desc.text = descs[0];
 
         Gauges.gameObject.SetActive(true);
         GaugeAndLvUp.SetActive(true);
-        Time.SetActive(false);
+        Clock.SetActive(false);
         Skip.SetActive(false);
 
         for (int i = 0; i < userData.eggLv / 5 + 2; i++)
@@ -110,17 +108,86 @@ public class UIEggLvPopup : UIBase
         LvUpBtn.interactable = false;
     }
 
-    private void SetLvUpMode()
+    public void SetLvUpMode()
     {
-        SaveManager.Instance.SetData(nameof(userData.isLvUpMode), true);
         Desc.text = descs[1];
-
+        SaveManager.SetData(nameof(userData.isLvUpMode), true);
+        SaveManager.SetData(nameof(userData.fullGaugeCnt), 0);
         foreach (var gauge in lvUpGauges)
             gauge.ResetGauge();
 
         Gauges.gameObject.SetActive(false);
         GaugeAndLvUp.SetActive(false);
-        Time.SetActive(true);
+        Clock.SetActive(true);
         Skip.SetActive(true);
+
+        // 앱이 다시 시작될 때 경과된 시간 계산
+        DateTime lastQuitTime;
+        if (DateTime.TryParse(userData.lastLvUpTime, out lastQuitTime))
+        {
+            TimeSpan elapsedTime = DateTime.Now - lastQuitTime;
+            remainingTime = totalTime - (float)elapsedTime.TotalSeconds;
+            if (remainingTime <= 0) // 시간이 이미 지났다면 바로 레벨 업
+            {   
+                remainingTime = 0;
+                LvUp();
+                return;
+            }
+        }
+        else
+        {
+            remainingTime = totalTime;
+        }
+        StartCoroutine(UpdateTimer());
+    }
+
+    private void LvUp()
+    {
+        SaveManager.SetData(nameof(userData.lastLvUpTime), null);
+        SaveManager.SetDeltaData(nameof(userData.eggLv), 1);
+        if (userData.eggLv % 5 == 0)
+            lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
+        UpdateLvAndRateUI();       
+        SetGaugeMode();
+    }
+
+    private IEnumerator UpdateTimer()
+    {
+        while (remainingTime > 0)
+        {
+            remainingTime -= 1f; // 1초마다 감소
+            UpdateTimerText();
+            yield return new WaitForSeconds(1f); // 1초 대기
+        }
+        remainingTime = 0;
+        UpdateTimerText();
+        LvUp();
+    }
+
+    private void UpdateTimerText()
+    {
+        int hours = Mathf.FloorToInt(remainingTime / 3600f);
+        int minutes = Mathf.FloorToInt((remainingTime % 3600f) / 60f);
+        int seconds = Mathf.FloorToInt(remainingTime % 60f);
+
+        TimeTxt.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+    }
+
+    private void OnDisable()
+    {
+        if (userData.isLvUpMode)
+        {
+            SaveManager.SetData(nameof(userData.lastLvUpTime), DateTime.Now.ToString());
+            StopCoroutine(UpdateTimer());
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (userData.isLvUpMode)
+        {
+            SaveManager.SetData(nameof(userData.lastLvUpTime), DateTime.Now.ToString());
+            StopCoroutine(UpdateTimer());
+        }
     }
 }

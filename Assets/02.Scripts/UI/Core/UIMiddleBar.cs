@@ -151,7 +151,6 @@ public class UIMiddleBar : UIBase
     public void OnClickEggLvBtn()
     {
         EggLvPopup.SetActive(true);
-        EggLvPopup.SetPopup();
     }
 
     public void OnClickAutoBtn()
