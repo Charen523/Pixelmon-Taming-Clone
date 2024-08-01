@@ -29,6 +29,7 @@ public class UserData
     public int curStageCount = 0;
 
     public string questId = "R000_Q1";
+    public string questProgress = "1";
 
     public int[] UpgradeLvs = { 1, 1, 1, 1, 1, 1, 1};
     public bool[] isLockedSlot = {false, false, false, true, true};

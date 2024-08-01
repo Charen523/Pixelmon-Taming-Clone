@@ -363,7 +363,7 @@ public class StageManager : Singleton<StageManager>
             curProgress = Mathf.Min((float)killCount / Data.nextStageCount, 100f);
             spawner.isActivatedEnemy.Remove(enemy);
         }
-        saveManager.GiveRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
+        //saveManager.GiveRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
         saveManager.SetDeltaData("curStageCount", 1);
     }
 
