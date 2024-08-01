@@ -183,7 +183,7 @@ public class StageManager : Singleton<StageManager>
         {
             // Stage Clear
             ResetSpawnedEnemy();
-            saveManager.GetRewards(Data.rewardType, Data.rewardValue);
+            //saveManager.GiveRewards(Data.rewardType, Data.rewardValue);
             return true;
         }
 
@@ -219,7 +219,7 @@ public class StageManager : Singleton<StageManager>
         if (isBossCleared)
         {
             ResetSpawnedEnemy();
-            saveManager.GetRewards(Data.rewardType, Data.rewardValue);
+            //saveManager.GiveRewards(Data.rewardType, Data.rewardValue);
             return true;
         }
 
@@ -363,7 +363,7 @@ public class StageManager : Singleton<StageManager>
             curProgress = Mathf.Min((float)killCount / Data.nextStageCount, 100f);
             spawner.isActivatedEnemy.Remove(enemy);
         }
-        saveManager.GetRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
+        saveManager.GiveRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
         saveManager.SetDeltaData("curStageCount", 1);
     }
 
