@@ -63,6 +63,11 @@ public class SkillTab : UIBase, IPointerDownHandler
         infoPopUp = await UIManager.Show<UISkillPopUp>();
     }
 
+    private void Start()
+    {
+        //userData.ownedSkills.Add(new MyAtvData());
+        //saveManager.SetData(nameof(userData.ownedSkills), userData.ownedSkills);
+    }
     public void InitTab()
     {
         int index = 0;
@@ -116,7 +121,7 @@ public class SkillTab : UIBase, IPointerDownHandler
 
     public void OnEquip(int slotIndex)
     {
-        if (!allData[choiceId].myAtvData.isOwned && userData.equippedPxms[slotIndex] == null)
+        if (!allData[choiceId].myAtvData.isOwned)
         {
             //미보유 안내문구
 
