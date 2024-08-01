@@ -12,4 +12,10 @@ public class LvUpGauge : MonoBehaviour
         Empty.SetActive(false);
         Full.SetActive(true);
     }
+
+    public void ResetGauge()
+    {
+        Empty.SetActive(true);
+        Full.SetActive(false);
+    }
 }
