@@ -10,12 +10,12 @@ public class SkillEquipSlot : MonoBehaviour
     public MyAtvData myAtvData;
     public MyPixelmonData myPxmData;
     public Image equipIcon;
-
+    public int slotIndex;
     public void OnClick()
     {
         if(skillTab.tabState == TabState.Normal && myAtvData != null)
             skillTab.OnSkillPopUp(atvData.id);
-        else if(skillTab.tabState == TabState.Equip)
+        else if(skillTab.tabState == TabState.Equip && SaveManager.Instance.userData.equippedPxms[slotIndex].isEquipped)
         {
             skillTab.allData[skillTab.choiceId].EquipAction();
             EquipAction(skillTab.allData[skillTab.choiceId]);
