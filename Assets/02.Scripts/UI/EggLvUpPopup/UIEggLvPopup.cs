@@ -27,6 +27,8 @@ public class UIEggLvPopup : UIBase
     #region Lv업 중
     [SerializeField] private GameObject Time;
     [SerializeField] private GameObject Skip;
+    [SerializeField] private TextMeshProUGUI TimeTxt;
+    private float totalTime => userData.eggLv * 1800f; // 레벨*30분
     #endregion
 
     private string[] descs = { "Lv업 게이지", "Lv업 중" };       
