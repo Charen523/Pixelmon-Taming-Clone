@@ -60,6 +60,7 @@ public class UIPixelmonPopUp : UIBase
 
     private string equip = "장착하기";
     private string unEquip = "해제하기";
+    private string noneData = "??.??%";
     public int infoIndex = 0;
     public int foodPerExp = 10;
     public int maxExp = 50;
@@ -104,9 +105,9 @@ public class UIPixelmonPopUp : UIBase
         pxmIcon.sprite = data.icon;
         lvTxt.text = string.Format($"{myData.lv}/50");
         SetStars();
-        SetStartEffect();
+        SetStartEffect(myData.isOwned);
         SetPsvEffect();
-        SetOwnedEffect();
+        SetOwnedEffect(myData.isOwned);
         SetFoodCount();
         SetEvolvedCount();
         SetPxmSkill();
@@ -258,11 +259,19 @@ public class UIPixelmonPopUp : UIBase
         }
     }
 
-    public void SetStartEffect()
+    public void SetStartEffect(bool isOwned = true)
     {
-        atkValue.text = string.Format("{0:F2}%",myData.atkValue);
-        traitType.text = myData.traitType;
-        traitValue.text = string.Format("{0:F2}%", myData.traitValue);
+        traitType.text = UIUtils.TranslateTraitString(data.trait);
+        if (isOwned)
+        {
+            atkValue.text = string.Format("{0:F2}%", myData.atkValue);
+            traitValue.text = string.Format("{0:F2}%", myData.traitValue);
+        }
+        else
+        {
+            atkValue.text = noneData;
+            traitValue.text = noneData;
+        }
     }
 
     public void SetPxmSkill()
@@ -301,9 +310,15 @@ public class UIPixelmonPopUp : UIBase
         }
     }
 
-    public void SetOwnedEffect()
+    public void SetOwnedEffect(bool isOwned = true)
     {
-        for(int i = 0; i < ownEffectValue.Length; i++) 
-            ownEffectValue[i].text = string.Format("{0:F2}%", myData.ownEffectValue[i]);
+
+        for (int i = 0; i < ownEffectValue.Length; i++)
+        {
+            if (isOwned)
+                ownEffectValue[i].text = string.Format("{0:F2}%", myData.ownEffectValue[i]);
+            else
+                ownEffectValue[i].text = noneData;
+        }
     }
 }
