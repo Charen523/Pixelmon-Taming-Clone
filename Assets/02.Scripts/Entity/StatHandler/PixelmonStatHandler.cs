@@ -15,13 +15,13 @@ public static class PixelmonStatHandler
         status.SCriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCriDmg));
     }
 
-    public static void ApplyMyPixelmon(UpgradeIndex type, MyPixelmonData myData)
+    public static void ApplyMyPixelmon(UpgradeIndex type)
     {
         for(int i = 0; i < 5;  i++) 
         {
             if (PixelmonManager.Instance.player.pixelmons[i] != null) 
             {
-                PixelmonManager.Instance.player.pixelmons[i].ApplyStatus(type, myData);
+                PixelmonManager.Instance.player.pixelmons[i].ApplyStatus(type, PixelmonManager.Instance.player.pixelmons[i].myData);
             }
         }
     }
