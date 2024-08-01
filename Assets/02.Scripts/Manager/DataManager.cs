@@ -15,6 +15,7 @@ public class DataManager : GSpreadReader<DataManager>
     public GameData<AbilityRateData> abilityRateData;
     public GameData<BasePsvData> basePsvData;
     public GameData<ActiveData> activeData;
+    public GameData<QuestData> questData;
     public Sprite[] pxmBgIcons;
     public Sprite[] skillBgIcons;
 
