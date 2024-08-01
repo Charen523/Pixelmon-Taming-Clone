@@ -29,9 +29,12 @@ public class UIEggLvPopup : UIBase
     #region Lv업 중
     [SerializeField] private GameObject Clock;
     [SerializeField] private GameObject Skip;
+    [SerializeField] private Button DiaBtn;
     [SerializeField] private TextMeshProUGUI TimeTxt;
     private float totalTime => userData.eggLv * 1800f; // 레벨*30분
     private float remainingTime;
+
+    private int skipDia = 1000;
     #endregion
 
     private string[] descs = { "Lv업 게이지", "Lv업 중" };
@@ -44,9 +47,7 @@ public class UIEggLvPopup : UIBase
         {
             lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
             if(i < userData.fullGaugeCnt)
-            {
                 lvUpGauges[i].GaugeUp();
-            }
         }
         SetLvUpBtn();
     }
@@ -82,6 +83,10 @@ public class UIEggLvPopup : UIBase
         Clock.SetActive(true);
         Skip.SetActive(true);
 
+        if (userData.diamond >= skipDia)
+            DiaBtn.interactable = true;
+        else DiaBtn.interactable = false;
+
         updateTimerCoroutine = StartCoroutine(UpdateTimer());
     }
     private void SetGaugeMode()
@@ -96,7 +101,7 @@ public class UIEggLvPopup : UIBase
 
         price = CalculateLevelUpCost(userData.eggLv);
         PriceTxt.text = price.ToString();
-        LvUpBtn.interactable = false;
+        SetLvUpBtn();
     }
 
     public int CalculateLevelUpCost(int level)
@@ -113,11 +118,20 @@ public class UIEggLvPopup : UIBase
             LvUpBtn.interactable = true;
             GaugeUpBtn.interactable = false;
         }
+        else
+        {
+            LvUpBtn.interactable = false;
+            GaugeUpBtn.interactable = true;
+        }
     }
     public void OnClickGaugeUpBtn()
     {
         if (userData.gold >= price)
-            lvUpGauges[userData.fullGaugeCnt++].GaugeUp();
+        {
+            lvUpGauges[userData.fullGaugeCnt].GaugeUp();
+            SaveManager.Instance.SetDeltaData(nameof(userData.fullGaugeCnt), 1);
+        }          
+        else GaugeUpBtn.interactable = false;
 
         SetLvUpBtn();
     }
@@ -129,6 +143,19 @@ public class UIEggLvPopup : UIBase
         SetLvUpMode();
     }
 
+    //TODO : 광고넣기
+    public void OnClickAdBtn()
+    {
+
+    }
+
+    public void OnClickDiaBtn()
+    {
+        SaveManager.Instance.SetDeltaData(nameof(userData.diamond), -skipDia);
+        remainingTime -= 3600f;
+        if(remainingTime <= 0) SetGaugeMode();
+    }
+
     private void LvUp()
     {
         SaveManager.Instance.SetData(nameof(userData.lastLvUpTime), null);
@@ -137,6 +164,13 @@ public class UIEggLvPopup : UIBase
             lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
         UpdateLvAndRateUI();       
         SetGaugeMode();
+    }
+
+    // TODO : 실험 끝나면 지우기
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+            remainingTime = 0;
     }
 
     private IEnumerator UpdateTimer()
