@@ -11,6 +11,7 @@ public class UISkillPopUp : UIBase
     [SerializeField] private TextMeshProUGUI descTxt;
     [SerializeField] private Button equipBtn;
     [SerializeField] private TextMeshProUGUI equipTxt;
+    [SerializeField] private GameObject equipObj;
     [SerializeField] private SkillSlot copySlot;
     [SerializeField] private SkillTab skillTab;
     private string equip = "장착하기";
@@ -18,7 +19,7 @@ public class UISkillPopUp : UIBase
     private int slotIndex;
     public void ShowPopUp(SkillSlot slot, SkillTab tab)
     {
-        skillTab = tab;    
+        skillTab = tab;
         copySlot.InitSlot(tab, slot.atvData);
         copySlot.myAtvData = slot.myAtvData;
         copySlot.UpdateSlot();
@@ -27,11 +28,31 @@ public class UISkillPopUp : UIBase
         skillNameTxt.text = slot.atvData.name;
         ctTxt.text = slot.atvData.ct.ToString();
         descTxt.text = slot.atvData.description;
-        equipTxt.text = slot.myAtvData.isEquipped ? unEquip : slot.myAtvData.isOwned ? equip : "-";
+        SetEquipTxt();
+    }
+
+    private void SetEquipTxt()
+    {
+        if (copySlot.myAtvData.isEquipped)
+        {
+            equipTxt.text = unEquip;
+            equipObj.SetActive(true);
+        }
+        else if (copySlot.myAtvData.isOwned)
+        {
+            equipTxt.text = equip;
+            equipObj.SetActive(false);
+        }
+        else
+        {
+            equipTxt.text = "-";
+            equipObj.SetActive(false);
+        }
     }
 
     public void OnEquipEvt()
     {
         skillTab.OnEquip(slotIndex);
+        SetEquipTxt();
     }
 }

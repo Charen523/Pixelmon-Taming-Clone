@@ -15,6 +15,47 @@ public static class PixelmonStatHandler
         status.SCriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCriDmg));
     }
 
+    public static void ApplyMyPixelmon(UpgradeIndex type)
+    {
+        for(int i = 0; i < 5;  i++) 
+        {
+            if (PixelmonManager.Instance.player.pixelmons[i] != null) 
+            {
+                PixelmonManager.Instance.player.pixelmons[i].ApplyStatus(type, PixelmonManager.Instance.player.pixelmons[i].myData);
+            }
+        }
+    }
+
+    public static void ApplyStatus(this Pixelmon pixelmon, UpgradeIndex type, MyPixelmonData myData)
+    {
+        switch(type) 
+        { 
+            case UpgradeIndex.Atk:
+                pixelmon.status.Atk = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.Atk, myData.FindType(AbilityType.Attack));
+                break;
+            case UpgradeIndex.Cri:
+                pixelmon.status.Cri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Cri, myData.FindType(AbilityType.PSVCri));
+                break;
+            case UpgradeIndex.CriDmg:
+                pixelmon.status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.PSVCriDmg));
+                break;
+            case UpgradeIndex.Dmg:
+                pixelmon.status.Dmg = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.Dmg, myData.FindType(AbilityType.PSVDmg));
+                break;
+            case UpgradeIndex.SDmg:
+                pixelmon.status.SDmg = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.SDmg, myData.FindType(AbilityType.PSVSDmg));
+                break;
+            case UpgradeIndex.SCri:
+                pixelmon.status.SCri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCri));
+                break;
+            case UpgradeIndex.SCriDmg:
+                pixelmon.status.SCriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCriDmg));
+                break;
+            default:
+                break;
+        }
+    }
+
     public static float SetStatus(float perAtk, int lv, float lvAtkRate)
     {
         return (perAtk + lv * lvAtkRate);

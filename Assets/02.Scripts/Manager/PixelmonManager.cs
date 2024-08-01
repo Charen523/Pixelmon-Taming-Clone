@@ -11,7 +11,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
 
     private SaveManager saveManager;
     private UserData userData;
-    private Player player;
+    public Player player;
     public PixelmonTab pxmTab;
 
     private List<PixelmonData> pxmData;

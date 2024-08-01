@@ -27,6 +27,11 @@ public class UIPixelmonPopUp : UIBase
     [SerializeField] private Image pxmIcon;
     [SerializeField] private TextMeshProUGUI lvTxt;
 
+    [SerializeField] private Button skillBtn;
+    [SerializeField] private GameObject[] objSkill;
+    [SerializeField] private Image skillIcon;
+    [SerializeField] private TextMeshProUGUI skillName;
+
     [SerializeField] private TextMeshProUGUI atkValue;
     [SerializeField] private TextMeshProUGUI traitType;
     [SerializeField] private TextMeshProUGUI traitValue;
@@ -55,6 +60,7 @@ public class UIPixelmonPopUp : UIBase
 
     private string equip = "장착하기";
     private string unEquip = "해제하기";
+    private string noneData = "??.??%";
     public int infoIndex = 0;
     public int foodPerExp = 10;
     public int maxExp = 50;
@@ -65,10 +71,7 @@ public class UIPixelmonPopUp : UIBase
             saveManager = SaveManager.Instance;
         pxmTab = tab;
         infoIndex = dataIndex;
-        if (infoIndex == 0)
-            infoBtns[0].gameObject.SetActive(false);
-        else if (infoIndex == pxmTab.allData.Count)
-            infoBtns[1].gameObject.SetActive(false);
+        
         SetData();
     }
 
@@ -76,27 +79,11 @@ public class UIPixelmonPopUp : UIBase
     {
         infoIndex--;
         SetData();
-        if (infoIndex == 0)
-        {
-            infoBtns[0].gameObject.SetActive(false);
-        }
-        else if (infoIndex == pxmTab.allData.Count - 2)
-        {
-            infoBtns[1].gameObject.SetActive(true);
-        }
     }
     public void OnNextInfo()
     {
         infoIndex++;
         SetData();
-        if (infoIndex == 1)
-        {
-            infoBtns[0].gameObject.SetActive(true);
-        }
-        else if (infoIndex == pxmTab.allData.Count - 1)
-        {
-            infoBtns[1].gameObject.SetActive(false);     
-        }
     }
 
     private void SetData()
@@ -105,6 +92,7 @@ public class UIPixelmonPopUp : UIBase
         myData = pxmTab.allData[infoIndex].myPxmData;
         pxmTab.choiceId = myData.id;
         equipTxt.text = myData.isEquipped ? unEquip : equip;
+        SetChangeBtn();
         InitInfo();
     }
 
@@ -117,11 +105,31 @@ public class UIPixelmonPopUp : UIBase
         pxmIcon.sprite = data.icon;
         lvTxt.text = string.Format($"{myData.lv}/50");
         SetStars();
-        SetStartEffect();
+        SetStartEffect(myData.isOwned);
         SetPsvEffect();
-        SetOwnedEffect();
+        SetOwnedEffect(myData.isOwned);
         SetFoodCount();
         SetEvolvedCount();
+        SetPxmSkill();
+        CheckedOwn();
+    }
+
+    public void CheckedOwn()
+    {
+        if (myData.isOwned)
+        {
+            equipBtn.gameObject.SetActive(true);
+            evolvedBtn.gameObject.SetActive(true);
+            feedingBtn.gameObject.SetActive(true);
+            skillBtn.gameObject.SetActive(true);
+        }
+        else
+        {
+            equipBtn.gameObject.SetActive(false);
+            evolvedBtn.gameObject.SetActive(false);
+            feedingBtn.gameObject.SetActive(false);
+            skillBtn.gameObject.SetActive(false);
+        }
     }
 
     public void OnEquip()
@@ -156,6 +164,25 @@ public class UIPixelmonPopUp : UIBase
         else
         {
             Debug.Log("남은 먹이가 없습니다.");
+        }
+    }
+
+    public void SetChangeBtn()
+    {
+        if (infoIndex == 0)
+        {
+            infoBtns[0].gameObject.SetActive(false);
+            infoBtns[1].gameObject.SetActive(true);
+        }
+        else if (infoIndex == pxmTab.allData.Count - 1)
+        {
+            infoBtns[0].gameObject.SetActive(true);
+            infoBtns[1].gameObject.SetActive(false);
+        }
+        else
+        {
+            infoBtns[0].gameObject.SetActive(true);
+            infoBtns[1].gameObject.SetActive(true);
         }
     }
 
@@ -232,12 +259,37 @@ public class UIPixelmonPopUp : UIBase
         }
     }
 
-    public void SetStartEffect()
+    public void SetStartEffect(bool isOwned = true)
     {
-        atkValue.text = string.Format("{0:F2}%",myData.atkValue);
-        traitType.text = myData.traitType;
-        traitValue.text = string.Format("{0:F2}%", myData.traitValue);
+        traitType.text = UIUtils.TranslateTraitString(data.trait);
+        if (isOwned)
+        {
+            atkValue.text = string.Format("{0:F2}%", myData.atkValue);
+            traitValue.text = string.Format("{0:F2}%", myData.traitValue);
+        }
+        else
+        {
+            atkValue.text = noneData;
+            traitValue.text = noneData;
+        }
     }
+
+    public void SetPxmSkill()
+    {
+        if (myData.atvSkillId != -1)
+        {
+            objSkill[0].SetActive(true);
+            objSkill[1].SetActive(false);
+            skillIcon.sprite = SkillManager.Instance.skillTab.allData[myData.atvSkillId].atvData.icon;
+            skillName.text = SkillManager.Instance.skillTab.allData[myData.atvSkillId].atvData.name;
+        }
+        else
+        {
+            objSkill[0].SetActive(false);
+            objSkill[1].SetActive(true);
+        }
+    }
+
 
     public void SetPsvEffect()
     {
@@ -258,9 +310,15 @@ public class UIPixelmonPopUp : UIBase
         }
     }
 
-    public void SetOwnedEffect()
+    public void SetOwnedEffect(bool isOwned = true)
     {
-        for(int i = 0; i < ownEffectValue.Length; i++) 
-            ownEffectValue[i].text = string.Format("{0:F2}%", myData.ownEffectValue[i]);
+
+        for (int i = 0; i < ownEffectValue.Length; i++)
+        {
+            if (isOwned)
+                ownEffectValue[i].text = string.Format("{0:F2}%", myData.ownEffectValue[i]);
+            else
+                ownEffectValue[i].text = noneData;
+        }
     }
 }

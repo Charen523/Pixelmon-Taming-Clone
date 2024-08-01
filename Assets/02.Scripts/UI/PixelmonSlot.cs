@@ -30,7 +30,7 @@ public class PixelmonSlot : MonoBehaviour
     #region 데이터
     public PixelmonTab pxmtab;
     public PixelmonData pxmData;
-    public MyPixelmonData myPxmData;
+    public MyPixelmonData myPxmData = new MyPixelmonData();
     public bool isOwned => myPxmData.isOwned;
     #endregion
 

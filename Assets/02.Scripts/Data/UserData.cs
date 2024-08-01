@@ -37,7 +37,7 @@ public class UserData
     public MyPixelmonData[] equippedPxms = new MyPixelmonData[5];
     public MyPixelmonData[] ownedPxms = new MyPixelmonData[20];
 
-    public int[] equippedSkills = new int[5];
+    public int[] equippedSkills = {-1, -1, -1, -1, -1};
     public List<MyAtvData> ownedSkills = new List<MyAtvData>();
     //public string[] OwnedActiveSkills; 만약 스킬 강화 생기면 string-> 스킬로 바꾸기.
     public FieldData[] fieldDatas = new FieldData[6];
