@@ -68,7 +68,8 @@ public class PixelmonEquipSlot : PixelmonSlot
 
     public void UnEquip()
     {
-        SkillManager.Instance.UnEquipSkill(slotIndex, myPxmData.atvSkillId);
+        if(myPxmData.atvSkillId != -1)
+            SkillManager.Instance.UnEquipSkill(slotIndex, myPxmData.atvSkillId);
         pxmData = null;
         myPxmData = null;
         slotIcon.gameObject.SetActive(false);
