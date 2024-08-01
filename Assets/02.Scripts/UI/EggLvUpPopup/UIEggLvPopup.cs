@@ -36,11 +36,19 @@ public class UIEggLvPopup : UIBase
 
     private string[] descs = { "Lv업 게이지", "Lv업 중" };
     private UserData userData => SaveManager.Instance.userData;
+    private Coroutine updateTimerCoroutine;
 
     private void Start()
     {
         for (int i = 0; i < userData.eggLv / 5 + 2; i++)
+        {
             lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
+            if(i < userData.fullGaugeCnt)
+            {
+                lvUpGauges[i].GaugeUp();
+            }
+        }
+        SetLvUpBtn();
     }
 
     public void SetPopup()
@@ -74,7 +82,7 @@ public class UIEggLvPopup : UIBase
         Clock.SetActive(true);
         Skip.SetActive(true);
 
-        StartCoroutine(UpdateTimer());
+        updateTimerCoroutine = StartCoroutine(UpdateTimer());
     }
     private void SetGaugeMode()
     {
@@ -98,17 +106,20 @@ public class UIEggLvPopup : UIBase
         return goldCost;
     }
 
-    public void OnClickGaugeUpBtn()
+    private void SetLvUpBtn()
     {
-        if (userData.gold >= price)
-            lvUpGauges[userData.fullGaugeCnt++].GaugeUp();
-        Debug.Log("after fullGaugeCnt : " + userData.fullGaugeCnt);
-
         if (userData.fullGaugeCnt == lvUpGauges.Count)
         {
             LvUpBtn.interactable = true;
             GaugeUpBtn.interactable = false;
         }
+    }
+    public void OnClickGaugeUpBtn()
+    {
+        if (userData.gold >= price)
+            lvUpGauges[userData.fullGaugeCnt++].GaugeUp();
+
+        SetLvUpBtn();
     }
 
     public void OnClickLvUpBtn()
@@ -156,9 +167,10 @@ public class UIEggLvPopup : UIBase
 
     private void OnDisable()
     {
-        if (userData.isLvUpMode)
+        if (updateTimerCoroutine != null)
         {
-            StopCoroutine(UpdateTimer());
+            StopCoroutine(updateTimerCoroutine);
+            updateTimerCoroutine = null;
         }
     }
 }
