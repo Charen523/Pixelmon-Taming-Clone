@@ -57,10 +57,10 @@ public class SkillSlot : MonoBehaviour
 
     public void UnEquipAction()
     {
-        atvData = null;
-        myAtvData = null;
         myAtvData.isEquipped = false;
         equipIcon.SetActive(false);
+        atvData = null;
+        myAtvData = null;
     }
 
     public void InitSlot(SkillTab tab, ActiveData data)
