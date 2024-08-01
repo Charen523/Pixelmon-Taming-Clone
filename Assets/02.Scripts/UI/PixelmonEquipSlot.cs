@@ -68,12 +68,14 @@ public class PixelmonEquipSlot : PixelmonSlot
 
     public void UnEquip()
     {
+        SkillManager.Instance.UnEquipSkill(slotIndex, myPxmData.atvSkillId);
         pxmData = null;
         myPxmData = null;
         slotIcon.gameObject.SetActive(false);
         slotIconBg.sprite = pxmManager.defaultBg;
         stateIcon.gameObject.SetActive(true);
         lvTxt.gameObject.SetActive(false);
+
 
         saveManager.userData.equippedPxms[slotIndex] = null;
         saveManager.SetData("equippedPxms", saveManager.userData.equippedPxms);

@@ -40,8 +40,7 @@ public class SkillTab : UIBase, IPointerDownHandler
     //보유한 픽셀몬 정보
     public List<SkillSlot> ownedData = new List<SkillSlot>();
     //편성된 픽셀몬 정보
-    [SerializeField]
-    private List<SkillEquipSlot> equipData = new List<SkillEquipSlot>();
+    public List<SkillEquipSlot> equipData = new List<SkillEquipSlot>();
     [SerializeField]
     private PixelmonLayout pxmLayout;
     #endregion
@@ -60,6 +59,7 @@ public class SkillTab : UIBase, IPointerDownHandler
         dataManager = DataManager.Instance;
         skillManager = SkillManager.Instance;
         InitTab();
+        SkillManager.Instance.skillTab = this;
         infoPopUp = await UIManager.Show<UISkillPopUp>();
     }
 
@@ -91,7 +91,7 @@ public class SkillTab : UIBase, IPointerDownHandler
 
         for (int i = 0; i < equipData.Count; i++)
         {
-            if (userData.equippedPxms.Length > i && userData.equippedPxms[i].isEquipped)
+            if (userData.equippedPxms.Length > i && userData.equippedSkills[i] != -1)
             {
                 equipData[i].myPxmData = userData.equippedPxms[i];
                 equipData[i].myAtvData = allData[userData.equippedSkills[i]].myAtvData;
@@ -159,6 +159,7 @@ public class SkillTab : UIBase, IPointerDownHandler
     public void OnCancelEquip()
     {
         tabState = TabState.Normal;
+        infoPopUp.gameObject.SetActive(false);
         equipOverlay.SetActive(false);
     }
 
