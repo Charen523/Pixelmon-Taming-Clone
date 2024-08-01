@@ -70,10 +70,7 @@ public class UIPixelmonPopUp : UIBase
             saveManager = SaveManager.Instance;
         pxmTab = tab;
         infoIndex = dataIndex;
-        if (infoIndex == 0)
-            infoBtns[0].gameObject.SetActive(false);
-        else if (infoIndex == pxmTab.allData.Count)
-            infoBtns[1].gameObject.SetActive(false);
+        
         SetData();
     }
 
@@ -81,27 +78,11 @@ public class UIPixelmonPopUp : UIBase
     {
         infoIndex--;
         SetData();
-        if (infoIndex == 0)
-        {
-            infoBtns[0].gameObject.SetActive(false);
-        }
-        else if (infoIndex == pxmTab.allData.Count - 2)
-        {
-            infoBtns[1].gameObject.SetActive(true);
-        }
     }
     public void OnNextInfo()
     {
         infoIndex++;
         SetData();
-        if (infoIndex == 1)
-        {
-            infoBtns[0].gameObject.SetActive(true);
-        }
-        else if (infoIndex == pxmTab.allData.Count - 1)
-        {
-            infoBtns[1].gameObject.SetActive(false);     
-        }
     }
 
     private void SetData()
@@ -110,6 +91,7 @@ public class UIPixelmonPopUp : UIBase
         myData = pxmTab.allData[infoIndex].myPxmData;
         pxmTab.choiceId = myData.id;
         equipTxt.text = myData.isEquipped ? unEquip : equip;
+        SetChangeBtn();
         InitInfo();
     }
 
@@ -127,6 +109,26 @@ public class UIPixelmonPopUp : UIBase
         SetOwnedEffect();
         SetFoodCount();
         SetEvolvedCount();
+        SetPxmSkill();
+        CheckedOwn();
+    }
+
+    public void CheckedOwn()
+    {
+        if (myData.isOwned)
+        {
+            equipBtn.gameObject.SetActive(true);
+            evolvedBtn.gameObject.SetActive(true);
+            feedingBtn.gameObject.SetActive(true);
+            skillBtn.gameObject.SetActive(true);
+        }
+        else
+        {
+            equipBtn.gameObject.SetActive(false);
+            evolvedBtn.gameObject.SetActive(false);
+            feedingBtn.gameObject.SetActive(false);
+            skillBtn.gameObject.SetActive(false);
+        }
     }
 
     public void OnEquip()
@@ -161,6 +163,25 @@ public class UIPixelmonPopUp : UIBase
         else
         {
             Debug.Log("남은 먹이가 없습니다.");
+        }
+    }
+
+    public void SetChangeBtn()
+    {
+        if (infoIndex == 0)
+        {
+            infoBtns[0].gameObject.SetActive(false);
+            infoBtns[1].gameObject.SetActive(true);
+        }
+        else if (infoIndex == pxmTab.allData.Count - 1)
+        {
+            infoBtns[0].gameObject.SetActive(true);
+            infoBtns[1].gameObject.SetActive(false);
+        }
+        else
+        {
+            infoBtns[0].gameObject.SetActive(true);
+            infoBtns[1].gameObject.SetActive(true);
         }
     }
 
