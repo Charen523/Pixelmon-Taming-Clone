@@ -107,7 +107,7 @@ public class UIHatchResultPopup : UIBase
         Psv[0].NewPsvRankTxt.gameObject.SetActive(true);
         Psv[0].OldPsvValueTxt.gameObject.SetActive(true);
         Psv[0].ArrowImg.gameObject.SetActive(true);
-        for (int i = 0; i <= hatchedPxmData.psvSkill.Count; i++)
+        for (int i = 0; i < hatchedPxmData.psvSkill.Count; i++)
         {
             Psv[i].gameObject.SetActive(true);
 
@@ -117,6 +117,10 @@ public class UIHatchResultPopup : UIBase
 
             Psv[i].NewPsvRankTxt.text = Psv[i].NewPsvRank.ToString();
             Psv[i].NewPsvValueTxt.text = new StringBuilder().Append(Psv[i].NewPsvValue.ToString("F2")).Append('%').ToString();
+        }
+        for (int i = 3; i >= hatchedPxmData.psvSkill.Count; i--)
+        {
+            Psv[i].gameObject.SetActive(false);
         }
     }
 
@@ -193,6 +197,7 @@ public class UIHatchResultPopup : UIBase
     private void GetRepetition()
     {
         saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "evolvedCount", ++userData.ownedPxms[uiMiddleBar.HatchPxmData.id].evolvedCount);
+        PixelmonManager.Instance.UnLockedPixelmon(uiMiddleBar.HatchPxmData.id);
     }
 
     private void ReplacePsv()

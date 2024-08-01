@@ -198,10 +198,3 @@ public class PixelmonTab : UIBase
     }
 }
 
-public enum TabState
-{
-    Normal,
-    Equip,
-    UnEquip,
-    Empty
-}

@@ -9,10 +9,12 @@ using System.Xml.Linq;
 
 public class SkillSlot : MonoBehaviour
 {
-    SkillTab skillTab;
-    public ActiveData data;
-    public MyAtvData myData;
+    public SkillTab skillTab;
+    public ActiveData atvData;
+    public MyAtvData myAtvData;
     DataManager dataManager;
+
+
     #region 슬롯정보
     [SerializeField] protected int slotIndex;
     [SerializeField]
@@ -32,103 +34,120 @@ public class SkillSlot : MonoBehaviour
     [SerializeField] protected TextMeshProUGUI skillLv;
     [SerializeField] private Slider evolveSldr;
     [SerializeField] private TextMeshProUGUI evolvedCount;
-
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
-       
+        dataManager = DataManager.Instance;
+        if(slotBtn != null )
+            slotBtn.onClick.AddListener(() => { OnClick(); });
     }
 
-    public void InitSlot(SkillTab tab, ActiveData atvData)
+    public void OnClick()
     {
-        dataManager = DataManager.Instance;
+        skillTab.OnSkillPopUp(atvData.id);
+    }
+
+    public void EquipAction()
+    {
+        equipIcon.SetActive(true);
+        myAtvData.isEquipped = true;
+    }
+
+    public void UnEquipAction()
+    {
+        myAtvData.isEquipped = false;
+        equipIcon.SetActive(false);
+        atvData = null;
+        myAtvData = null;
+    }
+
+    public void InitSlot(SkillTab tab, ActiveData data)
+    {
+        slotIndex = data.id;
         skillTab = tab;
-        data = atvData;
-        slotBtn.onClick.AddListener(() => { skillTab.OnSkillPopUp(); });
-        
+        atvData = data;        
+        SetRankTxt();
+        SetSkillIcon();
     }
 
     public void UpdateSlot()
-    {
-        myData = SaveManager.Instance.userData.ownedSkills[myData.id];
-        SetRankTxt();
+    {        
         SetSkillLv();
-        SetEquipTxt();
-        SetSkillIcon();
-        SetEvolveSldr();
+        SetEquipTxt();       
         SetEvolveSldr();
     }
-
-    public void OnSlotClick()
-    {
-        skillTab.OnSkillPopUp();
-    }
-
 
     public void OnEvolved()
     {
-        skillTab.saveManager.UpdatePixelmonData(myData.id, "isAdvancable", false);
-        //skillTab.saveManager.UpdatePixelmonData(myData.id, "evolvedCount", myData.evolvedCount - UIUtils.GetEvolveValue(myData, data));
-        skillTab.saveManager.UpdatePixelmonData(myData.id, "star", ++myData.lv) ;
+        while (myAtvData.isAdvancable)
+        {
+            skillTab.saveManager.UpdateSkillData(myAtvData.id, "isAdvancable", false);
+            skillTab.saveManager.UpdatePixelmonData(myAtvData.id, "evolvedCount", myAtvData.evolvedCount - UIUtils.GetEvolveValue(myAtvData, atvData));
+            skillTab.saveManager.UpdateSkillData(myAtvData.id, "lv", ++myAtvData.lv);
+            SetEvolveSldr();
+            SetSkillLv();
+        }
     }
 
     public void SetRankTxt()
     {
-        skillRankTxt.text = data.rank;
-        skillRankTxt.colorGradientPreset.topRight = GetRankColor(data.rank);
-        skillRankTxt.colorGradientPreset.bottomLeft = GetRankColor(data.rank);
+        skillRankTxt.colorGradientPreset = GetRankColor(atvData.rank);
+        skillRankTxt.text = atvData.rank;
     }
     public void SetSkillLv()
     {
-        skillLv.text = myData.lv.ToString();
+        skillLv.text = myAtvData.lv.ToString();
     }
 
     public void SetEquipTxt()
     {
-        if(myData.isEquipped)
+        if(myAtvData.isEquipped)
             equipIcon.gameObject.SetActive(true);
         else equipIcon.gameObject.SetActive(false);
     }
 
     public void SetSkillIcon()
     {
-        slotIcon.sprite = data.icon;
-        slotIconBg.sprite = data.bgIcon;
+        slotIcon.sprite = atvData.icon;
+        slotIconBg.sprite = atvData.bgIcon;
     }
 
     public void SetEvolveSldr()
     {
-        int maxNum = UIUtils.GetEvolveValue(myData, data);
+        int maxNum = UIUtils.GetEvolveValue(myAtvData, atvData);
         evolveSldr.maxValue = maxNum;
-        evolveSldr.value = myData.evolvedCount;
-        evolvedCount.text = string.Format("{0}/{1}", myData.evolvedCount, maxNum);
-        if (myData.evolvedCount >= maxNum)
+        evolveSldr.value = myAtvData.evolvedCount;
+        evolvedCount.text = string.Format("{0}/{1}", myAtvData.evolvedCount, maxNum);
+        if (myAtvData.evolvedCount >= maxNum)
         {
-            skillTab.userData.ownedPxms[myData.id].isAdvancable = true;
-            skillTab.saveManager.UpdateSkillData(myData.id, "isAdvancable", true);
+            skillTab.userData.ownedPxms[myAtvData.id].isAdvancable = true;
+            skillTab.saveManager.UpdateSkillData(myAtvData.id, "isAdvancable", true);
         }
     }
 
-
-
-    public Color GetRankColor(string rank)
+    public TMP_ColorGradient GetRankColor(string rank)
     {
         switch (rank)
         {
             case "C":
-                return skillTab.rankColor[0];
+                slotIconBg.color = skillTab.bgIconColor[0];
+                return skillTab.txtColors[0];
             case "B":
-                return skillTab.rankColor[1];
+                slotIconBg.color = skillTab.bgIconColor[1];
+                return skillTab.txtColors[1];
             case "A":
-                return skillTab.rankColor[2];
+                slotIconBg.color = skillTab.bgIconColor[2];
+                return skillTab.txtColors[2];
             case "S":
-                return skillTab.rankColor[3];
+                slotIconBg.color = skillTab.bgIconColor[3];
+                return skillTab.txtColors[3];
             case "SS":
-                return skillTab.rankColor[4];
+                slotIconBg.color = skillTab.bgIconColor[4];
+                return skillTab.txtColors[4];
             default:
-                return Color.white;
+                return skillTab.txtColors[0];
         }
     }
 

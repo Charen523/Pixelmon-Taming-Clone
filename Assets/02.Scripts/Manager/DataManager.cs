@@ -15,8 +15,9 @@ public class DataManager : GSpreadReader<DataManager>
     public GameData<AbilityRateData> abilityRateData;
     public GameData<BasePsvData> basePsvData;
     public GameData<ActiveData> activeData;
-    public Sprite[] bgIcons;
-    
+    public Sprite[] pxmBgIcons;
+    public Sprite[] skillBgIcons;
+
     public bool isPxmInit;
     public async Task SetBaseData()
     {
@@ -26,22 +27,22 @@ public class DataManager : GSpreadReader<DataManager>
             switch (data.rank)
             {
                 case "Common":
-                    data.bgIcon = bgIcons[0];
+                    data.bgIcon = pxmBgIcons[0];
                     break;
                 case "Advanced":
-                    data.bgIcon = bgIcons[1];
+                    data.bgIcon = pxmBgIcons[1];
                     break;
                 case "Rare":
-                    data.bgIcon = bgIcons[2];
+                    data.bgIcon = pxmBgIcons[2];
                     break;
                 case "Epic":
-                    data.bgIcon = bgIcons[3];
+                    data.bgIcon = pxmBgIcons[3];
                     break;
                 case "Legendary":
-                    data.bgIcon = bgIcons[4];
+                    data.bgIcon = pxmBgIcons[4];
                     break;
                 case "Unique":
-                    data.bgIcon = bgIcons[5];
+                    data.bgIcon = pxmBgIcons[5];
                     break;
                 default:
                     break;
@@ -51,6 +52,26 @@ public class DataManager : GSpreadReader<DataManager>
         foreach (var data in activeData.data)
         {
             data.icon = await ResourceManager.Instance.LoadAsset<Sprite>(data.rcode, eAddressableType.thumbnail);
+            switch (data.rank)
+            {
+                case "C":
+                    data.bgIcon = skillBgIcons[0];
+                    break;
+                case "B":
+                    data.bgIcon = skillBgIcons[1];
+                    break;
+                case "A":
+                    data.bgIcon = skillBgIcons[2];
+                    break;
+                case "S":
+                    data.bgIcon = skillBgIcons[3];
+                    break;
+                case "SS":
+                    data.bgIcon = skillBgIcons[4];
+                    break;
+                default:
+                    break;
+            }
         }
 
         isPxmInit = true;
