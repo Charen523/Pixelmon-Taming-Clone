@@ -4,6 +4,7 @@ using System;
 public class QuestData : IData
 {
     public string rcode;
+    public string description;
     public string goal;
     public string rewardTypes;
     public string rewardValues;
