@@ -197,6 +197,7 @@ public class UIHatchResultPopup : UIBase
     private void GetRepetition()
     {
         saveManager.UpdatePixelmonData(uiMiddleBar.HatchPxmData.id, "evolvedCount", ++userData.ownedPxms[uiMiddleBar.HatchPxmData.id].evolvedCount);
+        PixelmonManager.Instance.UnLockedPixelmon(uiMiddleBar.HatchPxmData.id);
     }
 
     private void ReplacePsv()
