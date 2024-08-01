@@ -58,16 +58,16 @@ public class StageManager : Singleton<StageManager>
             SaveManager.Instance.SetData("curStageRcode", value);
         }
     }
-    
+
     [Header("Current Stage")]
     private readonly string stageCodeName = "STG";
-    
+
     public int diffNum => saveManager.userData.curDifficulty;
 
-    [SerializeField] private int worldNum;
+    public int worldNum;
     [SerializeField] private readonly int maxWorldNum = 10;
 
-    [SerializeField] private int stageNum;
+    public int stageNum;
     [SerializeField] private readonly int bossStageNum = 6;
     private bool isBossStage => stageNum == bossStageNum;
     #endregion
