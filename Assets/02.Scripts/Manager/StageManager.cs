@@ -183,7 +183,7 @@ public class StageManager : Singleton<StageManager>
         {
             // Stage Clear
             ResetSpawnedEnemy();
-            saveManager.GetRewards(Data.rewardType, Data.rewardValue);
+            //saveManager.GiveRewards(Data.rewardType, Data.rewardValue);
             return true;
         }
 
@@ -219,7 +219,7 @@ public class StageManager : Singleton<StageManager>
         if (isBossCleared)
         {
             ResetSpawnedEnemy();
-            saveManager.GetRewards(Data.rewardType, Data.rewardValue);
+            //saveManager.GiveRewards(Data.rewardType, Data.rewardValue);
             return true;
         }
 
@@ -254,7 +254,7 @@ public class StageManager : Singleton<StageManager>
     {
         if (isBossStage)
         {
-            stageTitleTxt.text = $"{SetDiffTxt()} {worldNum}-BOSS";
+            stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-BOSS";
             StageIcon.sprite = iconSprite[1];
             progressSldr.value = 1; // TODO: 보스 HealthSystem과 연결.
             progressTxt.text = "100.00%";
@@ -262,7 +262,7 @@ public class StageManager : Singleton<StageManager>
         }
         else
         {
-            stageTitleTxt.text = $"{SetDiffTxt()} {worldNum}-{stageNum}";
+            stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.sprite = iconSprite[0];
             prevProgress = killCount / (float)Data.nextStageCount;
             curProgress = prevProgress;
@@ -271,9 +271,9 @@ public class StageManager : Singleton<StageManager>
         }
     }
 
-    private string SetDiffTxt()
+    public string SetDiffTxt(int num)
     {
-        return diffNum switch
+        return num switch
         {
             0 => "쉬움",
             1 => "보통",
@@ -363,7 +363,7 @@ public class StageManager : Singleton<StageManager>
             curProgress = Mathf.Min((float)killCount / Data.nextStageCount, 100f);
             spawner.isActivatedEnemy.Remove(enemy);
         }
-        saveManager.GetRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
+        //saveManager.GiveRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
         saveManager.SetDeltaData("curStageCount", 1);
     }
 
