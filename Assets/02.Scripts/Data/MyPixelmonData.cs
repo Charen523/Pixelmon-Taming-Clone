@@ -22,7 +22,7 @@ public class MyPixelmonData
     //보유 여부
     public bool isOwned;
 
-    public int? atvSkillId;
+    public int atvSkillId;
     //공격수치
     public float atkValue;
     //특성타입
