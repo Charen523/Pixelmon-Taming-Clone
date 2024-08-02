@@ -347,7 +347,7 @@ public class StageManager : Singleton<StageManager>
 
         if (worldNum % 2 == 0 && QuestManager.Instance.isStageQ)
         {
-            QuestManager.Instance.OnQuestEvent("Q3");
+            QuestManager.Instance.OnQuestEvent();
         }
     }
     #endregion
@@ -372,7 +372,7 @@ public class StageManager : Singleton<StageManager>
         
         if (QuestManager.Instance.isMonsterQ)
         {
-            QuestManager.Instance.OnQuestEvent("Q2");
+            QuestManager.Instance.OnQuestEvent();
         }
 
         saveManager.SetDeltaData(nameof(saveManager.userData.curStageCount), 1);

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class QuestManager : Singleton<QuestManager>
 {
-    public event Action<string> QuestEvent;
+    public event Action QuestEvent;
 
     StageManager stageManager;
     SaveManager saveManager;
@@ -25,9 +25,13 @@ public class QuestManager : Singleton<QuestManager>
 
     [SerializeField] private int maxQNum = 4;
 
+    public bool isUserLevelQ => curQIndex == "Q1";
     public bool isMonsterQ => curQIndex == "Q2";
     public bool isStageQ => curQIndex == "Q3";
     public bool isHatchQ => curQIndex == "Q4";
+
+    private int StageProgress => stageManager.diffNum * 10000 + stageManager.worldNum * 100 + stageManager.stageNum;
+    private bool isQuestClear = false;
 
     protected override void Awake()
     {
@@ -79,7 +83,7 @@ public class QuestManager : Singleton<QuestManager>
     private void SetQuestCountTxt()
     {
         int goal = curGoal;
-        int progress = curProgress;
+        int progress = Mathf.Min(curProgress, goal); 
         if (isStageQ)
         {
             progress = progress >= goal ? 1 : 0;
@@ -90,21 +94,18 @@ public class QuestManager : Singleton<QuestManager>
 
     public void QuestClearBtn()
     {
-        SetNewQuestId();
-        ResetProgress();
-        InitQuest();
+        if (isQuestClear)
+        {
+            isQuestClear = false;
+            SetNewQuestId();
+            ResetProgress();
+            InitQuest();
 
-
-        //if (IsQuestClear())
-        //{
-        //    //TODO: 퀘스트 보상 로직
-
-        //    //다음 조건에 맞게 초기화.
-        //    SetNewQuestId();
-        //    saveManager.SetData(nameof(userData.questProgress), "");
-
-        //    //UI set.
-        //    InitQuest();
+        }
+        else
+        {
+            Debug.LogWarning("퀘스트 미완료");
+        }
     }
     #endregion
 
@@ -129,41 +130,62 @@ public class QuestManager : Singleton<QuestManager>
     #region Quest Progress
     private void ResetProgress()
     {
-        int data;
+        int progress;
 
         switch (curQIndex)
         {
             case "Q1":
-                data = userData.userLv;
+                progress = userData.userLv;
                 break;
             case "Q2":
-                data = 0;
+                progress = 0;
                 break;
             case "Q3":
-                 data = stageManager.diffNum * 10000 + stageManager.worldNum * 100 + stageManager.stageNum;
+                 progress = StageProgress;
                 break;
             case "Q4":
-                data = 0;
+                progress = curGoal; //TODO: 알 부화에 이벤트 걸기
                 break;
             default:
-                data = -1;
+                progress = -1;
                 Debug.LogWarning("퀘스트 rcode 범위를 넘었습니다.");
                 break;
         }
 
-        saveManager.SetData(nameof(userData.questProgress), data);
+        saveManager.SetData(nameof(userData.questProgress), progress);
+        if (curProgress >= curGoal)
+        {
+            isQuestClear = true;
+        }
     }
 
-    private void UpdateProgress(string qNum)
+    private void UpdateProgress()
     {
-        if (isStageQ)
-        {
-            int progress = stageManager.diffNum * 10000 + stageManager.worldNum * 100 + stageManager.stageNum;
+        int progress = curProgress;
 
+        switch (curQIndex)
+        {
+            case "Q1":
+                progress = userData.userLv;
+                break;
+            case "Q2":
+                progress++;
+                break;
+            case "Q3":
+                progress = StageProgress;
+                break;
+            case "Q4":
+                progress++;
+                break;
+            default:
+                Debug.LogWarning("퀘스트 rcode 범위를 넘었습니다.");
+                break;
         }
-        else
-        {
 
+        saveManager.SetData(nameof(userData.questProgress), progress);
+        if (curProgress >= curGoal)
+        {
+            isQuestClear = true;
         }
     }
 
@@ -195,9 +217,8 @@ public class QuestManager : Singleton<QuestManager>
     }
     #endregion
 
-
-    public void OnQuestEvent(string qNum)
+    public void OnQuestEvent()
     {
-        QuestEvent?.Invoke(qNum);
+        QuestEvent?.Invoke();
     }
 }

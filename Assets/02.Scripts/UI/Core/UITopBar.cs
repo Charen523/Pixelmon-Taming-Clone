@@ -96,6 +96,11 @@ public class UITopBar : UIBase
             saveManager.SetDeltaData("userExp", -tempMaxExp);
             saveManager.userData.userLv++;
             lvTxt.text = $"Lv.{saveManager.userData.userLv}";
+
+            if (QuestManager.Instance.isUserLevelQ)
+            {
+                QuestManager.Instance.OnQuestEvent();
+            }
         }
 
         int endExp = currentExp;
