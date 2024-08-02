@@ -1,17 +1,22 @@
+using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class QuestManager : Singleton<QuestManager>
 {
+    public event Action QuestEvent;
 
-    private QuestData curQData;
-    private int curGoal => curQData.goal;
+    StageManager stageManager;
+    SaveManager saveManager;
+    UserData userData;
 
-    [SerializeField] private string curQuestId => SaveManager.Instance.userData.questId;
+    private QuestData curQData => DataManager.Instance.GetData<QuestData>(curQIndex);
+    private int curGoal => CurQuestGoal();
+
+    [SerializeField] private string curQuestId => userData.questId;
     private int curRepeat => int.Parse(curQuestId.Substring(0, 4));
-    private string curQIndex => curQuestId.Substring(4, 2);
-    private int curProgress => SaveManager.Instance.userData.questProgress;
+    public string curQIndex => curQuestId.Substring(4, 2);
+    private int curProgress => userData.questProgress;
 
     #region UI
     [SerializeField] private TextMeshProUGUI questNameTxt;
@@ -20,15 +25,33 @@ public class QuestManager : Singleton<QuestManager>
 
     [SerializeField] private int maxQNum = 4;
 
-    private void Start()
+    public bool isUserLevelQ => curQIndex == "Q1";
+    public bool isMonsterQ => curQIndex == "Q2";
+    public bool isStageQ => curQIndex == "Q3";
+    public bool isHatchQ => curQIndex == "Q4";
+
+    private int StageProgress => stageManager.diffNum * 10000 + stageManager.worldNum * 100 + stageManager.stageNum;
+    private bool isQuestClear = false;
+
+    protected override void Awake()
     {
-        InitQuest();
+        isDontDestroyOnLoad = false;
+        base.Awake();
+
+        stageManager = StageManager.Instance;
+        saveManager = SaveManager.Instance;
+        userData = SaveManager.Instance.userData;
     }
 
-    #region UI
-    private void InitQuest()
+    private void Start()
     {
-        curQData = DataManager.Instance.GetData<QuestData>(curQIndex);
+        QuestEvent += UpdateProgress;
+        SetQuestUI();
+    }
+    
+    #region UI
+    private void SetQuestUI()
+    {
         SetQuestNameTxt();
         SetQuestCountTxt();
     }
@@ -37,10 +60,10 @@ public class QuestManager : Singleton<QuestManager>
     {
         string curDescription = curQData.description;
 
-        if (curQIndex == "Q3")
+        if (isStageQ)
         {
             int diff = curGoal / 10000;
-            string diffString = StageManager.Instance.SetDiffTxt(diff);
+            string diffString = stageManager.SetDiffTxt(diff);
             curDescription = curDescription.Replace("D", diffString);
 
             int world = (curGoal / 100) % 100;
@@ -59,71 +82,156 @@ public class QuestManager : Singleton<QuestManager>
 
     private void SetQuestCountTxt()
     {
-        countTxt.text = $"({curProgress} / {curGoal})";
+        int goal = curGoal;
+        int progress = Mathf.Min(curProgress, goal); 
+        if (isStageQ)
+        {
+            progress = progress >= goal ? 1 : 0;
+            goal = 1;
+        }
+
+        if (progress < goal)
+        {
+            countTxt.text = $"(<color=#ff0000>{progress}</color> / {goal})";
+        }
+        else
+        {
+            countTxt.text = $"(<color=#00ff00>{progress}</color> / {goal})";
+        }
+
     }
 
     public void QuestClearBtn()
     {
-        //테스트용
-        SetNewQuestId();
-        InitQuest();
+        if (isQuestClear)
+        {
+            isQuestClear = false;
+            SetNewQuestId();
+            ResetProgress();
+            SetQuestUI();
 
-        //if (IsQuestClear())
-        //{
-        //    //TODO: 퀘스트 보상 로직
-
-        //    //다음 조건에 맞게 초기화.
-        //    SetNewQuestId();
-        //    SaveManager.Instance.SetData(nameof(SaveManager.Instance.userData.questProgress), "");
-
-        //    //UI set.
-        //    InitQuest();
-        //}
-        //else
-        //{
-        //    Debug.Log("퀘스트 조건 충족하지 못함");
-        //}
+        }
+        else
+        {
+            Debug.LogWarning("퀘스트 미완료");
+        }
     }
     #endregion
 
     #region Quest ID
     private void SetNewQuestId()
     {
-        string newId = (curRepeat + 1).ToString("D4") + NextQrcode();
-        SaveManager.Instance.SetData(nameof(SaveManager.Instance.userData.questId), newId);
-    }
-
-    private string NextQrcode()
-    {
+        int repeatNum = curRepeat;
         int index = int.Parse(curQIndex.Substring(1, 1));
+        string qNum = "Q" + (index + 1).ToString();
+
         if (index == maxQNum)
         {
-            return "Q1";
+            repeatNum++;
+            qNum = "Q1";
         }
-        else
-        {
-            return "Q" + (index + 1).ToString();
-        }
+
+        string newId = repeatNum.ToString("D4") + qNum;
+        SaveManager.Instance.SetData(nameof(SaveManager.Instance.userData.questId), newId);
     }
     #endregion
 
-    #region
-    private void SetProgress()
+    #region Quest Progress
+    private void ResetProgress()
     {
+        int progress;
 
+        switch (curQIndex)
+        {
+            case "Q1":
+                progress = userData.userLv;
+                break;
+            case "Q2":
+                progress = 0;
+                break;
+            case "Q3":
+                 progress = StageProgress;
+                break;
+            case "Q4":
+                progress = curGoal; //TODO: 알 부화에 이벤트 걸기
+                break;
+            default:
+                progress = -1;
+                Debug.LogWarning("퀘스트 rcode 범위를 넘었습니다.");
+                break;
+        }
+
+        saveManager.SetData(nameof(userData.questProgress), progress);
+        if (curProgress >= curGoal)
+        {
+            isQuestClear = true;
+            //TODO: 퀘스트 클리어 시 UI 변동주기
+        }
     }
 
-    private bool IsQuestClear()
+    private void UpdateProgress()
     {
-        if (true)
+        int progress = curProgress;
+
+        switch (curQIndex)
         {
-            
-            return true;
+            case "Q1":
+                progress = userData.userLv;
+                break;
+            case "Q2":
+                progress++;
+                break;
+            case "Q3":
+                progress = StageProgress;
+                break;
+            case "Q4":
+                progress++;
+                break;
+            default:
+                Debug.LogWarning("퀘스트 rcode 범위를 넘었습니다.");
+                break;
         }
-        else
+
+        saveManager.SetData(nameof(userData.questProgress), progress);
+        SetQuestCountTxt();
+
+        if (curProgress >= curGoal)
         {
-            return false;
+            isQuestClear = true;
+            //TODO: 퀘스트 클리어 시 UI 변동주기
         }
+    }
+
+    private int CurQuestGoal()
+    {
+        int goal = curQData.goal;
+
+        switch (curQIndex)
+        {
+            case "Q1":
+                goal = curRepeat + 2;
+                break;
+            case "Q2":
+                goal = ((curRepeat / 10) + 1) * 10;
+                break;
+            case "Q3":
+                goal = (curRepeat / 5) * 10000 + (2 + 2 * (curRepeat % 5)) * 100 + 1;
+                break;
+            case "Q4":
+                goal = ((curRepeat / 10) + 1) * 10;
+                break;
+            default:
+                goal = -1;
+                Debug.LogWarning("퀘스트 rcode 범위를 넘었습니다.");
+                break;
+        }
+
+        return goal;
     }
     #endregion
+
+    public void OnQuestEvent()
+    {
+        QuestEvent?.Invoke();
+    }
 }
