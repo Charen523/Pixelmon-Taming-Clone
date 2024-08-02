@@ -1,17 +1,22 @@
+using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class QuestManager : Singleton<QuestManager>
 {
+    public event Action<string> QuestEvent;
 
-    private QuestData curQData;
-    private int curGoal => curQData.goal;
+    StageManager stageManager;
+    SaveManager saveManager;
+    UserData userData;
 
-    [SerializeField] private string curQuestId => SaveManager.Instance.userData.questId;
+    private QuestData curQData => DataManager.Instance.GetData<QuestData>(curQIndex);
+    private int curGoal => CurQuestGoal();
+
+    [SerializeField] private string curQuestId => userData.questId;
     private int curRepeat => int.Parse(curQuestId.Substring(0, 4));
-    private string curQIndex => curQuestId.Substring(4, 2);
-    private int curProgress => SaveManager.Instance.userData.questProgress;
+    public string curQIndex => curQuestId.Substring(4, 2);
+    private int curProgress => userData.questProgress;
 
     #region UI
     [SerializeField] private TextMeshProUGUI questNameTxt;
@@ -20,15 +25,29 @@ public class QuestManager : Singleton<QuestManager>
 
     [SerializeField] private int maxQNum = 4;
 
+    public bool isMonsterQ => curQIndex == "Q2";
+    public bool isStageQ => curQIndex == "Q3";
+    public bool isHatchQ => curQIndex == "Q4";
+
+    protected override void Awake()
+    {
+        isDontDestroyOnLoad = false;
+        base.Awake();
+
+        stageManager = StageManager.Instance;
+        saveManager = SaveManager.Instance;
+        userData = SaveManager.Instance.userData;
+    }
+
     private void Start()
     {
+        QuestEvent += UpdateProgress;
         InitQuest();
     }
 
     #region UI
     private void InitQuest()
     {
-        curQData = DataManager.Instance.GetData<QuestData>(curQIndex);
         SetQuestNameTxt();
         SetQuestCountTxt();
     }
@@ -37,10 +56,10 @@ public class QuestManager : Singleton<QuestManager>
     {
         string curDescription = curQData.description;
 
-        if (curQIndex == "Q3")
+        if (isStageQ)
         {
             int diff = curGoal / 10000;
-            string diffString = StageManager.Instance.SetDiffTxt(diff);
+            string diffString = stageManager.SetDiffTxt(diff);
             curDescription = curDescription.Replace("D", diffString);
 
             int world = (curGoal / 100) % 100;
@@ -59,14 +78,22 @@ public class QuestManager : Singleton<QuestManager>
 
     private void SetQuestCountTxt()
     {
-        countTxt.text = $"({curProgress} / {curGoal})";
+        int goal = curGoal;
+        int progress = curProgress;
+        if (isStageQ)
+        {
+            progress = progress >= goal ? 1 : 0;
+            goal = 1;
+        }
+        countTxt.text = $"({progress} / {goal})";
     }
 
     public void QuestClearBtn()
     {
-        //테스트용
         SetNewQuestId();
+        ResetProgress();
         InitQuest();
+
 
         //if (IsQuestClear())
         //{
@@ -74,56 +101,103 @@ public class QuestManager : Singleton<QuestManager>
 
         //    //다음 조건에 맞게 초기화.
         //    SetNewQuestId();
-        //    SaveManager.Instance.SetData(nameof(SaveManager.Instance.userData.questProgress), "");
+        //    saveManager.SetData(nameof(userData.questProgress), "");
 
         //    //UI set.
         //    InitQuest();
-        //}
-        //else
-        //{
-        //    Debug.Log("퀘스트 조건 충족하지 못함");
-        //}
     }
     #endregion
 
     #region Quest ID
     private void SetNewQuestId()
     {
-        string newId = (curRepeat + 1).ToString("D4") + NextQrcode();
-        SaveManager.Instance.SetData(nameof(SaveManager.Instance.userData.questId), newId);
-    }
-
-    private string NextQrcode()
-    {
+        int repeatNum = curRepeat;
         int index = int.Parse(curQIndex.Substring(1, 1));
+        string qNum = "Q" + (index + 1).ToString();
+
         if (index == maxQNum)
         {
-            return "Q1";
+            repeatNum++;
+            qNum = "Q1";
         }
-        else
-        {
-            return "Q" + (index + 1).ToString();
-        }
+
+        string newId = repeatNum.ToString("D4") + qNum;
+        SaveManager.Instance.SetData(nameof(SaveManager.Instance.userData.questId), newId);
     }
     #endregion
 
-    #region
-    private void SetProgress()
+    #region Quest Progress
+    private void ResetProgress()
     {
+        int data;
 
+        switch (curQIndex)
+        {
+            case "Q1":
+                data = userData.userLv;
+                break;
+            case "Q2":
+                data = 0;
+                break;
+            case "Q3":
+                 data = stageManager.diffNum * 10000 + stageManager.worldNum * 100 + stageManager.stageNum;
+                break;
+            case "Q4":
+                data = 0;
+                break;
+            default:
+                data = -1;
+                Debug.LogWarning("퀘스트 rcode 범위를 넘었습니다.");
+                break;
+        }
+
+        saveManager.SetData(nameof(userData.questProgress), data);
     }
 
-    private bool IsQuestClear()
+    private void UpdateProgress(string qNum)
     {
-        if (true)
+        if (isStageQ)
         {
-            
-            return true;
+            int progress = stageManager.diffNum * 10000 + stageManager.worldNum * 100 + stageManager.stageNum;
+
         }
         else
         {
-            return false;
+
         }
     }
+
+    private int CurQuestGoal()
+    {
+        int goal = curQData.goal;
+
+        switch (curQIndex)
+        {
+            case "Q1":
+                goal = curRepeat + 2;
+                break;
+            case "Q2":
+                goal = ((curRepeat / 10) + 1) * 10;
+                break;
+            case "Q3":
+                goal = (curRepeat / 5) * 10000 + (2 + 2 * (curRepeat % 5)) * 100 + 1;
+                break;
+            case "Q4":
+                goal = ((curRepeat / 10) + 1) * 10;
+                break;
+            default:
+                goal = -1;
+                Debug.LogWarning("퀘스트 rcode 범위를 넘었습니다.");
+                break;
+        }
+
+        return goal;
+    }
     #endregion
+
+
+    public void OnQuestEvent(string qNum)
+    {
+        QuestEvent?.Invoke(qNum);
+    }
 }

@@ -64,10 +64,10 @@ public class StageManager : Singleton<StageManager>
     
     public int diffNum => saveManager.userData.curDifficulty;
 
-    [SerializeField] private int worldNum;
+    public int worldNum;
     [SerializeField] private readonly int maxWorldNum = 10;
 
-    [SerializeField] private int stageNum;
+    public int stageNum;
     [SerializeField] private readonly int bossStageNum = 6;
     private bool isBossStage => stageNum == bossStageNum;
     #endregion
@@ -344,6 +344,11 @@ public class StageManager : Singleton<StageManager>
         }
 
         ResetRcode();
+
+        if (worldNum % 2 == 0 && QuestManager.Instance.isStageQ)
+        {
+            QuestManager.Instance.OnQuestEvent("Q3");
+        }
     }
     #endregion
 
@@ -364,7 +369,13 @@ public class StageManager : Singleton<StageManager>
             spawner.isActivatedEnemy.Remove(enemy);
         }
         //saveManager.GiveRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
-        saveManager.SetDeltaData("curStageCount", 1);
+        
+        if (QuestManager.Instance.isMonsterQ)
+        {
+            QuestManager.Instance.OnQuestEvent("Q2");
+        }
+
+        saveManager.SetDeltaData(nameof(saveManager.userData.curStageCount), 1);
     }
 
     public void OnPlayerDead()
