@@ -96,7 +96,7 @@ public class QuestManager : Singleton<QuestManager>
         }
         else
         {
-            countTxt.text = $"<color=#82FF55>({progress}</color> / {goal})</color>";
+            countTxt.text = $"<color=#82FF55>({progress} / {goal})</color>";
         }
 
     }
