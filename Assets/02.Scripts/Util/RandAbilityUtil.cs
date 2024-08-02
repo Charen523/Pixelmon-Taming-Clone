@@ -22,7 +22,7 @@ public static class RandAbilityUtil
     /// <param name="abilityType"></param>
     /// <param name="maxRate"></param>
     /// <returns></returns>
-    public static (string AbilityRank, float AbilityValue) PerformAbilityGacha(AbilityType abilityType, float maxRate)
+    public static (string AbilityRank, float AbilityValue) PerformAbilityGacha(AbilityType abilityType, float maxRate, float oldValue = 0)
     {
         var data = DataManager.Instance.abilityRateData.data;
 
@@ -56,10 +56,14 @@ public static class RandAbilityUtil
         #endregion
 
         #region 능력치값 랜덤(min~max)
-
-        var dropData = DataManager.Instance.GetData<AbilityRateData>(dropRcode);
-        int randValue = UnityEngine.Random.Range(dropData.min, dropData.max + 1);
-        float abilityValue = ((float)randValue / 100) * maxRate;
+        float abilityValue;
+        int randValue;
+        var dropData = DataManager.Instance.GetData<AbilityRateData>(dropRcode);     
+        do
+        {
+            randValue = UnityEngine.Random.Range(dropData.min, dropData.max + 1);
+            abilityValue = (randValue / 100f) * maxRate;
+        } while (oldValue != 0 && abilityValue == oldValue);
         #endregion
 
         return (dropRcode, abilityValue);

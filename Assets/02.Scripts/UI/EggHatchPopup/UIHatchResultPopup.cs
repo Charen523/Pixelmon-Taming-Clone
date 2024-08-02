@@ -90,6 +90,10 @@ public class UIHatchResultPopup : UIBase
 
             UIPsv[i].NewPsvRankTxt.text = uiMiddleBar.PsvData[i].NewPsvRank.ToString();
             UIPsv[i].NewPsvValueTxt.text = new StringBuilder().Append(uiMiddleBar.PsvData[i].NewPsvValue.ToString("F2")).Append('%').ToString();
+            if (uiMiddleBar.PsvData[i].NewPsvValue > uiMiddleBar.HatchMyPxmData.psvSkill[i].psvValue)
+                UIPsv[i].NewPsvValueTxt.HexColor("#78FF1E");
+            else if(uiMiddleBar.PsvData[i].NewPsvValue < uiMiddleBar.HatchMyPxmData.psvSkill[i].psvValue)
+                UIPsv[i].NewPsvValueTxt.HexColor("#FF0A0A");
         }
         for (int i = 3; i >= uiMiddleBar.HatchMyPxmData.psvSkill.Count; i--)
         {
@@ -102,6 +106,7 @@ public class UIHatchResultPopup : UIBase
         UIPsv[0].PsvNameTxt.text = uiMiddleBar.PsvData[0].PsvName;
         UIPsv[0].OldPsvRankTxt.text = uiMiddleBar.PsvData[0].NewPsvRank.ToString();
         UIPsv[0].NewPsvValueTxt.text = new StringBuilder().Append(uiMiddleBar.PsvData[0].NewPsvValue.ToString("F2")).Append('%').ToString();
+        UIPsv[0].NewPsvValueTxt.HexColor("#78FF1E");
 
         UIPsv[0].NewPsvRankTxt.gameObject.SetActive(false);
         UIPsv[0].OldPsvValueTxt.gameObject.SetActive(false);

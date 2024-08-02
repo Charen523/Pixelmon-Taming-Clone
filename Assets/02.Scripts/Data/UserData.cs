@@ -26,9 +26,10 @@ public class UserData
     public string startLvUpTime = null;
     public float skipTime = 0;
     public bool isGetPxm = true;
+    public bool isOwnedPxm = false;
     public PixelmonData hatchPxmData = null;
     public MyPixelmonData hatchMyPxmData = null;
-    public PxmPsvData[] psvData = new PxmPsvData[4];
+    public PxmPsvData[] psvData = new PxmPsvData[4];    
 
     public string curStageRcode = "STG00101";
     public int curDifficulty = 0;
