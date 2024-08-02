@@ -3,16 +3,15 @@ using UnityEngine;
 public class AtkUpgradeSlot : UpgradeSlot
 {
     #region UI
-    protected override void SetTxt()
+    protected override void SetSlotTxts()
     {
-        slotLevelTxt.text = "Lv." + CurLv.ToString();
+        base.SetSlotTxts();
         slotValueTxt.text = CalculateTool.NumFormatter(Mathf.RoundToInt(CurValue));
-        SetGoldTxt();
     }
     #endregion
 
     #region Value
-    protected override float CalculateValue(int reachLv)
+    protected override float ValuePerLv(int reachLv)
     {
         return reachLv;
     }
@@ -21,16 +20,21 @@ public class AtkUpgradeSlot : UpgradeSlot
     #region Price
     public override void CalculatePrice(int mulValue) //next 3종 새로고침.
     {
-        curMulValue = mulValue;
+        curUpgradeRate = mulValue;
 
-        if (mulValue == 0)
+        if (curUpgradeRate == 0)
         {
             FindMaxPrice();
         }
         else
         {
-            nextLv = CurLv + mulValue;
-            nextValue = CalculateValue(nextLv);
+            if (CurLv + curUpgradeRate > maxLv)
+            {
+                curUpgradeRate = maxLv - CurLv;
+            }
+
+            nextLv =  CurLv + curUpgradeRate;
+            nextValue = ValuePerLv(nextLv);
             nextPrice = CalculateTool.GetAtkTotalPrice(CurLv, nextLv);
         }
         SetGoldTxt();
@@ -44,9 +48,9 @@ public class AtkUpgradeSlot : UpgradeSlot
             nextLv++;
             nextPrice = CalculateTool.GetAtkTotalPrice(CurLv, nextLv);
         }
-        while (CalculateTool.GetAtkTotalPrice(CurLv, nextLv + 1) <= ownGold);
+        while (CalculateTool.GetAtkTotalPrice(CurLv, nextLv + 1) <= ownGold && nextLv != maxLv);
 
-        nextValue = CalculateValue(nextLv);
+        nextValue = ValuePerLv(nextLv);
         SetGoldTxt();
     }
     #endregion
