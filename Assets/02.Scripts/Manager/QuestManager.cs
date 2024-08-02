@@ -89,7 +89,16 @@ public class QuestManager : Singleton<QuestManager>
             progress = progress >= goal ? 1 : 0;
             goal = 1;
         }
-        countTxt.text = $"({progress} / {goal})";
+
+        if (progress < goal)
+        {
+            countTxt.text = $"(<color=#ff0000>{progress}</color> / {goal})";
+        }
+        else
+        {
+            countTxt.text = $"(<color=#00ff00>{progress}</color> / {goal})";
+        }
+
     }
 
     public void QuestClearBtn()
