@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +21,7 @@ public class UIMiddleBar : UIBase
     public int eggLv = 1;
     #endregion
     #region 애니메이션
-    public AnimationData Data = new AnimationData();
+    public AnimationData AnimData = new AnimationData();
     public Animator BreakAnim;
     public Animator HatchAnim;
     public GameObject HatchAnimGO;
@@ -29,11 +30,17 @@ public class UIMiddleBar : UIBase
     public PixelmonRank Rank;
     public Image HatchedPixelmonImg;
     public PixelmonData HatchPxmData;
+    public MyPixelmonData HatchMyPxmData;
+    public PxmPsvData[] PsvData;
+    public bool IsOwnedPxm;
 
     private UIHatchResultPopup HatchResultPopup;
     private UIEggLvPopup EggLvPopup;
     private WaitUntil getPixelmon;
-    private bool isGetPixelmon;
+    private bool isDoneGetPxm;
+
+    private UserData userData => SaveManager.Instance.userData;
+    private Coroutine hatchedCoroutine;
     #endregion
 
     private async void Awake()
@@ -43,16 +50,27 @@ public class UIMiddleBar : UIBase
     }
     private void Start()
     {
-        eggCount = SaveManager.Instance.userData.eggCount;
-        eggLv = SaveManager.Instance.userData.eggLv;
+        eggCount = userData.eggCount;
+        eggLv = userData.eggLv;
         EggCntText.text = eggCount.ToString();
         EggLvText.text = eggLv.ToString();
   
-        getPixelmon = new WaitUntil(() => isGetPixelmon == true);
+        getPixelmon = new WaitUntil(() => isDoneGetPxm == true);
         HatchedPixelmonImg.gameObject.SetActive(false);
 
-        Data.Initialize();
-        Gacha();
+        AnimData.Initialize();
+
+        PsvData = new PxmPsvData[4];
+        for (int i = 0; i < PsvData.Length; i++)
+            PsvData[i] = new PxmPsvData();
+
+        if (!userData.isGetPxm)
+        {
+            HatchPxmData = userData.hatchPxmData;
+            HatchMyPxmData = userData.hatchMyPxmData;
+            PsvData = userData.psvData;
+            hatchedCoroutine = StartCoroutine(SetPxmHatchAnim());
+        }
     }
 
     private bool Gacha()
@@ -73,13 +91,53 @@ public class UIMiddleBar : UIBase
         }
 
         HatchPxmData = randPxmData[UnityEngine.Random.Range(0, randPxmData.Count)];
-        HatchedPixelmonImg.sprite = HatchPxmData.icon;
+        SaveManager.Instance.SetData(nameof(userData.hatchPxmData), HatchPxmData);
+        #endregion
+
+        #region 픽셀몬 능력치 랜덤뽑기
+        IsOwnedPxm = false;
+        foreach (var data in userData.ownedPxms)
+        {
+            if (HatchPxmData.rcode == data.rcode)
+            {
+                IsOwnedPxm = true;
+                HatchMyPxmData = data;
+                SaveManager.Instance.SetData(nameof(userData.hatchMyPxmData), HatchMyPxmData);
+                break;
+            }
+        }
+        if (IsOwnedPxm)
+            SetNewPsvValue();
+        else SetFirstPsvValue();
+        SaveManager.Instance.SetData(nameof(userData.psvData), PsvData);
         #endregion
         return true;
+    }
+    private void SetNewPsvValue()
+    {
+        for (int i = 0; i < HatchMyPxmData.psvSkill.Count; i++)
+        { 
+            var psvData = DataManager.Instance.GetData<BasePsvData>(HatchMyPxmData.psvSkill[i].psvName);
+            var randAbility = RandAbilityUtil.PerformAbilityGacha(HatchMyPxmData.psvSkill[i].psvType, psvData.maxRate);
+            PsvData[i].NewPsvRank = randAbility.AbilityRank;
+            PsvData[i].NewPsvValue = randAbility.AbilityValue;
+        }
+    }
+
+    private void SetFirstPsvValue()
+    {
+        var basePsvData = RandAbilityUtil.RandAilityData();
+        var randAbility = RandAbilityUtil.PerformAbilityGacha((AbilityType)basePsvData.psvEnum, basePsvData.maxRate);
+        PsvData[0].PsvType = (AbilityType)basePsvData.psvEnum;
+        PsvData[0].PsvName = basePsvData.rcode;
+        PsvData[0].NewPsvRank = randAbility.AbilityRank;
+        PsvData[0].NewPsvValue = randAbility.AbilityValue;
     }
 
     public void OnClickEgg()
     {
+        if (userData.isGetPxm)
+            Gacha();
         StartCoroutine(ClickEgg());
     }
 
@@ -87,24 +145,33 @@ public class UIMiddleBar : UIBase
     {
         if (eggCount <= 0) yield break;
 
+        isDoneGetPxm = false;
+
+        if (userData.isGetPxm == true)
+            yield return SetPxmHatchAnim();
+
+        HatchResultPopup.SetActive(true);
+        HatchResultPopup.SetPopup(this);
+
+        yield return getPixelmon;  
+    }
+
+    private IEnumerator SetPxmHatchAnim()
+    {
         HatchAnimGO.SetActive(true);
-        isGetPixelmon = false;
 
         // 애니메이션 실행
-        BreakAnim.SetInteger(Data.EggBreakParameterHash, (int)Rank);
-        HatchAnim.SetBool(Data.EggHatchParameterHash, true);
+        BreakAnim.SetInteger(AnimData.EggBreakParameterHash, (int)Rank);
+        HatchAnim.SetBool(AnimData.EggHatchParameterHash, true);
 
         // 애니메이션 끝난지 체크
         float startTime = Time.time;
         while (Time.time - startTime < BreakClip.length) yield return null;
 
         HatchedPixelmonImg.gameObject.SetActive(true);
-        HatchResultPopup.SetActive(true);
-        HatchResultPopup.SetPopup(this);
-
-        yield return getPixelmon;
-        yield return Gacha(); // 다음 알 셋팅
+        HatchedPixelmonImg.sprite = HatchPxmData.icon;
     }
+
     public PixelmonRank PerformPxmGacha(string rcode)
     {
         var data = DataManager.Instance.GetData<EggRateData>(rcode);
@@ -138,14 +205,16 @@ public class UIMiddleBar : UIBase
         throw new System.Exception("확률 합 != 100");
     }
 
-    public void OnClickGetPixelmon(bool isReplace)
+    public void GetPixelmon()
     {
-        BreakAnim.SetInteger(Data.EggBreakParameterHash, -1);
-        HatchAnim.SetBool(Data.EggHatchParameterHash, false);
+        BreakAnim.SetInteger(AnimData.EggBreakParameterHash, -1);
+        HatchAnim.SetBool(AnimData.EggHatchParameterHash, false);
         
         HatchedPixelmonImg.gameObject.SetActive(false);
         HatchAnimGO.SetActive(false);
-        isGetPixelmon = true;
+
+        SaveManager.Instance.SetData(nameof(userData.isGetPxm), true);
+        isDoneGetPxm = true;
     }
 
     public void OnClickEggLvBtn()
@@ -156,5 +225,14 @@ public class UIMiddleBar : UIBase
 
     public void OnClickAutoBtn()
     {
+    }
+
+    private void OnDisable()
+    {
+        if (hatchedCoroutine != null)
+        {
+            StopCoroutine(hatchedCoroutine);
+            hatchedCoroutine = null;
+        }
     }
 }

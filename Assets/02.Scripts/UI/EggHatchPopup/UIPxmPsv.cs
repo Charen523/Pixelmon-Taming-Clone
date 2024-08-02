@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,9 +13,4 @@ public class UIPxmPsv : MonoBehaviour
     public Image ArrowImg;
     public TextMeshProUGUI NewPsvRankTxt;
     public TextMeshProUGUI NewPsvValueTxt;
-
-    public AbilityType PsvType;
-    public string PsvName;
-    public string NewPsvRank;
-    public float NewPsvValue;
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Threading.Tasks;
 using System.Numerics;
+using System.Reflection;
 
 public class SaveManager : Singleton<SaveManager>
 {
@@ -84,9 +85,8 @@ public class SaveManager : Singleton<SaveManager>
         while (true)
         {
             yield return CheckDirty;
-
             isDirty = false;
-            SaveDataAsync();
+            SaveToJson(userData);
         }
     }
 
@@ -102,6 +102,7 @@ public class SaveManager : Singleton<SaveManager>
         {
             fieldInfo.SetValue(userData, value);
             isDirty = true;
+            Debug.Log(fieldInfo.Name);
             UIManager.Instance.InvokeUIChange(field);
         }
         else
@@ -120,6 +121,7 @@ public class SaveManager : Singleton<SaveManager>
             int currentValue = (int)fieldInfo.GetValue(userData);
             fieldInfo.SetValue(userData, currentValue + value);
             isDirty = true;
+            Debug.Log(fieldInfo.Name);
             UIManager.Instance.InvokeUIChange(field);
         }
         else
@@ -140,7 +142,8 @@ public class SaveManager : Singleton<SaveManager>
             userData.gold = value;
             userData._gold = value.ToString();
         }
-
+        isDirty = true;
+        Debug.Log("SetGold");
         UIManager.Instance.InvokeUIChange(nameof(userData.gold));
     }
 
