@@ -1,11 +1,8 @@
-using System;
 using System.Numerics;
 using UnityEngine;
 
 public class UpgradeTab : UIBase
 {
-    private PixelmonStatus upgradeStat;
-
     private BigInteger currentGold => SaveManager.Instance.userData.gold;
 
     #region UI
@@ -27,11 +24,6 @@ public class UpgradeTab : UIBase
             upgradeSlots[i].upgradeTab = this;
             upgradeSlots[i].CurLv = upgradeLvs[i];
         }
-    }
-
-    private void Start()
-    {
-        upgradeStat = PixelmonManager.Instance.upgradeStatus;
     }
 
     public void CurrentToggle(int toggleIndex)

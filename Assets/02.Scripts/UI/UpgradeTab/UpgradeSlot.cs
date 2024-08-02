@@ -62,6 +62,7 @@ public abstract class UpgradeSlot : MonoBehaviour
         {
             _curValue = value;
             SetUpgradeStat(value);
+            PixelmonStatHandler.ApplyMyPixelmon(slotIndex);
         }
     }
 
@@ -116,7 +117,6 @@ public abstract class UpgradeSlot : MonoBehaviour
             SaveManager.Instance.SetGold(-nextPrice, true);
 
             SetTxt();
-            //레벨 오르고 새로운 가격 PixelmonTab으로 보내고 BtnPrice 새로 계산.
         }
         else
         {
