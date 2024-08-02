@@ -11,7 +11,7 @@ public class UserData
     public string _gold = "1000";
     public BigInteger gold;
 
-    public int diamond = 100;
+    public int diamond = 10000;
     public int seed = 10;
     public int food = 10;
     //public int key;
@@ -23,13 +23,14 @@ public class UserData
     public int eggCount = 3;
     public int fullGaugeCnt = 0;
     public bool isLvUpMode = false;
-    public string lastLvUpTime = null;
+    public string startLvUpTime = null;
+    public float skipTime = 0;
 
     public string curStageRcode = "STG00101";
     public int curDifficulty = 0;
     public int curStageCount = 0;
 
-    public string questId = "0000_Q1";
+    public string questId = "0000Q1";
     public int questProgress = 1;
 
     public int[] UpgradeLvs = { 1, 1, 1, 1, 1, 1, 1};

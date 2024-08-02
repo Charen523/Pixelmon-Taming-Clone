@@ -43,6 +43,7 @@ public class UIEggLvPopup : UIBase
 
     private void Start()
     {
+
         for (int i = 0; i < userData.eggLv / 5 + 2; i++)
         {
             lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
@@ -74,9 +75,6 @@ public class UIEggLvPopup : UIBase
     {
         Desc.text = descs[1];
         SaveManager.Instance.SetData(nameof(userData.isLvUpMode), true);
-
-        foreach (var gauge in lvUpGauges)
-            gauge.ResetGauge();
 
         Gauges.gameObject.SetActive(false);
         GaugeAndLvUp.SetActive(false);
@@ -138,8 +136,12 @@ public class UIEggLvPopup : UIBase
 
     public void OnClickLvUpBtn()
     {
-        SaveManager.Instance.SetData(nameof(userData.lastLvUpTime), DateTime.Now.ToString());
+        SaveManager.Instance.SetData(nameof(userData.startLvUpTime), DateTime.Now.ToString());
         SaveManager.Instance.SetData(nameof(userData.fullGaugeCnt), 0);
+        foreach (var gauge in lvUpGauges)
+            gauge.ResetGauge();
+        if ((userData.eggLv + 1) % 5 == 0)
+            lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
         SetLvUpMode();
     }
 
@@ -152,16 +154,15 @@ public class UIEggLvPopup : UIBase
     public void OnClickDiaBtn()
     {
         SaveManager.Instance.SetDeltaData(nameof(userData.diamond), -skipDia);
+        SaveManager.Instance.SetData(nameof(userData.skipTime), userData.skipTime + 3600f);
         remainingTime -= 3600f;
         if(remainingTime <= 0) SetGaugeMode();
     }
 
     private void LvUp()
     {
-        SaveManager.Instance.SetData(nameof(userData.lastLvUpTime), null);
+        SaveManager.Instance.SetData(nameof(userData.startLvUpTime), null);
         SaveManager.Instance.SetDeltaData(nameof(userData.eggLv), 1);
-        if (userData.eggLv % 5 == 0)
-            lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
         UpdateLvAndRateUI();       
         SetGaugeMode();
     }
@@ -176,8 +177,8 @@ public class UIEggLvPopup : UIBase
     private IEnumerator UpdateTimer()
     {
         // 앱이 다시 시작될 때 경과된 시간 계산
-        TimeSpan elapsedTime = DateTime.Now - DateTime.Parse(userData.lastLvUpTime);
-        remainingTime = totalTime - (float)elapsedTime.TotalSeconds;
+        TimeSpan elapsedTime = DateTime.Now - DateTime.Parse(userData.startLvUpTime);
+        remainingTime = totalTime - (float)elapsedTime.TotalSeconds - userData.skipTime;
 
         while (remainingTime > 0)
         {
@@ -185,6 +186,7 @@ public class UIEggLvPopup : UIBase
             UpdateTimerText();
             yield return new WaitForSeconds(1f); // 1초 대기
         }
+        SaveManager.Instance.SetData(nameof(userData.skipTime), 0);
         remainingTime = 0;
         UpdateTimerText();
         LvUp();
