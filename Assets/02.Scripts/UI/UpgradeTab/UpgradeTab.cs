@@ -1,22 +1,10 @@
-using System.Numerics;
 using UnityEngine;
 
 public class UpgradeTab : UIBase
 {
-    private BigInteger currentGold => SaveManager.Instance.userData.gold;
-
-    #region UI
     [SerializeField] private UpgradeSlot[] upgradeSlots;
-    #endregion
-
-    #region Tab Fields & Properties
-
-    private int mulValue;
-
     private int[] upgradeLvs => SaveManager.Instance.userData.UpgradeLvs;
     
-    #endregion
-
     private void Awake()
     {
         for (int i = 0; i < upgradeSlots.Length; i++)
@@ -28,18 +16,16 @@ public class UpgradeTab : UIBase
 
     public void CurrentToggle(int toggleIndex)
     {
-        mulValue = toggleIndex;
-
         for (int i = 0; i < upgradeSlots.Length; i++)
         {
-            upgradeSlots[i].CalculatePrice(mulValue);
+            upgradeSlots[i].CalculatePrice(toggleIndex);
         }
     }
 
-    public void SetUpgradeLvs(int index, int curLv)
+    public void SaveUpgradeLvs(int index, int curLv)
     {
-        int[] newUpgradeLvs = SaveManager.Instance.userData.UpgradeLvs;
+        int[] newUpgradeLvs = upgradeLvs;
         newUpgradeLvs[index] = curLv;
-        SaveManager.Instance.SetData(nameof(SaveManager.Instance.userData.UpgradeLvs), newUpgradeLvs);
+        SaveManager.Instance.SetData(nameof(upgradeLvs), newUpgradeLvs);
     }
 }
