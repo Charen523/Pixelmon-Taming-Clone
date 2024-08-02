@@ -46,11 +46,11 @@ public class QuestManager : Singleton<QuestManager>
     private void Start()
     {
         QuestEvent += UpdateProgress;
-        InitQuest();
+        SetQuestUI();
     }
-
+    
     #region UI
-    private void InitQuest()
+    private void SetQuestUI()
     {
         SetQuestNameTxt();
         SetQuestCountTxt();
@@ -99,7 +99,7 @@ public class QuestManager : Singleton<QuestManager>
             isQuestClear = false;
             SetNewQuestId();
             ResetProgress();
-            InitQuest();
+            SetQuestUI();
 
         }
         else
@@ -156,6 +156,7 @@ public class QuestManager : Singleton<QuestManager>
         if (curProgress >= curGoal)
         {
             isQuestClear = true;
+            //TODO: 퀘스트 클리어 시 UI 변동주기
         }
     }
 
@@ -183,9 +184,12 @@ public class QuestManager : Singleton<QuestManager>
         }
 
         saveManager.SetData(nameof(userData.questProgress), progress);
+        SetQuestCountTxt();
+
         if (curProgress >= curGoal)
         {
             isQuestClear = true;
+            //TODO: 퀘스트 클리어 시 UI 변동주기
         }
     }
 
