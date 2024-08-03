@@ -19,14 +19,14 @@ public abstract class UpgradeSlot : MonoBehaviour
 
     [Header("Slot Info")]
     [HideInInspector] public UpgradeTab upgradeTab;
-    [SerializeField] private UpgradeIndex slotIndex; //Inspector Setting
-    [SerializeField] protected int maxLv; //Inspector Setting
+    [SerializeField] private UpgradeIndex slotIndex;
+    [SerializeField] protected int maxLv;
 
     [Header("Upgrade UI")]
     [SerializeField] private TextMeshProUGUI slotLevelTxt;
     [SerializeField] protected TextMeshProUGUI slotValueTxt;
     [SerializeField] private TextMeshProUGUI slotPriceTxt;
-    [SerializeField] private GameObject GoldBtn; //TODO: 끝까지 불필요하면 삭제.
+    [SerializeField] private GameObject goldBtn; //TODO: 끝까지 불필요하면 삭제.
 
     private int _curLv;
     public int CurLv
@@ -60,7 +60,6 @@ public abstract class UpgradeSlot : MonoBehaviour
         }
     }
 
-    /*upgrade Stat 현재 값: PixelmonManager의 Status와 동일해야 함!*/
     private float _curValue;
     protected float CurValue
     {
@@ -79,15 +78,18 @@ public abstract class UpgradeSlot : MonoBehaviour
         }
     }
 
-    protected BigInteger curLvPrice => CalculateTool.GetAtkPrice(CurLv);
-
     #region Buy Button Values
     protected int nextLv;
     protected float nextValue;
+
+    private BigInteger curLvPrice => Calculater.CalculatePrice(CurLv, b, d1, d2);
     protected BigInteger nextPrice;
+    [SerializeField] private int b = 100;
+    [SerializeField] private int d1 = 500;
+    [SerializeField] private int d2 = 200;
     #endregion
 
-    protected int curUpgradeRate = 1;
+    private int curUpgradeRate = 1;
     private bool isStart = false;
 
     private void Start()
@@ -149,8 +151,8 @@ public abstract class UpgradeSlot : MonoBehaviour
     //TODO: 잘하면 없어질듯?
     protected void SetGoldTxt()
     {
-        slotPriceTxt.text = CalculateTool.NumFormatter(nextPrice);
-    } 
+        slotPriceTxt.text = Calculater.NumFormatter(nextPrice);
+    }
     #endregion
 
     #region Value Methods
@@ -166,7 +168,40 @@ public abstract class UpgradeSlot : MonoBehaviour
     #endregion
 
     #region Price Methods
-    public abstract void CalculatePrice(int mulValue);
-    protected abstract void FindMaxPrice();
+    public void CalculatePrice(int mulValue) //next 3종 새로고침.
+    {
+        curUpgradeRate = mulValue;
+
+        if (curUpgradeRate == 0)
+        {
+            FindMaxPrice();
+        }
+        else
+        {
+            if (CurLv + curUpgradeRate > maxLv)
+            {
+                curUpgradeRate = maxLv - CurLv;
+            }
+
+            nextLv = CurLv + curUpgradeRate;
+            nextValue = ValuePerLv(nextLv);
+            nextPrice = Calculater.CalPriceSum(nextLv - 1, b, d1, d2) - Calculater.CalPriceSum(CurLv - 1, b, d1, d2);
+        }
+        SetGoldTxt();
+    }
+
+    private void FindMaxPrice()
+    {
+        nextLv = CurLv;
+        do
+        {
+            nextLv++;
+            nextPrice = Calculater.CalPriceSum(nextLv - 1, b, d1, d2) - Calculater.CalPriceSum(CurLv - 1, b, d1, d2);
+        }
+        while (Calculater.CalPriceSum(nextLv, b, d1, d2) - Calculater.CalPriceSum(CurLv - 1, b, d1, d2) <= ownGold && nextLv != maxLv);
+
+        nextValue = ValuePerLv(nextLv);
+        SetGoldTxt();
+    }
     #endregion
 }

@@ -71,7 +71,7 @@ public class UITopBar : UIBase
 
     public void UpdateGoldUI()
     {
-        goldTxt.text = CalculateTool.NumFormatter(saveManager.userData.gold);
+        goldTxt.text = Calculater.NumFormatter(saveManager.userData.gold);
     }
 
     public void UpdateDiamondUI()
