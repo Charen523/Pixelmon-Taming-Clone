@@ -26,6 +26,6 @@ public class UpgradeTab : UIBase
     {
         int[] newUpgradeLvs = upgradeLvs;
         newUpgradeLvs[index] = curLv;
-        SaveManager.Instance.SetData(nameof(upgradeLvs), newUpgradeLvs);
+        SaveManager.Instance.SetData(nameof(UserData.UpgradeLvs), newUpgradeLvs);
     }
 }
