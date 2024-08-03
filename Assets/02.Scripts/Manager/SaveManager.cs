@@ -102,7 +102,6 @@ public class SaveManager : Singleton<SaveManager>
         {
             fieldInfo.SetValue(userData, value);
             isDirty = true;
-            Debug.Log(fieldInfo.Name);
             UIManager.Instance.InvokeUIChange(field);
         }
         else
@@ -121,7 +120,6 @@ public class SaveManager : Singleton<SaveManager>
             int currentValue = (int)fieldInfo.GetValue(userData);
             fieldInfo.SetValue(userData, currentValue + value);
             isDirty = true;
-            Debug.Log(fieldInfo.Name);
             UIManager.Instance.InvokeUIChange(field);
         }
         else
@@ -143,7 +141,6 @@ public class SaveManager : Singleton<SaveManager>
             userData._gold = value.ToString();
         }
         isDirty = true;
-        Debug.Log("SetGold");
         UIManager.Instance.InvokeUIChange(nameof(userData.gold));
     }
 

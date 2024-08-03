@@ -38,12 +38,12 @@ public class UIEggLvPopup : UIBase
     #endregion
 
     private string[] descs = { "Lv업 게이지", "Lv업 중" };
+    private UIMiddleBar uiMiddleBar;
     private UserData userData => SaveManager.Instance.userData;
     private Coroutine updateTimerCoroutine;
 
     private void Start()
     {
-
         for (int i = 0; i < userData.eggLv / 5 + 2; i++)
         {
             lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
@@ -53,8 +53,9 @@ public class UIEggLvPopup : UIBase
         SetLvUpBtn();
     }
 
-    public void SetPopup()
+    public void SetPopup(UIMiddleBar middleBar)
     {
+        uiMiddleBar = middleBar;
         UpdateLvAndRateUI();
 
         if (userData.isLvUpMode) // Lv업 중
@@ -163,6 +164,7 @@ public class UIEggLvPopup : UIBase
     {
         SaveManager.Instance.SetData(nameof(userData.startLvUpTime), null);
         SaveManager.Instance.SetDeltaData(nameof(userData.eggLv), 1);
+        uiMiddleBar.SetEggTextUI();
         UpdateLvAndRateUI();       
         SetGaugeMode();
     }

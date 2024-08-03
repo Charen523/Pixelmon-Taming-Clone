@@ -112,4 +112,18 @@ public static class UIUtils
                 return 0;
         }
     }
+
+    // TextMeshProUGUI의 색상을 색상 코드로 변경하는 확장 메서드
+    public static void HexColor(this TextMeshProUGUI textElement, string hexColor)
+    {
+        Color newColor;
+        if (ColorUtility.TryParseHtmlString(hexColor, out newColor))
+        {
+            textElement.color = newColor;
+        }
+        else
+        {
+            Debug.LogError("색상 코드 변환에 실패했습니다: " + hexColor);
+        }
+    }
 }
