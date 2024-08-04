@@ -148,14 +148,12 @@ public abstract class UpgradeSlot : MonoBehaviour
         SetGoldTxt();
     }
 
-    //TODO: 잘하면 없어질듯?
     protected void SetGoldTxt()
     {
         slotPriceTxt.text = Calculater.NumFormatter(nextPrice);
     }
     #endregion
 
-    #region Value Methods
     private void GiveChangedStat(float value)
     {
         var fieldname = slotIndex.ToString();
@@ -165,9 +163,7 @@ public abstract class UpgradeSlot : MonoBehaviour
     }
 
     protected abstract float ValuePerLv(int reachLv);
-    #endregion
 
-    #region Price Methods
     public void CalculatePrice(int mulValue) //next 3종 새로고침.
     {
         curUpgradeRate = mulValue;
@@ -203,5 +199,4 @@ public abstract class UpgradeSlot : MonoBehaviour
         nextValue = ValuePerLv(nextLv);
         SetGoldTxt();
     }
-    #endregion
 }
