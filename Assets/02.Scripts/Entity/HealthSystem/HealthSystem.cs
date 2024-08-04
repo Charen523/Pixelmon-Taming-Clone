@@ -8,8 +8,8 @@ public abstract class HealthSystem : SerializedMonoBehaviour
     public Image hpBar;
 
     /*체력변수*/
-    protected float maxHealth = 1;
-    protected float currentHealth;
+    public float maxHealth = 1;
+    public float currentHealth;
     protected float def;
 
     protected virtual void Update()

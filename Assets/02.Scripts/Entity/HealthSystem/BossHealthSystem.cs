@@ -3,24 +3,22 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BossHealthSystem : EnemyHealthSystem
+public class BossHealthSystem : MonoBehaviour
 {
+    [SerializeField] private Enemy enemy;
     [SerializeField] private Slider bossHpBar;
     [SerializeField] private TextMeshProUGUI bossHpTxt;
+
+    [SerializeField] private float currentHealth => enemy.healthSystem.currentHealth;
+    [SerializeField] private float maxHealth => enemy.healthSystem.maxHealth;
+
     Coroutine bossCoroutine;
 
     public void InvokeBossHp()
     {
         bossHpBar = StageManager.Instance.GetBossSlider();
         bossHpTxt = StageManager.Instance.GetBossHpText();
-
-        initEnemyHealth(enemy.statHandler.enemyMaxHp);
         bossCoroutine = StartCoroutine(bossHealthSlider());
-    }
-
-    protected override void Update()
-    {
-        //상위 클래스의 update문 없애기 위함.
     }
 
     private IEnumerator bossHealthSlider()

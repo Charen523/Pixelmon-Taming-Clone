@@ -145,7 +145,7 @@ public class SaveManager : Singleton<SaveManager>
                 }
                 else if (currentValue is BigInteger currentBigInt)
                 {
-                    fieldInfo.SetValue(userData, currentBigInt + (BigInteger)value);
+                    fieldInfo.SetValue(userData, currentBigInt + new BigInteger((int)value));
                 }
                 else
                 {
