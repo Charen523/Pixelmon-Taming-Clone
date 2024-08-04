@@ -21,19 +21,47 @@ public static class UIUtils
         textElement.text = endValue.ToString();
     }
 
-    public static IEnumerator AnimateSliderChange(Slider slider, int startValue, int endValue, int maxValue, float duration = 0.5f)
+    public static IEnumerator AnimateSliderChange(Slider slider, float startValue, float endValue, float duration = 0.5f)
     {
         float elapsed = 0f;
+        float start = Mathf.Clamp01(startValue);
+        int numFullCycles = Mathf.FloorToInt(endValue);  // 전체 바퀴 수
+        float fractionalEnd = endValue % 1f;  // 마지막 남은 소수 부분
 
+        // 첫 번째 구간: start -> 1
+        if (start < 1f)
+        {
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                slider.value = Mathf.Lerp(start, 1f, elapsed / duration);
+                yield return null;
+            }
+            slider.value = 1f;
+        }
+
+        // 중간의 전체 바퀴 수만큼: 0 -> 1
+        for (int i = 0; i < numFullCycles; i++)
+        {
+            elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                slider.value = Mathf.Lerp(0f, 1f, elapsed / duration);
+                yield return null;
+            }
+            slider.value = 1f;
+        }
+
+        // 마지막 구간: 0 -> fractionalEnd
+        elapsed = 0f;
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            int currentValue = (int)Mathf.Lerp(startValue, endValue, elapsed / duration);
-            slider.value = (float)currentValue / maxValue;
+            slider.value = Mathf.Lerp(0f, fractionalEnd, elapsed / duration);
             yield return null;
         }
-
-        slider.value = (float)endValue / maxValue;
+        slider.value = fractionalEnd;
     }
 
     public static string TranslateRank(this PixelmonRank rank)
