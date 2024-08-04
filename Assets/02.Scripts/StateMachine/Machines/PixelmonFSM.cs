@@ -41,13 +41,21 @@ public class PixelmonFSM : FSM
             if (coolTime == 0)
             {
                 var enemies = Search(1);
-                if (enemies.Count == 0) Player.Instance.fsm.ChangeState(Player.Instance.fsm.DetectState);
-                for (int i = 0; i < enemies.Count; i++)
+                if (enemies.Count == 0)
                 {
-                    Vector2 direction = enemies[i].transform.position - transform.position;
-                    float damage = pixelmon.status.GetTotalDamage(pixelmon.myData);
-                    PoolManager.Instance.SpawnFromPool<ProjectileController>("ATV00000").GetAttackSign(transform.position, direction, damage, minDistance, 1 / attackSpeed * 5);
-                };
+                    Player.Instance.fsm.ChangeState(Player.Instance.fsm.DetectState);
+                    target = null;
+                }
+                else
+                {
+                    for (int i = 0; i < enemies.Count; i++)
+                    {
+                        target = enemies[i].gameObject;
+                        Vector2 direction = enemies[i].transform.position - transform.position;
+                        float damage = pixelmon.status.GetTotalDamage(pixelmon.myData);
+                        PoolManager.Instance.SpawnFromPool<ProjectileController>("ATV00000").GetAttackSign(transform.position, direction, damage, minDistance, 1 / attackSpeed * 5);
+                    };
+                }
             }
             yield return waitAttack;
         }
