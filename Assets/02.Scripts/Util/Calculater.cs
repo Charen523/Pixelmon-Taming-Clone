@@ -9,7 +9,7 @@ public static class Calculater
     /// <param name="d1">lv1 -> lv2 증가량</param>
     /// <param name="d2">diff의 증가량</param>
     /// <returns></returns>
-    public static BigInteger CalculatePrice(BigInteger lv, BigInteger baseNum, BigInteger d1, BigInteger d2)
+    public static BigInteger CalPrice(BigInteger lv, BigInteger baseNum, BigInteger d1, BigInteger d2)
     {
         if (lv <= 0) return 0;
         if (lv == 1) return baseNum;
