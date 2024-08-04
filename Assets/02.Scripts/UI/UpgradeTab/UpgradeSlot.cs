@@ -1,6 +1,7 @@
 using System.Numerics;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum UpgradeIndex
 {
@@ -26,7 +27,8 @@ public abstract class UpgradeSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI slotLevelTxt;
     [SerializeField] protected TextMeshProUGUI slotValueTxt;
     [SerializeField] private TextMeshProUGUI slotPriceTxt;
-    [SerializeField] private GameObject goldBtn; //TODO: 끝까지 불필요하면 삭제.
+    [SerializeField] private TextMeshProUGUI buyTxt;
+    [SerializeField] private Button goldBtn; //TODO: 끝까지 불필요하면 삭제.
 
     private int _curLv;
     public int CurLv
@@ -49,7 +51,8 @@ public abstract class UpgradeSlot : MonoBehaviour
 
                 if (_curLv >= maxLv)
                 {
-                    slotPriceTxt.text = "<color=FFFF00>MAX</color>";
+                    
+                    goldBtn.enabled = false;
                 }
 
                 if (isStart)
@@ -82,13 +85,14 @@ public abstract class UpgradeSlot : MonoBehaviour
     protected int nextLv;
     protected float nextValue;
 
-    private BigInteger curLvPrice => Calculater.CalculatePrice(CurLv, b, d1, d2);
+    private BigInteger curLvPrice => Calculater.CalPrice(CurLv, b, d1, d2);
     protected BigInteger nextPrice;
     [SerializeField] private int b = 100;
     [SerializeField] private int d1 = 500;
     [SerializeField] private int d2 = 200;
     #endregion
 
+    private int curToggleIndex;
     private int curUpgradeRate = 1;
     private bool isStart = false;
 
@@ -128,12 +132,16 @@ public abstract class UpgradeSlot : MonoBehaviour
     {
         if (nextPrice <= ownGold)
         {
+            SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.gold), -nextPrice, true);
+            
             CurLv = nextLv;
             CurValue = nextValue;
-
+            
+            if (curUpgradeRate == 0)
+            {
+                upgradeTab.CurrentToggle(0);
+            }
             CalculatePrice(curUpgradeRate);
-            SaveManager.Instance.SetGold(-nextPrice, true);
-
             SetSlotTxts();
         }
         else
@@ -148,14 +156,28 @@ public abstract class UpgradeSlot : MonoBehaviour
         SetGoldTxt();
     }
 
-    //TODO: 잘하면 없어질듯?
     protected void SetGoldTxt()
     {
-        slotPriceTxt.text = Calculater.NumFormatter(nextPrice);
+        string printPrice = Calculater.NumFormatter(nextPrice);
+
+        if (CurLv >= maxLv)
+        {
+            slotPriceTxt.text = "<color=#FFFFFF>--</color>";
+            buyTxt.text = "MAX";
+            return;
+        }
+
+        if (nextPrice > ownGold)
+        {
+            slotPriceTxt.text = $"<color=#FF0000>{printPrice}</color>";
+        }
+        else
+        {
+            slotPriceTxt.text = $"<color=#FFFFFF>{printPrice}</color>";
+        }
     }
     #endregion
 
-    #region Value Methods
     private void GiveChangedStat(float value)
     {
         var fieldname = slotIndex.ToString();
@@ -165,11 +187,10 @@ public abstract class UpgradeSlot : MonoBehaviour
     }
 
     protected abstract float ValuePerLv(int reachLv);
-    #endregion
 
-    #region Price Methods
     public void CalculatePrice(int mulValue) //next 3종 새로고침.
     {
+        curToggleIndex = mulValue;
         curUpgradeRate = mulValue;
 
         if (curUpgradeRate == 0)
@@ -198,10 +219,9 @@ public abstract class UpgradeSlot : MonoBehaviour
             nextLv++;
             nextPrice = Calculater.CalPriceSum(nextLv - 1, b, d1, d2) - Calculater.CalPriceSum(CurLv - 1, b, d1, d2);
         }
-        while (Calculater.CalPriceSum(nextLv, b, d1, d2) - Calculater.CalPriceSum(CurLv - 1, b, d1, d2) <= ownGold && nextLv != maxLv);
+        while (Calculater.CalPriceSum(nextLv, b, d1, d2) - Calculater.CalPriceSum(CurLv - 1, b, d1, d2) <= ownGold && nextLv < maxLv);
 
         nextValue = ValuePerLv(nextLv);
         SetGoldTxt();
     }
-    #endregion
 }

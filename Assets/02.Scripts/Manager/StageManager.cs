@@ -6,8 +6,9 @@ using UnityEngine.UI;
 public class StageManager : Singleton<StageManager>
 {
     private SaveManager saveManager;
+    private UserData userData;
+    private StageData data;
 
-    public StageData Data {get; private set;}
     [SerializeField] private Spawner spawner;
 
     #region UI
@@ -28,7 +29,7 @@ public class StageManager : Singleton<StageManager>
     #endregion
 
     #region Monsters
-    private string[] monsterIds => Data.monsterId;
+    private string[] monsterIds => data.monsterId;
 
     [HideInInspector] public int curSpawnCount = 0;
     private int killCount = 0;
@@ -46,7 +47,7 @@ public class StageManager : Singleton<StageManager>
         {
             if (_currentRcode == null || _currentRcode == "")
             {
-                _currentRcode = SaveManager.Instance.userData.curStageRcode;
+                _currentRcode = userData.curStageRcode;
             }
 
             return _currentRcode;
@@ -55,14 +56,14 @@ public class StageManager : Singleton<StageManager>
         private set
         {
             _currentRcode = value;
-            SaveManager.Instance.SetData("curStageRcode", value);
+            saveManager.SetFieldData(nameof(userData.curStageRcode), _currentRcode);
         }
     }
     
     [Header("Current Stage")]
-    private readonly string stageCodeName = "STG";
+    private readonly string stageCodeName = "STG0";
     
-    public int diffNum => saveManager.userData.curDifficulty;
+    public int diffNum => userData.curDifficulty;
 
     public int worldNum;
     [SerializeField] private readonly int maxWorldNum = 10;
@@ -89,6 +90,7 @@ public class StageManager : Singleton<StageManager>
         base.Awake();
 
         saveManager = SaveManager.Instance;
+        userData = saveManager.userData;
         InitData();
     }
 
@@ -105,16 +107,16 @@ public class StageManager : Singleton<StageManager>
 
     private void InitData()
     {
-        Data = DataManager.Instance.GetData<StageData>(CurrentRcode);
-        worldNum = Data.worldId;
-        stageNum = Data.stageId;
-        killCount = saveManager.userData.curStageCount;
+        data = DataManager.Instance.GetData<StageData>(CurrentRcode);
+        worldNum = data.worldId;
+        stageNum = data.stageId;
+        killCount = userData.curStageCount;
     }
 
     private void ResetRcode()
     {
-        CurrentRcode = $"{stageCodeName}{0}{worldNum.ToString("D2")}{stageNum.ToString("D2")}";
-        Data = DataManager.Instance.GetData<StageData>(CurrentRcode);
+        CurrentRcode = stageCodeName + worldNum.ToString("D2") + stageNum.ToString("D2");
+        data = DataManager.Instance.GetData<StageData>(CurrentRcode);
     }
 
     public void InitStage()
@@ -179,7 +181,7 @@ public class StageManager : Singleton<StageManager>
     /// <returns>노말스테이지 종료 여부</returns>
     private bool NormalStage() 
     {
-        if (killCount >= Data.nextStageCount)
+        if (killCount >= data.nextStageCount)
         {
             // Stage Clear
             ResetSpawnedEnemy();
@@ -197,9 +199,9 @@ public class StageManager : Singleton<StageManager>
         if (curInterval >= spawnInterval)
         {
             // 몬스터 최대치 미만 추가 소환
-            if (curSpawnCount < Data.spawnCount)
+            if (curSpawnCount < data.spawnCount)
             {
-                spawner.SpawnMonsterTroop(Data.monsterId, Data.spawnCount);
+                spawner.SpawnMonsterTroop(data.monsterId, data.spawnCount);
                 curInterval = 0;
             }
         }
@@ -210,7 +212,7 @@ public class StageManager : Singleton<StageManager>
     private void InitBossStage()
     {
         //PoolManager.Instance.AddPool(Data.monsterIds);
-        spawner.SpawnMonsterTroop(Data.monsterId, Data.spawnCount);
+        spawner.SpawnMonsterTroop(data.monsterId, data.spawnCount);
         bossLeftTime = bossLimitTime;
     }
 
@@ -264,7 +266,7 @@ public class StageManager : Singleton<StageManager>
         {
             stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.sprite = iconSprite[0];
-            prevProgress = killCount / (float)Data.nextStageCount;
+            prevProgress = killCount / (float)data.nextStageCount;
             curProgress = prevProgress;
             progressSldr.value = prevProgress;
             progressTxt.text = string.Format("{0:F2}%", prevProgress * 100);
@@ -285,12 +287,11 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator SetProgressBar() 
     {
-        float duration = 0.5f;
         while (true)
         {
             if (curProgress > prevProgress)
             {
-                StartCoroutine(UIUtils.AnimateSliderChange(progressSldr, (int)(prevProgress * 100), (int)(curProgress * 100), 100, duration));
+                StartCoroutine(UIUtils.AnimateSliderChange(progressSldr, prevProgress, curProgress));
                 progressTxt.text = string.Format("{0:F2}%", curProgress * 100);
                 prevProgress = curProgress;
             }
@@ -312,7 +313,7 @@ public class StageManager : Singleton<StageManager>
     #region Next Stage/World/Diff
     public void ToNextStage(bool isClear = true)
     {
-        saveManager.SetData("curStageCount", 0);
+        saveManager.SetFieldData(nameof(userData.curStageCount), 0);
 
         if (!isClear)
         {
@@ -327,7 +328,7 @@ public class StageManager : Singleton<StageManager>
     }
 
     /// <summary>
-    ///  다음 world가 없으면 diff도 함꼐 바뀜!
+    ///  마지막 world면 diff도 함꼐 바뀜!
     /// </summary>
     private void ToNextWorld()
     {
@@ -340,7 +341,7 @@ public class StageManager : Singleton<StageManager>
         else
         {
             worldNum = 1;
-            saveManager.SetDeltaData("curDifficulty", 1);
+            saveManager.SetFieldData(nameof(userData.curDifficulty), 1, true);
         }
 
         ResetRcode();
@@ -365,7 +366,7 @@ public class StageManager : Singleton<StageManager>
         {
             killCount++;
             curSpawnCount--;
-            curProgress = Mathf.Min((float)killCount / Data.nextStageCount, 100f);
+            curProgress = Mathf.Min((float)killCount / data.nextStageCount, 100f);
             spawner.isActivatedEnemy.Remove(enemy);
         }
         //saveManager.GiveRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
@@ -375,13 +376,12 @@ public class StageManager : Singleton<StageManager>
             QuestManager.Instance.OnQuestEvent();
         }
 
-        saveManager.SetDeltaData(nameof(saveManager.userData.curStageCount), 1);
+        saveManager.SetFieldData(nameof(userData.curStageCount), 1, true);
     }
 
     public void OnPlayerDead()
     {
         if (isPlayerDead) return;
-
         isPlayerDead = true;
         
         if (stageCoroutine != null)

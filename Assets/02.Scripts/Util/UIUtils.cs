@@ -21,19 +21,34 @@ public static class UIUtils
         textElement.text = endValue.ToString();
     }
 
-    public static IEnumerator AnimateSliderChange(Slider slider, int startValue, int endValue, int maxValue, float duration = 0.5f)
+    public static IEnumerator AnimateSliderChange(Slider slider, float startValue, float endValue, float duration = 0.5f)
     {
         float elapsed = 0f;
+        int cycleNum = Mathf.FloorToInt(endValue);  // 전체 바퀴 수
 
+        float realStart = cycleNum == 0? startValue : 0;
+        float realEnd = endValue % 1f;  // 마지막 남은 소수 부분
+
+        for (int i = 0; i < cycleNum; i++)
+        {
+            elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                slider.value = Mathf.Lerp(0f, 1f, elapsed / duration);
+                yield return null;
+            }
+            slider.value = 1f;
+        }
+
+        elapsed = 0f;
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            int currentValue = (int)Mathf.Lerp(startValue, endValue, elapsed / duration);
-            slider.value = (float)currentValue / maxValue;
+            slider.value = Mathf.Lerp(realStart, realEnd, elapsed / duration);
             yield return null;
         }
-
-        slider.value = (float)endValue / maxValue;
+        slider.value = realEnd;
     }
 
     public static string TranslateRank(this PixelmonRank rank)

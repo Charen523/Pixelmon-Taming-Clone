@@ -129,11 +129,8 @@ public class UIManager : Singleton<UIManager>
         return Instance.uiList.Exists(obj => obj.name == typeof(T).ToString());
     }
 
-    public void InvokeUIChange(string field)
+    public void InvokeUIChange(DirtyUI dirtyUI)
     {
-        if (Enum.TryParse(field, true, out DirtyUI dirtyUI))
-        {//두 번째 인자: 대소문자 무시
-            UpdateUI?.Invoke(dirtyUI);
-        }
+        UpdateUI?.Invoke(dirtyUI);
     }
 }
