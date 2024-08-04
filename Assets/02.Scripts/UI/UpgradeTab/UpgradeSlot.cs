@@ -27,6 +27,7 @@ public abstract class UpgradeSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI slotLevelTxt;
     [SerializeField] protected TextMeshProUGUI slotValueTxt;
     [SerializeField] private TextMeshProUGUI slotPriceTxt;
+    [SerializeField] private TextMeshProUGUI buyTxt;
     [SerializeField] private Button goldBtn; //TODO: 끝까지 불필요하면 삭제.
 
     private int _curLv;
@@ -50,7 +51,7 @@ public abstract class UpgradeSlot : MonoBehaviour
 
                 if (_curLv >= maxLv)
                 {
-                    slotPriceTxt.text = "<color=#FFFF00>MAX</color>";
+                    
                     goldBtn.enabled = false;
                 }
 
@@ -158,6 +159,14 @@ public abstract class UpgradeSlot : MonoBehaviour
     protected void SetGoldTxt()
     {
         string printPrice = Calculater.NumFormatter(nextPrice);
+
+        if (CurLv >= maxLv)
+        {
+            slotPriceTxt.text = "<color=#FFFFFF>--</color>";
+            buyTxt.text = "MAX";
+            return;
+        }
+
         if (nextPrice > ownGold)
         {
             slotPriceTxt.text = $"<color=#FF0000>{printPrice}</color>";
