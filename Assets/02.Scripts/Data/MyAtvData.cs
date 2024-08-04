@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public class MyAtvData
 {
     public string rcode;
-    public int id;
+    public int id = -1;
     public int lv = 1;
     public int maxExp = 10;
     public bool isAdvancable;
