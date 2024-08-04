@@ -70,6 +70,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
         player.pixelmons[index].InitPxm();
         player.currentPixelmonCount++;
         player.LocatedPixelmon();
+        SkillManager.Instance.ExecuteSkill(player.pixelmons[index]);
     }
 
     private void UnEquipped(int index)
