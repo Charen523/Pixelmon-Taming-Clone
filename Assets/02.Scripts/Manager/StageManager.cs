@@ -285,12 +285,11 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator SetProgressBar() 
     {
-        float duration = 0.5f;
         while (true)
         {
             if (curProgress > prevProgress)
             {
-                StartCoroutine(UIUtils.AnimateSliderChange(progressSldr, (int)(prevProgress * 100), (int)(curProgress * 100), 100, duration));
+                StartCoroutine(UIUtils.AnimateSliderChange(progressSldr, prevProgress, curProgress));
                 progressTxt.text = string.Format("{0:F2}%", curProgress * 100);
                 prevProgress = curProgress;
             }
