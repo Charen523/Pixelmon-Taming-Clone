@@ -53,6 +53,19 @@ public class Spawner : MonoBehaviour
             enemy.statHandler.data = curEnemy;
             enemy.statHandler.UpdateEnemyStats();
             isActivatedEnemy.Add(enemy);
+
+            if (enemy.statHandler.data.isBoss)
+            {
+                enemy.healthSystem.enabled = false;
+                enemy.bossHealthSystem.enabled = true;
+                enemy.bossHealthSystem.InvokeBossHp();
+            }
+            else
+            {
+                enemy.healthSystem.enabled = true;
+                enemy.bossHealthSystem.enabled = false;
+            }
+
             stageManager.curSpawnCount++;
         }
     }

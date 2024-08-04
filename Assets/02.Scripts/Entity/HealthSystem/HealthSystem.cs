@@ -28,7 +28,7 @@ public abstract class HealthSystem : SerializedMonoBehaviour
     public virtual void TakeDamage(float delta)
     {
         float damage = Mathf.Max(0, delta - def);
-        currentHealth = MathF.Max(0, currentHealth - damage);
+        currentHealth = Mathf.Max(0, currentHealth - damage);
         PoolManager.Instance.SpawnFromPool<DamageText>("TXT00001").ShowDamageText((int)damage, gameObject.transform.position);        
         if (currentHealth == 0)
         {

@@ -5,6 +5,7 @@ public class Enemy : SerializedMonoBehaviour
 {
     public EnemyFSM fsm;
     public EnemyHealthSystem healthSystem;
+    public BossHealthSystem bossHealthSystem;
     public EnemyStatHandler statHandler;
 
     private void Start()

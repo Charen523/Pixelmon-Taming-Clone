@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EnemyHealthSystem : HealthSystem
 {
-    [SerializeField] private Enemy enemy;
+    [SerializeField] protected Enemy enemy;
 
     private void Start()
     {
