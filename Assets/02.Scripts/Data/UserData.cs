@@ -14,6 +14,7 @@ public class UserData
     public int diamond = 10000;
     public int seed = 10;
     public int food = 10;
+    public int skillTicket = 0;
     public int keyGold;
     public int keySeed;
     public int keySkill;
