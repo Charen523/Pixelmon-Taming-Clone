@@ -8,7 +8,7 @@ public class UserData
     public string userId;
     public string userName = "Name한글";
 
-    public string _gold = "1000";
+    public string _gold = "33348332500000";
     public BigInteger gold = 0;
 
     public int diamond = 10000;

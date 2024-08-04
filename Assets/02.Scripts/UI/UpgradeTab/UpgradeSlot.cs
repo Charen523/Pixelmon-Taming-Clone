@@ -50,7 +50,7 @@ public abstract class UpgradeSlot : MonoBehaviour
 
                 if (_curLv >= maxLv)
                 {
-                    slotPriceTxt.text = "<color=FFFF00>MAX</color>";
+                    slotPriceTxt.text = "<color=#FFFF00>MAX</color>";
                     goldBtn.enabled = false;
                 }
 
@@ -140,10 +140,7 @@ public abstract class UpgradeSlot : MonoBehaviour
             {
                 upgradeTab.CurrentToggle(0);
             }
-            else
-            {
-                CalculatePrice(curUpgradeRate);
-            }
+            CalculatePrice(curUpgradeRate);
             SetSlotTxts();
         }
         else
@@ -160,7 +157,15 @@ public abstract class UpgradeSlot : MonoBehaviour
 
     protected void SetGoldTxt()
     {
-        slotPriceTxt.text = Calculater.NumFormatter(nextPrice);
+        string printPrice = Calculater.NumFormatter(nextPrice);
+        if (nextPrice > ownGold)
+        {
+            slotPriceTxt.text = $"<color=#FF0000>{printPrice}</color>";
+        }
+        else
+        {
+            slotPriceTxt.text = $"<color=#FFFFFF>{printPrice}</color>";
+        }
     }
     #endregion
 
@@ -205,7 +210,7 @@ public abstract class UpgradeSlot : MonoBehaviour
             nextLv++;
             nextPrice = Calculater.CalPriceSum(nextLv - 1, b, d1, d2) - Calculater.CalPriceSum(CurLv - 1, b, d1, d2);
         }
-        while (Calculater.CalPriceSum(nextLv, b, d1, d2) - Calculater.CalPriceSum(CurLv - 1, b, d1, d2) <= ownGold && nextLv != maxLv);
+        while (Calculater.CalPriceSum(nextLv, b, d1, d2) - Calculater.CalPriceSum(CurLv - 1, b, d1, d2) <= ownGold && nextLv < maxLv);
 
         nextValue = ValuePerLv(nextLv);
         SetGoldTxt();
