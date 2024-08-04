@@ -1,4 +1,5 @@
 using DG.Tweening.Core.Easing;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -63,7 +64,7 @@ public class SkillTab : UIBase, IPointerDownHandler
         infoPopUp = await UIManager.Show<UISkillPopUp>();
     }
 
-    private void Start()
+    private  void Start()
     {
         //userData.ownedSkills.Add(new MyAtvData());
         //saveManager.SetData(nameof(userData.ownedSkills), userData.ownedSkills);
@@ -119,7 +120,7 @@ public class SkillTab : UIBase, IPointerDownHandler
         infoPopUp.ShowPopUp(allData[id], this);
     }
 
-    public void OnEquip(int slotIndex)
+    public void OnEquip(int id)
     {
         if (!allData[choiceId].myAtvData.isOwned)
         {
@@ -136,22 +137,7 @@ public class SkillTab : UIBase, IPointerDownHandler
         }
         else
         {
-            UnEquip();
-        }
-    }
-
-
-    public void UnEquip()
-    {
-        var data = equipData.Find((obj) => obj.myAtvData.id == choiceId);
-        if (data != null)
-        {
-            allData[data.myAtvData.id].UnEquipAction();
-            data.UnEquipAction();
-        }
-        else
-        {
-            //allData[pxmLayout.dataInde].UnEquipAction();
+            CheckedOverlap(allData[id].myAtvData.id);
         }
     }
 
@@ -160,9 +146,22 @@ public class SkillTab : UIBase, IPointerDownHandler
     {
         tabState = TabState.Normal;
         infoPopUp.gameObject.SetActive(false);
+        popUpOverlay.SetActive(false);
         equipOverlay.SetActive(false);
     }
 
+    public void CheckedOverlap(int id)
+    {
+        foreach (var data in equipData)
+        {
+            if (data.myAtvData != null && data.myAtvData.id == id)
+            {
+                skillManager.UnEquipSkill(data.slotIndex, id);
+                break;
+            }
+        }
+            
+    }
     public void OnAllLvUp()
     {
         OnClosePopUp();
