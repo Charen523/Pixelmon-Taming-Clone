@@ -16,7 +16,7 @@ public class UISkillPopUp : UIBase
     [SerializeField] private SkillTab skillTab;
     private string equip = "장착하기";
     private string unEquip = "해제하기";
-    private int slotIndex;
+    private int id;
     public void ShowPopUp(SkillSlot slot, SkillTab tab)
     {
         skillTab = tab;
@@ -24,9 +24,9 @@ public class UISkillPopUp : UIBase
         copySlot.myAtvData = slot.myAtvData;
         copySlot.UpdateSlot();
 
-        slotIndex = slot.atvData.id;
+        id = slot.atvData.id;
         skillNameTxt.text = slot.atvData.name;
-        ctTxt.text = slot.atvData.ct.ToString();
+        ctTxt.text = slot.atvData.coolTime.ToString();
         descTxt.text = slot.atvData.description;
         SetEquipTxt();
     }
@@ -52,7 +52,7 @@ public class UISkillPopUp : UIBase
 
     public void OnEquipEvt()
     {
-        skillTab.OnEquip(slotIndex);
+        skillTab.OnEquip(id);
         SetEquipTxt();
     }
 }
