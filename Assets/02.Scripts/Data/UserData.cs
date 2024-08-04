@@ -9,15 +9,18 @@ public class UserData
     public string userName = "Name한글";
 
     public string _gold = "1000";
-    public BigInteger gold;
+    public BigInteger gold = 0;
 
     public int diamond = 10000;
     public int seed = 10;
     public int food = 10;
-    //public int key;
+    public int keyGold;
+    public int keySeed;
+    public int keySkill;
 
     public int userLv = 1;
-    public int userExp = 0; //매우 커질 가능성 있음
+    public string _exp = "0";
+    public BigInteger userExp = 0;
 
     public int eggLv = 1;
     public int eggCount = 3;

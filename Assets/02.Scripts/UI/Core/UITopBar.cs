@@ -1,3 +1,4 @@
+using System.Numerics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,6 +6,7 @@ using UnityEngine.UI;
 public class UITopBar : UIBase
 {
     private SaveManager saveManager;
+    private UserData userData;
 
     #region User Info UI
     [SerializeField] private Image characImg;
@@ -19,8 +21,15 @@ public class UITopBar : UIBase
     #endregion
 
     #region Data Fields
-    private int currentExp => saveManager.userData.userExp; 
-    private readonly int tempMaxExp = 1000; //임시 변수
+    [SerializeField] private int bNum = 1000;
+    [SerializeField] private int d1 = 1000;
+    [SerializeField] private int d2 = 500;
+
+    private BigInteger currentExp => saveManager.userData.userExp; 
+    private BigInteger tempMaxExp => Calculater.CalPrice(userData.userLv, bNum, d1, d2); //임시 변수
+
+    private float prevExp = 0;
+    private float curExp = 0;
     #endregion
 
     #region Coroutine
@@ -32,6 +41,7 @@ public class UITopBar : UIBase
     private void Awake()
     {
         saveManager = SaveManager.Instance;
+        userData = saveManager.userData;
     }
 
     private void Start()
@@ -89,13 +99,17 @@ public class UITopBar : UIBase
 
     public void UpdateExpUI()
     {
-        int startExp = currentExp;
+        BigInteger prevScaleExp = currentExp * 10000 / tempMaxExp;
+        prevExp = (int)prevScaleExp / 10000;
+
+        int lvUpValue = 0;
 
         while (currentExp > tempMaxExp)
         {
-            saveManager.SetDeltaData("userExp", -tempMaxExp);
-            saveManager.userData.userLv++;
-            lvTxt.text = $"Lv.{saveManager.userData.userLv}";
+            saveManager.SetFieldData(nameof(userData.userExp), -tempMaxExp, true);
+            userData.userLv++;
+            lvUpValue++;
+            lvTxt.text = $"Lv.{userData.userLv}";
 
             if (QuestManager.Instance.isUserLevelQ)
             {
@@ -103,16 +117,17 @@ public class UITopBar : UIBase
             }
         }
 
-        int endExp = currentExp;
+        BigInteger endExp = currentExp;
 
         if (expCoroutine != null)
         {
             StopCoroutine(expCoroutine);
         }
 
-        float tempExp = currentExp / (float)tempMaxExp;
+        BigInteger tempScaleExp = currentExp * 10000 / tempMaxExp;
+        curExp = (int)tempScaleExp / 10000;
 
-        expCoroutine = StartCoroutine(UIUtils.AnimateSliderChange(expSldr, startExp, endExp, tempMaxExp, 1));
-        expTxt.text = (tempExp * 100).ToString("0.00") + "%";
+        expCoroutine = StartCoroutine(UIUtils.AnimateSliderChange(expSldr, prevExp, curExp + lvUpValue, 1));
+        expTxt.text = (curExp * 100).ToString("0.00") + "%";
     }
 }

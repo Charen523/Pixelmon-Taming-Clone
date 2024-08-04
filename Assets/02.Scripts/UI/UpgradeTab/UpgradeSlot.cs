@@ -82,7 +82,7 @@ public abstract class UpgradeSlot : MonoBehaviour
     protected int nextLv;
     protected float nextValue;
 
-    private BigInteger curLvPrice => Calculater.CalculatePrice(CurLv, b, d1, d2);
+    private BigInteger curLvPrice => Calculater.CalPrice(CurLv, b, d1, d2);
     protected BigInteger nextPrice;
     [SerializeField] private int b = 100;
     [SerializeField] private int d1 = 500;
@@ -132,7 +132,7 @@ public abstract class UpgradeSlot : MonoBehaviour
             CurValue = nextValue;
 
             CalculatePrice(curUpgradeRate);
-            SaveManager.Instance.SetGold(-nextPrice, true);
+            SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.gold), -nextPrice, true);
 
             SetSlotTxts();
         }

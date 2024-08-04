@@ -23,6 +23,8 @@ public class SaveManager : Singleton<SaveManager>
         initPath = Path.Combine(Application.dataPath, "initData.json");
         userPath = Path.Combine(Application.persistentDataPath, "userData.json");
         LoadData();
+        SetFieldData(nameof(userData.gold), BigInteger.Parse(userData._gold));
+        SetFieldData(nameof(userData.userExp), BigInteger.Parse(userData._exp));
     }
 
     void Start()
@@ -51,13 +53,11 @@ public class SaveManager : Singleton<SaveManager>
         if (File.Exists(userPath))
         {
             LoadFromJson(userPath);
-            userData.gold = BigInteger.Parse(userData._gold);
         }
         else if (File.Exists(initPath))
         {
             LoadFromJson(initPath);
             SaveToJson(userData, userPath);
-            userData.gold = BigInteger.Parse(userData._gold);
         }
         else
         {
@@ -90,7 +90,7 @@ public class SaveManager : Singleton<SaveManager>
         }
     }
 
-    private async void SaveDataAsync()
+    private async void SaveDataAsync() //추후 저장데이터를 서버로 보낼 때 활성화
     {
         await Task.Run(() => SaveToJson(userData));
     }
@@ -102,7 +102,6 @@ public class SaveManager : Singleton<SaveManager>
         {
             fieldInfo.SetValue(userData, value);
             isDirty = true;
-            UIManager.Instance.InvokeUIChange(field);
         }
         else
         {
@@ -110,8 +109,6 @@ public class SaveManager : Singleton<SaveManager>
         }
     }
 
-    /// <param name="field">nameof(userData.변수)</param>
-    /// <param name="value">데이터 변화량</param>
     public void SetDeltaData(string field, int value)
     {
         var fieldInfo = userData.GetType().GetField(field);
@@ -120,7 +117,6 @@ public class SaveManager : Singleton<SaveManager>
             int currentValue = (int)fieldInfo.GetValue(userData);
             fieldInfo.SetValue(userData, currentValue + value);
             isDirty = true;
-            UIManager.Instance.InvokeUIChange(field);
         }
         else
         {
@@ -128,20 +124,60 @@ public class SaveManager : Singleton<SaveManager>
         }
     }
 
-    public void SetGold(BigInteger value, bool isDelta = false)
+    /// <summary>
+    /// SetData, SetDeltaData, SetGold 모두 섞은 하이브리드 메서드
+    /// </summary>
+    /// <param name="field">필드 이름: userData.(변수명) 형식으로 사용할 것.</param>
+    /// <param name="value">필드에 들어갈 값 또는 변화량.</param>
+    /// <param name="isDelta">만약 변화량이라면 true인 default매개변수</param>
+    public void SetFieldData(string field, object value, bool isDelta = false)
     {
-        if (isDelta)
+        var fieldInfo = userData.GetType().GetField(field);
+        if (fieldInfo != null)
         {
-            userData.gold += value;
-            userData._gold = userData.gold.ToString();
+            var currentValue = fieldInfo.GetValue(userData);
+
+            if (isDelta)
+            {
+                if (currentValue is int currentInt)
+                {
+                    fieldInfo.SetValue(userData, currentInt + (int)value);
+                }
+                else if (currentValue is BigInteger currentBigInt)
+                {
+                    fieldInfo.SetValue(userData, currentBigInt + (BigInteger)value);
+                }
+                else
+                {
+                    Debug.LogWarning($"Delta 연산이 지원되지 않는 타입입니다: {field}");
+                    return;
+                }
+            }
+            else
+            {
+                fieldInfo.SetValue(userData, value);
+            }
+
+            if (field == nameof(userData.gold))
+            {
+                userData._gold = userData.gold.ToString();
+            }
+            else if (field == nameof(userData.userExp))
+            {
+                userData._exp = userData.userExp.ToString();
+            }
+
+            isDirty = true;
+
+            if (Enum.TryParse(field, true, out DirtyUI dirtyUI))
+            {
+                UIManager.Instance.InvokeUIChange(dirtyUI);
+            }
         }
         else
         {
-            userData.gold = value;
-            userData._gold = value.ToString();
+            Debug.LogWarning($"{field} 변수를 UserData에서 찾을 수 없습니다.");
         }
-        isDirty = true;
-        UIManager.Instance.InvokeUIChange(nameof(userData.gold));
     }
 
     public void GetRewards(string[] rcodes, int[] amounts, float[] rates = null)
