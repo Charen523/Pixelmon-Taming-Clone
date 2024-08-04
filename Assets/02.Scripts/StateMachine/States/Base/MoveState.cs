@@ -16,24 +16,12 @@ public class MoveState : BaseState
 
     public override void Execute()
     {
-        Flip();
+        fsm.Flip();
     }
 
     public override void Exit()
     {
         StopAnimation(fsm.animData.MoveParameterHash);        
-    }
-
-    protected void Flip()
-    {
-        if (fsm.target != null)
-        {
-            float targetPositionX = fsm.target.transform.position.x;
-            float currentPositionX = fsm.transform.position.x;
-
-            bool shouldFlip = targetPositionX > currentPositionX;
-            fsm.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = shouldFlip;
-        }
     }
 
     protected void MoveTowardsTarget(float moveSpeed, float attackRange, IState newState)

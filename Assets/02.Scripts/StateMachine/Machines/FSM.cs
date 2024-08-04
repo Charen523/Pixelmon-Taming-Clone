@@ -30,4 +30,16 @@ public class FSM : MonoBehaviour
         if (currentState != null)
             currentState?.Execute();
     }
+
+    public void Flip()
+    {
+        if (target != null)
+        {
+            float targetPositionX = target.transform.position.x;
+            float currentPositionX = transform.position.x;
+
+            bool shouldFlip = targetPositionX > currentPositionX;
+            gameObject.GetComponentInChildren<SpriteRenderer>().flipX = shouldFlip;
+        }
+    }
 }

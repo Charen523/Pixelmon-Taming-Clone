@@ -15,6 +15,6 @@ public class PlayerDieState : DieState
         Player.Instance.ChangePixelmonsState(PixelmonState.Idle);
         fsm.joystick.gameObject.SetActive(false);
         fsm.rb.velocity = Vector2.zero;
-        GameManager.Instance.NotifyPlayerDie();     
+        GameManager.Instance.NotifyPlayerDie();
     }
 }

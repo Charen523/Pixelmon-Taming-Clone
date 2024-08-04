@@ -44,8 +44,8 @@ public class PlayerFSM : FSM
 
     public void ReStartPlayer()
     {
-        Player.Instance.healthSystem.InitHealth();
         ChangeState(DetectState);
+        Player.Instance.healthSystem.InitHealth();      
     }
 
     public void StageTimeOut()
@@ -55,16 +55,14 @@ public class PlayerFSM : FSM
 
     public void NotifyTimeOut()
     {
-        target = null;
         ReStartPlayer();
-        StageManager.Instance.InitStage();
+        StageManager.Instance.InitStage();        
     }
 
     public void NotifyPlayerDie()
     {
         ReStartPlayer();
         GameManager.Instance.NotifyStageStart();
-        joystick.gameObject.SetActive(true);
     }
 
 

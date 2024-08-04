@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerDetectState : IdleState
 {
@@ -18,6 +19,7 @@ public class PlayerDetectState : IdleState
     {
         base.Enter();
         fsm.target = null;
+        fsm.joystick.gameObject.SetActive(true);
         Player.Instance.SetPixelmonsTarget(null);
         Player.Instance.ChangePixelmonsState(PixelmonState.Idle);
     }

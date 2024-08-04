@@ -17,6 +17,7 @@ public class IdleState : BaseState
 
     public override void Execute()
     {
+        fsm.Flip();
     }
 
     public override void Exit()
