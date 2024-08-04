@@ -1,6 +1,7 @@
 using System.Numerics;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum UpgradeIndex
 {
@@ -26,7 +27,7 @@ public abstract class UpgradeSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI slotLevelTxt;
     [SerializeField] protected TextMeshProUGUI slotValueTxt;
     [SerializeField] private TextMeshProUGUI slotPriceTxt;
-    [SerializeField] private GameObject goldBtn; //TODO: 끝까지 불필요하면 삭제.
+    [SerializeField] private Button goldBtn; //TODO: 끝까지 불필요하면 삭제.
 
     private int _curLv;
     public int CurLv
@@ -50,6 +51,7 @@ public abstract class UpgradeSlot : MonoBehaviour
                 if (_curLv >= maxLv)
                 {
                     slotPriceTxt.text = "<color=FFFF00>MAX</color>";
+                    goldBtn.enabled = false;
                 }
 
                 if (isStart)
@@ -89,6 +91,7 @@ public abstract class UpgradeSlot : MonoBehaviour
     [SerializeField] private int d2 = 200;
     #endregion
 
+    private int curToggleIndex;
     private int curUpgradeRate = 1;
     private bool isStart = false;
 
@@ -128,12 +131,19 @@ public abstract class UpgradeSlot : MonoBehaviour
     {
         if (nextPrice <= ownGold)
         {
+            SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.gold), -nextPrice, true);
+            
             CurLv = nextLv;
             CurValue = nextValue;
-
-            CalculatePrice(curUpgradeRate);
-            SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.gold), -nextPrice, true);
-
+            
+            if (curUpgradeRate == 0)
+            {
+                upgradeTab.CurrentToggle(0);
+            }
+            else
+            {
+                CalculatePrice(curUpgradeRate);
+            }
             SetSlotTxts();
         }
         else
@@ -166,6 +176,7 @@ public abstract class UpgradeSlot : MonoBehaviour
 
     public void CalculatePrice(int mulValue) //next 3종 새로고침.
     {
+        curToggleIndex = mulValue;
         curUpgradeRate = mulValue;
 
         if (curUpgradeRate == 0)
