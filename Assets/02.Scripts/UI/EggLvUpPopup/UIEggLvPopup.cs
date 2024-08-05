@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Threading;
 using TMPro;
 using UnityEngine;
@@ -20,9 +21,7 @@ public class UIEggLvPopup : UIBase
     [SerializeField] private LvUpGauge LvUpGauge;
     [SerializeField] private GameObject GaugeAndLvUp;
 
-    private int baseGoldCost = 100; // 기본 골드 소모량
-    private int increaseRate = 50; // 골드 증가율
-    private int price;
+    private BigInteger price;
     private List<LvUpGauge> lvUpGauges = new List<LvUpGauge>();
     #endregion
 
@@ -49,8 +48,7 @@ public class UIEggLvPopup : UIBase
             lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
             if(i < userData.fullGaugeCnt)
                 lvUpGauges[i].GaugeUp();
-        }
-        SetLvUpBtn();
+        }        
     }
 
     public void SetPopup(UIMiddleBar middleBar)
@@ -59,57 +57,16 @@ public class UIEggLvPopup : UIBase
         UpdateLvAndRateUI();
 
         if (userData.isLvUpMode) // Lv업 중
-        {
             SetLvUpMode();
-        }
         else // Lv업 게이지
-        {
             SetGaugeMode();
-        }
     }
+
     private void UpdateLvAndRateUI()
     {
         CurLvNum.text = userData.eggLv.ToString();
         NextLvNum.text = (userData.eggLv + 1).ToString();
     }
-    private void SetLvUpMode()
-    {
-        Desc.text = descs[1];
-        SaveManager.Instance.SetData(nameof(userData.isLvUpMode), true);
-
-        Gauges.gameObject.SetActive(false);
-        GaugeAndLvUp.SetActive(false);
-        Clock.SetActive(true);
-        Skip.SetActive(true);
-
-        if (userData.diamond >= skipDia)
-            DiaBtn.interactable = true;
-        else DiaBtn.interactable = false;
-
-        updateTimerCoroutine = StartCoroutine(UpdateTimer());
-    }
-    private void SetGaugeMode()
-    {
-        SaveManager.Instance.SetData(nameof(userData.isLvUpMode), false);
-        Desc.text = descs[0];
-
-        Gauges.gameObject.SetActive(true);
-        GaugeAndLvUp.SetActive(true);
-        Clock.SetActive(false);
-        Skip.SetActive(false);
-
-        price = CalculateLevelUpCost(userData.eggLv);
-        PriceTxt.text = price.ToString();
-        SetLvUpBtn();
-    }
-
-    public int CalculateLevelUpCost(int level)
-    {
-        // 계차 수열 방식으로 골드 소모량 계산
-        int goldCost = baseGoldCost + (level * (level + 1) / 2) * increaseRate;
-        return goldCost;
-    }
-
     private void SetLvUpBtn()
     {
         if (userData.fullGaugeCnt == lvUpGauges.Count)
@@ -123,22 +80,65 @@ public class UIEggLvPopup : UIBase
             GaugeUpBtn.interactable = true;
         }
     }
+
+    private void SetGaugeUpBtn()
+    {
+        if(userData.gold >= price)
+            GaugeUpBtn.interactable = true;
+        else GaugeUpBtn.interactable = false;
+    }
+
+    private void SetDiaBtn()
+    {
+        if(userData.diamond >= skipDia)
+            DiaBtn.interactable = true;
+        else DiaBtn.interactable = false;
+    }
+
+    private void SetLvUpMode()
+    {
+        Desc.text = descs[1];
+        SaveManager.Instance.SetFieldData(nameof(userData.isLvUpMode), true);
+
+        Gauges.gameObject.SetActive(false);
+        GaugeAndLvUp.SetActive(false);
+        Clock.SetActive(true);
+        Skip.SetActive(true);
+
+        SetDiaBtn();
+
+        updateTimerCoroutine = StartCoroutine(UpdateTimer());
+    }
+
+    private void SetGaugeMode()
+    {
+        SaveManager.Instance.SetFieldData(nameof(userData.isLvUpMode), false);
+        Desc.text = descs[0];
+
+        Gauges.gameObject.SetActive(true);
+        GaugeAndLvUp.SetActive(true);
+        Clock.SetActive(false);
+        Skip.SetActive(false);
+
+        price = Calculater.CalPrice(userData.eggLv, 1000, 100, 50);
+        PriceTxt.text = Calculater.NumFormatter(price);
+        SetLvUpBtn();
+        SetGaugeUpBtn();
+    }
+
     public void OnClickGaugeUpBtn()
     {
-        if (userData.gold >= price)
-        {
-            lvUpGauges[userData.fullGaugeCnt].GaugeUp();
-            SaveManager.Instance.SetDeltaData(nameof(userData.fullGaugeCnt), 1);
-        }          
-        else GaugeUpBtn.interactable = false;
-
+        lvUpGauges[userData.fullGaugeCnt].GaugeUp();
+        SaveManager.Instance.SetFieldData(nameof(userData.fullGaugeCnt), 1, true);
+        SaveManager.Instance.SetFieldData(nameof(userData.gold), -price, true);
         SetLvUpBtn();
+        SetGaugeUpBtn();
     }
 
     public void OnClickLvUpBtn()
     {
-        SaveManager.Instance.SetData(nameof(userData.startLvUpTime), DateTime.Now.ToString());
-        SaveManager.Instance.SetData(nameof(userData.fullGaugeCnt), 0);
+        SaveManager.Instance.SetFieldData(nameof(userData.startLvUpTime), DateTime.Now.ToString());
+        SaveManager.Instance.SetFieldData(nameof(userData.fullGaugeCnt), 0);
         foreach (var gauge in lvUpGauges)
             gauge.ResetGauge();
         if ((userData.eggLv + 1) % 5 == 0)
@@ -154,26 +154,20 @@ public class UIEggLvPopup : UIBase
 
     public void OnClickDiaBtn()
     {
-        SaveManager.Instance.SetDeltaData(nameof(userData.diamond), -skipDia);
-        SaveManager.Instance.SetData(nameof(userData.skipTime), userData.skipTime + 3600f);
+        SaveManager.Instance.SetFieldData(nameof(userData.diamond), -skipDia, true);
+        SaveManager.Instance.SetFieldData(nameof(userData.skipTime), userData.skipTime + 3600f);
+        SetDiaBtn();
         remainingTime -= 3600f;
         if(remainingTime <= 0) SetGaugeMode();
     }
 
     private void LvUp()
     {
-        SaveManager.Instance.SetData(nameof(userData.startLvUpTime), null);
-        SaveManager.Instance.SetDeltaData(nameof(userData.eggLv), 1);
+        SaveManager.Instance.SetFieldData(nameof(userData.startLvUpTime), null);
+        SaveManager.Instance.SetFieldData(nameof(userData.eggLv), 1, true);
         uiMiddleBar.SetEggTextUI();
         UpdateLvAndRateUI();       
         SetGaugeMode();
-    }
-
-    // TODO : 실험 끝나면 지우기
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.T))
-            remainingTime = 0;
     }
 
     private IEnumerator UpdateTimer()
@@ -188,7 +182,7 @@ public class UIEggLvPopup : UIBase
             UpdateTimerText();
             yield return new WaitForSeconds(1f); // 1초 대기
         }
-        SaveManager.Instance.SetData(nameof(userData.skipTime), 0);
+        SaveManager.Instance.SetFieldData(nameof(userData.skipTime), 0);
         remainingTime = 0;
         UpdateTimerText();
         LvUp();
