@@ -185,7 +185,7 @@ public class StageManager : Singleton<StageManager>
         {
             // Stage Clear
             ResetSpawnedEnemy();
-            saveManager.GetRewards(data.rewardType, data.rewardValue);
+            RewardManager.Instance.GetRewards(data.rewardType, data.rewardValue);
             return true;
         }
 
@@ -221,7 +221,7 @@ public class StageManager : Singleton<StageManager>
         if (isBossCleared)
         {
             ResetSpawnedEnemy();
-            saveManager.GetRewards(data.rewardType, data.rewardValue);
+            RewardManager.Instance.GetRewards(data.rewardType, data.rewardValue);
             return true;
         }
 
@@ -369,7 +369,7 @@ public class StageManager : Singleton<StageManager>
             curProgress = Mathf.Min((float)killCount / data.nextStageCount, 100f);
             spawner.isActivatedEnemy.Remove(enemy);
         }
-        saveManager.GetRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
+        RewardManager.Instance.GetRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
         
         if (QuestManager.Instance.isMonsterQ)
         {

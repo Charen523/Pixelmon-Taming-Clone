@@ -56,8 +56,7 @@ public class UITopBar : UIBase
         
         userName.text = saveManager.userData.userName;
         UpdateGoldUI();
-        gemTxt.text = saveManager.userData.diamond.ToString();
-
+        UpdateDiamondUI();
         UpdateExpUI();
     }
 
@@ -86,29 +85,18 @@ public class UITopBar : UIBase
 
     public void UpdateDiamondUI()
     {
-        string newGemTxt = saveManager.userData.diamond.ToString();
-        if (gemTxt.text != newGemTxt)
-        {
-            if (gemCoroutine != null)
-            {
-                StopCoroutine(gemCoroutine);
-            }
-            gemCoroutine = StartCoroutine(UIUtils.AnimateTextChange(gemTxt, int.Parse(gemTxt.text), int.Parse(newGemTxt)));
-        }
+        gemTxt.text = Calculater.NumFormatter(saveManager.userData.diamond);
     }
 
     public void UpdateExpUI()
     {
         BigInteger prevScaleExp = currentExp * 10000 / tempMaxExp;
-        prevExp = (int)prevScaleExp / 10000;
-
-        int lvUpValue = 0;
+        prevExp = (float)prevScaleExp / 10000;
 
         while (currentExp > tempMaxExp)
         {
             saveManager.SetFieldData(nameof(userData.userExp), -tempMaxExp, true);
             userData.userLv++;
-            lvUpValue++;
             lvTxt.text = $"Lv.{userData.userLv}";
 
             if (QuestManager.Instance.isUserLevelQ)
@@ -125,9 +113,9 @@ public class UITopBar : UIBase
         }
 
         BigInteger tempScaleExp = currentExp * 10000 / tempMaxExp;
-        curExp = (int)tempScaleExp / 10000;
+        curExp = (float)tempScaleExp / 10000;
 
-        expCoroutine = StartCoroutine(UIUtils.AnimateSliderChange(expSldr, prevExp, curExp + lvUpValue, 1));
+        expCoroutine = StartCoroutine(UIUtils.AnimateSliderChange(expSldr, prevExp, curExp, 1));
         expTxt.text = (curExp * 100).ToString("0.00") + "%";
     }
 }
