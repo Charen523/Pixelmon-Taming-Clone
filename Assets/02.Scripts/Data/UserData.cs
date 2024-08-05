@@ -7,6 +7,7 @@ public class UserData
 { 
     public string userId;
     public string userName = "Name한글";
+    public string LastConnectTime = "";
 
     public string _gold = "33348332500000";
     public BigInteger gold = 0;
@@ -51,5 +52,5 @@ public class UserData
     public List<MyAtvData> ownedSkills = new List<MyAtvData>();
     //public string[] OwnedActiveSkills; 만약 스킬 강화 생기면 string-> 스킬로 바꾸기.
     public FieldData[] fieldDatas = new FieldData[6];
-    //public int[] DungeonLvs = { 1, 1, 1 };
+    public int[] DungeonLvs = { 1, 1, 1 };
 }
