@@ -24,7 +24,7 @@ public class RewardManager : Singleton<RewardManager>
             {
                 string itemName = DataManager.Instance.GetData<RewardData>(rcodes[i]).name;
 
-                //현재 스테이지에 비례하는 보상량 증가
+                //TODO: 현재 스테이지에 비례하는 보상량 증가
                 if (itemName == nameof(userData.gold) || itemName == nameof(userData.userExp))
                 {
                     BigInteger amount = amounts[i];

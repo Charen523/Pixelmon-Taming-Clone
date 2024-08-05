@@ -28,7 +28,7 @@ public abstract class UpgradeSlot : MonoBehaviour
     [SerializeField] protected TextMeshProUGUI slotValueTxt;
     [SerializeField] private TextMeshProUGUI slotPriceTxt;
     [SerializeField] private TextMeshProUGUI buyTxt;
-    [SerializeField] private Button goldBtn; //TODO: 끝까지 불필요하면 삭제.
+    [SerializeField] private Button goldBtn;
 
     private int _curLv;
     public int CurLv
