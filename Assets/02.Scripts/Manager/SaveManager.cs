@@ -187,7 +187,7 @@ public class SaveManager : Singleton<SaveManager>
             if (rates == null || CheckDropRate(rates[i]))
             {
                 string itemName = dataManager.GetData<RewardData>(rcodes[i]).name;
-                SetDeltaData(itemName, amounts[i]);
+                SetFieldData(itemName, amounts[i], true);
             }
         }
     }
