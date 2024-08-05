@@ -15,9 +15,9 @@ public class UserData
     public int seed = 10;
     public int food = 10;
     public int skillTicket = 0;
-    public int keyGold;
-    public int keySeed;
-    public int keySkill;
+    public int keyGold = 3;
+    public int keySeed = 3;
+    public int keySkill = 3;
 
     public int userLv = 1;
     public string _exp = "0";

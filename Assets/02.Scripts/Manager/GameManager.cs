@@ -39,11 +39,6 @@ public class GameManager : Singleton<GameManager>
         await DataManager.Instance.SetBaseData();
     }
 
-    public void ChangeMap()
-    {
-        
-    }
-
     public void NotifyPlayerDie()
     {
         OnPlayerDie?.Invoke();
