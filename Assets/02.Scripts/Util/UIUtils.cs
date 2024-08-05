@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Xml.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,32 +22,17 @@ public static class UIUtils
 
     public static IEnumerator AnimateSliderChange(Slider slider, float startValue, float endValue, float duration = 0.5f)
     {
-        float elapsed = 0f;
-        int cycleNum = Mathf.FloorToInt(endValue);  // 전체 바퀴 수
+        slider.value = startValue;
+        float elapsedTime = 0f;
 
-        float realStart = cycleNum == 0? startValue : 0;
-        float realEnd = endValue % 1f;  // 마지막 남은 소수 부분
-
-        for (int i = 0; i < cycleNum; i++)
+        while (elapsedTime < duration)
         {
-            elapsed = 0f;
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                slider.value = Mathf.Lerp(0f, 1f, elapsed / duration);
-                yield return null;
-            }
-            slider.value = 1f;
-        }
-
-        elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            slider.value = Mathf.Lerp(realStart, realEnd, elapsed / duration);
+            slider.value = Mathf.Lerp(startValue, endValue, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
             yield return null;
         }
-        slider.value = realEnd;
+
+        slider.value = endValue;
     }
 
     public static string TranslateRank(this PixelmonRank rank)

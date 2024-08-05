@@ -145,7 +145,14 @@ public class SaveManager : Singleton<SaveManager>
                 }
                 else if (currentValue is BigInteger currentBigInt)
                 {
-                    fieldInfo.SetValue(userData, currentBigInt + new BigInteger((int)value));
+                    BigInteger bigIntValue = value switch
+                    {
+                        int intValue => new BigInteger(intValue),
+                        BigInteger bigIntegerValue => bigIntegerValue,
+                        _ => throw new ArgumentException("value는 int 또는 BigInteger 형이어야 합니다.")
+                    };
+
+                    fieldInfo.SetValue(userData, currentBigInt + bigIntValue);
                 }
                 else
                 {
@@ -178,23 +185,6 @@ public class SaveManager : Singleton<SaveManager>
         {
             Debug.LogWarning($"{field} 변수를 UserData에서 찾을 수 없습니다.");
         }
-    }
-
-    public void GetRewards(string[] rcodes, int[] amounts, float[] rates = null)
-    {
-        for(int i = 0; i < rcodes.Length; i++) 
-        {
-            if (rates == null || CheckDropRate(rates[i]))
-            {
-                string itemName = dataManager.GetData<RewardData>(rcodes[i]).name;
-                SetDeltaData(itemName, amounts[i]);
-            }
-        }
-    }
-
-    public bool CheckDropRate(float rate)
-    {
-        return UnityEngine.Random.Range(0, 100) <= rate;
     }
 
     /// <summary>
