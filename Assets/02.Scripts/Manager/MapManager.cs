@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum MapList
@@ -15,4 +13,11 @@ public enum MapList
 public class MapManager : Singleton<MapManager>
 {
     public GameObject[] mapList;
+    private int curMap = (int)MapList.Theme1;
+
+    public void OnMapChanged(int map)
+    {
+        mapList[curMap].SetActive(false);
+        mapList[map].SetActive(true);
+    }
 }
