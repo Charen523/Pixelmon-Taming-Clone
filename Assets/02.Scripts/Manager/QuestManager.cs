@@ -31,7 +31,7 @@ public class QuestManager : Singleton<QuestManager>
     public bool isHatchQ => curQIndex == "Q4";
 
     private int StageProgress => stageManager.diffNum * 10000 + stageManager.worldNum * 100 + stageManager.stageNum;
-    private bool isQuestClear = false;
+    private bool isQuestClear => curProgress >= curGoal;
 
     protected override void Awake()
     {
@@ -105,7 +105,6 @@ public class QuestManager : Singleton<QuestManager>
     {
         if (isQuestClear)
         {
-            isQuestClear = false;
             SetNewQuestId();
             ResetProgress();
             SetQuestUI();
@@ -162,9 +161,8 @@ public class QuestManager : Singleton<QuestManager>
         }
 
         saveManager.SetData(nameof(userData.questProgress), progress);
-        if (curProgress >= curGoal)
+        if (isQuestClear)
         {
-            isQuestClear = true;
             //TODO: 퀘스트 클리어 시 UI 변동주기
         }
     }
@@ -195,9 +193,8 @@ public class QuestManager : Singleton<QuestManager>
         saveManager.SetData(nameof(userData.questProgress), progress);
         SetQuestCountTxt();
 
-        if (curProgress >= curGoal)
+        if (isQuestClear)
         {
-            isQuestClear = true;
             //TODO: 퀘스트 클리어 시 UI 변동주기
         }
     }
