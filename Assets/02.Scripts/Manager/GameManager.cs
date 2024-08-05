@@ -39,30 +39,6 @@ public class GameManager : Singleton<GameManager>
         await DataManager.Instance.SetBaseData();
     }
 
-    //public async void InitWorld()
-    //{
-    //    player = Instantiate(await ResourceManager.instance.LoadAsset<Player>("CHA00001", eAddressableType.prefab));
-    //    player.Init(null);
-    //    player.equipment.equipParent = CameraContainer.instance.EquipSlot;
-
-    //    var datas = DataManager.instance.mapData.data;
-    //    datas.ForEach(async data =>
-    //    {
-    //        for (int i = 0; i < data.count; i++)
-    //        {
-    //            var width = Environments.instance.terrain.localBounds.size.x / 2;
-    //            var height = Environments.instance.terrain.localBounds.size.z / 2;
-    //            var x = UnityEngine.Random.Range(-width, width);
-    //            var z = UnityEngine.Random.Range(-height, height);
-    //            if (!await SpawnManager.instance.SpawnObject(DataManager.instance.GetCloneData<WorldObjectData>(data.target), data.isRandom ? new Vector3(x, 0, z) : data.pos, data.isRandom))
-    //            {
-    //                i--;
-    //            }
-    //        }
-    //    });
-    //}
-
-
     public void NotifyPlayerDie()
     {
         OnPlayerDie?.Invoke();

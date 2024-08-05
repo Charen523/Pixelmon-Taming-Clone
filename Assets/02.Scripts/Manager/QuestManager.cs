@@ -10,7 +10,7 @@ public class QuestManager : Singleton<QuestManager>
     SaveManager saveManager;
     UserData userData;
 
-    private QuestData curQData => DataManager.Instance.GetData<QuestData>(curQIndex);
+    private QuestData data => DataManager.Instance.GetData<QuestData>(curQIndex);
     private int curGoal => CurQuestGoal();
 
     [SerializeField] private string curQuestId => userData.questId;
@@ -58,7 +58,7 @@ public class QuestManager : Singleton<QuestManager>
 
     private void SetQuestNameTxt()
     {
-        string curDescription = curQData.description;
+        string curDescription = data.description;
 
         if (isStageQ)
         {
@@ -105,6 +105,7 @@ public class QuestManager : Singleton<QuestManager>
     {
         if (isQuestClear)
         {
+            RewardManager.Instance.GetRewards(data.rewardType, data.rewardValue);
             SetNewQuestId();
             ResetProgress();
             SetQuestUI();
@@ -201,7 +202,7 @@ public class QuestManager : Singleton<QuestManager>
 
     private int CurQuestGoal()
     {
-        int goal = curQData.goal;
+        int goal = data.goal;
 
         switch (curQIndex)
         {
