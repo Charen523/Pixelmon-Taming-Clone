@@ -88,6 +88,13 @@ public class UIEggLvPopup : UIBase
         else GaugeUpBtn.interactable = false;
     }
 
+    private void SetDiaBtn()
+    {
+        if(userData.diamond >= skipDia)
+            DiaBtn.interactable = true;
+        else DiaBtn.interactable = false;
+    }
+
     private void SetLvUpMode()
     {
         Desc.text = descs[1];
@@ -98,9 +105,7 @@ public class UIEggLvPopup : UIBase
         Clock.SetActive(true);
         Skip.SetActive(true);
 
-        if (userData.diamond >= skipDia)
-            DiaBtn.interactable = true;
-        else DiaBtn.interactable = false;
+        SetDiaBtn();
 
         updateTimerCoroutine = StartCoroutine(UpdateTimer());
     }
@@ -121,17 +126,13 @@ public class UIEggLvPopup : UIBase
         SetGaugeUpBtn();
     }
 
-
     public void OnClickGaugeUpBtn()
     {
-        if (userData.gold >= price)
-        {
-            lvUpGauges[userData.fullGaugeCnt].GaugeUp();
-            SaveManager.Instance.SetFieldData(nameof(userData.fullGaugeCnt), 1, true);
-            SaveManager.Instance.SetFieldData(nameof(userData.gold), -price, true);
-            SetLvUpBtn();
-            SetGaugeUpBtn();
-        }      
+        lvUpGauges[userData.fullGaugeCnt].GaugeUp();
+        SaveManager.Instance.SetFieldData(nameof(userData.fullGaugeCnt), 1, true);
+        SaveManager.Instance.SetFieldData(nameof(userData.gold), -price, true);
+        SetLvUpBtn();
+        SetGaugeUpBtn();
     }
 
     public void OnClickLvUpBtn()
@@ -155,6 +156,7 @@ public class UIEggLvPopup : UIBase
     {
         SaveManager.Instance.SetFieldData(nameof(userData.diamond), -skipDia, true);
         SaveManager.Instance.SetFieldData(nameof(userData.skipTime), userData.skipTime + 3600f);
+        SetDiaBtn();
         remainingTime -= 3600f;
         if(remainingTime <= 0) SetGaugeMode();
     }
