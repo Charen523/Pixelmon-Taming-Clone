@@ -169,13 +169,6 @@ public class UIEggLvPopup : UIBase
         SetGaugeMode();
     }
 
-    // TODO : 실험 끝나면 지우기
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.T))
-            remainingTime = 0;
-    }
-
     private IEnumerator UpdateTimer()
     {
         // 앱이 다시 시작될 때 경과된 시간 계산

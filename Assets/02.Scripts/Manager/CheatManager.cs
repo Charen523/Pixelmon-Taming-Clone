@@ -16,6 +16,10 @@ public class CheatManager : Singleton<CheatManager>
                 case "G":
                     SaveManager.Instance.SetFieldData("gold", 10000, true);
                     break;
+                case "d":
+                case "D":
+                    SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.diamond), 10000, true);
+                    break;                        
                 default:
                     break;
             }
