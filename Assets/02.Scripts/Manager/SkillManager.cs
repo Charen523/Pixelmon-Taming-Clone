@@ -36,7 +36,7 @@ public class SkillManager : Singleton<SkillManager>
         for(int i = 0; i < dataManager.activeData.data.Count; i++)
         {
             actionStorage.Add(skillAction);
-            if(i == 0 || i == 1)
+            if(i == 0 || i == 1 || i == 7)
                 SpawnSkill(i);
         }
     }
@@ -49,7 +49,7 @@ public class SkillManager : Singleton<SkillManager>
 
     public IEnumerator SkillAction(Pixelmon pxm)
     {
-        var myData = saveManager.userData.ownedSkills[pxm.myData.atvSkillId];
+        var myData = saveManager.userData.ownedSkills.Find((obj) => obj.id == pxm.myData.atvSkillId);
         var data = dataManager.activeData.data[pxm.myData.atvSkillId];
         while (myData.isEquipped)
         {
@@ -83,6 +83,11 @@ public class SkillManager : Singleton<SkillManager>
     {
         skillTab.equipData[slotIndex].UnEquipAction();
         skillTab.allData[skillId].UnEquipAction();
+    }
+
+    public void AddSkill(int id)
+    {
+        skillTab.AddSkillAction?.Invoke(id);
     }
 
     public void SpawnSkill(int id)

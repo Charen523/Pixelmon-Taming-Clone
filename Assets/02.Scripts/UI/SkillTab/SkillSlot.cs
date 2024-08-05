@@ -73,7 +73,7 @@ public class SkillSlot : MonoBehaviour
     public void UpdateSlot()
     {        
         SetSkillLv();
-        SetEquipTxt();       
+        SetEquipTxt();
         SetEvolveSldr();
     }
 
