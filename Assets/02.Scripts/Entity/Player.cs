@@ -78,7 +78,7 @@ public class Player : Singleton<Player>
         var pxmList = pixelmons.ToList().FindAll((obj) => obj != null);
         for (int i = 0; i < currentPixelmonCount; i++)
         {
-            Vector3 pos = new Vector3(Mathf.Cos(currentAngle * Mathf.Deg2Rad) * radius, Mathf.Sin(currentAngle * Mathf.Deg2Rad) * radius - 0.6f, 0);
+            Vector3 pos = new Vector3(Mathf.Cos(currentAngle * Mathf.Deg2Rad) * radius, Mathf.Sin(currentAngle * Mathf.Deg2Rad) * radius - 0.1f, 0);
             pxmList[i].transform.position = transform.position + pos;
             currentAngle += angle;
         }
