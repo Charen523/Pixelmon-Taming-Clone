@@ -154,15 +154,15 @@ public static class PixelmonStatHandler
         return newSkills;
     }
     
-    public static float GetTotalDamage(this PixelmonStatus status, MyPixelmonData myData ,bool isSkill = false)
+    public static float GetTotalDamage(this PixelmonStatus status, MyPixelmonData myData, bool isSkill = false, float perSkill = 1)
     {
         float dealDmg;
         if (isSkill)
         {
             if (IsCritical(status.Cri + status.SCri))
-                dealDmg =  status.perAtk * (status.Atk + status.SDmg) * (100 + status.SCriDmg + status.CriDmg)/100;
+                dealDmg = (status.perAtk * status.Atk) * (perSkill + status.SDmg) * (100 + status.SCriDmg + status.CriDmg)/100;
             else
-                dealDmg = status.perAtk * (status.Atk + status.SDmg);
+                dealDmg = (status.perAtk * status.Atk) * (perSkill + status.SDmg);
         }
         else
         {
