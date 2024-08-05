@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -85,6 +84,7 @@ public class SkillGacha : MonoBehaviour
         }
     }
     #endregion
+
     #region OnClickBtns
     public void OnClickOneBtn()
     {
@@ -96,6 +96,7 @@ public class SkillGacha : MonoBehaviour
         {
             SaveManager.Instance.SetFieldData(nameof(userData.diamond), -oneCostDia, true);
         }
+        Gacha(1);
     }
     public void OnClickTenBtn()
     {
@@ -112,6 +113,7 @@ public class SkillGacha : MonoBehaviour
         {
             SaveManager.Instance.SetFieldData(nameof(userData.diamond), -oneCostDia * 10, true);
         }
+        Gacha(10);
     }
     public void OnClickThirtyBtn()
     {
@@ -127,6 +129,39 @@ public class SkillGacha : MonoBehaviour
         else
         {
             SaveManager.Instance.SetFieldData(nameof(userData.diamond), -oneCostDia * 30, true);
+        }
+        Gacha(30);
+    }
+    #endregion
+
+    #region Gacha
+    private void Gacha(int count)
+    {
+        MyAtvData[] randSkill = new MyAtvData[count];
+        var skillData = DataManager.Instance.activeData.data;
+        var ownedSkills = userData.ownedSkills;
+        int id;
+
+        for (int i = 0; i < count; i++)
+        {
+            randSkill[i] = new MyAtvData();
+            id = UnityEngine.Random.Range(0, skillData.Count);
+
+            if (SkillManager.Instance.skillTab.allData[id].myAtvData.isOwned) // 이미 있는 스킬
+            {
+                SaveManager.Instance.UpdateSkillData(id, "evolvedCount", 
+                    ownedSkills.Find((obj) => obj.id == id).evolvedCount + 1);
+            }
+            else // 새롭게 뽑은 스킬
+            {
+                randSkill[i].rcode = skillData[id].rcode;
+                randSkill[i].id = skillData[id].id;
+                randSkill[i].isOwned = true;
+                ownedSkills.Add(randSkill[i]);
+                SaveManager.Instance.SetFieldData(nameof(userData.ownedSkills), ownedSkills);
+            }
+            SkillManager.Instance.AddSkill(id);
+            Debug.Log("스킬 id : " + id);
         }
     }
     #endregion
