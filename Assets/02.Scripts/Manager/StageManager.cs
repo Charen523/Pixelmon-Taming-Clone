@@ -258,7 +258,7 @@ public class StageManager : Singleton<StageManager>
         {
             stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-BOSS";
             StageIcon.sprite = iconSprite[1];
-            progressSldr.value = 1; // TODO: 보스 HealthSystem과 연결.
+            progressSldr.value = 1;
             progressTxt.text = "100.00%";
             bossTimeSldr.gameObject.SetActive(true);
         }
