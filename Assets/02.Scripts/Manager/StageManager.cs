@@ -266,7 +266,7 @@ public class StageManager : Singleton<StageManager>
         {
             stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.sprite = iconSprite[0];
-            prevProgress = killCount / (float)data.nextStageCount;
+            prevProgress = Mathf.Min( killCount / (float)data.nextStageCount , 100f);
             curProgress = prevProgress;
             progressSldr.value = prevProgress;
             progressTxt.text = string.Format("{0:F2}%", prevProgress * 100);
