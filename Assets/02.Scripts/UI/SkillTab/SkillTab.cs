@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -34,19 +35,19 @@ public class SkillTab : UIBase, IPointerDownHandler
     #region Info
     [Header("Info")]
     public UserData userData;
-    //전체 픽셀몬 정보
+    //전체 스킬 정보
     public List<SkillSlot> allData = new List<SkillSlot>();
-    //미보유 픽셀몬 정보
+    //미보유 스킬 정보
     public List<SkillSlot> noneData = new List<SkillSlot>();
-    //보유한 픽셀몬 정보
+    //보유한 스킬 정보
     public List<SkillSlot> ownedData = new List<SkillSlot>();
-    //편성된 픽셀몬 정보
+    //편성된 스킬 정보
     public List<SkillEquipSlot> equipData = new List<SkillEquipSlot>();
     [SerializeField]
     private PixelmonLayout pxmLayout;
     #endregion
 
-
+    public UnityAction<int> AddSkillAction;
     public TabState tabState = TabState.Normal;
     public Color[] bgIconColor;
     public TMP_ColorGradient[] txtColors;
@@ -59,8 +60,9 @@ public class SkillTab : UIBase, IPointerDownHandler
         userData = saveManager.userData;
         dataManager = DataManager.Instance;
         skillManager = SkillManager.Instance;
-        InitTab();
         SkillManager.Instance.skillTab = this;
+        AddSkillAction += AddSkill;
+        InitTab();
         infoPopUp = await UIManager.Show<UISkillPopUp>();
     }
 
@@ -77,7 +79,7 @@ public class SkillTab : UIBase, IPointerDownHandler
         {
             SkillSlot slot = Instantiate(slotPrefab, contentTr);
             slot.InitSlot(this, dataManager.activeData.data[i]);
-            if (userData.ownedSkills.Count > index && userData.ownedSkills[index].id == slot.atvData.id)
+            if (userData.ownedSkills.Count > index && userData.ownedSkills[index].id == i)
             {
                 slot.myAtvData = userData.ownedSkills[index++];
                 ownedData.Add(slot);
@@ -162,6 +164,18 @@ public class SkillTab : UIBase, IPointerDownHandler
         }
             
     }
+
+    public void AddSkill(int index)
+    {
+        if (!ownedData.Contains(allData[index]))
+        {
+            allData[index].myAtvData.isOwned = true;
+            ownedData.Add(allData[index]);
+            noneData.Remove(allData[index]);
+        }
+        allData[index].UpdateSlot();
+    }
+
     public void OnAllLvUp()
     {
         OnClosePopUp();
