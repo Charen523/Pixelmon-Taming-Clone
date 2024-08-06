@@ -62,6 +62,7 @@ public enum DirtyUI
     Diamond,
     Seed,
     Food,
+    SkillTicket,
     UserExp,
     EggCount,
     EggLv
