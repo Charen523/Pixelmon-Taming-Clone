@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class SkillEquipSlot : MonoBehaviour
 {
+    private SaveManager saveManager;
     public SkillTab skillTab;
     public ActiveData atvData;
     public MyAtvData myAtvData;
@@ -16,6 +17,7 @@ public class SkillEquipSlot : MonoBehaviour
     private void Start()
     {
         skillTab = SkillManager.Instance.skillTab;
+        saveManager = SaveManager.Instance;
         ChangedInfo();
     }
 
@@ -56,7 +58,6 @@ public class SkillEquipSlot : MonoBehaviour
                 skillTab.CheckedOverlap(myAtvData.id);
             skillTab.allData[skillTab.choiceId].EquipAction();
             EquipAction(skillTab.allData[skillTab.choiceId].atvData, skillTab.allData[skillTab.choiceId].myAtvData);
-            SkillManager.Instance.ExecuteSkill(Player.Instance.pixelmons[slotIndex]);
             skillTab.OnCancelEquip();
         }
         else
@@ -72,12 +73,13 @@ public class SkillEquipSlot : MonoBehaviour
         equipIcon.sprite = atvData.icon;
         myData.isEquipped = true;
         myPxmData.atvSkillId = atvData.id;
-        SaveManager.Instance.userData.equippedSkills[slotIndex] = atvData.id;
-        SaveManager.Instance.SetData("equippedSkills", SaveManager.Instance.userData.equippedSkills);
-        SaveManager.Instance.userData.equippedPxms[slotIndex].atvSkillId = atvData.id;
-        SaveManager.Instance.SetData("equippedPxms", SaveManager.Instance.userData.equippedPxms);
-        SaveManager.Instance.UpdatePixelmonData(SaveManager.Instance.userData.equippedPxms[slotIndex].id, nameof(myPxmData.atvSkillId), atvData.id);
-        //SkillManager.Instance.ExecuteSkill(atvData, myAtvData);
+        saveManager.userData.equippedSkills[slotIndex] = atvData.id;
+        saveManager.SetData("equippedSkills", saveManager.userData.equippedSkills);
+        saveManager.userData.equippedPxms[slotIndex].atvSkillId = atvData.id;
+        saveManager.SetData("equippedPxms", saveManager.userData.equippedPxms);
+        saveManager.UpdateSkillData(atvData.dataIndex, nameof(myAtvData.isEquipped), true);
+        saveManager.UpdatePixelmonData(saveManager.userData.equippedPxms[slotIndex].id, nameof(myPxmData.atvSkillId), atvData.id);
+        SkillManager.Instance.ExecuteSkill(Player.Instance.pixelmons[slotIndex]);
     }
 
     public void UnEquipAction()
