@@ -4,13 +4,13 @@ using UnityEngine.UI;
 
 public class SkillGacha : MonoBehaviour
 {
-    [SerializeField] private Button OneBtn;
-    [SerializeField] private Button TenBtn;
-    [SerializeField] private Button ThirtyBtn;
+    [SerializeField] private SkillGachaBtn OneBtn;
+    [SerializeField] private SkillGachaBtn TenBtn;
+    [SerializeField] private SkillGachaBtn ThirtyBtn;
 
     private UserData userData => SaveManager.Instance.userData;
     private UISkillGachaPopup skillGachaPopup;
-    private MyAtvData randSkill = new MyAtvData();
+    private MyAtvData randSkill;
     private int oneCostTicket = 1; // 1티켓 == 1회 뽑기
     private int oneCostDia = 100;  // 100다이아 == 1회 뽑기
 
@@ -22,38 +22,55 @@ public class SkillGacha : MonoBehaviour
     public void SetSkillGacha()
     {
         SetBtnInteractable();
-        SetBtnCostUI(1);
-        SetBtnCostUI(10);
-        SetBtnCostUI(30);
+        SetBtnCostUIs();
     }
 
     #region UI
     private void SetBtnInteractable()
     {
-        OneBtn.interactable = false;
-        TenBtn.interactable = false;
-        ThirtyBtn.interactable = false;
+        OneBtn.Btn.interactable = false;
+        TenBtn.Btn.interactable = false;
+        ThirtyBtn.Btn.interactable = false;
 
-        if (userData.skillTicket / oneCostTicket + userData.diamond / oneCostDia >= 1)
-            OneBtn.interactable = true;
-        if (userData.skillTicket / oneCostTicket + userData.diamond / oneCostDia >= 10)
-            TenBtn.interactable = true;
-        if (userData.skillTicket / oneCostTicket + userData.diamond / oneCostDia >= 30)
-            ThirtyBtn.interactable = true;
+        UpdateButnInteractable(OneBtn.Btn, 1);
+        UpdateButnInteractable(TenBtn.Btn, 10);
+        UpdateButnInteractable(ThirtyBtn.Btn, 30);
     }
 
-    private void SetBtnCostUI(int multiplier)
+    void UpdateButnInteractable(Button button, int requiredAmount)
     {
-        int totalCost = oneCostTicket * multiplier;
+        if ((userData.skillTicket / oneCostTicket + userData.diamond / oneCostDia) >= requiredAmount)
+            button.interactable = true;
+    }
 
-        if (userData.skillTicket >= totalCost)
+    private void SetBtnCostUIs()
+    {
+        SetBtnCostUI(OneBtn, 1);
+        SetBtnCostUI(TenBtn, 10);
+        SetBtnCostUI(ThirtyBtn, 30);
+    }
+    private void SetBtnCostUI(SkillGachaBtn btn, int multiplier)
+    {
+        int totalCostTicket = oneCostTicket * multiplier;
+        int totalCostDia = oneCostDia * multiplier;
+
+        if (userData.skillTicket >= totalCostTicket)
         {
+            btn.SetTicket(totalCostTicket);
+            btn.HideDia();
         }
         else if (multiplier > 1 && userData.skillTicket >= oneCostTicket)
         {
+            int neededTickets = userData.skillTicket / oneCostTicket;
+            int reaminingCost = totalCostTicket - neededTickets;
+            int neededDiamonds = (reaminingCost / oneCostTicket) * oneCostDia;
+
+            btn.SetAllCost(neededTickets, neededDiamonds);
         }
         else
         {
+            btn.SetDia(totalCostDia);
+            btn.HideTicket();
         }
     }
     #endregion
@@ -81,17 +98,19 @@ public class SkillGacha : MonoBehaviour
             SaveManager.Instance.SetFieldData(nameof(userData.diamond), -totalCostDia, true);
         }
 
+        SetBtnCostUIs();
         Gacha(multiplier);
     }
 
     private void Gacha(int count)
     {     
-        ActiveData[] resultDatas = new ActiveData[count];
+        ActiveData[] resultDatas = new ActiveData[count];       
         var ownedSkills = userData.ownedSkills;
         int id;
 
         for (int i = 0; i < count; i++)
         {
+            randSkill = new MyAtvData();
             resultDatas[i] = new ActiveData();
 
             id = UnityEngine.Random.Range(0, DataManager.Instance.activeData.data.Count);
