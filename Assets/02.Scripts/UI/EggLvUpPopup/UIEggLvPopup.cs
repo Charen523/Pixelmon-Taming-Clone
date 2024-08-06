@@ -165,7 +165,6 @@ public class UIEggLvPopup : UIBase
     {
         SaveManager.Instance.SetFieldData(nameof(userData.startLvUpTime), null);
         SaveManager.Instance.SetFieldData(nameof(userData.eggLv), 1, true);
-        uiMiddleBar.SetEggTextUI();
         UpdateLvAndRateUI();       
         SetGaugeMode();
     }

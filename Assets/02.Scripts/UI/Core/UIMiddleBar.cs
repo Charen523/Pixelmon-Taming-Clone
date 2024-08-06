@@ -48,7 +48,8 @@ public class UIMiddleBar : UIBase
     }
     private void Start()
     {
-        SetEggTextUI();
+        SetMiddleBarUI();
+        UIManager.Instance.UpdateUI += UpdateMiddleBarUI;
         getPixelmon = new WaitUntil(() => isDoneGetPxm == true);
         HatchedPixelmonImg.gameObject.SetActive(false);
 
@@ -69,10 +70,23 @@ public class UIMiddleBar : UIBase
         }
     }
 
-    public void SetEggTextUI()
+    private void SetMiddleBarUI()
     {
         EggCntText.text = userData.eggCount.ToString();
         EggLvText.text = userData.eggLv.ToString();
+    }
+
+    public void UpdateMiddleBarUI(DirtyUI dirtyUI)
+    {
+        switch (dirtyUI)
+        {
+            case DirtyUI.EggCount:
+                EggCntText.text = userData.eggCount.ToString();
+                break;
+            case DirtyUI.EggLv:
+                EggLvText.text = userData.eggLv.ToString();
+                break;
+        }   
     }
 
     private bool Gacha()
@@ -93,7 +107,7 @@ public class UIMiddleBar : UIBase
         }
 
         HatchPxmData = randPxmData[UnityEngine.Random.Range(0, randPxmData.Count)];
-        SaveManager.Instance.SetData(nameof(userData.hatchPxmData), HatchPxmData);
+        SaveManager.Instance.SetFieldData(nameof(userData.hatchPxmData), HatchPxmData);
         #endregion
 
         #region 픽셀몬 능력치 랜덤뽑기
@@ -104,15 +118,15 @@ public class UIMiddleBar : UIBase
             {
                 IsOwnedPxm = true;
                 HatchMyPxmData = data;
-                SaveManager.Instance.SetData(nameof(userData.hatchMyPxmData), HatchMyPxmData);
+                SaveManager.Instance.SetFieldData(nameof(userData.hatchMyPxmData), HatchMyPxmData);
                 break;
             }
         }
         if (IsOwnedPxm)
             SetNewPsvValue();
         else SetFirstPsvValue();
-        SaveManager.Instance.SetData(nameof(userData.psvData), PsvData);
-        SaveManager.Instance.SetData(nameof(userData.isOwnedPxm), IsOwnedPxm);
+        SaveManager.Instance.SetFieldData(nameof(userData.psvData), PsvData);
+        SaveManager.Instance.SetFieldData(nameof(userData.isOwnedPxm), IsOwnedPxm);
         #endregion
         return true;
     }
@@ -217,9 +231,8 @@ public class UIMiddleBar : UIBase
         HatchedPixelmonImg.gameObject.SetActive(false);
         HatchAnimGO.SetActive(false);
 
-        SaveManager.Instance.SetData(nameof(userData.isGetPxm), true);
-        SaveManager.Instance.SetDeltaData(nameof(userData.eggCount), -1);
-        SetEggTextUI();
+        SaveManager.Instance.SetFieldData(nameof(userData.isGetPxm), true);
+        SaveManager.Instance.SetFieldData(nameof(userData.eggCount), -1, true);
         isDoneGetPxm = true;
     }
 

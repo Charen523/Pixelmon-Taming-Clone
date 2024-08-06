@@ -63,7 +63,8 @@ public enum DirtyUI
     Seed,
     Food,
     UserExp,
-    EggCount
+    EggCount,
+    EggLv
 }
 
 public enum TabState
