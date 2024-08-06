@@ -149,8 +149,9 @@ public class SkillGacha : MonoBehaviour
 
             if (SkillManager.Instance.skillTab.allData[id].myAtvData.isOwned) // 이미 있는 스킬
             {
-                SaveManager.Instance.UpdateSkillData(id, "evolvedCount", 
-                    ownedSkills.Find((obj) => obj.id == id).evolvedCount + 1);
+                int index = SkillManager.Instance.skillTab.allData[id].atvData.dataIndex;
+                if(index != -1)
+                    SaveManager.Instance.UpdateSkillData(index, "evolvedCount", ownedSkills[index].evolvedCount + 1);
             }
             else // 새롭게 뽑은 스킬
             {

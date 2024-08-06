@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening.Core.Easing;
 
 public class SkillSlot : MonoBehaviour
 {
@@ -65,10 +66,11 @@ public class SkillSlot : MonoBehaviour
         atvData = data;        
         SetRankTxt();
         SetSkillIcon();
+        atvData.dataIndex = SaveManager.Instance.userData.ownedSkills.FindIndex((obj) => obj.id == atvData.id);
     }
 
     public void UpdateSlot()
-    {        
+    {
         SetSkillLv();
         SetEquipTxt();
         SetEvolveSldr();
@@ -78,9 +80,9 @@ public class SkillSlot : MonoBehaviour
     {
         while (myAtvData.isAdvancable)
         {
-            skillTab.saveManager.UpdateSkillData(myAtvData.id, "isAdvancable", false);
+            skillTab.saveManager.UpdateSkillData(atvData.dataIndex, "isAdvancable", false);
             skillTab.saveManager.UpdatePixelmonData(myAtvData.id, "evolvedCount", myAtvData.evolvedCount - UIUtils.GetEvolveValue(myAtvData, atvData));
-            skillTab.saveManager.UpdateSkillData(myAtvData.id, "lv", ++myAtvData.lv);
+            skillTab.saveManager.UpdateSkillData(atvData.dataIndex, "lv", ++myAtvData.lv);
             SetEvolveSldr();
             SetSkillLv();
         }
@@ -117,8 +119,7 @@ public class SkillSlot : MonoBehaviour
         evolvedCount.text = string.Format("{0}/{1}", myAtvData.evolvedCount, maxNum);
         if (myAtvData.evolvedCount >= maxNum)
         {
-            skillTab.userData.ownedPxms[myAtvData.id].isAdvancable = true;
-            skillTab.saveManager.UpdateSkillData(myAtvData.id, "isAdvancable", true);
+            skillTab.saveManager.UpdateSkillData(atvData.dataIndex, "isAdvancable", true);
         }
     }
 

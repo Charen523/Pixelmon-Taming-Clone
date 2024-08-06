@@ -20,7 +20,7 @@ public class ActiveData : IData
     public float range;
     public float scale;
 
-
+    public int dataIndex;
     public Sprite icon;
     public Sprite bgIcon;
 
