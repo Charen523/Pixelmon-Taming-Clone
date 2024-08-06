@@ -23,6 +23,11 @@ public class DungeonSlot : MonoBehaviour
     public TextMeshProUGUI keyTxt;
     #endregion
 
+    private void Start()
+    {
+        keyTxt.text = dungeonTab.GetKeyString((int)type);
+    }
+
     public void enterDungeonBtn()
     {
         dungeonTab.dgPopup.SetActive(true);
