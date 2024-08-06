@@ -7,6 +7,7 @@ public class UserData
 { 
     public string userId;
     public string userName = "Name한글";
+    public string lastConnectTime;
 
     public string _gold = "33348332500000";
     public BigInteger gold = 0;
