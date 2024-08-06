@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum eUIPosition
 {
@@ -15,8 +16,9 @@ public class UIManager : Singleton<UIManager>
 {
     public event Action<DirtyUI> UpdateUI;
 
-    public Transform canvas;
     [SerializeField] private List<Transform> parents;
+    public Transform canvas;
+    public Button tabOverlay;
     
     private List<UIBase> uiList = new List<UIBase>();
 
@@ -28,6 +30,11 @@ public class UIManager : Singleton<UIManager>
     public static void SetCanvas(Transform canvas)
     {
         Instance.canvas = canvas;
+    }
+
+    public static void SetTabOverlay(Button btn)
+    {
+        Instance.tabOverlay = btn;
     }
 
     /// <summary>
