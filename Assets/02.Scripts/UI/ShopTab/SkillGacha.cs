@@ -9,13 +9,22 @@ public class SkillGacha : MonoBehaviour
     [SerializeField] private Button ThirtyBtn;
 
     private UserData userData => SaveManager.Instance.userData;
+    private UISkillGachaPopup skillGachaPopup;
+    private MyAtvData randSkill = new MyAtvData();
     private int oneCostTicket = 1; // 1티켓 == 1회 뽑기
     private int oneCostDia = 100;  // 100다이아 == 1회 뽑기
+
+    public async void Awake()
+    {
+        skillGachaPopup = await UIManager.Show<UISkillGachaPopup>();
+    }
 
     public void SetSkillGacha()
     {
         SetBtnInteractable();
-        SetBtnCostUIs();
+        SetBtnCostUI(1);
+        SetBtnCostUI(10);
+        SetBtnCostUI(30);
     }
 
     #region UI
@@ -25,127 +34,68 @@ public class SkillGacha : MonoBehaviour
         TenBtn.interactable = false;
         ThirtyBtn.interactable = false;
 
-        if (userData.skillTicket >= oneCostTicket || userData.diamond >= oneCostDia)
+        if (userData.skillTicket / oneCostTicket + userData.diamond / oneCostDia >= 1)
             OneBtn.interactable = true;
-        if (userData.skillTicket >= oneCostTicket * 10 || userData.diamond >= oneCostDia * 10)
+        if (userData.skillTicket / oneCostTicket + userData.diamond / oneCostDia >= 10)
             TenBtn.interactable = true;
-        if (userData.skillTicket >= oneCostTicket * 30 || userData.diamond >= oneCostDia * 30)
+        if (userData.skillTicket / oneCostTicket + userData.diamond / oneCostDia >= 30)
             ThirtyBtn.interactable = true;
     }
 
-    private void SetBtnCostUIs()
+    private void SetBtnCostUI(int multiplier)
     {
-        SetOneBtnCostUI();
-        SetTenBtnCostUI();
-        SetThirtyBtnCostUI();
-    }
+        int totalCost = oneCostTicket * multiplier;
 
-    private void SetOneBtnCostUI()
-    {
-        if (userData.skillTicket >= oneCostTicket)
+        if (userData.skillTicket >= totalCost)
         {
-
+        }
+        else if (multiplier > 1 && userData.skillTicket >= oneCostTicket)
+        {
         }
         else
         {
-
-        }
-    }
-
-    private void SetTenBtnCostUI()
-    {
-        if (userData.skillTicket >= oneCostTicket * 10)
-        {
-
-        }
-        else if (userData.skillTicket >= oneCostTicket)
-        {
-
-        }
-        else
-        {
-
-        }
-    }
-
-    private void SetThirtyBtnCostUI()
-    {
-        if (userData.skillTicket >= oneCostTicket * 30)
-        {
-
-        }
-        else if (userData.skillTicket >= oneCostTicket)
-        {
-
-        }
-        else
-        {
-
         }
     }
     #endregion
 
-    #region OnClickBtns
-    public void OnClickOneBtn()
+    public void OnClickBtn(int multiplier)
     {
-        if (userData.skillTicket >= oneCostTicket) // 티켓 먼저 소모
-        {
-            SaveManager.Instance.SetFieldData(nameof(userData.skillTicket), -oneCostTicket, true);
-        }
-        else
-        {
-            SaveManager.Instance.SetFieldData(nameof(userData.diamond), -oneCostDia, true);
-        }
-        Gacha(1);
-    }
-    public void OnClickTenBtn()
-    {
-        if (userData.skillTicket >= oneCostTicket * 10) // 티켓 먼저 소모
-        {
-            SaveManager.Instance.SetFieldData(nameof(userData.skillTicket), -oneCostTicket * 10, true);
-        }
-        else if (userData.skillTicket >= oneCostTicket)
-        {
-            SaveManager.Instance.SetFieldData(nameof(userData.diamond), -(oneCostDia * (10 - userData.skillTicket / oneCostTicket)), true);
-            SaveManager.Instance.SetFieldData(nameof(userData.skillTicket), 0);
-        }
-        else
-        {
-            SaveManager.Instance.SetFieldData(nameof(userData.diamond), -oneCostDia * 10, true);
-        }
-        Gacha(10);
-    }
-    public void OnClickThirtyBtn()
-    {
-        if (userData.skillTicket >= oneCostTicket * 30) // 티켓 먼저 소모
-        {
-            SaveManager.Instance.SetFieldData(nameof(userData.skillTicket), -oneCostTicket * 30, true);
-        }
-        else if (userData.skillTicket >= oneCostTicket)
-        {
-            SaveManager.Instance.SetFieldData(nameof(userData.diamond), -(oneCostDia * (30 - userData.skillTicket / oneCostTicket)), true);
-            SaveManager.Instance.SetFieldData(nameof(userData.skillTicket), 0);
-        }
-        else
-        {
-            SaveManager.Instance.SetFieldData(nameof(userData.diamond), -oneCostDia * 30, true);
-        }
-        Gacha(30);
-    }
-    #endregion
+        int totalCostTicket = oneCostTicket * multiplier;
+        int totalCostDia = oneCostDia * multiplier;
 
-    #region Gacha
+        if (userData.skillTicket >= totalCostTicket) // 티켓 먼저 소모
+        {
+            SaveManager.Instance.SetFieldData(nameof(userData.skillTicket), -totalCostTicket, true);
+        }
+        else if (multiplier > 1 && userData.skillTicket >= oneCostTicket)
+        {
+            int remainingTickets = userData.skillTicket % oneCostTicket;
+            int reaminingCost = totalCostTicket - userData.skillTicket / oneCostTicket;
+            int neededDiamonds = (reaminingCost / oneCostTicket) * oneCostDia;
+
+            SaveManager.Instance.SetFieldData(nameof(userData.diamond), -neededDiamonds, true);
+            SaveManager.Instance.SetFieldData(nameof(userData.skillTicket), remainingTickets);
+        }
+        else
+        {
+            SaveManager.Instance.SetFieldData(nameof(userData.diamond), -totalCostDia, true);
+        }
+
+        Gacha(multiplier);
+    }
+
     private void Gacha(int count)
-    {
-        MyAtvData[] randSkill = new MyAtvData[count];
-        var skillData = DataManager.Instance.activeData.data;
+    {     
+        ActiveData[] resultDatas = new ActiveData[count];
         var ownedSkills = userData.ownedSkills;
         int id;
 
         for (int i = 0; i < count; i++)
         {
-            randSkill[i] = new MyAtvData();
-            id = UnityEngine.Random.Range(0, skillData.Count);
+            resultDatas[i] = new ActiveData();
+
+            id = UnityEngine.Random.Range(0, DataManager.Instance.activeData.data.Count);
+            resultDatas[i] = DataManager.Instance.activeData.data[id];
 
             if (SkillManager.Instance.skillTab.allData[id].myAtvData.isOwned) // 이미 있는 스킬
             {
@@ -155,15 +105,17 @@ public class SkillGacha : MonoBehaviour
             }
             else // 새롭게 뽑은 스킬
             {
-                randSkill[i].rcode = skillData[id].rcode;
-                randSkill[i].id = skillData[id].id;
-                randSkill[i].isOwned = true;
-                ownedSkills.Add(randSkill[i]);
+                randSkill.rcode = resultDatas[i].rcode;
+                randSkill.id = resultDatas[i].id;
+                randSkill.isOwned = true;
+                ownedSkills.Add(randSkill);
                 SaveManager.Instance.SetFieldData(nameof(userData.ownedSkills), ownedSkills);
             }
             SkillManager.Instance.AddSkill(id);
             Debug.Log("스킬 id : " + id);
         }
+
+        skillGachaPopup.SetActive(true);
+        skillGachaPopup.SetPopup(count, resultDatas);
     }
-    #endregion
 }
