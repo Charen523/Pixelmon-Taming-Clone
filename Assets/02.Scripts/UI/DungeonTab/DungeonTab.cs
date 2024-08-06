@@ -45,13 +45,8 @@ public class DungeonTab : UIBase
                 }
                 else if (date.Date < DateTime.Now.Date)
                 {
-                    //과거: 버그임.
-                    Debug.LogError("과거로 오면 안됩니다...앱 강제종료.");
-#if UNITY_EDITOR
-                    UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+                    //혹시나 시차때문일지 모르니 강종로직 뺌.
+                    Debug.LogError("과거로 오면 안됩니다...");
                 }
             }
             saveManager.SetFieldData(nameof(userData.lastConnectTime), DateTime.Now.ToString());
