@@ -30,11 +30,20 @@ public class DungeonSlot : MonoBehaviour
         dungeonTab.dgPopup.SetDgPopup(dungeonName.text);
     }
 
-    public void UseKey()
+    public bool UseKey()
     {
         int keyIndex = (int)type;
-        SaveManager.Instance.SetFieldData($"key{keyIndex}", -1, true);
-        dungeonTab.keys[keyIndex]--;
-        keyTxt.text = dungeonTab.GetKeyString(keyIndex);
+        if (dungeonTab.keys[keyIndex] > 0)
+        {
+            SaveManager.Instance.SetFieldData($"key{keyIndex}", -1, true);
+            dungeonTab.keys[keyIndex]--;
+            keyTxt.text = dungeonTab.GetKeyString(keyIndex);
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning("열쇠 없음!");
+            return false;
+        }
     }
 }

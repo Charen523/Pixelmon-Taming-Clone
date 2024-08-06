@@ -46,8 +46,17 @@ public class UIDungeonEnterPopup : UIBase
         {
             BigInteger curRwdValue = Calculater.CalPrice(lv, curSlot.rwdBNum, curSlot.rwdD1, curSlot.rwdD2);
             rwdDgValue.text = Calculater.NumFormatter(curRwdValue);
-            keyValue.text = dungeonTab.GetKeyString((int)type);
         }
+        else if (type == DungeonType.Seed)
+        {
+            rwdDgValue.text = "0";
+        }
+        else
+        {
+            rwdDgValue.text = "00";
+        }
+
+        keyValue.text = dungeonTab.GetKeyString((int)type);
 
         if (lv == 1)
         {
@@ -61,28 +70,30 @@ public class UIDungeonEnterPopup : UIBase
 
     public void OnEnterBtn()
     {
-        curSlot.UseKey();
-        MapManager.Instance.OnMapChanged((int)type);
-
-        UIManager.Instance.tabOverlay.onClick.Invoke();
-        dungeonTab.dgProgress.SetActive(true);
-        gameObject.SetActive(false);
+        if (curSlot.UseKey())
+        {
+            MapManager.Instance.OnMapChanged((int)type);
+            UIManager.Instance.tabOverlay.onClick.Invoke();
+            dungeonTab.dgProgress.SetActive(true);
+            gameObject.SetActive(false);
+        }
     }
 
     public void OnClrBtn()
     {
-        curSlot.UseKey();
-        
-        switch(type)
+        if (curSlot.UseKey())
         {
-            case DungeonType.Gold:
-                BigInteger getValue = Calculater.CalPrice(lv - 1, curSlot.rwdBNum, curSlot.rwdD1, curSlot.rwdD2);
-                SaveManager.Instance.SetFieldData("gold", getValue, true);
-                break;
-            case DungeonType.Seed:
-                break;
-            case DungeonType.Skill:
-                break;
+            switch (type)
+            {
+                case DungeonType.Gold:
+                    BigInteger getValue = Calculater.CalPrice(lv - 1, curSlot.rwdBNum, curSlot.rwdD1, curSlot.rwdD2);
+                    SaveManager.Instance.SetFieldData("gold", getValue, true);
+                    break;
+                case DungeonType.Seed:
+                    break;
+                case DungeonType.Skill:
+                    break;
+            }
         }
     }
 }
