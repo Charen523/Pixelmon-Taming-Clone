@@ -60,7 +60,7 @@ public class SkillTab : UIBase, IPointerDownHandler
         userData = saveManager.userData;
         dataManager = DataManager.Instance;
         skillManager = SkillManager.Instance;
-        SkillManager.Instance.skillTab = this;
+        skillManager.skillTab = this;
         AddSkillAction += AddSkill;
         InitTab();
         infoPopUp = await UIManager.Show<UISkillPopUp>();
@@ -74,9 +74,9 @@ public class SkillTab : UIBase, IPointerDownHandler
         {
             SkillSlot slot = Instantiate(slotPrefab, contentTr);
             slot.InitSlot(this, dataManager.activeData.data[i]);
-            if (userData.ownedSkills.Count > index && userData.ownedSkills[index].id == i)
+            if (userData.ownedSkills.Count != 0 && slot.atvData.dataIndex != -1)
             {
-                slot.myAtvData = userData.ownedSkills[index++];
+                slot.myAtvData = userData.ownedSkills[slot.atvData.dataIndex];
                 ownedData.Add(slot);
                 slot.UpdateSlot();
             }
