@@ -26,6 +26,8 @@ public class UIDungeonEnterPopup : UIBase
 
     public void SetDgPopup(string name)
     {
+        type = curSlot.type;
+
         dgName.text = name;
         lv = dungeonTab.dgLv[(int)type];
         dgLv.text = $"최고 {lv}단계";
