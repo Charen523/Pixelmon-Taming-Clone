@@ -66,11 +66,6 @@ public class SkillTab : UIBase, IPointerDownHandler
         infoPopUp = await UIManager.Show<UISkillPopUp>();
     }
 
-    private  void Start()
-    {
-        //userData.ownedSkills.Add(new MyAtvData());
-        //saveManager.SetData(nameof(userData.ownedSkills), userData.ownedSkills);
-    }
     public void InitTab()
     {
         int index = 0;

@@ -208,7 +208,7 @@ public class SaveManager : Singleton<SaveManager>
 
     public void UpdateSkillData(int index, string field, object value)
     {
-        if (index >= 0 && index < userData.ownedSkills.Count)
+        if (index >= 0)
         {
             userData.ownedSkills.Find((obj) => obj.id == index).UpdateField(field, value);
             isDirty = true;
