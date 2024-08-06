@@ -2,12 +2,12 @@ using UnityEngine;
 
 public enum MapList
 {
-    Theme1,
-    Theme2, 
-    Theme3,
     DgGold,
     DgSeed,
-    DgSkill
+    DgSkill,
+    Theme1,
+    Theme2, 
+    Theme3
 }
 
 public class MapManager : Singleton<MapManager>

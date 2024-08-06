@@ -8,9 +8,8 @@ public class DungeonTab : UIBase
     SaveManager saveManager;
     UserData userData;
 
-    public int keyGold => saveManager.userData.keyGold;
-    public int keySeed => saveManager.userData.keySeed;
-    public int keySkill => saveManager.userData.keySkill;
+    public int[] dgLv => userData.bestDgLvs;
+    public int[] keys = new int[3];
 
     #region UI
     [SerializeField] private TextMeshProUGUI keyChargeTime;
@@ -26,12 +25,13 @@ public class DungeonTab : UIBase
     {
         saveManager = SaveManager.Instance;
         userData = saveManager.userData;
-        
+
         dgPopup = await UIManager.Show<UIDungeonEnterPopup>();
         dgPopup.dungeonTab = this;
         
         dgProgress = await UIManager.Show<UIDungeonProgress>();
 
+        keys = new int[3];
         isInit = true;
     }
 
@@ -40,6 +40,10 @@ public class DungeonTab : UIBase
         if (isInit)
         {
             string lastTime = userData.lastConnectTime;
+            keys[0] = userData.key0;
+            keys[1] = userData.key1;
+            keys[2] = userData.key2;
+
             if (DateTime.TryParse(lastTime, out DateTime date))
             {
                 if (date.Date > DateTime.Now.Date)
@@ -79,7 +83,7 @@ public class DungeonTab : UIBase
         while (true)
         {
             DateTime now = DateTime.Now;
-            TimeSpan timeUntilMidnight = now - now.Date.AddDays(1);
+            TimeSpan timeUntilMidnight = midnight - now;
 
             keyChargeTime.text = string.Format("{0:D2}:{1:D2}:{2:D2}",
                                                 timeUntilMidnight.Hours,
@@ -96,28 +100,14 @@ public class DungeonTab : UIBase
 
     private void ResetKey()
     {
-        saveManager.SetFieldData(nameof(userData.keyGold), 3);
-        saveManager.SetFieldData(nameof(userData.keySeed), 3);
-        saveManager.SetFieldData(nameof(userData.keySkill), 3);
+        saveManager.SetFieldData(nameof(userData.key0), 3);
+        saveManager.SetFieldData(nameof(userData.key1), 3);
+        saveManager.SetFieldData(nameof(userData.key2), 3);
     }
 
-    public string GetKeyString(DungeonType type)
+    public string GetKeyString(int type)
     {
-        string result = "";
-
-        switch (type)
-        {
-            case DungeonType.Gold:
-                result = $"{keyGold}/3";
-                break;
-            case DungeonType.Seed:
-                result = $"{keySeed}/3";
-                break;
-            case DungeonType.Skill:
-                result = $"{keySkill}/3";
-                break;
-        }
-
+        string result = $"{keys[type]}/3";
         return result;
     }
 }
