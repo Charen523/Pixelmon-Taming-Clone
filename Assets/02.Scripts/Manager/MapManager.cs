@@ -19,5 +19,6 @@ public class MapManager : Singleton<MapManager>
     {
         mapList[curMap].SetActive(false);
         mapList[map].SetActive(true);
+        curMap = map;
     }
 }
