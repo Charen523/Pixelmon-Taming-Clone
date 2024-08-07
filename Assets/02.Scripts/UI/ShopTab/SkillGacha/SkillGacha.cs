@@ -14,9 +14,14 @@ public class SkillGacha : MonoBehaviour
     private int oneCostTicket = 1; // 1티켓 == 1회 뽑기
     private int oneCostDia = 100;  // 100다이아 == 1회 뽑기
 
-    public async void Awake()
+    private async void Awake()
     {
         skillGachaPopup = await UIManager.Show<UISkillGachaPopup>();
+    }
+
+    private void Start()
+    {
+        UIManager.Instance.UpdateUI += UpdateCostUI;
     }
 
     public void SetSkillGacha()
@@ -37,12 +42,17 @@ public class SkillGacha : MonoBehaviour
         UpdateButnInteractable(ThirtyBtn.Btn, 30);
     }
 
-    void UpdateButnInteractable(Button button, int requiredAmount)
+    private void UpdateButnInteractable(Button button, int requiredAmount)
     {
         if ((userData.skillTicket / oneCostTicket + userData.diamond / oneCostDia) >= requiredAmount)
             button.interactable = true;
     }
 
+    private void UpdateCostUI(DirtyUI dirtyUI)
+    {
+        if (dirtyUI == DirtyUI.Diamond || dirtyUI == DirtyUI.SkillTicket)
+            SetBtnCostUIs();
+    }
     private void SetBtnCostUIs()
     {
         SetBtnCostUI(OneBtn, 1);
@@ -98,7 +108,6 @@ public class SkillGacha : MonoBehaviour
             SaveManager.Instance.SetFieldData(nameof(userData.diamond), -totalCostDia, true);
         }
 
-        SetBtnCostUIs();
         Gacha(multiplier);
     }
 

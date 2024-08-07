@@ -45,7 +45,7 @@ public class UIHatchResultPopup : UIBase
     
     public void SetPopup(UIMiddleBar middleBar)
     {
-        SaveManager.Instance.SetData(nameof(userData.isGetPxm), false);
+        SaveManager.Instance.SetFieldData(nameof(userData.isGetPxm), false);
         uiMiddleBar = middleBar;
         #region 소환된 픽셀몬 정보 UI        
         pxmName.text = uiMiddleBar.HatchPxmData.name;

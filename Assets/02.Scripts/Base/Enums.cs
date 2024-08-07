@@ -62,8 +62,10 @@ public enum DirtyUI
     Diamond,
     Seed,
     Food,
+    SkillTicket,
     UserExp,
-    EggCount
+    EggCount,
+    EggLv
 }
 
 public enum TabState
