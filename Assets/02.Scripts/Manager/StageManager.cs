@@ -176,8 +176,6 @@ public class StageManager : Singleton<StageManager>
         }
 
         Player.Instance.fsm.target = null; //target 초기화
-        yield return nextStageInterval;
-
         if (isDungeon)
         {
             InitDgStage();
@@ -185,6 +183,7 @@ public class StageManager : Singleton<StageManager>
             bossTimeSldr.gameObject.SetActive(false);
         }
 
+        yield return nextStageInterval;
         InitStage();
     }
 
