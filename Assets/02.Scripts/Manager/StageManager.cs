@@ -187,10 +187,6 @@ public class StageManager : Singleton<StageManager>
         InitStage();
     }
 
-    /// <summary>
-    /// 노말 스테이지일 때 몬스터 스폰시켜주기
-    /// </summary>
-    /// <returns>노말스테이지 종료 여부</returns>
     private bool NormalStage() 
     {
         if (isDungeon)
@@ -204,11 +200,6 @@ public class StageManager : Singleton<StageManager>
             // Stage Clear
             ResetSpawnedEnemy();
             RewardManager.Instance.GetRewards(data.rewardType, data.rewardValue);
-            return true;
-        }
-
-        if (isBossStage)
-        {
             return true;
         }
 
