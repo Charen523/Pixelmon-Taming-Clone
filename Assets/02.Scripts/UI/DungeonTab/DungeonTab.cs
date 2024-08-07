@@ -15,7 +15,7 @@ public class DungeonTab : UIBase
     [SerializeField] private TextMeshProUGUI keyChargeTime;
     [SerializeField] private DungeonSlot[] dungeonSlots;
     public UIDungeonEnterPopup dgPopup;
-    public UIDungeonProgress dgProgress;
+    
     #endregion
 
     private bool isInit = false;
@@ -28,8 +28,6 @@ public class DungeonTab : UIBase
 
         dgPopup = await UIManager.Show<UIDungeonEnterPopup>();
         dgPopup.dungeonTab = this;
-        
-        dgProgress = await UIManager.Show<UIDungeonProgress>();
 
         keys = new int[3];
         isInit = true;

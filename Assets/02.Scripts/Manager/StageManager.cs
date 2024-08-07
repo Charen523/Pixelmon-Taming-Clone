@@ -9,7 +9,7 @@ public class StageManager : Singleton<StageManager>
     private UserData userData;
     private StageData data;
 
-    [SerializeField] private Spawner spawner;
+    public Spawner spawner;
 
     #region UI
     [Header("Stage UI")]
@@ -85,8 +85,8 @@ public class StageManager : Singleton<StageManager>
 
     #region Dungeon
     public bool isDungeon = false;
-    public int dungeonIndex = 0;
-    private GameObject boss;
+    public int dgIndex = 0;
+    private DgMonster boss;
     #endregion
 
     protected override void Awake()
@@ -131,7 +131,7 @@ public class StageManager : Singleton<StageManager>
         InitStageUI();
         SummonMonster();
 
-        if (isBossStage)
+        if (isBossStage || isDungeon)
         {
             StartCoroutine(SetProgressBar());
         }
@@ -264,13 +264,21 @@ public class StageManager : Singleton<StageManager>
 
     private void InitDgStage()
     {
-        InitStageUI();
-        boss = spawner.GetDgMonster(dungeonIndex);
         bossLeftTime = bossLimitTime;
+        boss = spawner.GetDgMonster(dgIndex);
+        boss.InitDgMonster(dgIndex);
+        InitStageUI();
     }
 
     private bool DungeonStage()
     {
+        if (!isDungeon)
+        {
+            Destroy(boss.gameObject);
+            return true;
+        }
+
+        stageTitleTxt.text = $"Dungeon Lv.{boss.dgLv}";
         bossLeftTime = Mathf.Max(0, bossLeftTime - Time.deltaTime);
         float percent = bossLeftTime / bossLimitTime;
         bossTimeSldr.value = percent;
@@ -278,7 +286,9 @@ public class StageManager : Singleton<StageManager>
 
         if (bossLeftTime == 0 || isPlayerDead)
         {
-            ResetSpawnedEnemy();
+            Destroy(boss.gameObject);
+            isDungeon = false;
+            bossTimeSldr.gameObject.SetActive(false);
             return true;
         }
 
@@ -302,9 +312,8 @@ public class StageManager : Singleton<StageManager>
     {
         if (isDungeon)
         {
-            stageTitleTxt.text = $"Dungeon!";
+            stageTitleTxt.text = $"Dungeon Lv.{boss.dgLv}";
             StageIcon.gameObject.SetActive(false);
-            //progressbar
             bossTimeSldr.gameObject.SetActive(true);
             return;
         }

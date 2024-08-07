@@ -75,8 +75,7 @@ public class UIDungeonEnterPopup : UIBase
             MapManager.Instance.OnMapChanged((int)type);
             UIManager.Instance.tabOverlay.onClick.Invoke();
             StageManager.Instance.isDungeon = true;
-            StageManager.Instance.dungeonIndex = (int)type;
-            dungeonTab.dgProgress.SetActive(true);
+            StageManager.Instance.dgIndex = (int)type;
             gameObject.SetActive(false);
         }
     }

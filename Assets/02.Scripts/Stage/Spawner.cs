@@ -70,9 +70,9 @@ public class Spawner : MonoBehaviour
         return new Vector2(Random.Range(bounds.min.x, bounds.max.x), (Random.Range(bounds.min.y, bounds.max.y)));
     }
 
-    public GameObject GetDgMonster(int index)
+    public DgMonster GetDgMonster(int index)
     {
         GameObject boss = Instantiate(dungeonBoss[index]);
-        return boss;
+        return boss.GetComponent<DgMonster>();
     }
 }
