@@ -65,8 +65,6 @@ public class SkillTab : UIBase, IPointerDownHandler
 
     public void InitTab()
     {
-        int index = 0;
-         
         for (int i = 0; i < dataManager.activeData.data.Count; i++)
         {
             SkillSlot slot = Instantiate(slotPrefab, contentTr);
