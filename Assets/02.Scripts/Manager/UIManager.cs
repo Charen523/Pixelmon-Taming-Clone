@@ -9,7 +9,8 @@ public enum eUIPosition
     Navigator,
     Tab,
     UI,
-    Popup
+    Popup,
+    OverWrite
 }
 
 public class UIManager : Singleton<UIManager>
