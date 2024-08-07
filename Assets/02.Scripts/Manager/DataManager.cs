@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using static Sirenix.OdinInspector.Editor.UnityPropertyEmitter;
 
 public class DataManager : GSpreadReader<DataManager>
 {
@@ -22,8 +23,10 @@ public class DataManager : GSpreadReader<DataManager>
     public bool isPxmInit;
     public async Task SetBaseData()
     {
+        float progress = 1.0f;
         foreach (var data in pixelmonData.data)
         {
+            UILoading.Instance.SetProgress(progress++ / pixelmonData.data.Count);
             data.icon = await ResourceManager.Instance.LoadAsset<Sprite>(data.rcode, eAddressableType.thumbnail);
             switch (data.rank)
             {
@@ -50,8 +53,10 @@ public class DataManager : GSpreadReader<DataManager>
             }
         }
 
+        progress = 1.0f;
         foreach (var data in activeData.data)
         {
+            UILoading.Instance.SetProgress(progress++ / activeData.data.Count);
             data.icon = await ResourceManager.Instance.LoadAsset<Sprite>(data.rcode, eAddressableType.thumbnail);
             switch (data.rank)
             {

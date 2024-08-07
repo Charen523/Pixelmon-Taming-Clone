@@ -79,16 +79,18 @@ public abstract class GSpreadReader<V> : Singleton<V> where V : GSpreadReader<V>
 
     public async void Init()
     {
+        float progress = 1.0f;
         foreach (var sheet in sheets)
         {
             var url = $"{this.url}export?format=tsv&gid={sheet.sheetId}";
             var req = UnityWebRequest.Get(url);
             var op = req.SendWebRequest();
-            UILoading.Instance.SetProgress(op, $"{sheet.className} 데이터 로딩중");
+            //UILoading.Instance.SetProgress(op, $"{sheet.className} 데이터 로딩중");
             await op;
             var res = req.downloadHandler.text;
             Debug.Log(res);
             sheet.datas = TsvToDic(res);
+            UILoading.Instance.SetProgress(progress++/sheets.Count);
         }
         ImportDatas();
     }
