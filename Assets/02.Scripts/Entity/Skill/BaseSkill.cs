@@ -4,29 +4,35 @@ using UnityEngine;
 
 public class BaseSkill : MonoBehaviour
 {
-    public Pixelmon owner;
     public ActiveData data;
     public MyAtvData myData;
-    public GameObject target;
+    public Pixelmon owner;
     public Enemy enemy;
-    public virtual void InitInfo(Pixelmon pxm, GameObject target, ActiveData atvData, MyAtvData myAtvData)
+    public GameObject target;
+    public virtual void InitInfo(Pixelmon pxm, GameObject _target, ActiveData atvData, MyAtvData myAtvData)
     {
         owner = pxm;
         data = atvData;
         myData = myAtvData;
-        gameObject.transform.position = target.transform.position;
+        target = _target;
+        Setprojectile();
+        ExecuteSkill();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected virtual void ExecuteSkill() { }
+    protected virtual void Setprojectile() { }
+
+
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent<Enemy>(out enemy))
         {
-            enemy.healthSystem.TakeDamage(owner.status.GetTotalDamage(owner.myData, true, data.maxRate));
             Debug.Log(target);
+            enemy.healthSystem.TakeDamage(owner.status.GetTotalDamage(owner.myData, true, data.maxRate));
         }
     }
 
-    private void CloseSkill()
+    protected virtual void CloseSkill()
     {
         gameObject.SetActive(false);
     }

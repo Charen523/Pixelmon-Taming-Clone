@@ -1,6 +1,3 @@
-using DG.Tweening.Core.Easing;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -77,8 +74,8 @@ public class SkillTab : UIBase, IPointerDownHandler
             if (userData.ownedSkills.Count != 0 && slot.atvData.dataIndex != -1)
             {
                 slot.myAtvData = userData.ownedSkills[slot.atvData.dataIndex];
-                ownedData.Add(slot);
                 slot.UpdateSlot();
+                ownedData.Add(slot);
             }
             else
             {
@@ -164,6 +161,7 @@ public class SkillTab : UIBase, IPointerDownHandler
     {
         if (!ownedData.Contains(allData[index]))
         {
+            allData[index].atvData.dataIndex = userData.ownedSkills.Count - 1;
             allData[index].myAtvData.isOwned = true;
             ownedData.Add(allData[index]);
             noneData.Remove(allData[index]);

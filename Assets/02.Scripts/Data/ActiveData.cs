@@ -10,7 +10,8 @@ public class ActiveData : IData
     public string rank;
     public string name;
     public string description;
-    public AtvSkillType type;
+    public int type;
+    public AtvSkillType Type => (AtvSkillType)type;
     public bool isCT;
     public float coolTime;
     public float maxRate;

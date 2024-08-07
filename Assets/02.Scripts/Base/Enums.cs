@@ -75,3 +75,11 @@ public enum TabState
     UnEquip,
     Empty
 }
+
+public enum AtvSkillType
+{
+    Single,
+    Area,
+    RandomSpot,
+    Special
+}
