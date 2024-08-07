@@ -10,7 +10,7 @@ public class PixelmonStatus
     public float Atk;
     public float Cri;
     public float CriDmg;
-    public float AtkSpd;
+    public float AtkSpd = 1;
     public float Dmg;
     public float SDmg;
     public float SCri;
