@@ -25,9 +25,6 @@ public class MyPixelmonData
     public int atvSkillId = -1;
     //공격수치
     public float atkValue;
-    //특성타입
-    public string traitType;
-    public float traitValue;
     //패시브 능력
     public List<PsvSkill> psvSkill = new List<PsvSkill>();
     //보유효과
@@ -46,12 +43,12 @@ public class MyPixelmonData
         }
     }
 
-    public float FindType(AbilityType type)
+    public float FindType(AbilityType type, bool isSpeed = false)
     {
         var myType = psvSkill.Find((obj) => obj.psvType == type);
         if (myType == null)
         {
-            return 1;
+            return isSpeed ? 0 : 1;
         }
         return myType.psvValue;
     }
