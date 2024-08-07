@@ -182,6 +182,7 @@ public class StageManager : Singleton<StageManager>
         {
             InitDgStage();
             yield return proceedDgStg;
+            bossTimeSldr.gameObject.SetActive(false);
         }
 
         InitStage();
@@ -279,7 +280,6 @@ public class StageManager : Singleton<StageManager>
         {
             Destroy(boss.gameObject);
             isDungeon = false;
-            bossTimeSldr.gameObject.SetActive(false);
             return true;
         }
 
@@ -448,7 +448,8 @@ public class StageManager : Singleton<StageManager>
         ResetSpawnedEnemy();
         ToNextStage(false);
         Player.Instance.fsm.target = null; //target 초기화
-        bossTimeSldr.gameObject.SetActive(false);       
+        bossTimeSldr.gameObject.SetActive(false);
+        isDungeon = false;
     }
 
     private void DelayedInitStage()
