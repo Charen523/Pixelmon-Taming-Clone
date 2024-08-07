@@ -132,6 +132,10 @@ public class EggHatch : MonoBehaviour
         {
             if (userData.eggCount <= 0) yield break;
             SaveManager.Instance.SetFieldData(nameof(userData.eggCount), -1, true);
+            if (QuestManager.Instance.isHatchQ)
+            {
+                QuestManager.Instance.OnQuestEvent();
+            }
             Gacha();
             yield return SetPxmHatchAnim();
         }
