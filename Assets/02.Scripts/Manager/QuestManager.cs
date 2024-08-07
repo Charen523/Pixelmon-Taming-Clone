@@ -6,9 +6,9 @@ public class QuestManager : Singleton<QuestManager>
 {
     public event Action QuestEvent;
 
-    StageManager stageManager;
-    SaveManager saveManager;
-    UserData userData;
+    private StageManager stageManager;
+    private SaveManager saveManager;
+    private UserData userData;
 
     private QuestData curQData => DataManager.Instance.GetData<QuestData>(curQIndex);
     private int curGoal => CurQuestGoal();
@@ -117,7 +117,6 @@ public class QuestManager : Singleton<QuestManager>
     }
     #endregion
 
-    #region Quest ID
     private void SetNewQuestId()
     {
         int repeatNum = curRepeat;
@@ -133,38 +132,26 @@ public class QuestManager : Singleton<QuestManager>
         string newId = repeatNum.ToString("D4") + qNum;
         SaveManager.Instance.SetData(nameof(SaveManager.Instance.userData.questId), newId);
     }
-    #endregion
 
     #region Quest Progress
     private void ResetProgress()
     {
-        int progress;
+        int progress = 0;
 
         switch (curQIndex)
         {
+            case "Q2":
+            case "Q4":
+                break;
             case "Q1":
                 progress = userData.userLv;
-                break;
-            case "Q2":
-                progress = 0;
                 break;
             case "Q3":
                  progress = StageProgress;
                 break;
-            case "Q4":
-                progress = curGoal; //TODO: 알 부화에 이벤트 걸기
-                break;
-            default:
-                progress = -1;
-                Debug.LogWarning("퀘스트 rcode 범위를 넘었습니다.");
-                break;
         }
 
         saveManager.SetData(nameof(userData.questProgress), progress);
-        if (isQuestClear)
-        {
-            //TODO: 퀘스트 클리어 시 UI 변동주기
-        }
     }
 
     private void UpdateProgress()
@@ -173,30 +160,20 @@ public class QuestManager : Singleton<QuestManager>
 
         switch (curQIndex)
         {
-            case "Q1":
-                progress = userData.userLv;
-                break;
             case "Q2":
-                progress++;
-                break;
-            case "Q3":
-                progress = StageProgress;
-                break;
             case "Q4":
                 progress++;
                 break;
-            default:
-                Debug.LogWarning("퀘스트 rcode 범위를 넘었습니다.");
+            case "Q1":
+                progress = userData.userLv;
+                break;
+            case "Q3":
+                progress = StageProgress;
                 break;
         }
 
         saveManager.SetData(nameof(userData.questProgress), progress);
         SetQuestCountTxt();
-
-        if (isQuestClear)
-        {
-            //TODO: 퀘스트 클리어 시 UI 변동주기
-        }
     }
 
     private int CurQuestGoal()
