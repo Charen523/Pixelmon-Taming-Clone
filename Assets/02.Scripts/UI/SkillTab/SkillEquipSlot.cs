@@ -42,8 +42,7 @@ public class SkillEquipSlot : MonoBehaviour
         }
         else if (skillTab.tabState == TabState.Normal && myAtvData.isEquipped)
         {
-            skillTab.choiceId = myAtvData.id;
-            skillTab.OnSkillPopUp(skillTab.choiceId);
+            skillTab.OnSkillPopUp(myAtvData.id);
         }
         else if (skillTab.tabState == TabState.Equip && SaveManager.Instance.userData.equippedPxms[slotIndex].isEquipped)
         {
