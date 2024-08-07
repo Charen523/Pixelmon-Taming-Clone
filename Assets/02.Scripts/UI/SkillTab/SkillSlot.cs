@@ -71,6 +71,7 @@ public class SkillSlot : MonoBehaviour
 
     public void UpdateSlot()
     {
+        myAtvData = SaveManager.Instance.userData.ownedSkills[atvData.dataIndex];
         SetSkillLv();
         SetEquipTxt();
         SetEvolveSldr();
@@ -81,7 +82,7 @@ public class SkillSlot : MonoBehaviour
         while (myAtvData.isAdvancable)
         {
             skillTab.saveManager.UpdateSkillData(atvData.dataIndex, "isAdvancable", false);
-            skillTab.saveManager.UpdatePixelmonData(myAtvData.id, "evolvedCount", myAtvData.evolvedCount - UIUtils.GetEvolveValue(myAtvData, atvData));
+            skillTab.saveManager.UpdateSkillData(atvData.dataIndex, "evolvedCount", myAtvData.evolvedCount - UIUtils.GetEvolveValue(myAtvData, atvData));
             skillTab.saveManager.UpdateSkillData(atvData.dataIndex, "lv", ++myAtvData.lv);
             SetEvolveSldr();
             SetSkillLv();
