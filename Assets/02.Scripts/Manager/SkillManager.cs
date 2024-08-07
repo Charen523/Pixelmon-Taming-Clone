@@ -61,7 +61,7 @@ public class SkillManager : Singleton<SkillManager>
             if (!myData.isEquipped) yield break;
             data.isCT = true;
             actionStorage[data.id]?.Invoke(pxm, data, myData);
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(data.coolTime);
             data.isCT = false;
         }
     }
@@ -104,11 +104,4 @@ public class SkillManager : Singleton<SkillManager>
             }
         }
     }
-}
-
-public enum AtvSkillType
-{
-    Single,
-    Area,
-    Special
 }
