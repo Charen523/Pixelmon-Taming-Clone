@@ -248,7 +248,7 @@ public class UIPixelmonPopUp : UIBase
 
     public void SetStars()
     {
-        for (int i = 0; i <= myData.star; i++)
+        for (int i = 0; i < 5; i++)
         {
             if (i < myData.star)
                 stars[i].SetActive(true);
