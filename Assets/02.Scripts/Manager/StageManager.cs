@@ -176,21 +176,17 @@ public class StageManager : Singleton<StageManager>
         }
 
         Player.Instance.fsm.target = null; //target 초기화
-        yield return nextStageInterval;
-
         if (isDungeon)
         {
             InitDgStage();
             yield return proceedDgStg;
+            bossTimeSldr.gameObject.SetActive(false);
         }
 
+        yield return nextStageInterval;
         InitStage();
     }
 
-    /// <summary>
-    /// 노말 스테이지일 때 몬스터 스폰시켜주기
-    /// </summary>
-    /// <returns>노말스테이지 종료 여부</returns>
     private bool NormalStage() 
     {
         if (isDungeon)
@@ -204,11 +200,6 @@ public class StageManager : Singleton<StageManager>
             // Stage Clear
             ResetSpawnedEnemy();
             RewardManager.Instance.GetRewards(data.rewardType, data.rewardValue);
-            return true;
-        }
-
-        if (isBossStage)
-        {
             return true;
         }
 
@@ -288,7 +279,6 @@ public class StageManager : Singleton<StageManager>
         {
             Destroy(boss.gameObject);
             isDungeon = false;
-            bossTimeSldr.gameObject.SetActive(false);
             return true;
         }
 
@@ -457,7 +447,8 @@ public class StageManager : Singleton<StageManager>
         ResetSpawnedEnemy();
         ToNextStage(false);
         Player.Instance.fsm.target = null; //target 초기화
-        bossTimeSldr.gameObject.SetActive(false);       
+        bossTimeSldr.gameObject.SetActive(false);
+        isDungeon = false;
     }
 
     private void DelayedInitStage()
