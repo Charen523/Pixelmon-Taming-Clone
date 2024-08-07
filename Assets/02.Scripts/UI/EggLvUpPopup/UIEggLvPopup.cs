@@ -43,6 +43,7 @@ public class UIEggLvPopup : UIBase
 
     private void Start()
     {
+        UIManager.Instance.UpdateUI += UpdateEggLvPopupUI;
         for (int i = 0; i < userData.eggLv / 5 + 2; i++)
         {
             lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
@@ -62,11 +63,28 @@ public class UIEggLvPopup : UIBase
             SetGaugeMode();
     }
 
+    private void UpdateEggLvPopupUI(DirtyUI dirtyU)
+    {
+        switch (dirtyU)
+        {
+            case DirtyUI.EggLv:
+                UpdateLvAndRateUI();
+                break;
+            case DirtyUI.Gold:
+                SetGaugeUpBtn();
+                break;
+            case DirtyUI.Diamond:
+                SetDiaBtn();
+                break;
+        }
+    }
+
     private void UpdateLvAndRateUI()
     {
         CurLvNum.text = userData.eggLv.ToString();
         NextLvNum.text = (userData.eggLv + 1).ToString();
     }
+
     private void SetLvUpBtn()
     {
         if (userData.fullGaugeCnt == lvUpGauges.Count)
@@ -132,7 +150,6 @@ public class UIEggLvPopup : UIBase
         SaveManager.Instance.SetFieldData(nameof(userData.fullGaugeCnt), 1, true);
         SaveManager.Instance.SetFieldData(nameof(userData.gold), -price, true);
         SetLvUpBtn();
-        SetGaugeUpBtn();
     }
 
     public void OnClickLvUpBtn()
@@ -156,7 +173,6 @@ public class UIEggLvPopup : UIBase
     {
         SaveManager.Instance.SetFieldData(nameof(userData.diamond), -skipDia, true);
         SaveManager.Instance.SetFieldData(nameof(userData.skipTime), userData.skipTime + 3600f);
-        SetDiaBtn();
         remainingTime -= 3600f;
         if(remainingTime <= 0) SetGaugeMode();
     }
@@ -164,8 +180,7 @@ public class UIEggLvPopup : UIBase
     private void LvUp()
     {
         SaveManager.Instance.SetFieldData(nameof(userData.startLvUpTime), null);
-        SaveManager.Instance.SetFieldData(nameof(userData.eggLv), 1, true);
-        UpdateLvAndRateUI();       
+        SaveManager.Instance.SetFieldData(nameof(userData.eggLv), 1, true);    
         SetGaugeMode();
     }
 
