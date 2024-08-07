@@ -9,7 +9,7 @@ public class StageManager : Singleton<StageManager>
     private UserData userData;
     private StageData data;
 
-    [SerializeField] private Spawner spawner;
+    public Spawner spawner;
 
     #region UI
     [Header("Stage UI")]
@@ -34,12 +34,9 @@ public class StageManager : Singleton<StageManager>
     [HideInInspector] public int curSpawnCount = 0;
     private int killCount = 0;
 
-    private WaitUntil proceedNormalStg;
-    private WaitUntil proceedBossStg;
     private bool isBossCleared = false;
     #endregion
 
-    #region Current Stage
     private string _currentRcode;
     public string CurrentRcode 
     { 
@@ -62,6 +59,9 @@ public class StageManager : Singleton<StageManager>
     
     [Header("Current Stage")]
     private readonly string stageCodeName = "STG0";
+    private WaitUntil proceedNormalStg;
+    private WaitUntil proceedBossStg;
+    private WaitUntil proceedDgStg;
     
     public int diffNum => userData.curDifficulty;
 
@@ -71,7 +71,6 @@ public class StageManager : Singleton<StageManager>
     public int stageNum;
     [SerializeField] private readonly int bossStageNum = 6;
     private bool isBossStage => stageNum == bossStageNum;
-    #endregion
 
     #region Time Interval
     private float curInterval = 0; //현재 시간 간격
@@ -83,6 +82,12 @@ public class StageManager : Singleton<StageManager>
 
     //플레이어 사망 중복 호출 방지 플래그
     private bool isPlayerDead = false;
+
+    #region Dungeon
+    public bool isDungeon = false;
+    public int dgIndex = 0;
+    private DgMonster boss;
+    #endregion
 
     protected override void Awake()
     {
@@ -98,6 +103,8 @@ public class StageManager : Singleton<StageManager>
     {
         proceedNormalStg = new WaitUntil(() => NormalStage());
         proceedBossStg = new WaitUntil(() => BossStage());
+        proceedDgStg = new WaitUntil(() => DungeonStage());
+
         GameManager.Instance.OnPlayerDie += OnPlayerDead;
         GameManager.Instance.OnStageStart += DelayedInitStage;
 
@@ -123,7 +130,8 @@ public class StageManager : Singleton<StageManager>
     {
         InitStageUI();
         SummonMonster();
-        if (isBossStage)
+
+        if (isBossStage || isDungeon)
         {
             StartCoroutine(SetProgressBar());
         }
@@ -146,16 +154,10 @@ public class StageManager : Singleton<StageManager>
 
             if (isBossCleared)
             {
-                //현재 월드의 Normal Monster Pool 삭제.
-                //foreach (var monsterId in monsterIds)
-                //{
-                //    PoolManager.Instance.RemovePool(monsterId);
-                //}
-
                 isBossCleared = false;
                 ToNextWorld();
             }
-            else
+            else if (!isDungeon)
             {
                 ToNextStage(false);
                 GameManager.Instance.NotifyStageTimeOut();
@@ -166,12 +168,22 @@ public class StageManager : Singleton<StageManager>
         {
             yield return proceedNormalStg;
 
-            ToNextStage();
-            GameManager.Instance.NotifyStageClear();
+            if (!isDungeon)
+            {
+                ToNextStage();
+                GameManager.Instance.NotifyStageClear();
+            }
         }
 
         Player.Instance.fsm.target = null; //target 초기화
         yield return nextStageInterval;
+
+        if (isDungeon)
+        {
+            InitDgStage();
+            yield return proceedDgStg;
+        }
+
         InitStage();
     }
 
@@ -181,6 +193,12 @@ public class StageManager : Singleton<StageManager>
     /// <returns>노말스테이지 종료 여부</returns>
     private bool NormalStage() 
     {
+        if (isDungeon)
+        {
+            ResetSpawnedEnemy();
+            return true;
+        }
+
         if (killCount >= data.nextStageCount)
         {
             // Stage Clear
@@ -211,13 +229,18 @@ public class StageManager : Singleton<StageManager>
 
     private void InitBossStage()
     {
-        //PoolManager.Instance.AddPool(Data.monsterIds);
         spawner.SpawnMonsterTroop(data.monsterId, data.spawnCount);
         bossLeftTime = bossLimitTime;
     }
 
     private bool BossStage()
     {
+        if (isDungeon)
+        {
+            ResetSpawnedEnemy();
+            return true;
+        }
+
         if (isBossCleared)
         {
             ResetSpawnedEnemy();
@@ -239,6 +262,39 @@ public class StageManager : Singleton<StageManager>
         return false;
     }
 
+    private void InitDgStage()
+    {
+        bossLeftTime = bossLimitTime;
+        boss = spawner.GetDgMonster(dgIndex);
+        boss.InitDgMonster(dgIndex);
+        InitStageUI();
+    }
+
+    private bool DungeonStage()
+    {
+        if (!isDungeon)
+        {
+            Destroy(boss.gameObject);
+            return true;
+        }
+
+        stageTitleTxt.text = $"Dungeon Lv.{boss.dgLv}";
+        bossLeftTime = Mathf.Max(0, bossLeftTime - Time.deltaTime);
+        float percent = bossLeftTime / bossLimitTime;
+        bossTimeSldr.value = percent;
+        bossTimeTxt.text = string.Format("{0:F2}", bossLeftTime);
+
+        if (bossLeftTime == 0 || isPlayerDead)
+        {
+            Destroy(boss.gameObject);
+            isDungeon = false;
+            bossTimeSldr.gameObject.SetActive(false);
+            return true;
+        }
+
+        return false;
+    }
+
     private void ResetSpawnedEnemy()
     {
         foreach (var enemy in spawner.isActivatedEnemy)
@@ -254,23 +310,32 @@ public class StageManager : Singleton<StageManager>
     #region UI세팅
     private void InitStageUI()
     {
+        if (isDungeon)
+        {
+            stageTitleTxt.text = $"Dungeon Lv.{boss.dgLv}";
+            StageIcon.gameObject.SetActive(false);
+            bossTimeSldr.gameObject.SetActive(true);
+            return;
+        }
+
         if (isBossStage)
         {
             stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-BOSS";
+            StageIcon.gameObject.SetActive(true);
             StageIcon.sprite = iconSprite[1];
             progressSldr.value = 1; // TODO: 보스 HealthSystem과 연결.
             progressTxt.text = "100.00%";
             bossTimeSldr.gameObject.SetActive(true);
+            return;
         }
-        else
-        {
-            stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
-            StageIcon.sprite = iconSprite[0];
-            prevProgress = killCount / (float)data.nextStageCount;
-            curProgress = prevProgress;
-            progressSldr.value = prevProgress;
-            progressTxt.text = string.Format("{0:F2}%", prevProgress * 100);
-        }
+
+        stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
+        StageIcon.gameObject.SetActive(true);
+        StageIcon.sprite = iconSprite[0];
+        prevProgress = killCount / (float)data.nextStageCount;
+        curProgress = prevProgress;
+        progressSldr.value = prevProgress;
+        progressTxt.text = string.Format("{0:F2}%", prevProgress * 100);
     }
 
     public string SetDiffTxt(int num)

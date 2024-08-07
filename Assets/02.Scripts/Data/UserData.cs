@@ -16,9 +16,9 @@ public class UserData
     public int seed = 10;
     public int food = 10;
     public int skillTicket = 0;
-    public int keyGold;
-    public int keySeed;
-    public int keySkill;
+    public int key0 = 3;
+    public int key1 = 3;
+    public int key2 = 3;
 
     public int userLv = 1;
     public string _exp = "0";
@@ -50,7 +50,6 @@ public class UserData
 
     public int[] equippedSkills = {-1, -1, -1, -1, -1};
     public List<MyAtvData> ownedSkills = new List<MyAtvData>();
-    //public string[] OwnedActiveSkills; 만약 스킬 강화 생기면 string-> 스킬로 바꾸기.
     public FieldData[] fieldDatas = new FieldData[6];
-    //public int[] DungeonLvs = { 1, 1, 1 };
+    public int[] bestDgLvs = { 1, 1, 1 };
 }

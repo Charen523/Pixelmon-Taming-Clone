@@ -11,6 +11,7 @@ public class Spawner : MonoBehaviour
     [SerializeField]private Collider2D cleanArea;
 
     public List<Enemy> isActivatedEnemy = new List<Enemy>();
+    public GameObject[] dungeonBoss;
 
     private void Awake()
     {
@@ -67,5 +68,11 @@ public class Spawner : MonoBehaviour
     {
         Bounds bounds = collider.bounds;
         return new Vector2(Random.Range(bounds.min.x, bounds.max.x), (Random.Range(bounds.min.y, bounds.max.y)));
+    }
+
+    public DgMonster GetDgMonster(int index)
+    {
+        GameObject boss = Instantiate(dungeonBoss[index]);
+        return boss.GetComponent<DgMonster>();
     }
 }
