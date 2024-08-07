@@ -47,8 +47,7 @@ public class PixelmonTab : UIBase
     //보유한 픽셀몬 정보
     public List<PixelmonSlot> ownedData = new List<PixelmonSlot>();
     //편성된 픽셀몬 정보
-    [SerializeField]
-    private PixelmonEquipSlot[] equipData = new PixelmonEquipSlot[5];
+    public PixelmonEquipSlot[] equipData = new PixelmonEquipSlot[5];
     #endregion
 
     private async void Awake()

@@ -24,5 +24,6 @@ public class Pixelmon : MonoBehaviour
     {
         status.InitStatus(data, myData);
         fsm.ChangeState(Player.Instance.fsm.currentState);
+        fsm.attackSpeed = status.AtkSpd;
     }
 }

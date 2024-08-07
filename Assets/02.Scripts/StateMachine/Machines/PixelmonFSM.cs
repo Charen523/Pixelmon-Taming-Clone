@@ -15,14 +15,13 @@ public class PixelmonFSM : FSM
     #endregion
 
     Coroutine attackCoroutine;
-    float attackSpeed = 2f; //패시브 쪽에서 만약 관련 패시브 보유한 픽셀몬이 장착되면 여기서 빼주기.
+    public float attackSpeed = 2f; //패시브 쪽에서 만약 관련 패시브 보유한 픽셀몬이 장착되면 여기서 빼주기.
     WaitUntil waitAttack;
     float coolTime = 0;
     float minDistance;
     private void Start()
     {
         waitAttack = new WaitUntil(() => AttackCoolTime());
-        //attackSpeed = pixelmon.data.atkSpd;
     }
 
     public void InitStates()

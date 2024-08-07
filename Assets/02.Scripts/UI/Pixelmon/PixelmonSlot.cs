@@ -99,10 +99,13 @@ public class PixelmonSlot : MonoBehaviour
 
     public void OnEvolved()
     {
+        if (myPxmData.star >= 5) return;
         pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "isAdvancable", false);
         pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "evolvedCount", myPxmData.evolvedCount - UIUtils.GetEvolveValue(myPxmData, pxmData));
         pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "star", ++myPxmData.star);
+        myPxmData.PxmStarUp();
         SetStars();
         SetEvolveSldr();
+        PixelmonManager.Instance.ApplyStatus(pxmData, myPxmData);
     }
 }

@@ -64,7 +64,7 @@ public class UIPixelmonPopUp : UIBase
     public int infoIndex = 0;
     public int foodPerExp = 10;
     public int maxExp = 50;
-
+    private string maxLv = "-";
     public void ShowPopUp(int dataIndex, PixelmonTab tab)
     {
         if(saveManager == null)
@@ -150,7 +150,7 @@ public class UIPixelmonPopUp : UIBase
 
     public void OnFeeding()
     {
-        if (!myData.isOwned) return;
+        if (!myData.isOwned || myData.lv >= 50) return;
         if (saveManager.userData.food >= myData.maxExp)
         {
             saveManager.SetDeltaData("food", -myData.maxExp);
@@ -158,7 +158,10 @@ public class UIPixelmonPopUp : UIBase
             saveManager.UpdatePixelmonData(myData.id, "lv", ++myData.lv);
             lvTxt.text = string.Format($"{myData.lv}/50");
             pxmTab.allData[myData.id].SetPxmLv();
+            myData.PxmLvUp();
             SetFoodCount();
+            SetStartEffect();
+            PixelmonManager.Instance.ApplyStatus(data, myData);
             Debug.Log("레벨 업!");
         }
         else
@@ -188,32 +191,48 @@ public class UIPixelmonPopUp : UIBase
 
     public void SetFoodCount()
     {
-        curFoodCount.text = saveManager.userData.food.ToString();
-        demandFoodCount.text = myData.maxExp.ToString();
-        if (saveManager.userData.food >= myData.maxExp && myData.isOwned)
+        if (myData.lv >= 50)
         {
-            curFoodCount.color = Color.yellow;
-            feedingArrow.SetActive(true);
+            curFoodCount.text = maxLv;
+            demandFoodCount.text = maxLv;
         }
         else
         {
-            curFoodCount.color = Color.red;
-            feedingArrow.SetActive(false);
+            curFoodCount.text = saveManager.userData.food.ToString();
+            demandFoodCount.text = myData.maxExp.ToString();
+            if (saveManager.userData.food >= myData.maxExp && myData.isOwned)
+            {
+                curFoodCount.color = Color.yellow;
+                feedingArrow.SetActive(true);
+            }
+            else
+            {
+                curFoodCount.color = Color.red;
+                feedingArrow.SetActive(false);
+            }
         }
     }
 
     public void OnEvovled()
     {
-        if (!myData.isOwned || !myData.isAdvancable) return;
+        if (!myData.isOwned || !myData.isAdvancable || myData.star >= 5) return;
         pxmTab.allData[myData.id].OnEvolved();
         SetStars();
         SetEvolvedCount();
+        SetPsvEffect();
+        SetOwnedEffect();
         Debug.Log("합성완료(팝업)");
     }
 
     public void SetEvolvedCount()
     {
-        curCardCount.text = myData.evolvedCount.ToString(); ;
+        curCardCount.text = myData.evolvedCount.ToString();
+        if (myData.star >= 5)
+        {
+            demandCardCount.text = maxLv;
+            return;
+        }
+
         demandCardCount.text = UIUtils.GetEvolveValue(myData, data).ToString();
         if (myData.evolvedCount >= UIUtils.GetEvolveValue(myData, data))
         {
@@ -229,7 +248,7 @@ public class UIPixelmonPopUp : UIBase
 
     public void SetStars()
     {
-        for (int i = 0; i <= myData.star; i++)
+        for (int i = 0; i < 5; i++)
         {
             if (i < myData.star)
                 stars[i].SetActive(true);
@@ -264,8 +283,8 @@ public class UIPixelmonPopUp : UIBase
         traitType.text = UIUtils.TranslateTraitString(data.trait);
         if (isOwned)
         {
-            atkValue.text = string.Format("{0:F2}%", myData.atkValue);
-            traitValue.text = string.Format("{0:F2}%", myData.traitValue);
+            atkValue.text = string.Format("{0:F2}%", myData.atkValue + myData.lv * data.lvAtkRate);
+            traitValue.text = string.Format("{0:F2}%", data.traitValue + myData.lv * data.lvAtkRate);
         }
         else
         {
