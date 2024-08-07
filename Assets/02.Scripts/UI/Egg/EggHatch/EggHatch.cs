@@ -37,6 +37,7 @@ public class EggHatch : MonoBehaviour
 
     private void Start()
     {
+        isDoneGetPxm = true;
         getPixelmon = new WaitUntil(() => isDoneGetPxm == true);
         HatchedPixelmonImg.gameObject.SetActive(false);
 
@@ -119,30 +120,29 @@ public class EggHatch : MonoBehaviour
         PsvData[0].NewPsvValue = randAbility.AbilityValue;
     }
 
-    public void OnClickEgg()
+    public void OnClickEgg(Button btn)
     {
-        StartCoroutine(ClickEgg());
+        StartCoroutine(ClickEgg(btn));
     }
 
-    public IEnumerator ClickEgg()
+    public IEnumerator ClickEgg(Button btn)
     {
-        if (userData.eggCount <= 0) yield break;
-
+        btn.interactable = false;
         if (userData.isGetPxm)
         {
+            if (userData.eggCount <= 0) yield break;
             SaveManager.Instance.SetFieldData(nameof(userData.eggCount), -1, true);
             Gacha();
-        }
-            
-        isDoneGetPxm = false;
-
-        if (userData.isGetPxm == true)
             yield return SetPxmHatchAnim();
+        }
+
+        isDoneGetPxm = false;
 
         HatchResultPopup.SetActive(true);
         HatchResultPopup.SetPopup(this);
+        btn.interactable = true;
 
-        yield return getPixelmon;
+        yield return getPixelmon;      
     }
 
     private IEnumerator SetPxmHatchAnim()
