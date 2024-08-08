@@ -6,15 +6,15 @@ using System.Numerics;
 public class UserData
 { 
     public string userId;
-    public string userName = "Name한글";
+    public string userName = "song이름";
     public string lastConnectTime;
 
-    public string _gold = "33348332500000";
+    public string _gold = "0";
     public BigInteger gold = 0;
 
     public int diamond = 10000;
-    public int seed = 10;
-    public int food = 10;
+    public int seed = 3;
+    public int food = 0;
     public int skillTicket = 0;
     public int key0 = 3;
     public int key1 = 3;

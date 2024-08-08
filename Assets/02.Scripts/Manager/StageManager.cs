@@ -318,8 +318,8 @@ public class StageManager : Singleton<StageManager>
             stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-BOSS";
             StageIcon.gameObject.SetActive(true);
             StageIcon.sprite = iconSprite[1];
-            progressSldr.value = 1; // TODO: 보스 HealthSystem과 연결.
-            progressTxt.text = "100.00%";
+            progressSldr.value = 1;
+            progressTxt.text = "100%";
             bossTimeSldr.gameObject.SetActive(true);
             return;
         }
@@ -331,7 +331,7 @@ public class StageManager : Singleton<StageManager>
         prevProgress = killCount / (float)data.nextStageCount;
         curProgress = prevProgress;
         progressSldr.value = prevProgress;
-        progressTxt.text = string.Format("{0:F2}%", prevProgress * 100);
+        progressTxt.text = string.Format($"{(int)(prevProgress * 100)}%");
     }
 
     public string SetDiffTxt(int num)
@@ -353,7 +353,7 @@ public class StageManager : Singleton<StageManager>
             if (curProgress > prevProgress)
             {
                 StartCoroutine(UIUtils.AnimateSliderChange(progressSldr, prevProgress, curProgress));
-                progressTxt.text = string.Format("{0:F2}%", curProgress * 100);
+                progressTxt.text = string.Format($"{(int)(prevProgress * 100)}%");
                 prevProgress = curProgress;
             }
             yield return null;
