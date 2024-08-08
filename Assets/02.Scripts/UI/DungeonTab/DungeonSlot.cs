@@ -23,11 +23,6 @@ public class DungeonSlot : MonoBehaviour
     public TextMeshProUGUI keyTxt;
     #endregion
 
-    private void Start()
-    {
-        keyTxt.text = dungeonTab.GetKeyString((int)type);
-    }
-
     public void enterDungeonBtn()
     {
         dungeonTab.dgPopup.SetActive(true);
@@ -42,7 +37,7 @@ public class DungeonSlot : MonoBehaviour
         {
             SaveManager.Instance.SetFieldData($"key{keyIndex}", -1, true);
             dungeonTab.keys[keyIndex]--;
-            keyTxt.text = dungeonTab.GetKeyString(keyIndex);
+            KeyTxt();
             return true;
         }
         else
@@ -50,5 +45,10 @@ public class DungeonSlot : MonoBehaviour
             Debug.LogWarning("열쇠 없음!");
             return false;
         }
+    }
+
+    public void KeyTxt()
+    {
+        keyTxt.text = dungeonTab.GetKeyString((int)type);
     }
 }
