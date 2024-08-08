@@ -10,7 +10,7 @@ public class FieldSlot : MonoBehaviour
     private UserData userData;
 
     public FarmTab farmTab;
-    public int myIndex;
+    public int slotIndex;
     public FieldData fieldData;
 
     [SerializeField] private int price;
@@ -106,7 +106,7 @@ public class FieldSlot : MonoBehaviour
 
     public void OnBuyBtn()
     {
-        if (myIndex < 4)
+        if (slotIndex < 4)
         {
             if (price <= userData.gold)
             {
@@ -133,6 +133,7 @@ public class FieldSlot : MonoBehaviour
         CurrentFieldState = FieldState.Empty;
         buyBtn.transform.parent.gameObject.SetActive(false);
         farmTab.SaveFarmData();
+        farmTab.UnlockNextField(slotIndex);
     }
 
     public void OnSeedBtn()

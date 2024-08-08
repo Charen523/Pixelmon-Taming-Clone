@@ -29,7 +29,7 @@ public class FarmTab : UIBase
         for (int i = 0; i < fieldSlots.Length; i++)
         {
             fieldSlots[i].farmTab = this;
-            fieldSlots[i].myIndex = i;
+            fieldSlots[i].slotIndex = i;
             fieldSlots[i].fieldData = userData.fieldDatas[i];
         }
         seedTxt.text = seedCount.ToString();
@@ -66,6 +66,12 @@ public class FarmTab : UIBase
                 foodTxt.text = foodCount.ToString();
                 break;
         }
+    }
+
+    public void UnlockNextField(int buyIndex)
+    {
+        if (buyIndex > 4) return;
+        fieldSlots[buyIndex + 1].CurrentFieldState = FieldState.Buyable;
     }
 
     public bool PlantSeed()
