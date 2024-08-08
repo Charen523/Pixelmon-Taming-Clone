@@ -1,18 +1,19 @@
-using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
-using System.Collections;
-using System.Threading;
 using System;
-using System.Numerics;
+using System.Collections;
 
-public class FieldSlot : SerializedMonoBehaviour
+public class FieldSlot : MonoBehaviour
 {
-    /*FarmTab에서 Awake 메서드로 초기화되는 변수들*/
+    private SaveManager saveManager;
+    private UserData userData;
+
     public FarmTab farmTab;
     public int myIndex;
     public FieldData fieldData;
+
+    [SerializeField] private int price;
 
     #region properties
     public FieldState CurrentFieldState 
@@ -30,79 +31,54 @@ public class FieldSlot : SerializedMonoBehaviour
     #endregion
 
     #region UI
-    [SerializeField] private Button pxmBtn;
-    [SerializeField] private Button FieldBtn;
+    [SerializeField] private Button buyBtn;
+    [SerializeField] private Button seedBtn;
+    [SerializeField] private Button harvestBtn;
     
-    [SerializeField] private Sprite[] fieldStatusImgs;
-    [SerializeField] private Image currentSprite;
+    [SerializeField] private Sprite[] plantImgs;
+    [SerializeField] private Image curSprite;
 
-    [SerializeField] private Sprite[] Icons;
-    [SerializeField] private Image FieldIcon;
-
+    [SerializeField] private Slider timeSldr;
     [SerializeField] private TextMeshProUGUI timeTxt;
-    [SerializeField] private TextMeshProUGUI priceTxt;
     #endregion
 
     Coroutine growingCoroutine;
-    [SerializeField] private int price; //밭 가격
 
-    private void OnEnable()
+    private void Awake()
     {
-        if (fieldData.currentFieldState == FieldState.Seeded)
-        {
-            CalculateRemainingTime(); 
-        }
-
-        CurrentFieldState = fieldData.currentFieldState;
-        CurrentFieldAction(CurrentFieldState);
+        saveManager = SaveManager.Instance;
+        userData = saveManager.userData;
     }
 
-    private void CurrentFieldAction(FieldState state)
+    public void CurrentFieldAction(FieldState state)
     {
-        switch(state)
+        switch (state)
         {
             case FieldState.Locked: //잠김.
-                /*Btn Settings*/
-                pxmBtn.interactable = false;
-                FieldBtn.interactable = false;
-                /*UI Settings*/
-                currentSprite.sprite = fieldStatusImgs[0];
-                FieldIcon.sprite = Icons[0];
-                priceTxt.gameObject.SetActive(true);
                 break;
 
             case FieldState.Buyable: //구매가능
                 /*Btn Settings*/
-                pxmBtn.interactable = true;
-                FieldBtn.interactable = true;
-                FieldBtn.onClick.AddListener(OnBuyFieldClicked);
+                buyBtn.gameObject.SetActive(true);
                 /*UI Settings*/
-                currentSprite.sprite = fieldStatusImgs[1];
-                FieldIcon.sprite = Icons[1];
-                /*TMP Settings*/
-                priceTxt.gameObject.SetActive(true);
-                priceTxt.text = $"가격: {price}다이아";
                 break;
 
             case FieldState.Empty: //빈 밭.
                 /*Btn Settings*/
-                FieldBtn.interactable = true;
-                FieldBtn.onClick.RemoveAllListeners();
-                FieldBtn.onClick.AddListener(OnSeedFieldClicked);
+                buyBtn.transform.parent.gameObject.SetActive(false);
+                seedBtn.gameObject.SetActive(true);
+                harvestBtn.gameObject.SetActive(false);
                 /*UI Settings*/
-                currentSprite.sprite = fieldStatusImgs[1];
-                FieldIcon.sprite = Icons[2];
-                /*TMP Settings*/
-                priceTxt.gameObject.SetActive(false);
+                curSprite.gameObject.SetActive(false);
                 break;
 
             case FieldState.Seeded: //작물이 심긴 밭.
                 /*Btn Settings*/
-                pxmBtn.interactable = false;
-                FieldBtn.interactable = false;
+                buyBtn.transform.parent.gameObject.SetActive(false);
+                seedBtn.gameObject.SetActive(false);
                 /*UI Settings*/
-                currentSprite.sprite = fieldStatusImgs[2];
-                FieldIcon.sprite = Icons[3];
+                curSprite.gameObject.SetActive(true);
+                timeSldr.gameObject.SetActive(true);
                 /*TMP Settings*/
                 if (growingCoroutine != null)
                 {
@@ -113,64 +89,66 @@ public class FieldSlot : SerializedMonoBehaviour
 
             case FieldState.Harvest: //수확 준비된 밭.
                 /*Btn Settings*/
-                pxmBtn.interactable = true;
-                FieldBtn.interactable = true;
-                FieldBtn.onClick.RemoveAllListeners();
-                FieldBtn.onClick.AddListener(OnHarvestFieldClicked);
+                buyBtn.transform.parent.gameObject.SetActive(false);
+                harvestBtn.gameObject.SetActive(true);
                 /*UI Settings*/
-                currentSprite.sprite = fieldStatusImgs[3];
-                FieldIcon.sprite = Icons[4];
+                curSprite.sprite = plantImgs[fieldData.yieldClass];
+                timeSldr.gameObject.SetActive(false);
                 /*TMP Settings*/
                 if (growingCoroutine != null)
                 {
                     StopCoroutine(growingCoroutine);
                 }
-                if (timeTxt.gameObject.activeSelf)
-                {
-                    timeTxt.gameObject.SetActive(false);
-                }
-                break;
-
-            default:
-                Debug.LogError($"{myIndex}번 밭에서 잘못된 FieldState.");
                 break;
         }
     }
 
-    private void OnBuyFieldClicked()
+    public void OnBuyBtn()
     {
-        //TODO: 구매 팝업 띄우는 것으로 대체하기
-        if (price <= SaveManager.Instance.userData.diamond)
+        if (myIndex < 4)
         {
-            SaveManager.Instance.SetDeltaData("diamond", -price);
-            CurrentFieldState = FieldState.Empty;
+            if (price <= userData.gold)
+            {
+                saveManager.SetFieldData(nameof(userData.gold), -price, true);
+            }
+            else
+            {
+                Debug.LogWarning("돈 없음 popup");
+                return;
+            }
         }
         else
         {
-            //TODO: 다이아 없음을 알리는 popup
-            Debug.LogWarning("다이아 없음 Popup");
+            if (price <= userData.diamond)
+            {
+                saveManager.SetFieldData(nameof(userData.diamond), -price, true);
+            }
+            else
+            {
+                Debug.LogWarning("다이아 없음 popup");
+                return;
+            }
         }
+        CurrentFieldState = FieldState.Empty;
+        buyBtn.transform.parent.gameObject.SetActive(false);
+        farmTab.SaveFarmData();
     }
 
-    private void OnSeedFieldClicked()
+    public void OnSeedBtn()
     {
         if (farmTab.PlantSeed())
         {
-            CalculatePassiveEffect();
+            RandomCurYield();
             fieldData.leftTime = fieldData.yieldClass * 2 * 3600f;
-            fieldData.lastSaveTime = DateTime.Now.ToString();
+            fieldData.startTime = DateTime.Now.ToString();
             CurrentFieldState = FieldState.Seeded;
         }
-        else
-        {
-            //TODO: 씨앗 없음을 알리는 popup
-            Debug.LogWarning("씨앗 없음 Popup");
-        }
+        farmTab.SaveFarmData();
     }
 
-    private void OnHarvestFieldClicked()
+    public void OnHarvestBtn()
     {
-        int yield;
+        int yield = 0;
         switch (fieldData.yieldClass)
         {
             case 1:
@@ -182,19 +160,15 @@ public class FieldSlot : SerializedMonoBehaviour
             case 3:
                 yield = 10;
                 break;
-            default:
-                Debug.LogError("Harvest Class 값이 이상함");
-                yield = 0;
-                break;
         }
-
         farmTab.HarvestYield(yield);
         CurrentFieldState = FieldState.Empty;
+        farmTab.SaveFarmData();
     }
 
-    private void CalculatePassiveEffect()
+    private void RandomCurYield()
     {
-        fieldData.yieldClass = RandomNumGenerator();
+        fieldData.yieldClass = 1; //1, 2, 3, 4로 작물종류.
     }
 
     private IEnumerator plantGrowing()
@@ -213,32 +187,15 @@ public class FieldSlot : SerializedMonoBehaviour
         CurrentFieldState = FieldState.Harvest;
     }
 
-    private void CalculateRemainingTime()
+    public void CalculateRemainingTime()
     {
-        DateTime lastTime = DateTime.Parse(fieldData.lastSaveTime);
+        DateTime lastTime = DateTime.Parse(fieldData.startTime);
         TimeSpan elapsed = DateTime.Now - lastTime;
         fieldData.leftTime -= (float)elapsed.TotalSeconds;
 
         if (fieldData.leftTime <= 0)
         {
             fieldData.currentFieldState = FieldState.Harvest;
-        }
-    }
-    private int RandomNumGenerator()
-    {
-        int randomNum = UnityEngine.Random.Range(0, 10);
-
-        if (randomNum < 6)
-        {
-            return 1;
-        }
-        else if (randomNum < 9)
-        {
-            return 2;
-        }
-        else
-        {
-            return 3;
         }
     }
 }
