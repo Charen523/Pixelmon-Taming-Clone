@@ -67,7 +67,6 @@ public class PixelmonManager : Singleton<PixelmonManager>
         player.pixelmons[index].gameObject.SetActive(true);
         player.pixelmons[index].myData = myData;
         player.pixelmons[index].data = pxmData[myData.id];
-        player.pixelmons[index].fsm.ChangeState(player.fsm.currentState);
         player.pixelmons[index].fsm.anim.runtimeAnimatorController = await ResourceManager.Instance.LoadAsset<RuntimeAnimatorController>(myData.rcode, eAddressableType.animator);
         player.pixelmons[index].InitPxm();
         player.currentPixelmonCount++;
