@@ -46,11 +46,11 @@ public class FarmTab : UIBase
 
             for (int i = 0; i < fieldSlots.Length; i++)
             {
-                fieldSlots[i].CurrentFieldAction(fieldSlots[i].CurrentFieldState);
-                if (fieldSlots[i].CurrentFieldState == FieldState.Seeded)
+                if (fieldSlots[i].fieldData.currentFieldState == FieldState.Seeded)
                 {
                     fieldSlots[i].CalculateRemainingTime();
                 }
+                fieldSlots[i].CurrentFieldAction(fieldSlots[i].CurrentFieldState);
             }
         }
     }
@@ -93,7 +93,6 @@ public class FarmTab : UIBase
         for (int i = 0; i < temp.Length; i++)
         {
             FieldData tempItem = fieldSlots[i].fieldData;
-            fieldSlots[i].gameObject.SetActive(false);
             temp[i] = tempItem;
         }
         saveManager.SetFieldData(nameof(userData.fieldDatas), temp);

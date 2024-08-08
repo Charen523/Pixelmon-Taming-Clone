@@ -14,6 +14,7 @@ public class FieldSlot : MonoBehaviour
     public FieldData fieldData;
 
     [SerializeField] private int price;
+    [SerializeField] private float passTime;
 
     #region properties
     public FieldState CurrentFieldState 
@@ -140,6 +141,7 @@ public class FieldSlot : MonoBehaviour
         {
             RandomCurYield();
             fieldData.leftTime = fieldData.yieldClass * 2 * 3600f;
+            passTime = fieldData.leftTime;
             fieldData.startTime = DateTime.Now.ToString();
             CurrentFieldState = FieldState.Seeded;
         }
@@ -174,12 +176,12 @@ public class FieldSlot : MonoBehaviour
     private IEnumerator plantGrowing()
     {
         timeTxt.gameObject.SetActive(true);
-        while (fieldData.leftTime > 0)
+        while (passTime > 0)
         {
-            fieldData.leftTime -= Time.deltaTime;
-            int hours = Mathf.FloorToInt(fieldData.leftTime / 3600f);
-            int minutes = Mathf.FloorToInt((fieldData.leftTime % 3600f) / 60f);
-            int seconds = Mathf.FloorToInt(fieldData.leftTime % 60f);
+            passTime -= Time.deltaTime;
+            int hours = Mathf.FloorToInt(passTime / 3600f);
+            int minutes = Mathf.FloorToInt((passTime % 3600f) / 60f);
+            int seconds = Mathf.FloorToInt(passTime % 60f);
             timeTxt.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
             yield return null;
         }
@@ -189,11 +191,11 @@ public class FieldSlot : MonoBehaviour
 
     public void CalculateRemainingTime()
     {
-        DateTime lastTime = DateTime.Parse(fieldData.startTime);
-        TimeSpan elapsed = DateTime.Now - lastTime;
-        fieldData.leftTime -= (float)elapsed.TotalSeconds;
+        DateTime time = DateTime.Parse(fieldData.startTime);
+        TimeSpan elapsed = DateTime.Now - time;
+        passTime = fieldData.leftTime - (float)elapsed.TotalSeconds;
 
-        if (fieldData.leftTime <= 0)
+        if (passTime <= 0)
         {
             fieldData.currentFieldState = FieldState.Harvest;
         }
