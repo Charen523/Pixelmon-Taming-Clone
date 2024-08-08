@@ -164,8 +164,6 @@ public class StageManager : Singleton<StageManager>
             {
                 ToNextStage(false);
                 GameManager.Instance.NotifyStageTimeOut();
-                fadeOut.gameObject.SetActive(true);
-                fadeOut.StartFade();
                 yield break;
             }
         }
@@ -453,8 +451,6 @@ public class StageManager : Singleton<StageManager>
         {
             StopCoroutine(stageCoroutine);
         }
-        fadeOut.gameObject.SetActive(true);
-        fadeOut.StartFade();
 
         ResetSpawnedEnemy();
         ToNextStage(false);
