@@ -41,9 +41,8 @@ public class FarmTab : UIBase
 
     private void OnEnable()
     {
-        if (isAwakeEnabled)
+        if (isAwakeEnabled && i != 0)
         {
-            i++;
             seedTxt.text = seedCount.ToString();
             foodTxt.text = foodCount.ToString();
 
@@ -54,12 +53,10 @@ public class FarmTab : UIBase
                     fieldSlots[i].CalculateRemainingTime();
                 }
                 fieldSlots[i].CurrentFieldAction(fieldSlots[i].CurrentFieldState);
-                if (i > 0)
-                {
-                    SetAllPriceTxts();
-                }
+                SetAllPriceTxts();
             }
         }
+        i++;
     }
 
     private void UpdateFieldUI(DirtyUI dirtyUI)
