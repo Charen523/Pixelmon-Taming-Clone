@@ -22,7 +22,7 @@ public class UISkillPopUp : UIBase
         skillTab = tab;
         copySlot.InitSlot(tab, slot.atvData);
         copySlot.myAtvData = slot.myAtvData;
-        copySlot.UpdateSlot();
+        
 
         id = slot.atvData.id;
         skillNameTxt.text = slot.atvData.name;
@@ -37,11 +37,13 @@ public class UISkillPopUp : UIBase
         {
             equipTxt.text = unEquip;
             equipObj.SetActive(true);
+            copySlot.UpdateSlot();
         }
         else if (copySlot.myAtvData.isOwned)
         {
             equipTxt.text = equip;
             equipObj.SetActive(false);
+            copySlot.UpdateSlot();
         }
         else
         {
