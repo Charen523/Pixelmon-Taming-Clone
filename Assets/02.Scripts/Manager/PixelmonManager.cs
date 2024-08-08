@@ -8,6 +8,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
 {
     public UnityAction<int, MyPixelmonData> equipAction;
     public UnityAction<int> unEquipAction;
+    public UnityAction<int> unlockSlotAction;
 
     private SaveManager saveManager;
     private UserData userData;
@@ -29,6 +30,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
         player = Player.Instance;
         equipAction += Equipped;
         unEquipAction += UnEquipped;
+        unlockSlotAction += unlockSlotAction;
         InitUpgradeStatus();
         InitEquippedPixelmon();
     }
@@ -87,6 +89,28 @@ public class PixelmonManager : Singleton<PixelmonManager>
     public void UnLockedPixelmon(int index)
     {
         pxmTab.unLockAction?.Invoke(index);
+    }
+
+    public void UnLockedSlot(int index)
+    {
+        switch (index) 
+        {
+            case 5:
+                pxmTab.equipData[2].isLocked = false;
+                pxmTab.equipData[2].stateIcon.sprite = plusIcon;
+                break;
+            case 10:
+                pxmTab.equipData[3].isLocked = false;
+                pxmTab.equipData[3].stateIcon.sprite = plusIcon;
+                break;
+            case 15:
+                pxmTab.equipData[4].isLocked = false;
+                pxmTab.equipData[4].stateIcon.sprite = plusIcon;
+                unlockSlotAction = null;
+                break;
+            default:
+                break;
+        }
     }
 
     public PixelmonData FindPixelmonData(int id)
