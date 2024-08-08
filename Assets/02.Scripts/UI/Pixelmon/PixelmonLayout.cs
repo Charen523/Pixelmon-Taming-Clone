@@ -8,17 +8,19 @@ public class PixelmonLayout : MonoBehaviour
     public Image[] backgrounds;
     public Image[] thumbnailIcon;
     public Image[] stateIcon;
+    public Image[] timer;
 
     PixelmonManager pxmManager;
     IEnumerator Start()
     {
         yield return new WaitUntil(() => GameManager.isInit);
+        if(SkillManager.Instance.layout == null)
+            SkillManager.Instance.layout = this;
         pxmManager = PixelmonManager.Instance;
         pxmManager.equipAction += InsertIcon;
         pxmManager.unEquipAction += DeleteIcon;
         InitPxmLayout();
     }
-
     private void InitPxmLayout()
     {
         UserData userdata = SaveManager.Instance.userData;
