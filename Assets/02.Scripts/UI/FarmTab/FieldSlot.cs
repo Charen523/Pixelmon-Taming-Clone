@@ -81,6 +81,7 @@ public class FieldSlot : MonoBehaviour
                 seedBtn.gameObject.SetActive(false);
                 /*UI Settings*/
                 curSprite.gameObject.SetActive(true);
+                curSprite.sprite = plantImgs[0];
                 timeSldr.gameObject.SetActive(true);
                 /*TMP Settings*/
                 if (growingCoroutine != null)
