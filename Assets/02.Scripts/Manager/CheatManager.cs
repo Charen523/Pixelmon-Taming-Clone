@@ -1,3 +1,4 @@
+using System.Numerics;
 using UnityEngine;
 
 public class CheatManager : Singleton<CheatManager>
@@ -14,7 +15,8 @@ public class CheatManager : Singleton<CheatManager>
                     break;
                 case "g":
                 case "G":
-                    SaveManager.Instance.SetFieldData("gold", 33348332500000, true);
+                    BigInteger money = 33348332500000;
+                    SaveManager.Instance.SetFieldData("gold", money, true);
                     break;
                 case "d":
                 case "D":
