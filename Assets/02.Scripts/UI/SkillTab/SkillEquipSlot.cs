@@ -79,7 +79,7 @@ public class SkillEquipSlot : MonoBehaviour
         saveManager.SetData("equippedPxms", saveManager.userData.equippedPxms);
         saveManager.UpdateSkillData(atvData.dataIndex, nameof(myAtvData.isEquipped), true);
         saveManager.UpdatePixelmonData(saveManager.userData.equippedPxms[slotIndex].id, nameof(myPxmData.atvSkillId), atvData.id);
-        SkillManager.Instance.ExecuteSkill(Player.Instance.pixelmons[slotIndex]);
+        SkillManager.Instance.ExecuteSkill(Player.Instance.pixelmons[slotIndex], slotIndex);
     }
 
     public void UnEquipAction()
