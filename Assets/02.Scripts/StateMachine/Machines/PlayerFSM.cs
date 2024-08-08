@@ -7,7 +7,6 @@ public class PlayerFSM : FSM
     public string EnemyTag = "Enemy";
 
     #region Player States
-    public PlayerIdleState IdleState { get; private set; }
     public PlayerFailState FailState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
     public PlayerDieState DieState { get; private set; }
@@ -29,7 +28,6 @@ public class PlayerFSM : FSM
 
     public void Init()
     {
-        IdleState = new PlayerIdleState(this);
         FailState = new PlayerFailState(this);
         MoveState = new PlayerMoveState(this);
         DetectState = new PlayerDetectState(this);
