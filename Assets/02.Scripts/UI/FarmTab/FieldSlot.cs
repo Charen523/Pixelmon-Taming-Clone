@@ -137,6 +137,7 @@ public class FieldSlot : MonoBehaviour
         buyBtn.transform.parent.gameObject.SetActive(false);
         farmTab.SaveFarmData();
         farmTab.UnlockNextField(slotIndex);
+        farmTab.SetAllPriceTxts();
     }
 
     public void OnSeedBtn()
@@ -173,7 +174,7 @@ public class FieldSlot : MonoBehaviour
         farmTab.SaveFarmData();
     }
 
-    private void SetPriceTxt()
+    public void SetPriceTxt()
     {
         if (CurrentFieldState == FieldState.Locked)
         {

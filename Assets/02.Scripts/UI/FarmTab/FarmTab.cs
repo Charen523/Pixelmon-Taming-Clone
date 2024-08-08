@@ -51,6 +51,7 @@ public class FarmTab : UIBase
                     fieldSlots[i].CalculateRemainingTime();
                 }
                 fieldSlots[i].CurrentFieldAction(fieldSlots[i].CurrentFieldState);
+                SetAllPriceTxts();
             }
         }
     }
@@ -72,6 +73,7 @@ public class FarmTab : UIBase
     {
         if (buyIndex > 4) return;
         fieldSlots[buyIndex + 1].CurrentFieldState = FieldState.Buyable;
+        SaveFarmData();
     }
 
     public bool PlantSeed()
@@ -128,5 +130,13 @@ public class FarmTab : UIBase
             temp[i] = tempItem;
         }
         saveManager.SetFieldData(nameof(userData.fieldDatas), temp);
+    }
+
+    public void SetAllPriceTxts()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            fieldSlots[i].SetPriceTxt();
+        }
     }
 }
