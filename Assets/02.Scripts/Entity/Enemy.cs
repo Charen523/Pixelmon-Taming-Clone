@@ -36,7 +36,11 @@ public class Enemy : SerializedMonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (fsm.currentState == fsm.DieState) enemyCollider.enabled = false;
+        if (fsm.currentState == fsm.DieState)
+        {
+            enemyCollider.enabled = false;
+            return;
+        }
 
         if (collision.CompareTag("PixelmonProjectile"))
         {
