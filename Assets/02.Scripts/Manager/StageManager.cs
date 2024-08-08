@@ -34,6 +34,7 @@ public class StageManager : Singleton<StageManager>
 
     [HideInInspector] public int curSpawnCount = 0;
     private int killCount = 0;
+    private bool isRestEnemys;
 
     private bool isBossCleared = false;
     #endregion
@@ -146,6 +147,7 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator StartStage()
     {
+        isRestEnemys = false;
         if (isBossStage)
         {
             yield return null; //없음 서순차이로 보스 소환 안됨.
@@ -298,6 +300,7 @@ public class StageManager : Singleton<StageManager>
         spawner.isActivatedEnemy.Clear();
         curSpawnCount = 0;
         killCount = 0;
+        isRestEnemys = true;
     }
     #endregion
 
@@ -416,6 +419,8 @@ public class StageManager : Singleton<StageManager>
     #region Death Events
     public void MonsterDead(Enemy enemy)
     {
+        if (isRestEnemys) return;
+
         EnemyData enemyData = enemy.statHandler.data;
 
         if (enemyData.isBoss)
