@@ -102,8 +102,9 @@ internal class AddressableUtils : Editor
     {
 #if UNITY_EDITOR
         return EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android ? "Android" : EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS ? "IOS" : "StandaloneWindows";
-#endif
+#else
         return Application.platform == RuntimePlatform.Android ? "Android" : Application.platform == RuntimePlatform.IPhonePlayer ? "IOS" : "StandaloneWindows";
+#endif
     }
 
     #region Use NAS Server
