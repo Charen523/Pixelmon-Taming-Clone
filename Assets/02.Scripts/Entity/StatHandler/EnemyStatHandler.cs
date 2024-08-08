@@ -16,7 +16,7 @@ public class EnemyStatHandler : MonoBehaviour
 
     public void UpdateEnemyStats()
     {
-        int difficulty = SaveManager.Instance.userData.curDifficulty;
+        int difficulty = 0;
         int deltaDiff = (int)Mathf.Pow(2, difficulty);
 
         enemyAtk = data.atk * deltaDiff;
