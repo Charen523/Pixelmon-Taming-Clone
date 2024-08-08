@@ -90,7 +90,33 @@ public class FarmTab : UIBase
 
     public void HarvestYield(int yield)
     {
-        saveManager.SetFieldData(nameof(saveManager.userData.food), yield, true);
+        if (yield == 4)
+        {
+            saveManager.SetFieldData(nameof(saveManager.userData.food), 100, true);
+            return;
+        }
+
+        yield = yield switch
+        {
+            1 => 2,
+            2 => 4,
+            3 => 7,
+            _ => 0
+        };
+
+        int randNum = Random.Range(0, 100);
+        if (randNum < 40)
+        {
+            saveManager.SetFieldData(nameof(saveManager.userData.food), yield * 3, true);
+        }
+        else if (randNum < 75)
+        {
+            saveManager.SetFieldData(nameof(saveManager.userData.food), yield * 5, true);
+        }
+        else
+        {
+            saveManager.SetFieldData(nameof(saveManager.userData.food), yield * 8, true);
+        }
     }
 
     public void SaveFarmData()

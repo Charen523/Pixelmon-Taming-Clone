@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using System;
 using System.Collections;
+using UnityEditor.Build.Pipeline;
 
 public class FieldSlot : MonoBehaviour
 {
@@ -41,6 +42,7 @@ public class FieldSlot : MonoBehaviour
 
     [SerializeField] private Slider timeSldr;
     [SerializeField] private TextMeshProUGUI timeTxt;
+    [SerializeField] private TextMeshProUGUI priceTxt;
     #endregion
 
     Coroutine growingCoroutine;
@@ -93,7 +95,7 @@ public class FieldSlot : MonoBehaviour
                 buyBtn.transform.parent.gameObject.SetActive(false);
                 harvestBtn.gameObject.SetActive(true);
                 /*UI Settings*/
-                curSprite.sprite = plantImgs[fieldData.yieldClass];
+                curSprite.sprite = plantImgs[fieldData.cropClass];
                 timeSldr.gameObject.SetActive(false);
                 /*TMP Settings*/
                 if (growingCoroutine != null)
@@ -140,8 +142,9 @@ public class FieldSlot : MonoBehaviour
     {
         if (farmTab.PlantSeed())
         {
-            RandomCurYield();
-            fieldData.leftTime = fieldData.yieldClass * 2 * 3600f;
+            RandomCrop();
+            if (fieldData.cropClass == 4) fieldData.leftTime = 3 * 2 * 3600f;
+            else fieldData.leftTime = fieldData.cropClass * 2 * 3600f;
             passTime = fieldData.leftTime;
             fieldData.startTime = DateTime.Now.ToString();
             CurrentFieldState = FieldState.Seeded;
@@ -152,7 +155,7 @@ public class FieldSlot : MonoBehaviour
     public void OnHarvestBtn()
     {
         int yield = 0;
-        switch (fieldData.yieldClass)
+        switch (fieldData.cropClass)
         {
             case 1:
                 yield = 1;
@@ -169,9 +172,48 @@ public class FieldSlot : MonoBehaviour
         farmTab.SaveFarmData();
     }
 
-    private void RandomCurYield()
+    private void SetPriceTxt()
     {
-        fieldData.yieldClass = 1; //1, 2, 3, 4로 작물종류.
+        if (CurrentFieldState == FieldState.Locked)
+        {
+            priceTxt.color = Color.red;
+            return;
+        }
+
+        if (slotIndex < 4 && price > userData.gold)
+        {
+            priceTxt.color = Color.red;
+            return;
+        }
+
+        if (slotIndex > 3 &&  price > userData.diamond)
+        {
+            priceTxt.color = Color.red;
+            return;
+        }
+
+        priceTxt.color = Color.white;
+    }
+
+    private void RandomCrop()
+    {
+        int randNum = UnityEngine.Random.Range(0, 100);
+        if (randNum < 59)
+        {
+            fieldData.cropClass = 1;
+        }
+        else if (randNum < 92)
+        {
+            fieldData.cropClass = 2;
+        }
+        else if (randNum < 99)
+        {
+            fieldData.cropClass = 3;
+        }
+        else
+        {
+            fieldData.cropClass = 4;
+        }
     }
 
     private IEnumerator plantGrowing()
@@ -184,6 +226,7 @@ public class FieldSlot : MonoBehaviour
             int minutes = Mathf.FloorToInt((passTime % 3600f) / 60f);
             int seconds = Mathf.FloorToInt(passTime % 60f);
             timeTxt.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+            timeSldr.value = passTime / fieldData.leftTime;
             yield return null;
         }
         timeTxt.gameObject.SetActive(false);

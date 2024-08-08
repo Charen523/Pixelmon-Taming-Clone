@@ -5,7 +5,7 @@ using UnityEngine;
 public class FieldData
 {
     public FieldState currentFieldState;
-    public int yieldClass;
+    public int cropClass;
     public float leftTime;
     public string startTime;
 }
