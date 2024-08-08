@@ -7,6 +7,7 @@ public class Enemy : SerializedMonoBehaviour
     public EnemyHealthSystem healthSystem;
     public BossHealthSystem bossHealthSystem;
     public EnemyStatHandler statHandler;
+    public Collider2D enemyCollider;
 
     private void Start()
     {
@@ -35,7 +36,7 @@ public class Enemy : SerializedMonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (fsm.currentState == fsm.DieState) return;
+        if (fsm.currentState == fsm.DieState) enemyCollider.enabled = false;
 
         if (collision.CompareTag("PixelmonProjectile"))
         {

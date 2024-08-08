@@ -15,6 +15,7 @@ public class EnemyFSM : FSM
 
     private void OnEnable()
     {
+        enemy.enemyCollider.enabled = true;
         ChangeState(ChaseState);
     }
 
