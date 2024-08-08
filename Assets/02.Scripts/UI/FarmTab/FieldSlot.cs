@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using UnityEngine;
 using System;
 using System.Collections;
-using UnityEditor.Build.Pipeline;
 
 public class FieldSlot : MonoBehaviour
 {
