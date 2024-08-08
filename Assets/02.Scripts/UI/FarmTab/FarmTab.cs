@@ -18,6 +18,8 @@ public class FarmTab : UIBase
     [SerializeField] private TextMeshProUGUI foodTxt;
     #endregion
 
+    int i = 0;
+
     private bool isAwakeEnabled;
     private void Awake()
     {
@@ -41,6 +43,7 @@ public class FarmTab : UIBase
     {
         if (isAwakeEnabled)
         {
+            i++;
             seedTxt.text = seedCount.ToString();
             foodTxt.text = foodCount.ToString();
 
@@ -51,7 +54,10 @@ public class FarmTab : UIBase
                     fieldSlots[i].CalculateRemainingTime();
                 }
                 fieldSlots[i].CurrentFieldAction(fieldSlots[i].CurrentFieldState);
-                SetAllPriceTxts();
+                if (i > 0)
+                {
+                    SetAllPriceTxts();
+                }
             }
         }
     }
