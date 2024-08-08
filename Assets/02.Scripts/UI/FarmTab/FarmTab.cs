@@ -4,68 +4,55 @@ using UnityEngine;
 public class FarmTab : UIBase
 {
     private SaveManager saveManager;
-    
-    public FieldSlot[] fieldSlots;
-    [SerializeField] private Transform fieldsParent;
+    private UserData userData;
+
+    [SerializeField] public FieldSlot[] fieldSlots;
 
     #region User Data
-    int seedCount => SaveManager.Instance.userData.seed;
-    int foodCount => SaveManager.Instance.userData.food;
+    private int seedCount => userData.seed;
+    private int foodCount => userData.food;
     #endregion
 
     #region UI
-    private UIBase farmPxmPopup;
-
     [SerializeField] private TextMeshProUGUI seedTxt;
     [SerializeField] private TextMeshProUGUI foodTxt;
     #endregion
 
     private bool isAwakeEnabled;
-
-    private async void Awake()
+    private void Awake()
     {
         isAwakeEnabled = false;
-
         saveManager = SaveManager.Instance;
-        farmPxmPopup = await UIManager.Show<UIFarmPixelmonPopup>();
-
-        fieldSlots = new FieldSlot[fieldsParent.childCount];
+        userData = saveManager.userData;
+        UIManager.Instance.UpdateUI += UpdateFieldUI;
 
         for (int i = 0; i < fieldSlots.Length; i++)
         {
-            fieldSlots[i] = fieldsParent.GetChild(i).GetComponent<FieldSlot>();
             fieldSlots[i].farmTab = this;
-            fieldSlots[i].myIndex = i;
-            fieldSlots[i].fieldData = saveManager.userData.fieldDatas[i];
+            fieldSlots[i].slotIndex = i;
+            fieldSlots[i].fieldData = userData.fieldDatas[i];
         }
-
+        seedTxt.text = seedCount.ToString();
+        foodTxt.text = foodCount.ToString();
         isAwakeEnabled = true;
     }
 
     private void OnEnable()
     {
-        /*상단 UI 초기화*/
-        seedTxt.text = seedCount.ToString();
-        foodTxt.text = foodCount.ToString();  
-
         if (isAwakeEnabled)
         {
+            seedTxt.text = seedCount.ToString();
+            foodTxt.text = foodCount.ToString();
+
             for (int i = 0; i < fieldSlots.Length; i++)
             {
-                fieldSlots[i].gameObject.SetActive(true);
+                if (fieldSlots[i].fieldData.currentFieldState == FieldState.Seeded)
+                {
+                    fieldSlots[i].CalculateRemainingTime();
+                }
+                fieldSlots[i].CurrentFieldAction(fieldSlots[i].CurrentFieldState);
             }
         }
-        
-        //밭 해금조건 예시
-        //if (fieldSlots[2].CurrentFieldState == FieldState.Locked && invenManager.userData.lv >= 99)
-        //{
-        //    fieldSlots[2].CurrentFieldState = FieldState.Buyable;
-        //}
-    }
-
-    private void Start()
-    {
-        UIManager.Instance.UpdateUI += UpdateFieldUI;
     }
 
     private void UpdateFieldUI(DirtyUI dirtyUI)
@@ -78,66 +65,68 @@ public class FarmTab : UIBase
             case DirtyUI.Food:
                 foodTxt.text = foodCount.ToString();
                 break;
-            default:
-                break;
         }
     }
 
-    private void OnDisable()
+    public void UnlockNextField(int buyIndex)
     {
-        if (isAwakeEnabled)
-        {
-            SaveFieldData();
-        }
-    }
-
-    private void OnApplicationQuit()
-    {
-        if (isAwakeEnabled)
-        {
-            SaveFieldData();
-        }
-    }
-
-    public void ShowEquipPixelmon()
-    {
-        farmPxmPopup.SetActive(true);
+        if (buyIndex > 4) return;
+        fieldSlots[buyIndex + 1].CurrentFieldState = FieldState.Buyable;
     }
 
     public bool PlantSeed()
     {
         if (seedCount == 0)
         {
-            return false; //씨앗 없다는 팝업 띄우기
+            Debug.LogWarning("씨앗 없음!");
+            return false;
         }
         else
         {
-            saveManager.SetDeltaData(nameof(saveManager.userData.seed), -1);
+            saveManager.SetFieldData(nameof(saveManager.userData.seed), -1, true);
             return true;
         }
     }
 
     public void HarvestYield(int yield)
     {
-        saveManager.SetDeltaData(nameof(saveManager.userData.food), yield);
+        if (yield == 4)
+        {
+            saveManager.SetFieldData(nameof(saveManager.userData.food), 100, true);
+            return;
+        }
+
+        yield = yield switch
+        {
+            1 => 2,
+            2 => 4,
+            3 => 7,
+            _ => 0
+        };
+
+        int randNum = Random.Range(0, 100);
+        if (randNum < 40)
+        {
+            saveManager.SetFieldData(nameof(saveManager.userData.food), yield * 3, true);
+        }
+        else if (randNum < 75)
+        {
+            saveManager.SetFieldData(nameof(saveManager.userData.food), yield * 5, true);
+        }
+        else
+        {
+            saveManager.SetFieldData(nameof(saveManager.userData.food), yield * 8, true);
+        }
     }
 
-    private void SaveFieldData()
+    public void SaveFarmData()
     {
-        FieldData[] temp = new FieldData[fieldsParent.childCount];
+        FieldData[] temp = new FieldData[6];
         for (int i = 0; i < temp.Length; i++)
         {
             FieldData tempItem = fieldSlots[i].fieldData;
-            fieldSlots[i].gameObject.SetActive(false);
-
-            if (tempItem.currentFieldState == FieldState.Seeded)
-            {
-                tempItem.lastSaveTime = System.DateTime.Now.ToString();
-            }
-
             temp[i] = tempItem;
         }
-
-        saveManager.SetData("fieldDatas", temp);
+        saveManager.SetFieldData(nameof(userData.fieldDatas), temp);
     }
 }

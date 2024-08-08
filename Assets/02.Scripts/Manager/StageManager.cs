@@ -323,6 +323,7 @@ public class StageManager : Singleton<StageManager>
             return;
         }
 
+        bossTimeSldr.gameObject.SetActive(false);
         stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
         StageIcon.gameObject.SetActive(true);
         StageIcon.sprite = iconSprite[0];

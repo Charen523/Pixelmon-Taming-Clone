@@ -44,14 +44,13 @@ public class DungeonTab : UIBase
 
             if (DateTime.TryParse(lastTime, out DateTime date))
             {
-                if (date.Date > DateTime.Now.Date)
+                if (date.Date < DateTime.Now.Date)
                 {
                     //하루 뒤.
                     ResetKey();
                 }
-                else if (date.Date < DateTime.Now.Date)
+                else if (date.Date > DateTime.Now.Date)
                 {
-                    //혹시나 시차때문일지 모르니 강종로직 뺌.
                     Debug.LogError("과거로 오면 안됩니다...");
                 }
             }
@@ -62,6 +61,11 @@ public class DungeonTab : UIBase
                 StopCoroutine(chargeTimeCoroutine);
             }
             chargeTimeCoroutine = StartCoroutine(UpdateChargeTime());
+
+            for (int i = 0; i < 3; i++)
+            {
+                dungeonSlots[i].KeyTxt();
+            }
         }
     }
 
