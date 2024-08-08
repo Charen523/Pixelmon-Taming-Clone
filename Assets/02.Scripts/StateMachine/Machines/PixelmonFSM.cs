@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PixelmonFSM : FSM
@@ -29,7 +30,7 @@ public class PixelmonFSM : FSM
         IdleState = new IdleState(this);
         MoveState = new PixelmonMoveState(this);
         AttackState = new PixelmonAttackState(this);
-        minDistance = Player.Instance.data.baseAtkRange;
+        minDistance = Player.Instance.statHandler.data.baseAtkRange;
         ChangeState(IdleState);
     }
 
