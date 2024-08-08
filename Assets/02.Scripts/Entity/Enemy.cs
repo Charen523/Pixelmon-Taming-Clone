@@ -35,6 +35,8 @@ public class Enemy : SerializedMonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (fsm.currentState == fsm.DieState) return;
+
         if (collision.CompareTag("PixelmonProjectile"))
         {
             ProjectileController projectile = collision.gameObject.GetComponent<ProjectileController>();
