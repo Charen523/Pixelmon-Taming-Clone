@@ -82,12 +82,12 @@ public class DgMonster : MonoBehaviour
         {
             BigInteger hpValue = currentHealth * 10000 / maxHealth;
             hpSlider.value = (float)hpValue / 10000;
-            hpTxt.text = (hpSlider.value * 100).ToString("F2") + "%";
+            hpTxt.text = ((int)(hpSlider.value * 100)).ToString() + "%";
 
             if (currentHealth <= 0)
             {
                 hpSlider.value = 1;
-                hpTxt.text = (hpSlider.value * 100).ToString("F2") + "%";
+                hpTxt.text = ((int)(hpSlider.value * 100)).ToString() + "%";
             }
 
             yield return null;
