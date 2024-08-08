@@ -1,19 +1,14 @@
 public class PlayerHealthSystem : HealthSystem
-{
-    private void Start()
+{ 
+    public void InitHealth(float hp)
     {
-        InitHealth();
-    }
-
-    public void InitHealth()
-    {
-        maxHealth = Player.Instance.data.baseMaxHp;
+        maxHealth = hp;
         currentHealth = maxHealth;
     }
 
     public override void TakeDamage(float delta)
     {
-        def = Player.Instance.data.baseDef;
+        def = Player.Instance.statHandler.def;
         base.TakeDamage(delta);
     }
 

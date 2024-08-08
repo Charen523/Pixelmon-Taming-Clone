@@ -7,8 +7,8 @@ using UnityEngine.InputSystem.LowLevel;
 
 public class Player : Singleton<Player>
 {
-    public PlayerData data;
     public PlayerFSM fsm;
+    public PlayerStatHandler statHandler;
     public PlayerHealthSystem healthSystem;
     public GameObject HitPosition;
 
@@ -20,6 +20,7 @@ public class Player : Singleton<Player>
     private void Start()
     {
         fsm.Init();
+        statHandler.UpdateStats();
         //LocatedPixelmon();
     }
 

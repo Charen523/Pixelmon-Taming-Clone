@@ -45,7 +45,7 @@ public class PlayerFSM : FSM
     public void ReStartPlayer()
     {
         ChangeState(DetectState);
-        Player.Instance.healthSystem.InitHealth();      
+        Player.Instance.statHandler.UpdateStats();
     }
 
     public void StageTimeOut()
