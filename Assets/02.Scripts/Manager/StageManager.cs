@@ -293,7 +293,7 @@ public class StageManager : Singleton<StageManager>
     {
         foreach (var enemy in spawner.isActivatedEnemy)
         {
-            enemy.gameObject.SetActive(false);            
+            enemy.healthSystem.TakeDamage(9999999f);          
         }
         spawner.isActivatedEnemy.Clear();
         curSpawnCount = 0;

@@ -23,7 +23,7 @@ public class DamageText : SerializedMonoBehaviour
     {
         if (OnDamage != null)
             StopCoroutine(ShowText(pos));
-        damageTxt.text = damage.ToString();
+        damageTxt.text = string.Format("{0:#,###}", damage);
         OnDamage = StartCoroutine(ShowText(pos));
     }
 

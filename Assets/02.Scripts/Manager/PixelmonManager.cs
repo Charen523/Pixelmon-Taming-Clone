@@ -93,4 +93,20 @@ public class PixelmonManager : Singleton<PixelmonManager>
     {
         return DataManager.Instance.pixelmonData.data[id];
     }
+
+    public void ApplyStatus(PixelmonData data, MyPixelmonData myData)
+    {
+        if (myData.isEquipped)
+        {
+            foreach (var equipData in pxmTab.equipData)
+            {
+                if (equipData.myPxmData != null && equipData.myPxmData.id == myData.id)
+                {
+                    equipData.SetPxmLv();
+                    Player.Instance.pixelmons[equipData.slotIndex].status.InitStatus(data, myData);
+                    break;
+                }
+            }
+        }
+    }
 }

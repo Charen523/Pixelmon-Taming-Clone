@@ -3,53 +3,58 @@ using UnityEngine;
 
 public static class PixelmonStatHandler
 {
+    private static string criDmg = "AddCriDmg";
+    private static string dmg = "AddDmg";
+    private static string sDmg = "AddSDmg";
+    private static string sCriDmg = "AddSCriDmg";
     public static void InitStatus(this PixelmonStatus status, PixelmonData data, MyPixelmonData myData)
-    {   
+    {
         status.perAtk = SetStatus(data.basePerAtk, myData.lv, data.lvAtkRate);
-        status.Atk = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.Atk, myData.FindType(AbilityType.Attack));
+        status.Atk = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Atk, myData.FindType(AbilityType.PSVAtk));
         status.Cri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Cri, myData.FindType(AbilityType.PSVCri));
-        status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.PSVCriDmg));
-        status.Dmg = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.Dmg, myData.FindType(AbilityType.PSVDmg));
-        status.SDmg = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.SDmg, myData.FindType(AbilityType.PSVSDmg));
+        status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.PSVCriDmg), data.FindTraitType(criDmg));
+        status.Dmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Dmg, myData.FindType(AbilityType.PSVDmg), data.FindTraitType(dmg));
+        status.SDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SDmg, myData.FindType(AbilityType.PSVSDmg), data.FindTraitType(sDmg));
         status.SCri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCri));
-        status.SCriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCriDmg));
+        status.SCriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCriDmg, myData.FindType(AbilityType.PSVSCriDmg), data.FindTraitType(sCriDmg));
+        status.AtkSpd = SetAtkSpdStatus(myData.FindType(AbilityType.PSVAtkSpd, true));
     }
 
     public static void ApplyMyPixelmon(UpgradeIndex type)
     {
-        for(int i = 0; i < 5;  i++) 
+        for (int i = 0; i < 5; i++)
         {
-            if (PixelmonManager.Instance.player.pixelmons[i] != null) 
+            if (PixelmonManager.Instance.player.pixelmons[i] != null)
             {
-                PixelmonManager.Instance.player.pixelmons[i].ApplyStatus(type, PixelmonManager.Instance.player.pixelmons[i].myData);
+                PixelmonManager.Instance.player.pixelmons[i].ApplyStatus(type, PixelmonManager.Instance.player.pixelmons[i].data, PixelmonManager.Instance.player.pixelmons[i].myData);
             }
         }
     }
 
-    public static void ApplyStatus(this Pixelmon pixelmon, UpgradeIndex type, MyPixelmonData myData)
+    public static void ApplyStatus(this Pixelmon pixelmon, UpgradeIndex type, PixelmonData data, MyPixelmonData myData)
     {
-        switch(type) 
-        { 
+        switch (type)
+        {
             case UpgradeIndex.Atk:
-                pixelmon.status.Atk = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.Atk, myData.FindType(AbilityType.Attack));
+                pixelmon.status.Atk = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Atk, myData.FindType(AbilityType.Attack));
                 break;
             case UpgradeIndex.Cri:
                 pixelmon.status.Cri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Cri, myData.FindType(AbilityType.PSVCri));
                 break;
             case UpgradeIndex.CriDmg:
-                pixelmon.status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.PSVCriDmg));
+                pixelmon.status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.PSVCriDmg), data.FindTraitType(criDmg));
                 break;
             case UpgradeIndex.Dmg:
-                pixelmon.status.Dmg = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.Dmg, myData.FindType(AbilityType.PSVDmg));
+                pixelmon.status.Dmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Dmg, myData.FindType(AbilityType.PSVDmg), data.FindTraitType(dmg));
                 break;
             case UpgradeIndex.SDmg:
-                pixelmon.status.SDmg = SetMultiStatus(PixelmonManager.Instance.upgradeStatus.SDmg, myData.FindType(AbilityType.PSVSDmg));
+                pixelmon.status.SDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SDmg, myData.FindType(AbilityType.PSVSDmg), data.FindTraitType(sDmg));
                 break;
             case UpgradeIndex.SCri:
                 pixelmon.status.SCri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCri));
                 break;
             case UpgradeIndex.SCriDmg:
-                pixelmon.status.SCriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCriDmg));
+                pixelmon.status.SCriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCriDmg), data.FindTraitType(sCriDmg));
                 break;
             default:
                 break;
@@ -61,14 +66,19 @@ public static class PixelmonStatHandler
         return (perAtk + lv * lvAtkRate);
     }
 
-    public static float SetMultiStatus(float upgradeAtk, float psvAtk)
+    public static float SetMultiStatus(float upgradeStat, float psvAtk, float traitValue = 1)
     {
-        return upgradeAtk * psvAtk;
+        return upgradeStat * psvAtk * traitValue;
     }
 
-    public static float SetPlusStatus(float upgradeAtk, float psvAtk)
+    public static float SetPlusStatus(float upgradeStat, float psvAtk, float traitValue = 0)
     {
-        return upgradeAtk + psvAtk;
+        return upgradeStat + psvAtk + traitValue;
+    }
+
+    public static float SetAtkSpdStatus(float psvValue)
+    {
+        return 1 * (1 - psvValue / 100);
     }
 
     public static void StatusUp(this PixelmonStatus status, string field, float stat, StatusType type = StatusType.Add)
@@ -92,20 +102,19 @@ public static class PixelmonStatHandler
         }
     }
 
-    public static void PxmLvUp(this PixelmonStatus status, MyPixelmonData myData)
+    public static void PxmLvUp(this MyPixelmonData myData)
     {
-        SaveManager.Instance.SetDeltaData("lv", ++myData.lv);
         if (myData.lv % 10 == 0)
         {
-            SaveManager.Instance.SetDeltaData("maxExp", (int)(myData.maxExp * 1.5f));
+            SaveManager.Instance.UpdatePixelmonData(myData.id, "maxExp", (int)(myData.maxExp * 1.5f));
         }
         else
         {
-            SaveManager.Instance.SetDeltaData("maxExp", (int)(myData.maxExp * 1.1f));
+            SaveManager.Instance.UpdatePixelmonData(myData.id, "maxExp", (int)(myData.maxExp * 1.1f));
         }
     }
 
-    public static void PxmStarUp(this PixelmonStatus status, MyPixelmonData myData)
+    public static void PxmStarUp(this MyPixelmonData myData)
     {
         if ((myData.star & 1) == 0)
         {
@@ -120,18 +129,41 @@ public static class PixelmonStatHandler
                 for (int i = 0; i < myData.ownEffectValue.Length; i++)
                     myData.ownEffectValue[i] += 30;
             }
+            SaveManager.Instance.UpdatePixelmonData(myData.id, nameof(myData.ownEffectValue), myData.ownEffectValue);
         }
         else
         {
             PsvSkill newSkill = new PsvSkill();
-            myData.psvSkill.Add(newSkill);
-        }
+            BasePsvData basePsvData;
+            do
+            {
+                basePsvData = RandAbilityUtil.RandAilityData();
+            }
+            while (PsvOverlapCheck(myData, basePsvData));
 
-        if(myData.star == 5) 
-        {
-            //패시브 룰렛기능 오픈
+            var randAbility = RandAbilityUtil.PerformAbilityGacha((AbilityType)basePsvData.psvEnum, basePsvData.maxRate);
+            newSkill.psvType = (AbilityType)basePsvData.psvEnum;
+            newSkill.psvName = basePsvData.rcode;
+            newSkill.psvRank = randAbility.AbilityRank;
+            newSkill.psvValue = randAbility.AbilityValue;
+            myData.psvSkill.Add(newSkill);
+
+            SaveManager.Instance.UpdatePixelmonData(myData.id, nameof(myData.psvSkill), myData.psvSkill);
         }
     }
+
+    public static bool PsvOverlapCheck(MyPixelmonData myData, BasePsvData psvData)
+    {
+        for (int i = 0; i < myData.psvSkill.Count; i++)
+        {
+            if (psvData.rcode == myData.psvSkill[i].psvName)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public static List<PsvSkill> PxmPsvEffect(this PixelmonStatus status, MyPixelmonData myData, bool[] isLocked)
     {

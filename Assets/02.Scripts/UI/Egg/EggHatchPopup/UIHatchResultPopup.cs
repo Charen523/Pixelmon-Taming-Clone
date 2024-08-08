@@ -155,8 +155,6 @@ public class UIHatchResultPopup : UIBase
         SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "id", eggHatch.HatchPxmData.id);
         SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "isOwned", true);
         SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "atkValue", eggHatch.HatchPxmData.basePerAtk);
-        SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "traitType", eggHatch.HatchPxmData.trait.TranslateTraitString());
-        SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "traitValue", eggHatch.HatchPxmData.traitValue);
         SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "psvSkill", firstPsv);
         SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "ownEffectValue", ownEffectValue);
         PixelmonManager.Instance.UnLockedPixelmon(eggHatch.HatchPxmData.id);
@@ -183,5 +181,6 @@ public class UIHatchResultPopup : UIBase
             });
         }
         SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "psvSkill", newPsvs);
+        PixelmonManager.Instance.ApplyStatus(PixelmonManager.Instance.pxmTab.allData[eggHatch.HatchPxmData.id].pxmData, PixelmonManager.Instance.pxmTab.allData[eggHatch.HatchPxmData.id].myPxmData);
     }
 }

@@ -9,6 +9,9 @@ public class UILoading : Singleton<UILoading>
     [SerializeField] private Slider slider;
     [SerializeField] private TMPro.TMP_Text desc;
 
+    private float curProgress;
+    private float asyncOperationProgress;
+
     protected override void Awake()
     {
         base.Awake();
@@ -32,45 +35,35 @@ public class UILoading : Singleton<UILoading>
         Instance.gameObject.SetActive(false);
     }
 
-    public void SetProgress(float progress, string desc = "")
+
+    private void UpdateSliderValue()
     {
-        this.desc.text = desc;
-        slider.value = progress;
+        slider.value = (curProgress + asyncOperationProgress) / 10f;
+        int percentage = Mathf.RoundToInt(slider.value * 100f);
+        desc.text = $"{percentage}%";
     }
 
-    #region Basic Async
-    public void SetProgress(AsyncOperation op, string desc = "")
+    public void SetProgress(float progress)
     {
-        this.desc.text = desc;
-        StartCoroutine(Progress(op));
+        curProgress += progress;
+        UpdateSliderValue();
     }
-
-    public IEnumerator Progress(AsyncOperation op)
-    {
-        while (op.isDone)
-        {
-            slider.value = op.progress;
-            yield return new WaitForEndOfFrame();
-        }
-        slider.value = 1;
-    }
-    #endregion
 
     #region Addressable Async
-    public void SetProgress(AsyncOperationHandle op, string desc = "")
+    public void SetProgress(AsyncOperationHandle op)
     {
-        this.desc.text = desc;
         StartCoroutine(Progress(op));
     }
 
     public IEnumerator Progress(AsyncOperationHandle op)
     {
-        while (op.IsDone)
+        while (!op.IsDone)
         {
-            slider.value = op.GetDownloadStatus().Percent;
+            asyncOperationProgress = op.GetDownloadStatus().Percent;
+            UpdateSliderValue();
             yield return new WaitForEndOfFrame();
         }
-        slider.value = 1;
+        UpdateSliderValue();
     }
     #endregion
 }

@@ -27,7 +27,7 @@ public class UISkillPopUp : UIBase
         id = slot.atvData.id;
         skillNameTxt.text = slot.atvData.name;
         ctTxt.text = slot.atvData.coolTime.ToString();
-        descTxt.text = slot.atvData.description.Replace("N", slot.atvData.maxRate.ToString());
+        descTxt.text = slot.atvData.description.Replace("N", (slot.atvData.maxRate + slot.myAtvData.lv).ToString()) ;
         SetEquipTxt();
     }
 

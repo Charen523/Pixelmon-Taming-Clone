@@ -13,7 +13,7 @@ public class PrefabSkill : MonoBehaviour
 
     public void RandomAttack()
     {
-        transform.position = (Vector2)randomSpotSkill.transform.position + Random.insideUnitCircle * 1.5f;
+        transform.position = (Vector2)randomSpotSkill.transform.position + Random.insideUnitCircle * 1.2f;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -21,7 +21,8 @@ public class PrefabSkill : MonoBehaviour
         if (collision.TryGetComponent<Enemy>(out enemy))
         {
             enemy.healthSystem.TakeDamage(
-                randomSpotSkill.owner.status.GetTotalDamage(randomSpotSkill.owner.myData, true, randomSpotSkill.data.maxRate));
+                randomSpotSkill.owner.status.GetTotalDamage(
+                    randomSpotSkill.owner.myData, true, randomSpotSkill.data.maxRate + randomSpotSkill.myData.lv));
         }
     }
 }

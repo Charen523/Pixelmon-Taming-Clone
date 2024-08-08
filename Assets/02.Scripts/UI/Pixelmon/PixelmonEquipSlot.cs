@@ -30,7 +30,7 @@ public class PixelmonEquipSlot : PixelmonSlot
     public void ChangedInfo()
     {
         slotIndex = gameObject.transform.GetSiblingIndex();
-        MyPixelmonData datas = pxmtab.userData.equippedPxms[slotIndex];
+        MyPixelmonData datas = pxmtab.allData[pxmtab.userData.equippedPxms[slotIndex].id].myPxmData;
         isLocked = pxmtab.userData.isLockedSlot[slotIndex];
         if (datas != null && datas.isEquipped)
         {

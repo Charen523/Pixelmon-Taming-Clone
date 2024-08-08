@@ -16,7 +16,7 @@ public class RandomSpotSkill : BaseSkill
         if (spawnTime == null)
         {
             spawnTime = new WaitForSeconds(waitTime);
-            duration = new WaitForSeconds(5f);
+            duration = new WaitForSeconds(2f);
         }
     }
 

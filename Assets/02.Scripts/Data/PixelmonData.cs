@@ -25,5 +25,13 @@ public class PixelmonData : IData
     public Sprite bgIcon;
 
     string IData.Rcode => rcode;
+
+    public float FindTraitType(string type)
+    {
+        if (type == trait)
+            return traitValue;
+        else
+            return 1;
+    }
 }
 
