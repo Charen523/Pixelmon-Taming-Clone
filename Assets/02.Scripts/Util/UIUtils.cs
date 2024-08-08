@@ -106,9 +106,8 @@ public static class UIUtils
             case 3:
                 return DataManager.Instance.GetData<EvolveData>(rankTxt).star4;
             case 4:
-                return DataManager.Instance.GetData<EvolveData>(rankTxt).star5;
             default:
-                return 0;
+                return DataManager.Instance.GetData<EvolveData>(rankTxt).star5;
         }
     }
 
