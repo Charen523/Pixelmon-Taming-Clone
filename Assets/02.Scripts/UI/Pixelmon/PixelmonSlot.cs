@@ -92,7 +92,7 @@ public class PixelmonSlot : MonoBehaviour
 
 
 
-    protected virtual void OnClick()
+    public virtual void OnClick()
     {
         pxmtab.OnInfoPopUp(pxmData.id);
     }

@@ -13,7 +13,7 @@ public class DamageText : SerializedMonoBehaviour
     TextMeshProUGUI damageTxt;
     [SerializeField]
     RectTransform rectTr;
-
+    string missTxt = "Miss!";
     private void Awake()
     {
         cam = Camera.main;
@@ -23,7 +23,10 @@ public class DamageText : SerializedMonoBehaviour
     {
         if (OnDamage != null)
             StopCoroutine(ShowText(pos));
-        damageTxt.text = string.Format("{0:#,###}", damage);
+        if (damage > 0)
+            damageTxt.text = string.Format("{0:#,###}", damage);
+        else
+            damageTxt.text = missTxt;
         OnDamage = StartCoroutine(ShowText(pos));
     }
 

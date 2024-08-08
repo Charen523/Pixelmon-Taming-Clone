@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -118,6 +120,51 @@ public class PixelmonTab : UIBase
         foreach (PixelmonSlot data in noneData)
         {
             data.gameObject.SetActive(!prossessToggle.isOn);
+        }
+    }
+
+
+    public void OnArrangeAll()
+    {
+        if (ownedData.Count == 0) return;
+
+        int arrCount = 0;
+        for (int i = 0; i < equipData.Length; i++)
+        {
+            if (!equipData[i].isLocked)
+                arrCount++;
+        }
+
+        if(arrCount == 0) return;
+
+        float[] weight = new float[ownedData.Count];
+        float[] bestPxm = new float[arrCount];
+
+        for(int i = 0; i < ownedData.Count; i++) 
+        {
+            weight[i] = (ownedData[i].myPxmData.atkValue + ownedData[i].myPxmData.lv * ownedData[i].pxmData.lvAtkRate) +
+                ownedData[i].pxmData.traitValue;
+            for (int j = 0; j < ownedData[i].myPxmData.psvSkill.Count; j++)
+            {
+                float aa = UIUtils.GetPsvWeight(ownedData[i].myPxmData.psvSkill[j].psvName);
+                weight[i] = weight[i] + ownedData[i].myPxmData.psvSkill[j].psvValue * aa;
+            }
+
+            if (bestPxm[0] == 0 || bestPxm[0] <= weight[i])
+            {
+                bestPxm[0] = weight[i];
+                Array.Sort(bestPxm);
+            }
+        }
+
+        for(int i = arrCount - 1; i >= 0; i--) 
+        {
+            if (!equipData[i].isLocked)
+            {
+                tabState = TabState.Equip;
+                choiceId = ownedData[weight.ToList().FindIndex((obj) => obj == bestPxm[i])].myPxmData.id;
+                equipData[i].OnClick(); 
+            }
         }
     }
 

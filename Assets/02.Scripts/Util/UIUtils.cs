@@ -124,4 +124,30 @@ public static class UIUtils
             Debug.LogError("색상 코드 변환에 실패했습니다: " + hexColor);
         }
     }
+
+    public static float GetPsvWeight(string rcode)
+    {
+        switch (rcode)
+        {
+            case "공격력":
+                return DataManager.Instance.GetData<BasePsvData>(rcode).weight;
+            case "치명타 확률":
+                return DataManager.Instance.GetData<BasePsvData>(rcode).weight;
+            case "치명타 데미지":
+                return DataManager.Instance.GetData<BasePsvData>(rcode).weight;
+            case "공격 속도":
+                return DataManager.Instance.GetData<BasePsvData>(rcode).weight;
+            case "일반 데미지":
+                return DataManager.Instance.GetData<BasePsvData>(rcode).weight;
+            case "스킬 데미지":
+                return DataManager.Instance.GetData<BasePsvData>(rcode).weight;
+            case "스킬 치명타 확률":
+                return DataManager.Instance.GetData<BasePsvData>(rcode).weight;
+            case "스킬 치명타 데미지":
+                return DataManager.Instance.GetData<BasePsvData>(rcode).weight;
+            default:
+                return 0;
+        }
+    }
+
 }
