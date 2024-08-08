@@ -26,6 +26,7 @@ public abstract class UpgradeSlot : MonoBehaviour
     [Header("Upgrade UI")]
     [SerializeField] private TextMeshProUGUI slotLevelTxt;
     [SerializeField] protected TextMeshProUGUI slotValueTxt;
+    [SerializeField] protected TextMeshProUGUI nextValueTxt;
     [SerializeField] private TextMeshProUGUI slotPriceTxt;
     [SerializeField] private TextMeshProUGUI buyTxt;
     [SerializeField] private Button goldBtn;
@@ -123,6 +124,7 @@ public abstract class UpgradeSlot : MonoBehaviour
             CurValue = ValuePerLv(CurLv);
         }
         nextValue = ValuePerLv(nextLv);
+        nextValueTxt.text = nextValue.ToString();
 
         CalculatePrice(curUpgradeRate);
     }
@@ -159,6 +161,7 @@ public abstract class UpgradeSlot : MonoBehaviour
     protected void SetGoldTxt()
     {
         string printPrice = Calculater.NumFormatter(nextPrice);
+        nextValueTxt.text = nextValue.ToString();
 
         if (CurLv >= maxLv)
         {
