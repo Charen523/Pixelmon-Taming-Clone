@@ -157,9 +157,10 @@ public class PixelmonTab : UIBase
             }
         }
 
-        for(int i = arrCount - 1; i >= 0; i--) 
+        Array.Reverse(bestPxm);
+        for(int i = 0; i < arrCount; i++) 
         {
-            if (!equipData[i].isLocked)
+            if (!equipData[i].isLocked && bestPxm[i] != 0)
             {
                 tabState = TabState.Equip;
                 choiceId = ownedData[weight.ToList().FindIndex((obj) => obj == bestPxm[i])].myPxmData.id;

@@ -28,6 +28,7 @@ public class SkillSlot : MonoBehaviour
 
     #region UI
     public TextMeshProUGUI skillRankTxt;
+    [SerializeField] private GameObject lockIcon;
     [SerializeField] private GameObject equipIcon;
     [SerializeField] protected TextMeshProUGUI skillLv;
     [SerializeField] private Slider evolveSldr;
@@ -61,9 +62,9 @@ public class SkillSlot : MonoBehaviour
 
     public void InitSlot(SkillTab tab, ActiveData data)
     {
-        slotIndex = data.id;
         skillTab = tab;
         atvData = data;        
+        slotIndex = atvData.id;
         SetRankTxt();
         SetSkillIcon();
         atvData.dataIndex = SaveManager.Instance.userData.ownedSkills.FindIndex((obj) => obj.id == atvData.id);
@@ -75,6 +76,8 @@ public class SkillSlot : MonoBehaviour
         SetSkillLv();
         SetEquipTxt();
         SetEvolveSldr();
+        lockIcon.SetActive(false);
+        SetBgColor(atvData.rank);
     }
 
     public void OnEvolved()
@@ -129,22 +132,41 @@ public class SkillSlot : MonoBehaviour
         switch (rank)
         {
             case "C":
-                slotIconBg.color = skillTab.bgIconColor[0];
                 return skillTab.txtColors[0];
             case "B":
-                slotIconBg.color = skillTab.bgIconColor[1];
                 return skillTab.txtColors[1];
             case "A":
-                slotIconBg.color = skillTab.bgIconColor[2];
                 return skillTab.txtColors[2];
             case "S":
-                slotIconBg.color = skillTab.bgIconColor[3];
                 return skillTab.txtColors[3];
             case "SS":
-                slotIconBg.color = skillTab.bgIconColor[4];
                 return skillTab.txtColors[4];
             default:
                 return skillTab.txtColors[0];
+        }
+    }
+
+    public void SetBgColor(string rank)
+    {
+        switch (rank)
+        {
+            case "C":
+                slotIconBg.color = skillTab.bgIconColor[0];
+                break;
+            case "B":
+                slotIconBg.color = skillTab.bgIconColor[1];
+                break;
+            case "A":
+                slotIconBg.color = skillTab.bgIconColor[2];
+                break;
+            case "S":
+                slotIconBg.color = skillTab.bgIconColor[3];
+                break;
+            case "SS":
+                slotIconBg.color = skillTab.bgIconColor[4];
+                break;
+            default:
+                break;
         }
     }
 
