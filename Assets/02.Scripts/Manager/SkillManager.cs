@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,6 +15,8 @@ public class SkillManager : Singleton<SkillManager>
 
     public List<UnityAction<Pixelmon, ActiveData, MyAtvData>> actionStorage = new List<UnityAction<Pixelmon, ActiveData, MyAtvData>>();
     private UnityAction<Pixelmon, ActiveData, MyAtvData> skillAction;
+    public PixelmonLayout layout;
+    public float[] skillCoolTime = new float[5];
 
     public DataManager dataManager;
     public SaveManager saveManager;
@@ -41,13 +44,13 @@ public class SkillManager : Singleton<SkillManager>
         }
     }
 
-    public void ExecuteSkill(Pixelmon pxm)
+    public void ExecuteSkill(Pixelmon pxm, int index)
     {
         if(pxm.myData.atvSkillId != -1)
-            StartCoroutine(SkillAction(pxm));
+            StartCoroutine(SkillAction(pxm, index));
     }
 
-    public IEnumerator SkillAction(Pixelmon pxm)
+    public IEnumerator SkillAction(Pixelmon pxm, int index)
     {
         yield return new WaitUntil(() => pxm.fsm.target != null);
         ActiveData data = skillTab.allData[pxm.myData.atvSkillId].atvData;
@@ -61,10 +64,20 @@ public class SkillManager : Singleton<SkillManager>
             if (!myData.isEquipped) yield break;
             data.isCT = true;
             actionStorage[data.id]?.Invoke(pxm, data, myData);
-            yield return new WaitForSeconds(data.coolTime);
+            skillCoolTime[index] = data.coolTime;
+            layout.timer[index].gameObject.SetActive(true);
+            while (0 <= skillCoolTime[index])
+            {
+                skillCoolTime[index] -= Time.deltaTime;
+                layout.timer[index].fillAmount = skillCoolTime[index] / data.coolTime;
+                yield return null;
+            }
+            layout.timer[index].gameObject.SetActive(false);
+            skillCoolTime[index] = 0;
             data.isCT = false;
         }
     }
+
 
     public void OnSkillAction(Pixelmon pxm, ActiveData atvData, MyAtvData myAtvData)
     {
