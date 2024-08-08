@@ -2,18 +2,14 @@ using System.Numerics;
 
 public class RewardManager : Singleton<RewardManager>
 {
-    private SaveManager saveManager;
     private UserData userData;
-    private StageManager stageManager;
 
     protected override void Awake()
     {
         isDontDestroyOnLoad = true;
         base.Awake();
 
-        saveManager = SaveManager.Instance;
-        stageManager = StageManager.Instance;
-        userData = saveManager.userData;
+        userData = SaveManager.Instance.userData;
     }
 
     public void GetRewards(string[] rcodes, int[] amounts, float[] rates = null)
@@ -28,12 +24,12 @@ public class RewardManager : Singleton<RewardManager>
                 if (itemName == nameof(userData.gold) || itemName == nameof(userData.userExp))
                 {
                     BigInteger amount = amounts[i];
-                    saveManager.SetFieldData(itemName, amount, true);
+                    SaveManager.Instance.SetFieldData(itemName, amount, true);
                 }
                 else
                 {
                     int amount = amounts[i];
-                    saveManager.SetFieldData(itemName, amount, true);
+                    SaveManager.Instance.SetFieldData(itemName, amount, true);
                 }
             }
         }
@@ -43,5 +39,4 @@ public class RewardManager : Singleton<RewardManager>
     {
         return UnityEngine.Random.Range(0, 100) <= rate;
     }
-
 }
