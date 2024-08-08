@@ -61,8 +61,8 @@ public class PlayerFSM : FSM
 
     public void NotifyPlayerDie()
     {
-        ReStartPlayer();
         GameManager.Instance.NotifyStageStart();
+        ReStartPlayer();
     }
 
     public void FadeEffect()
