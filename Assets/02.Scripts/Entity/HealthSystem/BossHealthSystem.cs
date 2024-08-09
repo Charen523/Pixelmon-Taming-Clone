@@ -26,7 +26,7 @@ public class BossHealthSystem : MonoBehaviour
         while(true)
         {
             bossHpBar.value = currentHealth / maxHealth;
-            bossHpTxt.text = (bossHpBar.value * 100).ToString("F2") + "%";
+            bossHpTxt.text = ((int)(bossHpBar.value * 100)).ToString() + "%";
 
             if (currentHealth <= 0)
                 StopCoroutine(bossCoroutine);

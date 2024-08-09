@@ -24,11 +24,6 @@ public class Player : Singleton<Player>
         //LocatedPixelmon();
     }
 
-    private void Update()
-    {
-        fsm.Update();
-    }
-
     public void ChangePixelmonsState(PixelmonState newState)
     {
         for(int i = 0;  i < pixelmons.Length; i++)
