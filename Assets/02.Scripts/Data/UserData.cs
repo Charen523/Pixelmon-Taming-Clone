@@ -16,7 +16,7 @@ public class UserData
     #region Goods
     public string _gold = "0";
     public BigInteger gold = 0;
-    public int diamond = 10000;
+    public int diamond = 0;
     public int seed = 3;
     public int food = 0;
     public int skillTicket = 0;
