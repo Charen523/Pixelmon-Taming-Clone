@@ -186,26 +186,33 @@ public static class PixelmonStatHandler
         return newSkills;
     }
     
-    public static float GetTotalDamage(this PixelmonStatus status, MyPixelmonData myData, bool isSkill = false, float perSkill = 1)
+    public static (float,bool) GetTotalDamage(this PixelmonStatus status, MyPixelmonData myData, bool isSkill = false, float perSkill = 1)
     {
         float dealDmg;
+        bool isCri = false;
         if (isSkill)
         {
             if (IsCritical(status.Cri + status.SCri))
-                dealDmg = (status.perAtk * status.Atk) * (perSkill + status.SDmg) * (100 + status.SCriDmg + status.CriDmg)/100;
+            {
+                isCri = true;
+                dealDmg = (status.perAtk * status.Atk) * (perSkill + status.SDmg) * (100 + status.SCriDmg + status.CriDmg) / 100;
+            }
             else
                 dealDmg = (status.perAtk * status.Atk) * (perSkill + status.SDmg);
         }
         else
         {
             if (IsCritical(status.Cri))
-                dealDmg = status.perAtk * (status.Atk + status.Dmg) * (100 + status.CriDmg)/100;
+            {
+                isCri= true;
+                dealDmg = status.perAtk * (status.Atk + status.Dmg) * (100 + status.CriDmg) / 100;
+            }
             else
                 dealDmg = status.perAtk * (status.Atk + status.Dmg);
         }
         //버프가 있다면 dealDmg *= 1;
 
-        return dealDmg;
+        return (dealDmg, isCri);
     }
 
 

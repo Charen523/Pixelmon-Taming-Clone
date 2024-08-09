@@ -8,6 +8,7 @@ public class ProjectileController : SerializedMonoBehaviour
     [SerializeField] private Rigidbody2D rb;
 
     public float projectileDamage;
+    public bool isCri;
 
     private Vector2 startPosition;
     private Vector2 shootDirection;
@@ -39,14 +40,14 @@ public class ProjectileController : SerializedMonoBehaviour
     }
 
     //Invoke쪽에서 전달해야 할 변수들.
-    public void GetAttackSign(Vector3 startPos, Vector2 direction, float damage, float bulletRange, float speed)
+    public void GetAttackSign(Vector3 startPos, Vector2 direction, float damage, bool isCritical ,float bulletRange, float speed)
     {
         startPosition = startPos; //날아가기 시작하는 지점.
         shootDirection = direction; //날아갈 방향.
         projectileDamage = damage; //전달할 데이터.
         flyDistance = bulletRange; //날아갈 거리.
         flySpeed = speed; //날아갈 속도.
-
+        isCri = isCritical;
         rb.position = startPosition;
         isShoot = true; 
     }

@@ -24,10 +24,10 @@ public class EnemyHealthSystem : HealthSystem
         currentHealth = maxHealth;
     }
 
-    public override void TakeDamage(float delta)
+    public override void TakeDamage(float delta, bool isCri = false, bool isPlayer = false)
     {
         def = enemy.statHandler.enemyDef;
-        base.TakeDamage(delta);
+        base.TakeDamage(delta, isCri, isPlayer);
     }
 
     protected override void NoticeDead()
