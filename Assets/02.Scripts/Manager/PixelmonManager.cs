@@ -22,6 +22,9 @@ public class PixelmonManager : Singleton<PixelmonManager>
 
     public Sprite plusIcon;
     public Sprite defaultBg;
+
+    public float perHp = 0;
+    public float perDef = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -41,17 +44,20 @@ public class PixelmonManager : Singleton<PixelmonManager>
     {
         foreach (MyPixelmonData pxm in userData.ownedPxms)
         {
-            pxmTab.perHp += pxm.ownEffectValue[0];
-            pxmTab.perDef += pxm.ownEffectValue[1];
+            if (!pxm.isOwned) continue;
+            Debug.Log(pxm.id);
+            perHp += pxm.ownEffectValue[0];
+            perDef += pxm.ownEffectValue[1];
         }
-        player.statHandler.UpdateStats(pxmTab.perHp, pxmTab.perDef);
+        player.statHandler.UpdateStats(perHp, perDef);
+        player.healthSystem.currentHealth = player.statHandler.maxHp;
     }
 
-    public void UpdatePlayerStat(float perHp, float perDef)
+    public void UpdatePlayerStat(float hp, float def)
     {
-        pxmTab.perHp += perHp;
-        pxmTab.perDef += perDef;
-        player.statHandler.UpdateStats(pxmTab.perHp, pxmTab.perDef);
+        perHp += hp;
+        perDef += def;
+        player.statHandler.UpdateStats(perHp, perDef, hp/100);
     }
 
     private void InitUpgradeStatus()
@@ -107,7 +113,6 @@ public class PixelmonManager : Singleton<PixelmonManager>
     public void UnLockedPixelmon(int index)
     {
         pxmTab.unLockAction?.Invoke(index);
-        InitPlayerStat();
     }
 
     public void UnLockedSlot(int index)
