@@ -330,6 +330,7 @@ public class StageManager : Singleton<StageManager>
     #region Death Events
     public void MonsterDead(Enemy enemy)
     {
+        Player.Instance.fsm.target = null;
         EnemyData enemyData = enemy.statHandler.data;
         if (enemyData.isBoss)
         {
@@ -348,7 +349,6 @@ public class StageManager : Singleton<StageManager>
         {
             QuestManager.Instance.OnQuestEvent();
         }
-        Player.Instance.fsm.target = null;
         saveManager.SetFieldData(nameof(userData.curHuntCount), 1, true);
     }
 
