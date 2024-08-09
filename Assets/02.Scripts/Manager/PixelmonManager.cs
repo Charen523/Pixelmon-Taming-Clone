@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -33,8 +34,26 @@ public class PixelmonManager : Singleton<PixelmonManager>
         unlockSlotAction += unlockSlotAction;
         InitUpgradeStatus();
         InitEquippedPixelmon();
+        InitPlayerStat();
     }
-    
+
+    public void InitPlayerStat()
+    {
+        foreach (MyPixelmonData pxm in userData.ownedPxms)
+        {
+            pxmTab.perHp += pxm.ownEffectValue[0];
+            pxmTab.perDef += pxm.ownEffectValue[1];
+        }
+        player.statHandler.UpdateStats(pxmTab.perHp, pxmTab.perDef);
+    }
+
+    public void UpdatePlayerStat(float perHp, float perDef)
+    {
+        pxmTab.perHp += perHp;
+        pxmTab.perDef += perDef;
+        player.statHandler.UpdateStats(pxmTab.perHp, pxmTab.perDef);
+    }
+
     private void InitUpgradeStatus()
     {
         int[] upgradeArr = userData.UpgradeLvs;
@@ -88,6 +107,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
     public void UnLockedPixelmon(int index)
     {
         pxmTab.unLockAction?.Invoke(index);
+        InitPlayerStat();
     }
 
     public void UnLockedSlot(int index)
