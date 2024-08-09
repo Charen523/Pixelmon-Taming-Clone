@@ -11,10 +11,10 @@ public class PlayerStatHandler : MonoBehaviour
     public float def;
     #endregion
 
-    public void UpdateStats()
+    public void UpdateStats(float perHp, float perDef)
     {
-        maxHp = data.baseMaxHp;
-        def = data.baseDef;
+        maxHp = data.baseMaxHp * (1 + perHp/100);
+        def = data.baseDef * (1 + perDef / 100);
 
         Player.Instance.healthSystem.InitHealth(maxHp);
     }

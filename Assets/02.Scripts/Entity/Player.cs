@@ -20,7 +20,6 @@ public class Player : Singleton<Player>
     private void Start()
     {
         fsm.Init();
-        statHandler.UpdateStats();
         //LocatedPixelmon();
     }
 

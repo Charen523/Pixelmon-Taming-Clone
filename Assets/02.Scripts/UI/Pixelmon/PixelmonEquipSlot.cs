@@ -32,19 +32,15 @@ public class PixelmonEquipSlot : PixelmonSlot
         slotIndex = gameObject.transform.GetSiblingIndex();
         isLocked = pxmtab.userData.isLockedSlot[slotIndex];
         if (isLocked) return;
-
+        stateIcon.sprite = pxmManager.plusIcon;
         MyPixelmonData datas = pxmtab.allData[pxmtab.userData.equippedPxms[slotIndex].id].myPxmData;
         if (datas != null && datas.isEquipped)
         {
-            stateIcon.sprite = pxmManager.plusIcon;
             myPxmData = datas;
             Equip(myPxmData);
         }
         else
-        {
-            stateIcon.sprite = pxmManager.plusIcon;
             myPxmData = null;
-        }
     }
 
     public override void InitSlot(PixelmonTab tab, PixelmonData data)

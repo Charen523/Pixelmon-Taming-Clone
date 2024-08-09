@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerFSM : FSM
@@ -43,7 +44,7 @@ public class PlayerFSM : FSM
     public void ReStartPlayer()
     {
         ChangeState(DetectState);
-        Player.Instance.statHandler.UpdateStats();
+        Player.Instance.healthSystem.InitHealth(Player.Instance.statHandler.maxHp); ;
     }
 
     public void StageTimeOut()
