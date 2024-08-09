@@ -62,7 +62,6 @@ public class Spawner : MonoBehaviour
                 enemy.bossHealthSystem.InvokeBossHp();
             }
             stageManager.curSpawnCount++;
-            Debug.Log("+: " + stageManager.curSpawnCount);
         }
     }
 
