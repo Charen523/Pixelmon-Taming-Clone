@@ -26,10 +26,10 @@ public class PixelmonData : IData
 
     string IData.Rcode => rcode;
 
-    public float FindTraitType(string type)
+    public float FindTraitType(string type, int lv)
     {
         if (type == trait)
-            return traitValue;
+            return traitValue + lv * lvAtkRate;
         else
             return 1;
     }
