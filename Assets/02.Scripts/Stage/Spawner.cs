@@ -1,5 +1,8 @@
+using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class Spawner : MonoBehaviour
 {
@@ -59,6 +62,7 @@ public class Spawner : MonoBehaviour
                 enemy.bossHealthSystem.InvokeBossHp();
             }
             stageManager.curSpawnCount++;
+            Debug.Log("+: " + stageManager.curSpawnCount);
         }
     }
 
@@ -77,9 +81,18 @@ public class Spawner : MonoBehaviour
     {
         for (int i = 0; i < isActivatedEnemy.Count; i++)
         {
-            isActivatedEnemy[i].healthSystem.TakeDamage(9999999f);
+            StartCoroutine(FadeMonster(isActivatedEnemy[i]));
         }
         isActivatedEnemy.Clear();
+    }
+
+    private IEnumerator FadeMonster(Enemy enemy)
+    {
+        enemy.isFade = true;
+        enemy.myImg.DOFade(0, 1f);
+        yield return new WaitForSeconds(1f);
+        enemy.isFade = false;
+        enemy.gameObject.SetActive(false);
     }
 
     public DgMonster GetDgMonster(int index)

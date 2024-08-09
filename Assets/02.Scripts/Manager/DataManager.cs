@@ -25,7 +25,7 @@ public class DataManager : GSpreadReader<DataManager>
         float progress = 1.0f;
         foreach (var data in pixelmonData.data)
         {
-            UILoading.Instance.SetProgress(progress++ / pixelmonData.data.Count, "데이터 설정중");
+            UILoading.Instance.SetProgress(progress++ / pixelmonData.data.Count, "픽셀몬 부화중");
             data.icon = await ResourceManager.Instance.LoadAsset<Sprite>(data.rcode, eAddressableType.thumbnail);
             switch (data.rank)
             {
@@ -55,7 +55,7 @@ public class DataManager : GSpreadReader<DataManager>
         progress = 1.0f;
         foreach (var data in activeData.data)
         {
-            UILoading.Instance.SetProgress(progress++ / activeData.data.Count, "데이터 설정중");
+            UILoading.Instance.SetProgress(progress++ / activeData.data.Count, "마법 배우는 중");
             data.icon = await ResourceManager.Instance.LoadAsset<Sprite>(data.rcode, eAddressableType.thumbnail);
             switch (data.rank)
             {

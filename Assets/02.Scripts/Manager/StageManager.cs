@@ -61,7 +61,6 @@ public class StageManager : Singleton<StageManager>
     private bool isBossCleared;
     public bool isDungeon;
     private bool isPlayerDead;
-    private bool isEnemyReset;
     #endregion
 
     #region UI
@@ -132,7 +131,6 @@ public class StageManager : Singleton<StageManager>
         if (isBossStage)
         {
             yield return null;
-            isEnemyReset = false;
             InitBossStage();
             yield return proceedBossStg;
             bossTimeSldr.gameObject.SetActive(false);
@@ -159,14 +157,14 @@ public class StageManager : Singleton<StageManager>
                 GameManager.Instance.NotifyStageClear();
             }
         }
-        Player.Instance.fsm.target = null; //target 초기화
-
+        
         if (isDungeon)
         {
             fadeOut.gameObject.SetActive(true);
             fadeOut.StartFade();
             InitDgStage();
             yield return proceedDgStg;
+            Player.Instance.fsm.target = null;
         }
 
         fadeOut.gameObject.SetActive(true);
@@ -321,7 +319,7 @@ public class StageManager : Singleton<StageManager>
 
     private void ResetSpawnedEnemy()
     {
-        isEnemyReset = true;
+        Player.Instance.fsm.target = null;
         spawner.ResetSpawnedMonster();
         curSpawnCount = 0;
         saveManager.SetFieldData(nameof(userData.curHuntCount), 0);
@@ -331,8 +329,6 @@ public class StageManager : Singleton<StageManager>
     #region Death Events
     public void MonsterDead(Enemy enemy)
     {
-        if (isEnemyReset) return;
-
         EnemyData enemyData = enemy.statHandler.data;
         if (enemyData.isBoss)
         {
@@ -364,7 +360,6 @@ public class StageManager : Singleton<StageManager>
             StopCoroutine(stageCoroutine); //Stop Stage
         }
         ResetSpawnedEnemy();
-        Player.Instance.fsm.target = null;
 
         NextStageData(false);
         isBossStage = false;
@@ -408,8 +403,8 @@ public class StageManager : Singleton<StageManager>
             stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.gameObject.SetActive(true);
             StageIcon.sprite = iconSprite[0];
-            curProgress = Mathf.Min((float)killCount / data.nextStageCount, 1f);
-            prevProgress = curProgress;
+            curProgress = 0;
+            prevProgress = 0;
             progressSldr.value = prevProgress;
             progressTxt.text = string.Format($"{(int)(prevProgress * 100)}%");
             progressCoroutine = StartCoroutine(SetProgressBar());
@@ -423,7 +418,7 @@ public class StageManager : Singleton<StageManager>
             if (curProgress > prevProgress)
             {
                 StartCoroutine(UIUtils.AnimateSliderChange(progressSldr, prevProgress, curProgress));
-                progressTxt.text = string.Format($"{(int)(curProgress * 100)}%");
+                progressTxt.text = string.Format($"{(int)(prevProgress * 100)}%");
                 prevProgress = curProgress;
             }
             yield return null;

@@ -33,13 +33,16 @@ public class UserData
     public int questProgress = 1;
     #endregion
 
-    #region Hatch Egg
+    #region EggLv
     public int eggLv = 1;
-    public int eggCount = 3;
     public int fullGaugeCnt = 0;
     public bool isLvUpMode = false;
     public string startLvUpTime = null;
     public float skipTime = 0;
+    #endregion
+
+    #region Hatch Egg
+    public int eggCount = 3;
     public bool isGetPxm = true;
     public bool isOwnedPxm = false;
     public PixelmonData hatchPxmData = null;
