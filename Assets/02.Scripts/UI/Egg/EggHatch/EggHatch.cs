@@ -122,7 +122,8 @@ public class EggHatch : MonoBehaviour
 
     public void OnClickEgg(Button btn)
     {
-        StartCoroutine(ClickEgg(btn));
+        if (userData.eggCount > 0 || userData.isGetPxm == false)
+            StartCoroutine(ClickEgg(btn));
     }
 
     public IEnumerator ClickEgg(Button btn)
@@ -130,7 +131,6 @@ public class EggHatch : MonoBehaviour
         btn.interactable = false;
         if (userData.isGetPxm)
         {
-            if (userData.eggCount <= 0) yield break;
             SaveManager.Instance.SetFieldData(nameof(userData.eggCount), -1, true);
             if (QuestManager.Instance.isHatchQ)
             {
