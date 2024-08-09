@@ -15,6 +15,10 @@ public class PixelmonTab : UIBase
     [SerializeField]
     private TextMeshProUGUI foodCountTxt;
 
+    [SerializeField] TextMeshProUGUI ownSkillEffectTxt;
+    public float perHp = 0;
+    public float perDef = 0;
+
     public GameObject equipOverlay;
     public int choiceId;
     public TabState tabState;
