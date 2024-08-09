@@ -10,7 +10,7 @@ public class StageManager : Singleton<StageManager>
 
     #region Stage Info
     [Header("Stage Info")]
-    private StageData data;
+    public StageData data;
     private readonly string fixedRcode = "STG_";
     private string _currentRcode;
     public string CurrentRcode
@@ -37,12 +37,12 @@ public class StageManager : Singleton<StageManager>
     public int diffNum;
     public int worldNum;
     public int stageNum;
-    private int themeNum;
+    public int themeNum;
 
     public int curSpawnCount = 0;
     private float curInterval = 0; //현재 시간 간격
     private readonly float spawnInterval = 2f; //스폰 간격
-    private int killCount = 0;
+    public int killCount = 0;
 
     private float bossLeftTime;
     private readonly float bossLimitTime = 30;
@@ -97,7 +97,7 @@ public class StageManager : Singleton<StageManager>
     {
         data = DataManager.Instance.GetData<StageData>(userData.stageRcode);
 
-        themeNum = CurrentRcode[CurrentRcode.Length - 1];
+        themeNum = CurrentRcode[CurrentRcode.Length - 1] - 48;
         if (CurrentRcode[4] == 'B') isBossStage = true;
         else isBossStage = false;
 
@@ -278,7 +278,7 @@ public class StageManager : Singleton<StageManager>
         }
         else if (!isBossStage)
         {//Normal -> Boss: CurStage 변화X.
-            newRcode += "B";
+            newRcode += "B" + themeNum;
             isBossStage = true;
             CurrentRcode = newRcode;
             return;
