@@ -11,10 +11,9 @@ public class PlayerDieState : DieState
 
     public override void Enter()
     {
-        base.Enter();
         Player.Instance.ChangePixelmonsState(PixelmonState.Idle);
-        fsm.joystick.gameObject.SetActive(false);
         fsm.rb.velocity = Vector2.zero;
         GameManager.Instance.NotifyPlayerDie();
+        base.Enter();
     }
 }

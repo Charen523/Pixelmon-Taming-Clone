@@ -13,9 +13,9 @@ public class PlayerFailState : FailState
 
     public override void Enter()
     {
-        base.Enter();
         Player.Instance.ChangePixelmonsState(PixelmonState.Idle);
-        fsm.joystick.gameObject.SetActive(false);
+        //fsm.joystick.gameObject.SetActive(false);
         fsm.rb.velocity = Vector2.zero;
+        base.Enter();
     }
 }

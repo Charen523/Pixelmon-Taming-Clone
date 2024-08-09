@@ -19,7 +19,6 @@ public class PlayerDetectState : IdleState
     {
         base.Enter();
         fsm.target = null;
-        fsm.joystick.gameObject.SetActive(true);
         Player.Instance.SetPixelmonsTarget(null);
         Player.Instance.ChangePixelmonsState(PixelmonState.Idle);
     }
@@ -32,7 +31,7 @@ public class PlayerDetectState : IdleState
 
     private IEnumerator DetectClosestTargetCoroutine()
     {
-        currentDetectionRadius = fsm.initialDetectionRadius;      
+        currentDetectionRadius = fsm.initialDetectionRadius;
 
         while (fsm.target == null && currentDetectionRadius <= fsm.maxDetectionRadius)
         {
