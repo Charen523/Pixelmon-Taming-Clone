@@ -78,7 +78,7 @@ public class ResourceManager : Singleton<ResourceManager>
     {
         var init = await Addressables.InitializeAsync().Task;
         var handle = Addressables.DownloadDependenciesAsync("InitDownload");
-        UILoading.Instance.SetProgress(handle);
+        UILoading.Instance.SetProgress(handle, "리소스 불러오는 중");
         //StartCoroutine(SetProgress(handle));
         await handle.Task;
         switch (handle.Status)
@@ -141,7 +141,7 @@ public class ResourceManager : Singleton<ResourceManager>
         try
         {
             var ao = Addressables.LoadAssetsAsync<TextAsset>("JsonData", null);
-            UILoading.Instance.SetProgress(ao);
+            UILoading.Instance.SetProgress(ao, "데이터 불러오는 중");
             var jsonData = await ao.Task;
 
             List<T> retList = new List<T>();
