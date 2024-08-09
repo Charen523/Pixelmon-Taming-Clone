@@ -6,12 +6,12 @@ public class Spawner : MonoBehaviour
     private StageManager stageManager;
     private Camera cam;
 
+    private List<Enemy> isActivatedEnemy = new List<Enemy>();
+    [SerializeField] private GameObject[] dungeonBoss;
+
     public GameObject points;
     [SerializeField] private Collider2D spawnArea;
-    [SerializeField]private Collider2D cleanArea;
-
-    public List<Enemy> isActivatedEnemy = new List<Enemy>();
-    public GameObject[] dungeonBoss;
+    [SerializeField] private Collider2D cleanArea;
 
     private void Awake()
     {
@@ -23,15 +23,15 @@ public class Spawner : MonoBehaviour
     {
         if (stageManager.curSpawnCount >= totalCount) return;
 
-        //이번에 스폰될 몬스터의 종류
+        //몬스터 종류
         int randEnemyType = Random.Range(0, rcodes.Length);
         EnemyData curEnemy = DataManager.Instance.GetData<EnemyData>($"{rcodes[randEnemyType]}");
 
-        //이번에 스폰될 몬스터의 마리 수
+        //몬스터그룹 마리 수
         int maxSpawnNum = Mathf.Min(totalCount - stageManager.curSpawnCount + 1, 6);
         int randSpawnCount = Random.Range(1, maxSpawnNum);
         
-        //이번에 스폰될 몬스터의 위치
+        //몬스터 위치
         Vector2 RandomPos;
         do
         {
@@ -41,7 +41,6 @@ public class Spawner : MonoBehaviour
 
         points.transform.position = RandomPos;
         Transform[] spawnPoints = points.GetComponentsInChildren<Transform>();
-
 
         //실제 소환
         for (int i = 0; i < randSpawnCount; i++)
@@ -58,7 +57,6 @@ public class Spawner : MonoBehaviour
             if (enemy.statHandler.data.isBoss)
             {
                 enemy.bossHealthSystem.InvokeBossHp();
-
             }
             stageManager.curSpawnCount++;
         }
@@ -68,6 +66,20 @@ public class Spawner : MonoBehaviour
     {
         Bounds bounds = collider.bounds;
         return new Vector2(Random.Range(bounds.min.x, bounds.max.x), (Random.Range(bounds.min.y, bounds.max.y)));
+    }
+
+    public void RemoveActiveMonster(Enemy enemy)
+    {
+        isActivatedEnemy.Remove(enemy);
+    }
+
+    public void ResetSpawnedMonster()
+    {
+        for (int i = 0; i < isActivatedEnemy.Count; i++)
+        {
+            isActivatedEnemy[i].healthSystem.TakeDamage(9999999f);
+        }
+        isActivatedEnemy.Clear();
     }
 
     public DgMonster GetDgMonster(int index)
