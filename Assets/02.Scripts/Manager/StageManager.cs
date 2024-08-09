@@ -403,8 +403,8 @@ public class StageManager : Singleton<StageManager>
             stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.gameObject.SetActive(true);
             StageIcon.sprite = iconSprite[0];
-            curProgress = Mathf.Min((float)killCount / data.nextStageCount, 1f);
-            prevProgress = curProgress;
+            curProgress = 0;
+            prevProgress = 0;
             progressSldr.value = prevProgress;
             progressTxt.text = string.Format($"{(int)(prevProgress * 100)}%");
             progressCoroutine = StartCoroutine(SetProgressBar());
@@ -418,7 +418,7 @@ public class StageManager : Singleton<StageManager>
             if (curProgress > prevProgress)
             {
                 StartCoroutine(UIUtils.AnimateSliderChange(progressSldr, prevProgress, curProgress));
-                progressTxt.text = string.Format($"{(int)(curProgress * 100)}%");
+                progressTxt.text = string.Format($"{(int)(prevProgress * 100)}%");
                 prevProgress = curProgress;
             }
             yield return null;
