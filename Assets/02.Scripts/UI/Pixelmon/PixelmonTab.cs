@@ -16,8 +16,6 @@ public class PixelmonTab : UIBase
     private TextMeshProUGUI foodCountTxt;
 
     [SerializeField] TextMeshProUGUI ownSkillEffectTxt;
-    public float perHp = 0;
-    public float perDef = 0;
 
     public GameObject equipOverlay;
     public int choiceId;
@@ -189,6 +187,8 @@ public class PixelmonTab : UIBase
     {
         if (!ownedData.Contains(allData[index]))
         {
+            pixelmonManager.UpdatePlayerStat(
+                allData[index].pxmData.basePerHp, allData[index].pxmData.basePerDef);
             allData[index].myPxmData.isOwned = true;
             ownedData.Add(allData[index]);
             noneData.Remove(allData[index]);
