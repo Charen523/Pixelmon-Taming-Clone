@@ -90,7 +90,7 @@ public abstract class GSpreadReader<V> : Singleton<V> where V : GSpreadReader<V>
             var res = req.downloadHandler.text;
             Debug.Log(res);
             sheet.datas = TsvToDic(res);
-            UILoading.Instance.SetProgress(progress++/sheets.Count);
+            UILoading.Instance.SetProgress(progress++/sheets.Count, "데이터 불러오는 중");
         }
         ImportDatas();
     }

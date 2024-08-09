@@ -36,7 +36,7 @@ public class GameManager : Singleton<GameManager>
         InitData();
         yield return new WaitUntil(() => DataManager.Instance.isPxmInit);
 
-        isInit = true;
+        UILoading.Instance.HideProgress();
     }
     public async void InitData()
     {

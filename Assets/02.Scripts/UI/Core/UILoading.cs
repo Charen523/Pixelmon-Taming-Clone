@@ -8,14 +8,14 @@ public class UILoading : Singleton<UILoading>
     [SerializeField] private Image bg;
     [SerializeField] private Slider slider;
     [SerializeField] private TMPro.TMP_Text desc;
-
-    private float curProgress;
-    private float asyncOperationProgress;
+    [SerializeField] private TMPro.TMP_Text progessNum;
 
     protected override void Awake()
     {
         base.Awake();
         gameObject.SetActive(false);
+
+        slider.onValueChanged.AddListener(delegate { UpdateSliderValue(); });
     }
 
     public static void Show(Sprite bg = null)
@@ -35,35 +35,62 @@ public class UILoading : Singleton<UILoading>
         Instance.gameObject.SetActive(false);
     }
 
+    public void OnClickOveraly()
+    {
+        GameManager.isInit = true;
+    }
+
+    public void HideProgress()
+    {
+        slider.gameObject.SetActive(false);
+        progessNum.gameObject.SetActive(false);
+        desc.text = "화면을 터치하여 시작하기";
+    }
 
     private void UpdateSliderValue()
     {
-        slider.value = (curProgress + asyncOperationProgress) / 10f;
         int percentage = Mathf.RoundToInt(slider.value * 100f);
-        desc.text = $"{percentage}%";
+        progessNum.text = $"{percentage}%";
     }
 
-    public void SetProgress(float progress)
+    public void SetProgress(float progress, string desc = "")
     {
-        curProgress += progress;
-        UpdateSliderValue();
+        this.desc.text = desc;
+        slider.value = progress;
     }
+
+    #region Basic Async
+    public void SetProgress(AsyncOperation op, string desc = "")
+    {
+        this.desc.text = desc;
+        StartCoroutine(Progress(op));
+    }
+
+    public IEnumerator Progress(AsyncOperation op)
+    {
+        while (op.isDone)
+        {
+            slider.value = op.progress;
+            yield return new WaitForEndOfFrame();
+        }
+        slider.value = 1;
+    }
+    #endregion
 
     #region Addressable Async
-    public void SetProgress(AsyncOperationHandle op)
+    public void SetProgress(AsyncOperationHandle op, string desc = "")
     {
-        StartCoroutine(Progress(op));
+        this.desc.text = desc;
     }
 
     public IEnumerator Progress(AsyncOperationHandle op)
     {
-        while (!op.IsDone)
+        while (op.IsDone)
         {
-            asyncOperationProgress = op.GetDownloadStatus().Percent;
-            UpdateSliderValue();
+            slider.value = op.GetDownloadStatus().Percent;
             yield return new WaitForEndOfFrame();
         }
-        UpdateSliderValue();
+        slider.value = 1;
     }
     #endregion
 }
