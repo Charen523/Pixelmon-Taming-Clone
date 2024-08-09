@@ -395,7 +395,7 @@ public class StageManager : Singleton<StageManager>
         }
         else if (isBossStage)
         {
-            stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-BOSS";
+            stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.gameObject.SetActive(true);
             StageIcon.sprite = iconSprite[1];
             progressSldr.value = 1;
