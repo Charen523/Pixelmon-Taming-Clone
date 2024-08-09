@@ -268,11 +268,11 @@ public class StageManager : Singleton<StageManager>
     {
         string newRcode = fixedRcode;
         string newStageProgress;
-        isBossStage = false;
 
         if (!isClear)
         {//실패: CurStage 변화X.
             newRcode += "N" + themeNum;
+            isBossStage = false;
             CurrentRcode = newRcode;
             return;
         }
@@ -283,7 +283,7 @@ public class StageManager : Singleton<StageManager>
             CurrentRcode = newRcode;
             return;
         }
-
+        
         if (stageNum == themeKinds * themeStgCount) //Next World
         {
             if (worldNum == maxWorldNum) //Next Diff
@@ -310,6 +310,7 @@ public class StageManager : Singleton<StageManager>
             }
         }
         stageNum++;
+        isBossStage = false;
 
         newRcode += "N";
         newRcode += themeNum;
@@ -394,7 +395,7 @@ public class StageManager : Singleton<StageManager>
         }
         else if (isBossStage)
         {
-            stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-BOSS";
+            stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.gameObject.SetActive(true);
             StageIcon.sprite = iconSprite[1];
             progressSldr.value = 1;
