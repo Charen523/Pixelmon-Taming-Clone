@@ -12,11 +12,11 @@ public static class PixelmonStatHandler
         status.perAtk = SetStatus(data.basePerAtk, myData.lv, data.lvAtkRate);
         status.Atk = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Atk, myData.FindType(AbilityType.PSVAtk));
         status.Cri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Cri, myData.FindType(AbilityType.PSVCri));
-        status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.PSVCriDmg), data.FindTraitType(criDmg));
-        status.Dmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Dmg, myData.FindType(AbilityType.PSVDmg), data.FindTraitType(dmg));
-        status.SDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SDmg, myData.FindType(AbilityType.PSVSDmg), data.FindTraitType(sDmg));
+        status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.PSVCriDmg), data.FindTraitType(criDmg, myData.lv));
+        status.Dmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Dmg, myData.FindType(AbilityType.PSVDmg), data.FindTraitType(dmg, myData.lv));
+        status.SDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SDmg, myData.FindType(AbilityType.PSVSDmg), data.FindTraitType(sDmg, myData.lv));
         status.SCri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCri));
-        status.SCriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCriDmg, myData.FindType(AbilityType.PSVSCriDmg), data.FindTraitType(sCriDmg));
+        status.SCriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCriDmg, myData.FindType(AbilityType.PSVSCriDmg), data.FindTraitType(sCriDmg, myData.lv));
         status.AtkSpd = SetAtkSpdStatus(myData.FindType(AbilityType.PSVAtkSpd, true));
     }
 
@@ -42,19 +42,19 @@ public static class PixelmonStatHandler
                 pixelmon.status.Cri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Cri, myData.FindType(AbilityType.PSVCri));
                 break;
             case UpgradeIndex.CriDmg:
-                pixelmon.status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.PSVCriDmg), data.FindTraitType(criDmg));
+                pixelmon.status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.PSVCriDmg), data.FindTraitType(criDmg, myData.lv));
                 break;
             case UpgradeIndex.Dmg:
-                pixelmon.status.Dmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Dmg, myData.FindType(AbilityType.PSVDmg), data.FindTraitType(dmg));
+                pixelmon.status.Dmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Dmg, myData.FindType(AbilityType.PSVDmg), data.FindTraitType(dmg, myData.lv));
                 break;
             case UpgradeIndex.SDmg:
-                pixelmon.status.SDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SDmg, myData.FindType(AbilityType.PSVSDmg), data.FindTraitType(sDmg));
+                pixelmon.status.SDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SDmg, myData.FindType(AbilityType.PSVSDmg), data.FindTraitType(sDmg, myData.lv));
                 break;
             case UpgradeIndex.SCri:
                 pixelmon.status.SCri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCri));
                 break;
             case UpgradeIndex.SCriDmg:
-                pixelmon.status.SCriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCriDmg), data.FindTraitType(sCriDmg));
+                pixelmon.status.SCriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.SCri, myData.FindType(AbilityType.PSVSCriDmg), data.FindTraitType(sCriDmg, myData.lv));
                 break;
             default:
                 break;
@@ -123,11 +123,13 @@ public static class PixelmonStatHandler
                 //보유수치 상승
                 for (int i = 0; i < myData.ownEffectValue.Length; i++)
                     myData.ownEffectValue[i] += 10;
+                PixelmonManager.Instance.UpdatePlayerStat(10, 10);
             }
             else
             {
                 for (int i = 0; i < myData.ownEffectValue.Length; i++)
                     myData.ownEffectValue[i] += 30;
+                PixelmonManager.Instance.UpdatePlayerStat(30, 30);
             }
             SaveManager.Instance.UpdatePixelmonData(myData.id, nameof(myData.ownEffectValue), myData.ownEffectValue);
         }
@@ -147,6 +149,15 @@ public static class PixelmonStatHandler
             newSkill.psvRank = randAbility.AbilityRank;
             newSkill.psvValue = randAbility.AbilityValue;
             myData.psvSkill.Add(newSkill);
+
+            foreach (var pxm in Player.Instance.pixelmons)
+            {
+                if (pxm.myData != null && pxm.myData.id == myData.id)
+                {
+                    pxm.InitPxm();
+                    break;
+                }
+            }
 
             SaveManager.Instance.UpdatePixelmonData(myData.id, nameof(myData.psvSkill), myData.psvSkill);
         }
