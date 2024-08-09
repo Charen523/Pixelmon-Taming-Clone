@@ -157,14 +157,14 @@ public class StageManager : Singleton<StageManager>
                 GameManager.Instance.NotifyStageClear();
             }
         }
-        Player.Instance.fsm.target = null; //target 초기화
-
+        
         if (isDungeon)
         {
             fadeOut.gameObject.SetActive(true);
             fadeOut.StartFade();
             InitDgStage();
             yield return proceedDgStg;
+            Player.Instance.fsm.target = null;
         }
 
         fadeOut.gameObject.SetActive(true);
@@ -319,6 +319,7 @@ public class StageManager : Singleton<StageManager>
 
     private void ResetSpawnedEnemy()
     {
+        Player.Instance.fsm.target = null;
         spawner.ResetSpawnedMonster();
         curSpawnCount = 0;
         saveManager.SetFieldData(nameof(userData.curHuntCount), 0);
@@ -359,7 +360,6 @@ public class StageManager : Singleton<StageManager>
             StopCoroutine(stageCoroutine); //Stop Stage
         }
         ResetSpawnedEnemy();
-        Player.Instance.fsm.target = null;
 
         NextStageData(false);
         isBossStage = false;
