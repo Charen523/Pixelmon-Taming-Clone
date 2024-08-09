@@ -5,28 +5,38 @@ using UnityEngine;
 
 public class DamageText : SerializedMonoBehaviour
 {
-    [SerializeField]
-    Transform parent;
-    Coroutine OnDamage;
     Camera cam;
-    [SerializeField]
-    TextMeshProUGUI damageTxt;
-    [SerializeField]
-    RectTransform rectTr;
+    Coroutine OnDamage;
+    [SerializeField] Transform parent;
+    [SerializeField] TextMeshProUGUI damageTxt;
+    [SerializeField] RectTransform rectTr;
+    [SerializeField] TMP_ColorGradient[] textGradients; // 0번 일반, 1번 크리, 2번 플레이어
+    Color textColor = Color.white;
     string missTxt = "Miss!";
     private void Awake()
     {
         cam = Camera.main;
     }
 
-    public void ShowDamageText(int damage, Vector3 pos)
+    public void ShowDamageText(int damage, Vector3 pos, bool isCri = false, bool isPlayer = false)
     {
         if (OnDamage != null)
             StopCoroutine(ShowText(pos));
+
         if (damage > 0)
             damageTxt.text = string.Format("{0:#,###}", damage);
         else
             damageTxt.text = missTxt;
+        damageTxt.colorGradientPreset = null;
+        if (isPlayer)
+            damageTxt.colorGradientPreset = textGradients[2];
+        else 
+        {
+            if (isCri)
+                damageTxt.colorGradientPreset = textGradients[1];
+            else
+                damageTxt.colorGradientPreset = textGradients[0];
+        }
         OnDamage = StartCoroutine(ShowText(pos));
     }
 
@@ -35,9 +45,7 @@ public class DamageText : SerializedMonoBehaviour
         rectTr.anchoredPosition = RectTransformUtility.WorldToScreenPoint(cam, pos);
         yield return null;
         float time = 0;
-        Color textColor = Color.white;
-        damageTxt.color = Color.white;
-        while (time < 3f)
+        while (time < 1f)
         {
             time += Time.deltaTime;
             rectTr.anchoredPosition = RectTransformUtility.WorldToScreenPoint(cam, Vector3.Lerp(pos, pos + Vector3.up* 5, time / 3));

@@ -20,9 +20,9 @@ public class PrefabSkill : MonoBehaviour
     {
         if (collision.TryGetComponent<Enemy>(out enemy))
         {
-            enemy.healthSystem.TakeDamage(
-                randomSpotSkill.owner.status.GetTotalDamage(
-                    randomSpotSkill.owner.myData, true, randomSpotSkill.data.maxRate + randomSpotSkill.myData.lv));
+            var result = randomSpotSkill.owner.status.GetTotalDamage(
+                    randomSpotSkill.owner.myData, true, randomSpotSkill.data.maxRate + randomSpotSkill.myData.lv);
+            enemy.healthSystem.TakeDamage(result.Item1, result.Item2);
         }
     }
 }

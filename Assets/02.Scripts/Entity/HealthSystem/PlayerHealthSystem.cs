@@ -6,10 +6,10 @@ public class PlayerHealthSystem : HealthSystem
         currentHealth = maxHealth;
     }
 
-    public override void TakeDamage(float delta)
+    public override void TakeDamage(float delta, bool isCri = false, bool isPlayer = true)
     {
         def = Player.Instance.statHandler.def;
-        base.TakeDamage(delta);
+        base.TakeDamage(delta, isCri, isPlayer);
     }
 
     protected override void NoticeDead()

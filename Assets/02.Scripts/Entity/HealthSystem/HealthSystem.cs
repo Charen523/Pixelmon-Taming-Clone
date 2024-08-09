@@ -25,11 +25,11 @@ public abstract class HealthSystem : SerializedMonoBehaviour
         }
     }
 
-    public virtual void TakeDamage(float delta)
+    public virtual void TakeDamage(float delta, bool isCri = false, bool isPlayer = false)
     {
         float damage = Mathf.Max(0, delta - def);
         currentHealth = Mathf.Max(0, currentHealth - damage);
-        PoolManager.Instance.SpawnFromPool<DamageText>("TXT00001").ShowDamageText((int)damage, gameObject.transform.position);        
+        PoolManager.Instance.SpawnFromPool<DamageText>("TXT00001").ShowDamageText((int)damage, gameObject.transform.position, isCri, isPlayer);        
         if (currentHealth == 0)
         {
             NoticeDead();

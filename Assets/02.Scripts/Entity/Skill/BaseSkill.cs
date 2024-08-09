@@ -28,9 +28,8 @@ public class BaseSkill : MonoBehaviour
         if (collision.TryGetComponent<Enemy>(out enemy))
         {
             Debug.Log(target);
-            enemy.healthSystem.TakeDamage(
-                owner.status.GetTotalDamage(
-                    owner.myData, true, data.maxRate + myData.lv));
+            var result = owner.status.GetTotalDamage(owner.myData, true, data.maxRate + myData.lv);
+            enemy.healthSystem.TakeDamage(result.Item1, result.Item2);
         }
     }
 

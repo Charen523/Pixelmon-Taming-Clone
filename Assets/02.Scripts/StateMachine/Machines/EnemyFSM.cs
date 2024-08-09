@@ -45,7 +45,7 @@ public class EnemyFSM : FSM
 
     public void OnEnemyAttack()
     {
-        Player.Instance.healthSystem.TakeDamage(enemy.statHandler.GetDamage());
+        Player.Instance.healthSystem.TakeDamage(enemy.statHandler.GetDamage(), true);
     }
 
     public void OnEnemyDead()
