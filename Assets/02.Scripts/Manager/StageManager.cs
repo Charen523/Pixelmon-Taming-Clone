@@ -322,6 +322,7 @@ public class StageManager : Singleton<StageManager>
         Player.Instance.fsm.target = null;
         spawner.ResetSpawnedMonster();
         curSpawnCount = 0;
+        killCount = 0;
         saveManager.SetFieldData(nameof(userData.curHuntCount), 0);
     }
     #endregion
@@ -347,6 +348,7 @@ public class StageManager : Singleton<StageManager>
         {
             QuestManager.Instance.OnQuestEvent();
         }
+        Player.Instance.fsm.target = null;
         saveManager.SetFieldData(nameof(userData.curHuntCount), 1, true);
     }
 
@@ -403,8 +405,8 @@ public class StageManager : Singleton<StageManager>
             stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.gameObject.SetActive(true);
             StageIcon.sprite = iconSprite[0];
-            curProgress = 0;
-            prevProgress = 0;
+            curProgress = Mathf.Min((float)killCount / data.nextStageCount, 1f);
+            prevProgress = curProgress;
             progressSldr.value = prevProgress;
             progressTxt.text = string.Format($"{(int)(prevProgress * 100)}%");
             progressCoroutine = StartCoroutine(SetProgressBar());
