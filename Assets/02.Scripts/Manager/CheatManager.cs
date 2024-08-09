@@ -11,7 +11,7 @@ public class CheatManager : Singleton<CheatManager>
             {
                 case "s":
                 case "S":
-                    NextBossStage();
+                    NextStage();
                     break;
                 case "g":
                 case "G":
@@ -28,8 +28,8 @@ public class CheatManager : Singleton<CheatManager>
         }
     }
 
-    private void NextBossStage()
+    private void NextStage()
     {
-        StageManager.Instance.stageNum = 10;
+        StageManager.Instance.killCount = StageManager.Instance.data.nextStageCount;
     }
 }
