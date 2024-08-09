@@ -10,6 +10,8 @@ public class Enemy : SerializedMonoBehaviour
     public Collider2D enemyCollider;
     public SpriteRenderer myImg;
 
+    public bool isFade;
+
     private void Start()
     {
         if (fsm == null)
@@ -38,11 +40,12 @@ public class Enemy : SerializedMonoBehaviour
     private void OnEnable()
     {
         myImg.color = Color.white;
+        enemyCollider.enabled = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (fsm.currentState == fsm.DieState)
+        if (fsm.currentState == fsm.DieState || isFade)
         {
             enemyCollider.enabled = false;
             return;

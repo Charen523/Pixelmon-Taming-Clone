@@ -61,7 +61,6 @@ public class StageManager : Singleton<StageManager>
     private bool isBossCleared;
     public bool isDungeon;
     private bool isPlayerDead;
-    private bool isEnemyReset;
     #endregion
 
     #region UI
@@ -132,7 +131,6 @@ public class StageManager : Singleton<StageManager>
         if (isBossStage)
         {
             yield return null;
-            isEnemyReset = false;
             InitBossStage();
             yield return proceedBossStg;
             bossTimeSldr.gameObject.SetActive(false);
@@ -321,7 +319,6 @@ public class StageManager : Singleton<StageManager>
 
     private void ResetSpawnedEnemy()
     {
-        isEnemyReset = true;
         spawner.ResetSpawnedMonster();
         curSpawnCount = 0;
         saveManager.SetFieldData(nameof(userData.curHuntCount), 0);
@@ -331,8 +328,6 @@ public class StageManager : Singleton<StageManager>
     #region Death Events
     public void MonsterDead(Enemy enemy)
     {
-        if (isEnemyReset) return;
-
         EnemyData enemyData = enemy.statHandler.data;
         if (enemyData.isBoss)
         {
