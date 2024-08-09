@@ -45,7 +45,6 @@ public class PixelmonManager : Singleton<PixelmonManager>
         foreach (MyPixelmonData pxm in userData.ownedPxms)
         {
             if (!pxm.isOwned) continue;
-            Debug.Log(pxm.id);
             perHp += pxm.ownEffectValue[0];
             perDef += pxm.ownEffectValue[1];
         }

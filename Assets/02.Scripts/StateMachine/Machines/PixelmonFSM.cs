@@ -44,6 +44,8 @@ public class PixelmonFSM : FSM
                 if (enemies.Count == 0)
                 {
                     target = null;
+                    if (Player.Instance.fsm.target != null)
+                        Player.Instance.fsm.ChangeState(Player.Instance.fsm.DetectState);
                 }
                 else
                 {

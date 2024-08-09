@@ -35,7 +35,7 @@ public class PlayerFSM : FSM
         DieState = new PlayerDieState(this);
         AttackState = new PlayerAttackState(this);
 
-        GameManager.Instance.OnStageClear += ReStartPlayer;
+        GameManager.Instance.OnStageStart += ReStartPlayer;
         GameManager.Instance.OnStageTimeOut += StageTimeOut;
 
         ChangeState(DetectState);
@@ -44,7 +44,7 @@ public class PlayerFSM : FSM
     public void ReStartPlayer()
     {
         ChangeState(DetectState);
-        Player.Instance.healthSystem.InitHealth(Player.Instance.statHandler.maxHp); ;
+        Player.Instance.healthSystem.InitHealth(Player.Instance.statHandler.maxHp);
     }
 
     public void StageTimeOut()
@@ -52,24 +52,16 @@ public class PlayerFSM : FSM
         ChangeState(FailState);
     }
 
-    public void NotifyTimeOut()
+    public void StartInitStage()
     {
-        ReStartPlayer();
-        StageManager.Instance.InitStage();        
-    }
-
-    public void NotifyPlayerDie()
-    {
-        GameManager.Instance.NotifyStageStart();
-        ReStartPlayer();
+        StageManager.Instance.InitStage();
     }
 
     public void FadeEffect()
     {
         StageManager.Instance.fadeOut.gameObject.SetActive(true);
-        StageManager.Instance.fadeOut.StartFade();
+        StageManager.Instance.fadeOut.StartFadeInOut();
     }
-
 
     // Gizmos를 사용하여 탐지 반경을 시각적으로 표시
     private void OnDrawGizmos()

@@ -73,6 +73,7 @@ public class Spawner : MonoBehaviour
 
     public void RemoveActiveMonster(Enemy enemy)
     {
+        enemy.gameObject.SetActive(false);
         isActivatedEnemy.Remove(enemy);
     }
 
@@ -87,10 +88,8 @@ public class Spawner : MonoBehaviour
 
     private IEnumerator FadeMonster(Enemy enemy)
     {
-        enemy.isFade = true;
         enemy.myImg.DOFade(0, 1f);
         yield return new WaitForSeconds(1f);
-        enemy.isFade = false;
         enemy.gameObject.SetActive(false);
     }
 

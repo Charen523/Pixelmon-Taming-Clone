@@ -12,7 +12,9 @@ public class EnemyDieState : DieState
 
     public override void Enter()
     {
+        fsm.enemy.enemyCollider.enabled = false;
         fsm.rb.bodyType = RigidbodyType2D.Kinematic;
+        GameManager.Instance.NotifyEnemyDie(fsm.enemy);
         base.Enter();
     }
 

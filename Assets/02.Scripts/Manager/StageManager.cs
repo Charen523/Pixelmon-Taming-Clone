@@ -49,16 +49,20 @@ public class StageManager : Singleton<StageManager>
 
     public int dgIndex = 0;
     private DgMonster boss;
+    #endregion
 
+    #region Coroutine & WaitUntil
     private Coroutine stageCoroutine;
     private WaitUntil proceedNormalStg;
     private WaitUntil proceedBossStg;
     private WaitUntil proceedDgStg;
+    private WaitUntil bossDieDone;
     #endregion
 
     #region Flags
     private bool isBossStage;
     private bool isBossCleared;
+    public bool isBossDieDone;
     public bool isDungeon;
     private bool isPlayerDead;
     #endregion
@@ -109,41 +113,50 @@ public class StageManager : Singleton<StageManager>
 
     private void Start()
     {
-        GameManager.Instance.OnPlayerDie += OnPlayerDead;
-        GameManager.Instance.OnStageStart += RestartStage;
+        GameManager.Instance.OnPlayerDie += OnPlayerDie;
+        GameManager.Instance.OnEnemyDie += OnEnemyDie;
 
         proceedNormalStg = new WaitUntil(() => NormalStage());
         proceedBossStg = new WaitUntil(() => BossStage());
         proceedDgStg = new WaitUntil(() => DungeonStage());
+        bossDieDone = new WaitUntil(() => isBossDieDone == true);
 
         InitStage();
     }
     #region Stage
     public void InitStage()
     {
+        isPlayerDead = false;
+
         InitStageUI();
         killCount = userData.curHuntCount;
+
+        GameManager.Instance.NotifyStageStart();
         stageCoroutine = StartCoroutine(StartStage());
     }
 
     private IEnumerator StartStage()
     {
         if (isBossStage)
-        {
-            yield return null;
+        { 
             InitBossStage();
             yield return proceedBossStg;
             bossTimeSldr.gameObject.SetActive(false);
 
             if (isBossCleared)
             {
-                NextStageData();
                 isBossCleared = false;
+                yield return bossDieDone;
+                ResetSpawnedEnemy();
+
+                fadeOut.gameObject.SetActive(true);
+                yield return fadeOut.FadeInOut();
+
+                NextStageData();  
             }
             else if (!isDungeon)
             {
                 NextStageData(false);
-                GameManager.Instance.NotifyStageTimeOut();
                 yield break;
             }
         }
@@ -153,22 +166,24 @@ public class StageManager : Singleton<StageManager>
 
             if (!isDungeon)
             {
+                fadeOut.gameObject.SetActive(true);
+                yield return fadeOut.FadeInOut();
                 NextStageData();
-                GameManager.Instance.NotifyStageClear();
             }
         }
         
         if (isDungeon)
         {
             fadeOut.gameObject.SetActive(true);
-            fadeOut.StartFade();
+            yield return fadeOut.FadeInOut();
+
             InitDgStage();
             yield return proceedDgStg;
-            Player.Instance.fsm.target = null;
+
+            fadeOut.gameObject.SetActive(true);
+            yield return fadeOut.FadeInOut();
         }
 
-        fadeOut.gameObject.SetActive(true);
-        fadeOut.StartFade();
         InitStage();
     }
 
@@ -211,16 +226,14 @@ public class StageManager : Singleton<StageManager>
             return true;
         }
         if (isBossCleared)
-        {
-            ResetSpawnedEnemy();
-            return true;
-        }
+            return true;          
 
         StageTimer();
 
         if (bossLeftTime == 0)
         {
             ResetSpawnedEnemy();
+            GameManager.Instance.NotifyStageTimeOut();
             return true;
         }
         return false;
@@ -319,7 +332,6 @@ public class StageManager : Singleton<StageManager>
 
     private void ResetSpawnedEnemy()
     {
-        Player.Instance.fsm.target = null;
         spawner.ResetSpawnedMonster();
         curSpawnCount = 0;
         killCount = 0;
@@ -328,9 +340,8 @@ public class StageManager : Singleton<StageManager>
     #endregion
 
     #region Death Events
-    public void MonsterDead(Enemy enemy)
+    public void OnEnemyDie(Enemy enemy)
     {
-        Player.Instance.fsm.target = null;
         EnemyData enemyData = enemy.statHandler.data;
         if (enemyData.isBoss)
         {
@@ -340,8 +351,7 @@ public class StageManager : Singleton<StageManager>
         {
             killCount++;
             curSpawnCount--;
-            curProgress = Mathf.Min((float)killCount / data.nextStageCount, 1f);
-            spawner.RemoveActiveMonster(enemy);
+            curProgress = Mathf.Min((float)killCount / data.nextStageCount, 1f);       
         }
 
         RewardManager.Instance.GetRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
@@ -352,7 +362,7 @@ public class StageManager : Singleton<StageManager>
         saveManager.SetFieldData(nameof(userData.curHuntCount), 1, true);
     }
 
-    public void OnPlayerDead()
+    public void OnPlayerDie()
     {
         if (isPlayerDead) return;
         isPlayerDead = true;
@@ -362,16 +372,9 @@ public class StageManager : Singleton<StageManager>
             StopCoroutine(stageCoroutine); //Stop Stage
         }
         ResetSpawnedEnemy();
-
         NextStageData(false);
         isBossStage = false;
         isDungeon = false;
-    }
-
-    private void RestartStage()
-    {//Notice Player Respawn
-        isPlayerDead = false;
-        InitStage();
     }
     #endregion
 
