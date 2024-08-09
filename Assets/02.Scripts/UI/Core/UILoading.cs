@@ -9,6 +9,7 @@ public class UILoading : Singleton<UILoading>
     [SerializeField] private Slider slider;
     [SerializeField] private TMPro.TMP_Text desc;
     [SerializeField] private TMPro.TMP_Text progessNum;
+    [SerializeField] private GameObject TextEffect;
 
     protected override void Awake()
     {
@@ -44,7 +45,8 @@ public class UILoading : Singleton<UILoading>
     {
         slider.gameObject.SetActive(false);
         progessNum.gameObject.SetActive(false);
-        desc.text = "화면을 터치하여 시작하기";
+        desc.gameObject.SetActive(false);
+        TextEffect.SetActive(true);
     }
 
     private void UpdateSliderValue()
