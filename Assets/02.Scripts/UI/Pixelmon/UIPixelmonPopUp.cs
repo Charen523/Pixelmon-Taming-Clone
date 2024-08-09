@@ -155,13 +155,19 @@ public class UIPixelmonPopUp : UIBase
         {
             saveManager.SetDeltaData("food", -myData.maxExp);
             pxmTab.SetfoodCount();
+            SetFoodCount();
             saveManager.UpdatePixelmonData(myData.id, "lv", ++myData.lv);
             lvTxt.text = string.Format($"{myData.lv}/50");
             pxmTab.allData[myData.id].SetPxmLv();
             myData.PxmLvUp();
-            SetFoodCount();
             SetStartEffect();
             PixelmonManager.Instance.ApplyStatus(data, myData);
+
+            myData.ownEffectValue[0] += data.lvHpRate;
+            myData.ownEffectValue[1] += data.lvDefRate;
+            saveManager.UpdatePixelmonData(myData.id, "ownEffectValue", myData.ownEffectValue);
+            PixelmonManager.Instance.UpdatePlayerStat(data.lvHpRate, data.lvDefRate);
+            SetOwnedEffect();
             Debug.Log("레벨 업!");
         }
         else
