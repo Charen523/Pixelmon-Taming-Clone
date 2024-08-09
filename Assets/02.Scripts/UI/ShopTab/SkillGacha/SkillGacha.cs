@@ -33,10 +33,6 @@ public class SkillGacha : MonoBehaviour
     #region UI
     private void SetBtnInteractable()
     {
-        OneBtn.Btn.interactable = false;
-        TenBtn.Btn.interactable = false;
-        ThirtyBtn.Btn.interactable = false;
-
         UpdateButnInteractable(OneBtn.Btn, 1);
         UpdateButnInteractable(TenBtn.Btn, 10);
         UpdateButnInteractable(ThirtyBtn.Btn, 30);
@@ -46,12 +42,18 @@ public class SkillGacha : MonoBehaviour
     {
         if ((userData.skillTicket / oneCostTicket + userData.diamond / oneCostDia) >= requiredAmount)
             button.interactable = true;
+        else
+            button.interactable = false;
     }
 
     private void UpdateCostUI(DirtyUI dirtyUI)
     {
         if (dirtyUI == DirtyUI.Diamond || dirtyUI == DirtyUI.SkillTicket)
+        {
+            SetBtnInteractable();
             SetBtnCostUIs();
+        }
+            
     }
     private void SetBtnCostUIs()
     {

@@ -10,6 +10,7 @@ public class UILoading : Singleton<UILoading>
     [SerializeField] private TMPro.TMP_Text desc;
     [SerializeField] private TMPro.TMP_Text progessNum;
     [SerializeField] private GameObject TextEffect;
+    [SerializeField] private GameObject overlay;
 
     protected override void Awake()
     {
@@ -47,6 +48,7 @@ public class UILoading : Singleton<UILoading>
         progessNum.gameObject.SetActive(false);
         desc.gameObject.SetActive(false);
         TextEffect.SetActive(true);
+        overlay.SetActive(true);
     }
 
     private void UpdateSliderValue()
