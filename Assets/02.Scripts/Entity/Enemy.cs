@@ -8,6 +8,7 @@ public class Enemy : SerializedMonoBehaviour
     public BossHealthSystem bossHealthSystem;
     public EnemyStatHandler statHandler;
     public Collider2D enemyCollider;
+    public SpriteRenderer myImg;
 
     private void Start()
     {
@@ -33,7 +34,12 @@ public class Enemy : SerializedMonoBehaviour
 
         fsm.Init();
     }
-    
+
+    private void OnEnable()
+    {
+        myImg.color = Color.white;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (fsm.currentState == fsm.DieState)

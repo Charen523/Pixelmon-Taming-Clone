@@ -129,10 +129,10 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator StartStage()
     {
-        isEnemyReset = false;
         if (isBossStage)
         {
             yield return null;
+            isEnemyReset = false;
             InitBossStage();
             yield return proceedBossStg;
             bossTimeSldr.gameObject.SetActive(false);
