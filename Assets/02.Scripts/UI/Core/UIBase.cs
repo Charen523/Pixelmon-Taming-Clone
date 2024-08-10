@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using UnityEngine;
 using UnityEngine.Events;
 
 public class UIBase : SerializedMonoBehaviour
@@ -9,10 +10,10 @@ public class UIBase : SerializedMonoBehaviour
     public UnityAction<object[]> opened;
     public UnityAction<object[]> closed;
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        opened = Opened;
-        closed = Closed;
+        opened += Opened;
+        closed += Closed;
     }
 
     public void SetActive(bool isActive)

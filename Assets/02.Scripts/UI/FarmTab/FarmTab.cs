@@ -21,9 +21,10 @@ public class FarmTab : UIBase
     int i = 0;
 
     private bool isAwakeEnabled;
-    private void Awake()
+    protected override void Awake()
     {
         isAwakeEnabled = false;
+        base.Awake();
         saveManager = SaveManager.Instance;
         userData = saveManager.userData;
         UIManager.Instance.UpdateUI += UpdateFieldUI;
