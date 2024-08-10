@@ -38,9 +38,6 @@ public class UIManager : Singleton<UIManager>
         Instance.tabOverlay = btn;
     }
 
-    /// <summary>
-    /// async 함수에서만 사용가능한 메서드.
-    /// </summary>
     /// <typeparam name="T">UIBase를 상속받은 클래스 이름</typeparam>
     /// <param name="param">()안에 뭐 없어도 됨</param>
     /// <returns></returns>

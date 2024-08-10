@@ -21,7 +21,7 @@ public class DungeonTab : UIBase
     private bool isInit = false;
     private Coroutine chargeTimeCoroutine;
 
-    private async void Awake()
+    protected override async void Awake()
     {
         saveManager = SaveManager.Instance;
         userData = saveManager.userData;

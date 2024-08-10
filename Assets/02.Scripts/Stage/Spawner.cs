@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.U2D;
 
@@ -51,6 +52,12 @@ public class Spawner : MonoBehaviour
             if (i >= spawnPoints.Length) break;
 
             Enemy enemy = PoolManager.Instance.SpawnFromPool<Enemy>("Enemy");
+            while (enemy == null)
+            {
+                enemy = PoolManager.Instance.SpawnFromPool<Enemy>("Enemy");
+                await Task.Yield(); 
+            }
+
             enemy.transform.position = spawnPoints[i].position;
             enemy.fsm.anim.runtimeAnimatorController = await ResourceManager.Instance.LoadAsset<RuntimeAnimatorController>(curEnemy.rcode, eAddressableType.animator);
             enemy.statHandler.data = curEnemy;
