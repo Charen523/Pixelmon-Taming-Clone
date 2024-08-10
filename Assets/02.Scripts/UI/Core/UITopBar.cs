@@ -38,7 +38,7 @@ public class UITopBar : UIBase
     private Coroutine expCoroutine;
     #endregion
 
-    private void Awake()
+    protected override void Awake()
     {
         saveManager = SaveManager.Instance;
         userData = saveManager.userData;

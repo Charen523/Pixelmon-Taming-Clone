@@ -2,10 +2,18 @@ using UnityEngine;
 
 public class AtkUpgradeSlot : UpgradeSlot
 {
-    protected override void SetSlotTxts()
+    protected override void SetValueTxt()
     {
-        base.SetSlotTxts();
-        slotValueTxt.text = Calculater.NumFormatter(Mathf.RoundToInt(CurValue));
+        slotValueTxt.text = CurValue.ToString();
+
+        if (CurLv >= maxLv)
+        {
+            nextValueTxt.gameObject.SetActive(false);
+        }
+        else
+        {
+            nextValueTxt.text = nextValue.ToString();
+        }
     }
  
     protected override float ValuePerLv(int reachLv)

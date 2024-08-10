@@ -31,7 +31,7 @@ public abstract class UpgradeSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI buyTxt;
     [SerializeField] private Button goldBtn;
 
-    private int _curLv;
+    public int _curLv;
     public int CurLv
     {
         get
@@ -43,17 +43,10 @@ public abstract class UpgradeSlot : MonoBehaviour
             if (_curLv != value)
             {
                 _curLv = value;
-
                 if (_curLv > maxLv)
                 {
                     _curLv = maxLv;
                     Debug.LogWarning("CurLv에 부여된 값이 maxLv보다 큽니다.");
-                }
-
-                if (_curLv >= maxLv)
-                {
-                    
-                    goldBtn.enabled = false;
                 }
 
                 if (isStart)
@@ -64,7 +57,7 @@ public abstract class UpgradeSlot : MonoBehaviour
         }
     }
 
-    private float _curValue;
+    public float _curValue;
     protected float CurValue
     {
         get
@@ -83,8 +76,8 @@ public abstract class UpgradeSlot : MonoBehaviour
     }
 
     #region Buy Button Values
-    protected int nextLv;
-    protected float nextValue;
+    public int nextLv;
+    public float nextValue;
 
     private BigInteger curLvPrice => Calculater.CalPrice(CurLv, b, d1, d2);
     protected BigInteger nextPrice;
@@ -93,80 +86,72 @@ public abstract class UpgradeSlot : MonoBehaviour
     [SerializeField] private int d2 = 200;
     #endregion
 
-    private int curToggleIndex;
     private int curUpgradeRate = 1;
     private bool isStart = false;
 
     private void Start()
     {
+        curUpgradeRate = 1;
         InitSlot();
-        SetSlotTxts();
         isStart = true;
     }
 
     private void InitSlot()
     {
-        nextLv = CurLv + 1;
-
-        if (CurLv == 1)
-        {
-            if (slotIndex == UpgradeIndex.Atk)
-            {
-                CurValue = 1;
-            }
-            else
-            {
-                CurValue = 0;
-            }
-        }
-        else
-        {
-            CurValue = ValuePerLv(CurLv);
-        }
-        nextValue = ValuePerLv(nextLv);
-        nextValueTxt.text = nextValue.ToString();
-
+        CurValue = ValuePerLv(CurLv);
         CalculatePrice(curUpgradeRate);
+        SetLvTxt();
     }
 
     #region UI Methods
-    public void BuyBtn()
+    public async void BuyBtn()
     {
-        if (nextPrice <= ownGold)
+        if (nextPrice > ownGold)
         {
-            SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.gold), -nextPrice, true);
-            
+            await UIManager.Show<WarnPopup>("골드가 부족합니다!!");
+        }
+        else
+        {
             CurLv = nextLv;
             CurValue = nextValue;
-            
+
             if (curUpgradeRate == 0)
             {
                 upgradeTab.CurrentToggle(0);
             }
-            CalculatePrice(curUpgradeRate);
-            SetSlotTxts();
+            else
+            {
+                CalculatePrice(curUpgradeRate);
+            }
+            SetLvTxt();
+            
+            SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.gold), -nextPrice, true);
+        }
+    }
+
+    private void SetLvTxt()
+    {
+        if (CurLv == maxLv)
+        {
+            slotLevelTxt.text = "Lv.Max";
         }
         else
         {
-            Debug.LogWarning("돈 부족함!");
+            slotLevelTxt.text = "Lv." + CurLv.ToString();
         }
     }
 
-    protected virtual void SetSlotTxts()
-    {
-        slotLevelTxt.text = "Lv." + CurLv.ToString();
-        SetGoldTxt();
-    }
+    protected abstract void SetValueTxt();
 
-    protected void SetGoldTxt()
+    private void SetGoldTxt()
     {
         string printPrice = Calculater.NumFormatter(nextPrice);
-        nextValueTxt.text = nextValue.ToString();
 
         if (CurLv >= maxLv)
         {
-            slotPriceTxt.text = "<color=#FFFFFF>--</color>";
+            slotPriceTxt.text = "--";
             buyTxt.text = "MAX";
+            goldBtn.enabled = false;
             return;
         }
 
@@ -193,7 +178,6 @@ public abstract class UpgradeSlot : MonoBehaviour
 
     public void CalculatePrice(int mulValue) //next 3종 새로고침.
     {
-        curToggleIndex = mulValue;
         curUpgradeRate = mulValue;
 
         if (curUpgradeRate == 0)
@@ -211,18 +195,21 @@ public abstract class UpgradeSlot : MonoBehaviour
             nextValue = ValuePerLv(nextLv);
             nextPrice = Calculater.CalPriceSum(nextLv - 1, b, d1, d2) - Calculater.CalPriceSum(CurLv - 1, b, d1, d2);
         }
+        SetValueTxt();
         SetGoldTxt();
     }
 
     private void FindMaxPrice()
     {
         nextLv = CurLv;
+        BigInteger exclusion = Calculater.CalPriceSum(CurLv - 1, b, d1, d2);
+
         do
         {
             nextLv++;
-            nextPrice = Calculater.CalPriceSum(nextLv - 1, b, d1, d2) - Calculater.CalPriceSum(CurLv - 1, b, d1, d2);
+            nextPrice = Calculater.CalPriceSum(nextLv - 1, b, d1, d2) - exclusion;
         }
-        while (Calculater.CalPriceSum(nextLv, b, d1, d2) - Calculater.CalPriceSum(CurLv - 1, b, d1, d2) <= ownGold && nextLv < maxLv);
+        while (nextLv < maxLv && Calculater.CalPriceSum(nextLv, b, d1, d2) - exclusion <= ownGold);
 
         nextValue = ValuePerLv(nextLv);
         SetGoldTxt();

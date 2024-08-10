@@ -15,7 +15,7 @@ public class CheatManager : Singleton<CheatManager>
                     break;
                 case "g":
                 case "G":
-                    BigInteger money = 33348332500000;
+                    BigInteger money = 100000000;
                     SaveManager.Instance.SetFieldData("gold", money, true);
                     break;
                 case "d":
