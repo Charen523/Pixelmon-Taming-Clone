@@ -20,9 +20,7 @@ public class FadeInvoker : MonoBehaviour
         {
             isUsing = true;
             image.color = new Color(0, 0, 0, 0);
-            yield return waitFadeTime;
-            image.DOFade(1f, 0.5f).OnComplete(() => Player.Instance.gameObject.transform.position = Vector3.zero);
-            yield return waitFadeTime;    
+            yield return image.DOFade(1f, 0.5f).WaitForCompletion();
             isUsing = false;
         }
     }
@@ -38,8 +36,7 @@ public class FadeInvoker : MonoBehaviour
 
             image.color = Color.black;
             yield return time;
-            image.DOFade(0f, 0.5f);
-            yield return waitFadeTime;
+            yield return image.DOFade(0f, 0.5f).WaitForCompletion();
 
             isUsing = false;
             gameObject.SetActive(false);
