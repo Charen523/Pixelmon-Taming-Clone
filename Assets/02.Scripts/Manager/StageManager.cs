@@ -88,6 +88,9 @@ public class StageManager : Singleton<StageManager>
     public Spawner spawner;
     public FadeInvoker stageFade;
     public FadeInvoker allFade;
+
+    Transform middleBar;
+    Transform bottomBar;
     #endregion
 
     protected override void Awake()
@@ -111,7 +114,8 @@ public class StageManager : Singleton<StageManager>
         diffNum = int.Parse(userData.curStage.Substring(0, 2));
         worldNum = int.Parse(userData.curStage.Substring(2, 2));
         stageNum = int.Parse(userData.curStage.Substring(4, 2));
-        
+        ChangeMapByTheme();
+
         killCount = userData.curHuntCount;
     }
 
@@ -124,6 +128,9 @@ public class StageManager : Singleton<StageManager>
         proceedBossStg = new WaitUntil(() => BossStage());
         proceedDgStg = new WaitUntil(() => DungeonStage());
         bossDieDone = new WaitUntil(() => isBossDieDone == true);
+
+        middleBar = UIManager.Get<UIMiddleBar>().transform;
+        bottomBar = UIManager.Instance.parents[2].GetChild(0);
 
         InitStage();
     }
@@ -153,7 +160,7 @@ public class StageManager : Singleton<StageManager>
         {
             isStgFade = true;
             allFade.gameObject.SetActive(true);
-            yield return stageFade.FadeOut();
+            yield return allFade.FadeOut();
         }
         else
         {
@@ -210,6 +217,16 @@ public class StageManager : Singleton<StageManager>
             allFade.gameObject.SetActive(true);
             yield return allFade.FadeIn();
             isStgFade = false;
+
+            ChangeMapByTheme();
+
+            Vector3 middleBarPosition = middleBar.position;
+            middleBarPosition.y += 620;
+            middleBar.position = middleBarPosition;
+
+            Vector3 bottomBarPosition = bottomBar.position;
+            bottomBarPosition.y += 620;
+            bottomBar.position = bottomBarPosition;
         }
 
         InitStage();
@@ -304,6 +321,16 @@ public class StageManager : Singleton<StageManager>
         bossLeftTime = bossLimitTime;
         boss = spawner.GetDgMonster(dgIndex);
         boss.InitDgMonster(dgIndex);
+        MapManager.Instance.OnMapChanged(dgIndex);
+
+        Vector3 middleBarPosition = middleBar.position;
+        middleBarPosition.y -= 620;
+        middleBar.position = middleBarPosition;
+
+        Vector3 bottomBarPosition = bottomBar.position;
+        bottomBarPosition.y -= 620;
+        bottomBar.position = bottomBarPosition;
+
         InitStageUI();
     }
 
@@ -497,6 +524,22 @@ public class StageManager : Singleton<StageManager>
             progressSldr.value = prevProgress;
             progressTxt.text = string.Format($"{(int)(prevProgress * 100)}%");
             progressCoroutine = StartCoroutine(SetProgressBar());
+        }
+    }
+
+    private void ChangeMapByTheme()
+    {
+        switch (themeNum)
+        {
+            case 2:
+                MapManager.Instance.OnMapChanged((int)MapList.Theme2);
+                break;
+            case 3:
+                MapManager.Instance.OnMapChanged((int)MapList.Theme3);
+                break;
+            default:
+                MapManager.Instance.OnMapChanged((int)MapList.Theme1);
+                break;
         }
     }
 

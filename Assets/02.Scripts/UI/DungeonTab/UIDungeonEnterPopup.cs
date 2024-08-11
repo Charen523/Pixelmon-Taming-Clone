@@ -72,7 +72,6 @@ public class UIDungeonEnterPopup : UIBase
     {
         if (curSlot.UseKey())
         {
-            MapManager.Instance.OnMapChanged((int)type);
             UIManager.Instance.tabOverlay.onClick.Invoke();
             StageManager.Instance.isDungeon = true;
             StageManager.Instance.dgIndex = (int)type;
