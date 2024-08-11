@@ -21,6 +21,7 @@ public class QuestManager : Singleton<QuestManager>
     #region UI
     [SerializeField] private TextMeshProUGUI questNameTxt;
     [SerializeField] private TextMeshProUGUI countTxt;
+    [SerializeField] private TextMeshProUGUI rewardTxt;
     #endregion
 
     [SerializeField] private int maxQNum = 4;
@@ -54,6 +55,7 @@ public class QuestManager : Singleton<QuestManager>
     {
         SetQuestNameTxt();
         SetQuestCountTxt();
+        rewardTxt.text = curQData.rewardValue.ToString();
     }
 
     private void SetQuestNameTxt()
@@ -105,6 +107,7 @@ public class QuestManager : Singleton<QuestManager>
     {
         if (IsQuestClear())
         {
+            RewardManager.Instance.SpawnRewards(curQData.rewardType, curQData.rewardValue);
             SetNewQuestId();
             ResetProgress();
             SetQuestUI();
@@ -139,14 +142,17 @@ public class QuestManager : Singleton<QuestManager>
 
         switch (curQIndex)
         {
-            case "Q2":
-            case "Q4":
-                break;
             case "Q1":
-                progress = userData.userLv;
+                progress = 0;
+                break;
+            case "Q2":
+                progress = 0;
                 break;
             case "Q3":
-                 progress = StageProgress;
+                progress = StageProgress;
+                break;
+            case "Q4":
+                progress = userData.userLv;
                 break;
         }
 
