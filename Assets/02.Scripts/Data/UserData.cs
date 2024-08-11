@@ -22,6 +22,10 @@ public class UserData
     public int skillTicket = 0;
     #endregion
 
+    #region Tutorial
+    public bool isDoneTutorialMsg = false;
+    #endregion
+
     #region Stage Info
     public string stageRcode = "STG_N1";
     public string curStage = "000101";

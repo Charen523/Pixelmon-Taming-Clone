@@ -8,7 +8,7 @@ public class CanvasGame : MonoBehaviour
     [SerializeField] private List<Transform> parents;
     [SerializeField] private Button tabOverlay;
 
-    IEnumerator Start()
+    private IEnumerator Start()
     {
         UILoading.Hide();
         UIManager.SetParents(parents);
@@ -16,5 +16,7 @@ public class CanvasGame : MonoBehaviour
         UIManager.SetTabOverlay(tabOverlay);
         yield return new WaitUntil(() => DataManager.Instance.isInit);
         yield return UIManager.Show<UIMiddleBar>();
+        if (!SaveManager.Instance.userData.isDoneTutorialMsg)
+            yield return UIManager.Show<TutorialMsg>();
     }
 }
