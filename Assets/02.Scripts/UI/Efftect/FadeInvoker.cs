@@ -20,9 +20,7 @@ public class FadeInvoker : MonoBehaviour
         {
             isUsing = true;
             image.color = new Color(0, 0, 0, 0);
-            yield return waitFadeTime;
-            image.DOFade(1f, 0.5f).OnComplete(() => Player.Instance.gameObject.transform.position = Vector3.zero);
-            yield return waitFadeTime;    
+            yield return image.DOFade(1f, 0.5f).WaitForCompletion();
             isUsing = false;
         }
     }
@@ -37,14 +35,10 @@ public class FadeInvoker : MonoBehaviour
                 time = waitFadeTime;
 
             image.color = Color.black;
-            Debug.Log("Fade Out 2단계");
             yield return time;
-            image.DOFade(0f, 0.5f);
-            Debug.Log("Fade Out 3단계");
-            yield return waitFadeTime;
+            yield return image.DOFade(0f, 0.5f).WaitForCompletion();
 
             isUsing = false;
-            Debug.Log("Fade Out 4단계");
             gameObject.SetActive(false);
         }
     }
