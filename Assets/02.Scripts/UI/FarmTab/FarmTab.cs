@@ -84,7 +84,7 @@ public class FarmTab : UIBase
     {
         if (seedCount == 0)
         {
-            Debug.LogWarning("씨앗 없음!");
+            ShowWarn("씨앗이 부족합니다!!");
             return false;
         }
         else
@@ -142,5 +142,10 @@ public class FarmTab : UIBase
         {
             fieldSlots[i].SetPriceTxt();
         }
+    }
+
+    public async void ShowWarn(string msg)
+    {
+        await UIManager.Show<WarnPopup>(msg);
     }
 }

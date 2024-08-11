@@ -42,7 +42,7 @@ public class DungeonSlot : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("열쇠 없음!");
+            dungeonTab.ShowWarn("열쇠가 부족합니다!!");
             return false;
         }
     }
