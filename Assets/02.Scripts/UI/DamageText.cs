@@ -25,10 +25,17 @@ public class DamageText : SerializedMonoBehaviour
 
         if (damage > 0)
             damageTxt.text = string.Format("{0:#,###}", damage);
+        else if (damage <= 0 && isPlayer)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
         else
             damageTxt.text = missTxt;
+
         damageTxt.color = Color.white;
         damageTxt.colorGradientPreset = null;
+
         if (isPlayer)
             damageTxt.colorGradientPreset = textGradients[2];
         else 

@@ -55,7 +55,8 @@ public class Player : Singleton<Player>
     public void LocatedPixelmon()
     {
         if(currentPixelmonCount == 0) return;
-        int angle = 360 / currentPixelmonCount;
+        var pxmList = pixelmons.ToList().FindAll((obj) => obj != null);
+        int angle = 360 / pxmList.Count;
         int currentAngle = -90;
 
         switch (currentPixelmonCount)
@@ -70,9 +71,10 @@ public class Player : Singleton<Player>
                 break;
         }       
 
-        var pxmList = pixelmons.ToList().FindAll((obj) => obj != null);
-        for (int i = 0; i < currentPixelmonCount; i++)
+        
+        for (int i = 0; i < pxmList.Count; i++)
         {
+            if (pxmList[i] == null) continue;
             Vector3 pos = new Vector3(Mathf.Cos(currentAngle * Mathf.Deg2Rad) * radius, Mathf.Sin(currentAngle * Mathf.Deg2Rad) * radius - 0.1f, 0);
             pxmList[i].transform.position = transform.position + pos;
             currentAngle += angle;
