@@ -95,6 +95,7 @@ public class Spawner : MonoBehaviour
 
     private IEnumerator FadeMonster(Enemy enemy)
     {
+        enemy.fsm.ChangeState(enemy.fsm.AttackState);
         enemy.myImg.DOFade(0, 1f);
         yield return new WaitForSeconds(1f);
         enemy.gameObject.SetActive(false);

@@ -49,8 +49,9 @@ public class EnemyFSM : FSM
 
     public void OnEnemyDead()
     {
+        StageManager.Instance.spawner.RemoveActiveMonster(enemy);
+
         if (enemy.statHandler.data.isBoss)
             StageManager.Instance.isBossDieDone = true;
-        else StageManager.Instance.spawner.RemoveActiveMonster(enemy);
     }
 }
