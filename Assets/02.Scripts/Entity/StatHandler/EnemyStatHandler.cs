@@ -6,12 +6,9 @@ public class EnemyStatHandler : MonoBehaviour
     public EnemyData data;
 
     #region Enemy Status
-    public float enemySpd;
     public float enemyAtk;
     public float enemyMaxHp;
     public float enemyDef;
-    public float enemyCri;
-    public float enemyCriDmg;
     #endregion
 
     public void UpdateEnemyStats()
@@ -34,15 +31,6 @@ public class EnemyStatHandler : MonoBehaviour
 
     public float GetDamage()
     {
-        int isCri = Random.Range(1, 101);
-
-        if (isCri > enemyCri) //크리x
-        {
-            return enemyAtk;
-        }
-        else //크리
-        {
-            return enemyCriDmg;
-        }
+        return enemyAtk;
     }
 }
