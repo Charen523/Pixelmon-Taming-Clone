@@ -61,6 +61,7 @@ public class StageManager : Singleton<StageManager>
     #endregion
 
     #region Flags
+    private bool isStgFade;
     private bool isBossStage;
     private bool isBossCleared;
     public bool isBossDieDone;
@@ -85,7 +86,8 @@ public class StageManager : Singleton<StageManager>
     [SerializeField] private GameObject bossBtn;
 
     public Spawner spawner;
-    public FadeInvoker fader;
+    public FadeInvoker stageFade;
+    public FadeInvoker allFade;
     #endregion
 
     protected override void Awake()
@@ -147,9 +149,19 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator StartStage()
     {
-        fader.gameObject.SetActive(true);
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1f);
-        yield return fader.FadeOut(waitForSeconds);
+        if (!isStgFade)
+        {
+            isStgFade = true;
+            allFade.gameObject.SetActive(true);
+            yield return stageFade.FadeOut();
+        }
+        else
+        {
+            stageFade.gameObject.SetActive(true);
+            yield return stageFade.FadeOut();
+        }
+
+        
 
         if (isBossStage && !isDungeon)
         { 
@@ -163,8 +175,8 @@ public class StageManager : Singleton<StageManager>
                 yield return bossDieDone;
                 ResetSpawnedEnemy();
 
-                fader.gameObject.SetActive(true);
-                yield return fader.FadeIn();
+                stageFade.gameObject.SetActive(true);
+                yield return stageFade.FadeIn();
                 NextStageData();  
             }
             else if (!isDungeon)
@@ -180,23 +192,24 @@ public class StageManager : Singleton<StageManager>
 
             if (!isDungeon)
             {
-                fader.gameObject.SetActive(true);
-                yield return fader.FadeIn();
+                stageFade.gameObject.SetActive(true);
+                yield return stageFade.FadeIn();
                 NextStageData();
             }
         }
         
         if (isDungeon)
         {
-            fader.gameObject.SetActive(true);
-            yield return fader.FadeIn();
+            allFade.gameObject.SetActive(true);
+            yield return allFade.FadeIn();
             InitDgStage();
-            yield return fader.FadeOut();
+            yield return allFade.FadeOut();
 
             yield return proceedDgStg;
 
-            fader.gameObject.SetActive(true);
-            yield return fader.FadeIn();
+            allFade.gameObject.SetActive(true);
+            yield return allFade.FadeIn();
+            isStgFade = false;
         }
 
         InitStage();
@@ -229,8 +242,8 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator InfiniteStage()
     {
-        fader.gameObject.SetActive(true);
-        yield return fader.FadeOut();
+        stageFade.gameObject.SetActive(true);
+        yield return stageFade.FadeOut();
 
         while (true)
         {
@@ -438,6 +451,7 @@ public class StageManager : Singleton<StageManager>
     #region UI
     private void InitStageUI()
     {
+        Player.Instance.transform.position = Vector3.zero;
         if (progressCoroutine != null)
         {
             StopCoroutine(progressCoroutine);
@@ -553,8 +567,8 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator delayBossBtn()
     {
-        fader.gameObject.SetActive(true);
-        yield return fader.FadeIn();
+        stageFade.gameObject.SetActive(true);
+        yield return stageFade.FadeIn();
         InitStage();
     }
     #endregion
