@@ -401,7 +401,7 @@ public class StageManager : Singleton<StageManager>
             curProgress = Mathf.Min((float)killCount / data.nextStageCount, 1f);       
         }
 
-        RewardManager.Instance.GetRewards(enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
+        RewardManager.Instance.SpawnRewards(enemy.gameObject, enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
         if (QuestManager.Instance.isMonsterQ)
         {
             QuestManager.Instance.OnQuestEvent();
