@@ -49,10 +49,6 @@ public class DungeonTab : UIBase
                     //하루 뒤.
                     ResetKey();
                 }
-                else if (date.Date > DateTime.Now.Date)
-                {
-                    Debug.LogError("과거로 오면 안됩니다...");
-                }
             }
             saveManager.SetFieldData(nameof(userData.lastConnectTime), DateTime.Now.ToString());
 

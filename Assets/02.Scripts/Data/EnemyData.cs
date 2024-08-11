@@ -13,8 +13,6 @@ public class EnemyData : IData
     public float atkRange;
     public float hp;
     public float def;
-    public float cri;
-    public float criDmg;
     public string rewardTypes;
     public string rewardRates;
     public string rewardValues;

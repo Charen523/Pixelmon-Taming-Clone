@@ -23,11 +23,6 @@ public class EnemyFSM : FSM
         if (enemy == null)
         {
             enemy = GetComponent<Enemy>();
-
-            if (enemy == null)
-            {
-                Debug.LogError($"{gameObject.name} 객체에 Enemy 클래스 없음!");
-            }
         }
 
         target = Player.Instance.HitPosition;
