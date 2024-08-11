@@ -120,10 +120,14 @@ public class EggHatch : MonoBehaviour
         PsvData[0].NewPsvValue = randAbility.AbilityValue;
     }
 
-    public void OnClickEgg(Button btn)
+    public async void OnClickEgg(Button btn)
     {
         if (userData.eggCount > 0 || userData.isGetPxm == false)
             StartCoroutine(ClickEgg(btn));
+        else
+        {
+            await UIManager.Show<WarnPopup>("알이 부족합니다!!");
+        }
     }
 
     public IEnumerator ClickEgg(Button btn)
