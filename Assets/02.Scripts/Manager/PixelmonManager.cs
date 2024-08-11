@@ -57,6 +57,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
         perHp += hp;
         perDef += def;
         player.statHandler.UpdateStats(perHp, perDef, hp/100);
+        pxmTab.InitInfo();
     }
 
     private void InitUpgradeStatus()

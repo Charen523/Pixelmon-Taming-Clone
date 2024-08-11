@@ -32,6 +32,7 @@ public class SkillSlot : MonoBehaviour
     [SerializeField] private GameObject equipIcon;
     [SerializeField] protected TextMeshProUGUI skillLv;
     [SerializeField] private Slider evolveSldr;
+    [SerializeField] private Image evolveBarImg;
     [SerializeField] private TextMeshProUGUI evolvedCount;
     #endregion
 
@@ -88,8 +89,8 @@ public class SkillSlot : MonoBehaviour
             skillTab.saveManager.UpdateSkillData(atvData.dataIndex, "evolvedCount", myAtvData.evolvedCount - UIUtils.GetEvolveValue(myAtvData, atvData));
             skillTab.saveManager.UpdateSkillData(atvData.dataIndex, "lv", ++myAtvData.lv);
             SetEvolveSldr();
-            SetSkillLv();
         }
+        SetSkillLv();
     }
 
     public void SetRankTxt()
@@ -123,7 +124,14 @@ public class SkillSlot : MonoBehaviour
         evolvedCount.text = string.Format("{0}/{1}", myAtvData.evolvedCount, maxNum);
         if (myAtvData.evolvedCount >= maxNum)
         {
+            skillTab.isAdvancable = true;
             skillTab.saveManager.UpdateSkillData(atvData.dataIndex, "isAdvancable", true);
+            skillTab.evolveIcon.sprite = skillTab.btnColor[1];
+            evolveBarImg.sprite = skillTab.btnColor[1];
+        }
+        else
+        {
+            evolveBarImg.sprite = skillTab.btnColor[2];
         }
     }
 

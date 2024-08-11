@@ -25,10 +25,9 @@ public class DropItem : SerializedMonoBehaviour
         mySequence = DOTween.Sequence()
         .SetAutoKill(false) //추가
         .Prepend(sr.DOFade(0, 0))
-        .Append(sr.DOFade(1, 1))
-        .Join(transform.DOShakeScale(0.5f, itemScale.x, 5, 1, false))
-        .SetDelay(0.5f)
-        .Append(sr.DOFade(0, 2f)).OnComplete(() => GetReward());
+        .Append(sr.DOFade(1, 1f))
+        .Join(transform.DOShakeScale(0.5f, itemScale.x, 5, 1f, false))
+        .Append(sr.DOFade(0, 1.5f));
     }
 
     [ContextMenu("Test")]
@@ -48,6 +47,7 @@ public class DropItem : SerializedMonoBehaviour
             time += Time.deltaTime;
             transform.position = Vector2.Lerp(transform.position, Player.Instance.gameObject.transform.position, time / 2);
             yield return null;
+            GetReward();
         }
     }
 
@@ -55,5 +55,6 @@ public class DropItem : SerializedMonoBehaviour
     {
         RewardManager.Instance.GetReward(itemName, amount);
         amount = 0;
+        
     }
 }

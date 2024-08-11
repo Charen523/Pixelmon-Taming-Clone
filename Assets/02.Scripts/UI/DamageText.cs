@@ -27,6 +27,7 @@ public class DamageText : SerializedMonoBehaviour
             damageTxt.text = string.Format("{0:#,###}", damage);
         else
             damageTxt.text = missTxt;
+        damageTxt.color = Color.white;
         damageTxt.colorGradientPreset = null;
         if (isPlayer)
             damageTxt.colorGradientPreset = textGradients[2];

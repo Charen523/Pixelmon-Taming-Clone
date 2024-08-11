@@ -63,7 +63,7 @@ public static class PixelmonStatHandler
 
     public static float SetStatus(float perAtk, int lv, float lvAtkRate)
     {
-        return (perAtk + lv * lvAtkRate);
+        return (perAtk + 100) * 0.01f + lv * lvAtkRate;
     }
 
     public static float SetMultiStatus(float upgradeStat, float psvAtk, float traitValue = 1)
@@ -152,7 +152,7 @@ public static class PixelmonStatHandler
 
             foreach (var pxm in Player.Instance.pixelmons)
             {
-                if (pxm.myData != null && pxm.myData.id == myData.id)
+                if (pxm != null && pxm.myData != null && pxm.myData.id == myData.id)
                 {
                     pxm.InitPxm();
                     break;
@@ -216,10 +216,10 @@ public static class PixelmonStatHandler
             if (IsCritical(status.Cri))
             {
                 isCri= true;
-                dealDmg = status.perAtk * (status.Atk + status.Dmg) * (100 + status.CriDmg) / 100;
+                dealDmg = 10 * (100 + status.perAtk + status.Atk + status.Dmg) / 100 * (100 + status.CriDmg) / 100;
             }
             else
-                dealDmg = status.perAtk * (status.Atk + status.Dmg);
+                dealDmg = 10 * (100 + status.perAtk + status.Atk + status.Dmg) / 100;
         }
         //버프가 있다면 dealDmg *= 1;
 

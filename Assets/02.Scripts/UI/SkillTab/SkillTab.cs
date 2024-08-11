@@ -10,7 +10,8 @@ public class SkillTab : UIBase, IPointerDownHandler
     #region UI
     [SerializeField] private Toggle ownToggle;
     [SerializeField] private GameObject equipOverlay;
-    [SerializeField] private GameObject popUpOverlay;
+    public Image evolveIcon;
+    public Sprite[] btnColor;
     #endregion
 
     #region 슬롯, 팝업
@@ -50,8 +51,11 @@ public class SkillTab : UIBase, IPointerDownHandler
     public TMP_ColorGradient[] txtColors;
     public SkillSlot choiceSlot;
     public int choiceId;
+    public bool isAdvancable;
+ 
 
-    private async void Awake()
+
+    protected override async void Awake()
     {
         saveManager = SaveManager.Instance;
         userData = saveManager.userData;
@@ -93,6 +97,7 @@ public class SkillTab : UIBase, IPointerDownHandler
         }
 
         OnOwnedToggle();
+        CheckedLvUp();
     }
 
     public void OnOwnedToggle()
@@ -108,7 +113,6 @@ public class SkillTab : UIBase, IPointerDownHandler
     {
         choiceId = id;
         infoPopUp.gameObject.SetActive(true);
-        popUpOverlay.SetActive(true);
         infoPopUp.ShowPopUp(allData[id], this);
     }
 
@@ -138,7 +142,6 @@ public class SkillTab : UIBase, IPointerDownHandler
     {
         tabState = TabState.Normal;
         infoPopUp.gameObject.SetActive(false);
-        popUpOverlay.SetActive(false);
         equipOverlay.SetActive(false);
     }
 
@@ -167,9 +170,33 @@ public class SkillTab : UIBase, IPointerDownHandler
         allData[index].UpdateSlot();
     }
 
+    public void CheckedLvUp()
+    {
+        if (isAdvancable)
+        {
+            evolveIcon.sprite = btnColor[1];
+        }
+        else
+        {
+            foreach (var data in ownedData)
+            {
+                if (data.myAtvData.isAdvancable)
+                {
+                    isAdvancable = true;
+                    evolveIcon.sprite = btnColor[1];
+                    return;
+                }
+            }
+            if (!isAdvancable)
+                evolveIcon.sprite = btnColor[0];
+        }
+    }
+
+
     public void OnAllLvUp()
     {
         OnClosePopUp();
+        if (!isAdvancable) return;
         foreach (var data in ownedData)
         {
             if (data.myAtvData.isAdvancable)
@@ -178,6 +205,8 @@ public class SkillTab : UIBase, IPointerDownHandler
                 Debug.Log($"{data.myAtvData.id} 합성완료");
             }
         }
+        isAdvancable = false;
+        evolveIcon.sprite = btnColor[0];
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -208,9 +237,6 @@ public class SkillTab : UIBase, IPointerDownHandler
     public void OnClosePopUp()
     {
         if (infoPopUp != null && infoPopUp.gameObject.activeSelf)
-        {
             infoPopUp.SetActive(false);
-            popUpOverlay.SetActive(false);
-        }
     }
 }

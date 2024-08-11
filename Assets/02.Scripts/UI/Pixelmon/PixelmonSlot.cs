@@ -21,6 +21,7 @@ public class PixelmonSlot : MonoBehaviour
     public int slotIndex;
     [SerializeField] protected TextMeshProUGUI lvTxt;
     [SerializeField] private Slider evolveSldr;
+    [SerializeField] private Image evolveBarImg;
     [SerializeField] private TextMeshProUGUI evolveTxt;
     [SerializeField] protected GameObject[] stars;
     public GameObject equipIcon;
@@ -81,12 +82,19 @@ public class PixelmonSlot : MonoBehaviour
     {
         int maxNum = UIUtils.GetEvolveValue(myPxmData, pxmData);
         evolveSldr.maxValue = maxNum;
-        evolveSldr.value = myPxmData.evolvedCount;
+        evolveSldr.value = myPxmData.evolvedCount;        
         evolveTxt.text = string.Format("{0}/{1}", myPxmData.evolvedCount, maxNum);
         if (myPxmData.evolvedCount >= maxNum)
         {
-            pxmtab.userData.ownedPxms[myPxmData.id].isAdvancable = true;
+            evolveBarImg.sprite = pxmtab.btnColor[1];
+            pxmtab.evolveIcon.sprite = pxmtab.btnColor[1];
+            pxmtab.isAdvancable = true;
+            //pxmtab.userData.ownedPxms[myPxmData.id].isAdvancable = true;
             pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "isAdvancable", true);
+        }
+        else
+        {
+            evolveBarImg.sprite = pxmtab.btnColor[2];
         }
     }
 
@@ -99,16 +107,13 @@ public class PixelmonSlot : MonoBehaviour
 
     public void OnEvolved()
     {
-        while (myPxmData.isAdvancable)
-        {
-            if (myPxmData.star >= 5) return;
-            pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "isAdvancable", false);
-            pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "evolvedCount", myPxmData.evolvedCount - UIUtils.GetEvolveValue(myPxmData, pxmData));
-            pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "star", ++myPxmData.star);
-            myPxmData.PxmStarUp();
-            SetStars();
-            SetEvolveSldr();
-            PixelmonManager.Instance.ApplyStatus(pxmData, myPxmData);
-        }
+        if (myPxmData.star >= 5) return;
+        pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "isAdvancable", false);
+        pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "evolvedCount", myPxmData.evolvedCount - UIUtils.GetEvolveValue(myPxmData, pxmData));
+        pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "star", ++myPxmData.star);
+        myPxmData.PxmStarUp();
+        SetStars();
+        SetEvolveSldr();
+        PixelmonManager.Instance.ApplyStatus(pxmData, myPxmData);
     }
 }
