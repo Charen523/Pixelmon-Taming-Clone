@@ -38,7 +38,7 @@ public class UserData
 
     #region Main Quest
     public string questId = "0000Q1";
-    public int questProgress = 1;
+    public int questProgress = 0;
     #endregion
 
     #region EggLv
