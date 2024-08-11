@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Numerics;
 using TMPro;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class UIDungeonEnterPopup : UIBase
     public DungeonType type;
 
     private int lv;
+    BigInteger curRwdValue;
 
     #region UI
     [SerializeField] private TextMeshProUGUI dgName;
@@ -30,7 +32,7 @@ public class UIDungeonEnterPopup : UIBase
 
         dgName.text = name;
         lv = dungeonTab.dgLv[(int)type];
-        dgLv.text = $"최고 {lv}단계";
+        dgLv.text = $"최고 {lv - 1}단계";
 
         rwdDgIcon.sprite = rwdDgIcons[(int)type];
         string curRwdTxt = (int)type switch
@@ -44,7 +46,7 @@ public class UIDungeonEnterPopup : UIBase
         
         if (type == DungeonType.Gold)
         {
-            BigInteger curRwdValue = Calculater.CalPrice(lv, curSlot.rwdBNum, curSlot.rwdD1, curSlot.rwdD2);
+            curRwdValue = Calculater.CalPrice(lv - 1, curSlot.rwdBNum, curSlot.rwdD1, curSlot.rwdD2);
             rwdDgValue.text = Calculater.NumFormatter(curRwdValue);
         }
         else if (type == DungeonType.Seed)
@@ -79,6 +81,12 @@ public class UIDungeonEnterPopup : UIBase
         }
     }
 
+    private IEnumerator SetGoldRwd()
+    {
+        yield return new WaitForSeconds(2f);
+       
+    }
+
     public void OnClrBtn()
     {
         if (curSlot.UseKey())
@@ -86,8 +94,7 @@ public class UIDungeonEnterPopup : UIBase
             switch (type)
             {
                 case DungeonType.Gold:
-                    BigInteger getValue = Calculater.CalPrice(lv - 1, curSlot.rwdBNum, curSlot.rwdD1, curSlot.rwdD2);
-                    SaveManager.Instance.SetFieldData("gold", getValue, true);
+                    SaveManager.Instance.SetFieldData("gold", curRwdValue, true);
                     break;
                 case DungeonType.Seed:
                     break;

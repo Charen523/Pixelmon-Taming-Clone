@@ -14,12 +14,16 @@ public class DgMonster : MonoBehaviour
     private BigInteger maxHealth 
         => Calculater.CalPrice(dgLv, baseHealth, d1Health, d2Health);
     private BigInteger currentHealth;
-    private int baseHealth = 10000;
-    private int d1Health = 5000;
-    private int d2Health = 2000;
+    private int baseHealth = 1000;
+    private int d1Health = 4000;
+    private int d2Health = 5000;
 
     [SerializeField] private Slider hpSlider;
     [SerializeField] private TextMeshProUGUI hpTxt;
+
+    private int goldRwdBNum = 100000;
+    private int goldRwdD1 = 300000;
+    private int goldRwdD2 = 100000;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -39,9 +43,8 @@ public class DgMonster : MonoBehaviour
     private void OnDestroy()
     {
         SaveCurLv();
-        UIManager.Hide<UIDungeonProgress>();
-        //보상 주기!
-        Destroy(gameObject);
+        dgProgress.SetActive(false);
+        
     }
 
     public void InitDgMonster(int index)
@@ -57,16 +60,24 @@ public class DgMonster : MonoBehaviour
     private void TakeDamage(float delta)
     {
         BigInteger damage = (BigInteger)Mathf.Max(0, delta);
-        currentHealth = currentHealth - damage;
-        while (currentHealth < 0)
+        PoolManager.Instance.SpawnFromPool<DamageText>("TXT00001").ShowDamageText((int)damage, gameObject.transform.position);
+        currentHealth -= damage;
+
+        while (damage > 0)
         {
-            BigInteger temp = currentHealth;
-            currentHealth = maxHealth;
-            currentHealth += temp;
-            dgLv++;
+            if (damage >= currentHealth)
+            {
+                damage -= currentHealth;
+                dgLv++;
+                currentHealth = maxHealth;
+            }
+            else
+            {
+                currentHealth -= damage;
+                damage = 0;
+            }
         }
 
-        PoolManager.Instance.SpawnFromPool<DamageText>("TXT00001").ShowDamageText((int)damage, gameObject.transform.position);
     }
 
     private void SaveCurLv()
@@ -74,20 +85,25 @@ public class DgMonster : MonoBehaviour
         int[] dgLvs = SaveManager.Instance.userData.bestDgLvs;
         dgLvs[dgIndex] = dgLv;
         SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.bestDgLvs), dgLvs);
+        
+        BigInteger myReward = Calculater.CalPrice(dgLv - 1, goldRwdBNum, goldRwdD1, goldRwdD2);
+        SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.gold), myReward, true);
     }
 
     private IEnumerator bossHealthSlider()
     {
+        float hpValue;
         while (true)
         {
-            BigInteger hpValue = currentHealth * 10000 / maxHealth;
-            hpSlider.value = (float)hpValue / 10000;
+            BigInteger ratio = currentHealth * 10000 / maxHealth;
+            hpValue = (float)ratio / 10000;
+            hpSlider.value = Mathf.Clamp01(hpValue);
             hpTxt.text = ((int)(hpSlider.value * 100)).ToString() + "%";
 
             if (currentHealth <= 0)
             {
                 hpSlider.value = 1;
-                hpTxt.text = ((int)(hpSlider.value * 100)).ToString() + "%";
+                hpTxt.text = "100%";
             }
 
             yield return null;
