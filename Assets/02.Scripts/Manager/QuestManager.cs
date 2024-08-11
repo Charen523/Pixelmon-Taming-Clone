@@ -26,12 +26,12 @@ public class QuestManager : Singleton<QuestManager>
     [SerializeField] private int maxQNum = 4;
 
     public bool isHatchQ => curQIndex == "Q1";
-    public bool isUserLevelQ => curQIndex == "Q2";
-    public bool isMonsterQ => curQIndex == "Q3";
-    public bool isStageQ => curQIndex == "Q4";
+    public bool isMonsterQ => curQIndex == "Q2";
+    public bool isStageQ => curQIndex == "Q3";
+    public bool isUserLevelQ => curQIndex == "Q4";
 
     private int StageProgress => stageManager.diffNum * 10000 + stageManager.worldNum * 100 + stageManager.stageNum;
-    private bool isQuestClear => curProgress >= curGoal;
+    
 
     protected override void Awake()
     {
@@ -103,12 +103,11 @@ public class QuestManager : Singleton<QuestManager>
 
     public void QuestClearBtn()
     {
-        if (isQuestClear)
+        if (IsQuestClear())
         {
             SetNewQuestId();
             ResetProgress();
             SetQuestUI();
-
         }
         else
         {
@@ -160,15 +159,17 @@ public class QuestManager : Singleton<QuestManager>
 
         switch (curQIndex)
         {
-            case "Q2":
-            case "Q4":
-                progress++;
-                break;
             case "Q1":
                 progress = userData.userLv;
                 break;
+            case "Q2":
+                progress++;
+                break;
             case "Q3":
                 progress = StageProgress;
+                break;
+            case "Q4":
+                progress = userData.userLv;
                 break;
         }
 
@@ -200,6 +201,18 @@ public class QuestManager : Singleton<QuestManager>
         }
 
         return goal;
+    }
+
+    private bool IsQuestClear()
+    {
+        if (isStageQ)
+        {
+            return curProgress > curGoal;
+        }
+        else
+        {
+            return curProgress >= curGoal;
+        }
     }
     #endregion
 
