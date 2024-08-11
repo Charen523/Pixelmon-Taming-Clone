@@ -37,14 +37,11 @@ public class FadeInvoker : MonoBehaviour
                 time = waitFadeTime;
 
             image.color = Color.black;
-            Debug.Log("Fade Out 2단계");
             yield return time;
             image.DOFade(0f, 0.5f);
-            Debug.Log("Fade Out 3단계");
             yield return waitFadeTime;
 
             isUsing = false;
-            Debug.Log("Fade Out 4단계");
             gameObject.SetActive(false);
         }
     }
