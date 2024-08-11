@@ -44,6 +44,7 @@ public class PlayerFSM : FSM
     public void ReStartPlayer()
     {
         ChangeState(DetectState);
+        joystick.gameObject.SetActive(true);
         Player.Instance.healthSystem.InitHealth(Player.Instance.statHandler.maxHp);
     }
 
@@ -61,15 +62,5 @@ public class PlayerFSM : FSM
     {
         StageManager.Instance.stageFade.gameObject.SetActive(true);
         StageManager.Instance.stageFade.StartFadeIn();
-    }
-
-    // Gizmos를 사용하여 탐지 반경을 시각적으로 표시
-    private void OnDrawGizmos()
-    {
-        if (DetectState != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, DetectState.currentDetectionRadius);
-        }
     }
 }
