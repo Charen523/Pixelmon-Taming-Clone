@@ -47,11 +47,11 @@ public class RewardManager : Singleton<RewardManager>
             case nameof(userData.diamond):
                 int amount2 = _amount;
                 amount2 *= (StageManager.Instance.worldNum + StageManager.Instance.diffNum * 10);
-                SaveManager.Instance.SetFieldData(itemName, amount1, true);
+                SaveManager.Instance.SetFieldData(itemName, amount2, true);
                 break;
             default:
                 int amount3 = _amount;
-                SaveManager.Instance.SetFieldData(itemName, amount1, true);
+                SaveManager.Instance.SetFieldData(itemName, amount3, true);
                 break;
         }
 
