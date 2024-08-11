@@ -27,6 +27,7 @@ public class UserData
     public bool isOpenSkillTab = false;
     public bool isOpenFarmTab = false;
     public bool isOpenDungeonTab = false;
+    public bool isSetArrowOnEgg = false;
     #endregion
 
     #region Stage Info
