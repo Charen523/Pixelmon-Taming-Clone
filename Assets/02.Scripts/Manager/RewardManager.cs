@@ -34,6 +34,12 @@ public class RewardManager : Singleton<RewardManager>
         }
     }
 
+    public void SpawnRewards(string rcode, int amount)
+    {
+        string itemName = DataManager.Instance.GetData<RewardData>(rcode).name;
+        GetReward(itemName, amount);
+    }
+
     public void GetReward(string itemName, int _amount)
     {
         switch(itemName)
@@ -54,7 +60,6 @@ public class RewardManager : Singleton<RewardManager>
                 SaveManager.Instance.SetFieldData(itemName, amount3, true);
                 break;
         }
-
     }
 
     private bool CheckDropRate(float rate)
