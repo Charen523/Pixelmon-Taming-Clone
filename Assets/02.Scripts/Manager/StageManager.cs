@@ -85,7 +85,7 @@ public class StageManager : Singleton<StageManager>
     [SerializeField] private GameObject bossBtn;
 
     public Spawner spawner;
-    public FadeOut fadeOut;
+    public FadeInvoker fader;
     #endregion
 
     protected override void Awake()
@@ -147,6 +147,11 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator StartStage()
     {
+        Debug.Log("Starting Stage");
+        fader.gameObject.SetActive(true);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f);
+        yield return fader.FadeOut(waitForSeconds);
+
         if (isBossStage && !isDungeon)
         { 
             InitBossStage();
@@ -159,10 +164,9 @@ public class StageManager : Singleton<StageManager>
                 yield return bossDieDone;
                 ResetSpawnedEnemy();
 
-                fadeOut.gameObject.SetActive(true);
-                Debug.Log("StartStage");
-                yield return fadeOut.FadeInOut();
-
+                Debug.Log("Boss Cleared");
+                fader.gameObject.SetActive(true);
+                yield return fader.FadeIn();
                 NextStageData();  
             }
             else if (!isDungeon)
@@ -178,24 +182,27 @@ public class StageManager : Singleton<StageManager>
 
             if (!isDungeon)
             {
-                fadeOut.gameObject.SetActive(true);
                 Debug.Log("NormalEnd");
-                yield return fadeOut.FadeInOut();
+                fader.gameObject.SetActive(true);
+                yield return fader.FadeIn();
                 NextStageData();
             }
         }
         
         if (isDungeon)
         {
-            fadeOut.gameObject.SetActive(true);
             Debug.Log("dungeonEnter");
-            yield return fadeOut.FadeInOut();
-
+            fader.gameObject.SetActive(true);
+            yield return fader.FadeIn();
             InitDgStage();
+            Debug.Log("dungeonEnterEnd");
+            yield return fader.FadeOut();
+
             yield return proceedDgStg;
 
-            fadeOut.gameObject.SetActive(true);
-            yield return fadeOut.FadeInOut();
+            Debug.Log("dungeonExit");
+            fader.gameObject.SetActive(true);
+            yield return fader.FadeIn();
         }
 
         InitStage();
@@ -228,9 +235,10 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator InfiniteStage()
     {
-        fadeOut.gameObject.SetActive(true);
         Debug.Log("InfiniteEnter");
-        yield return fadeOut.FadeInOut();
+        fader.gameObject.SetActive(true);
+        yield return fader.FadeOut();
+
         while (true)
         {
             if (isDungeon)
@@ -255,6 +263,11 @@ public class StageManager : Singleton<StageManager>
 
     private void InitBossStage()
     {
+        if (userData.curHuntCount != 0)
+        {
+            saveManager.SetFieldData(nameof(userData.curHuntCount), 0);
+            curSpawnCount = userData.curHuntCount;
+        }
         spawner.SpawnMonsterTroop(data.monsterId, data.spawnCount);
         bossLeftTime = bossLimitTime;
     }
@@ -547,9 +560,9 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator delayBossBtn()
     {
-        fadeOut.gameObject.SetActive(true);
         Debug.Log("ReEnterBoss");
-        yield return fadeOut.FadeInOut();
+        fader.gameObject.SetActive(true);
+        yield return fader.FadeIn();
         InitStage();
     }
     #endregion
