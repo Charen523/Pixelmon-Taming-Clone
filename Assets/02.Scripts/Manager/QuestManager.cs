@@ -25,10 +25,10 @@ public class QuestManager : Singleton<QuestManager>
 
     [SerializeField] private int maxQNum = 4;
 
-    public bool isUserLevelQ => curQIndex == "Q1";
-    public bool isMonsterQ => curQIndex == "Q2";
-    public bool isStageQ => curQIndex == "Q3";
-    public bool isHatchQ => curQIndex == "Q4";
+    public bool isHatchQ => curQIndex == "Q1";
+    public bool isUserLevelQ => curQIndex == "Q2";
+    public bool isMonsterQ => curQIndex == "Q3";
+    public bool isStageQ => curQIndex == "Q4";
 
     private int StageProgress => stageManager.diffNum * 10000 + stageManager.worldNum * 100 + stageManager.stageNum;
     private bool isQuestClear => curProgress >= curGoal;
