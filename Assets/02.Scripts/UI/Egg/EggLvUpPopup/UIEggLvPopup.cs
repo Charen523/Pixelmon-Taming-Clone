@@ -220,7 +220,6 @@ public class UIEggLvPopup : UIBase
 
     public void OnClickGaugeUpBtn()
     {
-        Debug.Log("Click");
         lvUpGauges[userData.fullGaugeCnt].GaugeUp();
         SaveManager.Instance.SetFieldData(nameof(userData.fullGaugeCnt), 1, true);
         SaveManager.Instance.SetFieldData(nameof(userData.gold), -price, true);

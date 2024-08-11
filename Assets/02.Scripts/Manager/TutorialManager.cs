@@ -9,24 +9,10 @@ public enum OpenTabType
 }
 public class TutorialManager : Singleton<TutorialManager>
 {
-    public event Action<OpenTabType> TutorialEvent;
-
     public GameObject ShopLock;
     public GameObject SkillLock;
     public GameObject FarmLock;
     public GameObject DungeonLock;
-    public int _themeNum => StageManager.Instance.themeNum;
-    public int ThemeNum
-    {
-        get => _themeNum;
-        set
-        {
-            if (_themeNum != value)
-            {
-                OpenTab(_themeNum);
-            }
-        }
-    }
 
     protected override void Awake()
     {
@@ -44,21 +30,37 @@ public class TutorialManager : Singleton<TutorialManager>
 
         if (userData.isOpenDungeonTab)
             DungeonLock.SetActive(false);
+
+        StageManager.Instance.OnChangeThemeNum += OpenTab;
     }
 
     private void OpenTab(int num)
     {
+        var userData = SaveManager.Instance.userData;
+
         switch (num)
         {
-            case 1:
-                ShopLock.SetActive(false);
-                SkillLock.SetActive(false);
-                break;
             case 2:
-                FarmLock.SetActive(false);
+                if (!userData.isOpenSkillTab)
+                {
+                    SaveManager.Instance.SetFieldData(nameof(userData.isOpenSkillTab), true);
+                    ShopLock.SetActive(false);
+                    SkillLock.SetActive(false);
+                }
                 break;
             case 3:
-                DungeonLock.SetActive(false);
+                if (!userData.isOpenFarmTab)
+                {
+                    SaveManager.Instance.SetFieldData(nameof(userData.isOpenFarmTab), true);
+                    FarmLock.SetActive(false);
+                }                    
+                break;
+            case 1:
+                if (!userData.isOpenDungeonTab)
+                {
+                    SaveManager.Instance.SetFieldData(nameof(userData.isOpenDungeonTab), true);
+                    DungeonLock.SetActive(false);
+                }                 
                 break;
         }
     }

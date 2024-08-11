@@ -19,7 +19,7 @@ public class UIMiddleBar : UIBase
     private UIEggLvPopup EggLvPopup;
     private UserData userData => SaveManager.Instance.userData;
 
-    private async void Awake()
+    protected override async void Awake()
     {
         EggLvPopup = await UIManager.Show<UIEggLvPopup>();
     }

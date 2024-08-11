@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -38,6 +39,8 @@ public class StageManager : Singleton<StageManager>
     public int worldNum;
     public int stageNum;
     public int themeNum;
+
+    public event Action<int> OnChangeThemeNum;
 
     public int curSpawnCount = 0;
     private float curInterval = 0; //현재 시간 간격
@@ -404,6 +407,7 @@ public class StageManager : Singleton<StageManager>
             stageNum = 0;
             themeNum = 1;
             MapManager.Instance.OnMapChanged((int)MapList.Theme1);
+            OnChangeThemeNum?.Invoke(themeNum);
         }
         else if (stageNum % 5 == 0) //Next Theme
         {
@@ -417,6 +421,7 @@ public class StageManager : Singleton<StageManager>
             {
                 MapManager.Instance.OnMapChanged((int)MapList.Theme3);
             }
+            OnChangeThemeNum?.Invoke(themeNum);
         }
         stageNum++;
         isBossStage = false;
