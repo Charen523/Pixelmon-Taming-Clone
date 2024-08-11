@@ -8,11 +8,12 @@ using static UnityEditor.PlayerSettings;
 public class DropItem : SerializedMonoBehaviour
 {
     [SerializeField] SpriteRenderer sr;
-    Vector3 iconPos;
     Sequence mySequence;
     Vector3 itemScale;
     [SerializeField] string itemName;
     [SerializeField] int amount;
+    [SerializeField] float waitTime = 1.5f;
+    [SerializeField] WaitForSeconds delayTime;
     private void Awake()
     {
         itemScale = transform.localScale;
@@ -20,6 +21,7 @@ public class DropItem : SerializedMonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        delayTime = new WaitForSeconds(waitTime);
         mySequence = DOTween.Sequence()
         .SetAutoKill(false) //추가
         .Prepend(sr.DOFade(0, 0))
@@ -39,9 +41,9 @@ public class DropItem : SerializedMonoBehaviour
     IEnumerator MoveToPlayer()
     {
         mySequence.Restart();
-        yield return new WaitForSeconds(1.5f);
+        yield return delayTime;
         float time = 0;
-        while (time <= 2)
+        while (time <= waitTime)
         {
             time += Time.deltaTime;
             transform.position = Vector2.Lerp(transform.position, Player.Instance.gameObject.transform.position, time / 2);
