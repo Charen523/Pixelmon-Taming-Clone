@@ -5,12 +5,19 @@ public class EnemyHealthSystem : HealthSystem
 {
     [SerializeField] protected Enemy enemy;
 
+    [SerializeField] private Transform fillBar;
+
     private void Start()
     {
         if (enemy == null)
         {
             enemy = GetComponent<Enemy>();
         }
+    }
+
+    protected override void Update()
+    {
+        fillBar.localScale = new Vector3(currentHealth / maxHealth, 1, 1);
     }
 
     public void initEnemyHealth(float hp)

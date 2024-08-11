@@ -160,7 +160,7 @@ public class QuestManager : Singleton<QuestManager>
         switch (curQIndex)
         {
             case "Q1":
-                progress = userData.userLv;
+                progress++;
                 break;
             case "Q2":
                 progress++;
