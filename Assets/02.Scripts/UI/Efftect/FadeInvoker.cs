@@ -16,7 +16,6 @@ public class FadeInvoker : MonoBehaviour
 
     public IEnumerator FadeIn()
     {
-        Debug.Log("1");
         if (!isUsing)
         {
             isUsing = true;
@@ -29,7 +28,6 @@ public class FadeInvoker : MonoBehaviour
 
     public IEnumerator FadeOut(WaitForSeconds time = null)
     {
-        Debug.Log("2");
         if (!isUsing)
         {
             isUsing = true;
