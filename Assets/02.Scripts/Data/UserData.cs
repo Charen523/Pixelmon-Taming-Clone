@@ -26,6 +26,7 @@ public class UserData
     public string stageRcode = "STG_N1";
     public string curStage = "000101";
     public int curHuntCount = 0;
+    public bool isInfinite;
     #endregion
 
     #region Main Quest

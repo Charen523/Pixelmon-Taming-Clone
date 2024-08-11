@@ -53,6 +53,7 @@ public class StageManager : Singleton<StageManager>
 
     #region Coroutine & WaitUntil
     private Coroutine stageCoroutine;
+    private Coroutine infiniteMode;
     private WaitUntil proceedNormalStg;
     private WaitUntil proceedBossStg;
     private WaitUntil proceedDgStg;
@@ -81,6 +82,7 @@ public class StageManager : Singleton<StageManager>
 
     [SerializeField] private Slider bossTimeSldr;
     [SerializeField] private TextMeshProUGUI bossTimeTxt;
+    [SerializeField] private GameObject bossBtn;
 
     public Spawner spawner;
     public FadeOut fadeOut;
@@ -129,15 +131,23 @@ public class StageManager : Singleton<StageManager>
         isPlayerDead = false;
 
         InitStageUI();
-        killCount = userData.curHuntCount;
-
         GameManager.Instance.NotifyStageStart();
-        stageCoroutine = StartCoroutine(StartStage());
+
+        if (userData.isInfinite)
+        {
+            killCount = 0;
+            infiniteMode = StartCoroutine(InfiniteStage());
+        }
+        else
+        {
+            killCount = userData.curHuntCount;
+            stageCoroutine = StartCoroutine(StartStage());
+        }
     }
 
     private IEnumerator StartStage()
     {
-        if (isBossStage)
+        if (isBossStage && !isDungeon)
         { 
             InitBossStage();
             yield return proceedBossStg;
@@ -150,6 +160,7 @@ public class StageManager : Singleton<StageManager>
                 ResetSpawnedEnemy();
 
                 fadeOut.gameObject.SetActive(true);
+                Debug.Log("StartStage");
                 yield return fadeOut.FadeInOut();
 
                 NextStageData();  
@@ -157,6 +168,7 @@ public class StageManager : Singleton<StageManager>
             else if (!isDungeon)
             {
                 NextStageData(false);
+                saveManager.SetFieldData(nameof(userData.isInfinite), true);
                 yield break;
             }
         }
@@ -167,6 +179,7 @@ public class StageManager : Singleton<StageManager>
             if (!isDungeon)
             {
                 fadeOut.gameObject.SetActive(true);
+                Debug.Log("NormalEnd");
                 yield return fadeOut.FadeInOut();
                 NextStageData();
             }
@@ -175,6 +188,7 @@ public class StageManager : Singleton<StageManager>
         if (isDungeon)
         {
             fadeOut.gameObject.SetActive(true);
+            Debug.Log("dungeonEnter");
             yield return fadeOut.FadeInOut();
 
             InitDgStage();
@@ -212,6 +226,33 @@ public class StageManager : Singleton<StageManager>
         return false;
     }
 
+    private IEnumerator InfiniteStage()
+    {
+        fadeOut.gameObject.SetActive(true);
+        Debug.Log("InfiniteEnter");
+        yield return fadeOut.FadeInOut();
+        while (true)
+        {
+            if (isDungeon)
+            {
+                ResetSpawnedEnemy();
+                stageCoroutine = StartCoroutine(StartStage());
+                yield break;
+            }
+
+            curInterval += Time.deltaTime;
+            if (curInterval >= spawnInterval)
+            {
+                if (curSpawnCount < data.spawnCount)
+                {
+                    spawner.SpawnMonsterTroop(data.monsterId, data.spawnCount);
+                    curInterval = 0;
+                }
+            }
+            yield return null;
+        }
+    }
+
     private void InitBossStage()
     {
         spawner.SpawnMonsterTroop(data.monsterId, data.spawnCount);
@@ -238,7 +279,7 @@ public class StageManager : Singleton<StageManager>
         }
         return false;
     }
-
+    
     private void InitDgStage()
     {
         bossLeftTime = bossLimitTime;
@@ -371,10 +412,20 @@ public class StageManager : Singleton<StageManager>
         {
             StopCoroutine(stageCoroutine); //Stop Stage
         }
+        
         ResetSpawnedEnemy();
+
+        if (isBossStage)
+        {
+            saveManager.SetFieldData(nameof(userData.isInfinite), true);
+        }
         NextStageData(false);
-        isBossStage = false;
-        isDungeon = false;
+
+        if (isDungeon)
+        {
+            Destroy(boss.gameObject);
+            isDungeon = false;
+        }
     }
     #endregion
 
@@ -389,22 +440,35 @@ public class StageManager : Singleton<StageManager>
 
         if (isDungeon)
         {
+            bossTimeSldr.gameObject.SetActive(true);
+            bossBtn.SetActive(false);
             stageTitleTxt.text = $"Dungeon Lv.{boss.dgLv}";
             StageIcon.gameObject.SetActive(false);
-            bossTimeSldr.gameObject.SetActive(true);
+        }
+        else if (userData.isInfinite)
+        {
+            bossTimeSldr.gameObject.SetActive(false);
+            bossBtn.SetActive(true);
+            stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
+            StageIcon.gameObject.SetActive(true);
+            StageIcon.sprite = iconSprite[0];
+            progressSldr.value = 1;
+            progressTxt.text = "100%";
         }
         else if (isBossStage)
         {
-            stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
+            bossTimeSldr.gameObject.SetActive(true);
+            bossBtn.SetActive(false);
+            stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum} Boss";
             StageIcon.gameObject.SetActive(true);
             StageIcon.sprite = iconSprite[1];
             progressSldr.value = 1;
             progressTxt.text = "100%";
-            bossTimeSldr.gameObject.SetActive(true);
         }
         else
         {
             bossTimeSldr.gameObject.SetActive(false);
+            bossBtn.SetActive(false);
             stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.gameObject.SetActive(true);
             StageIcon.sprite = iconSprite[0];
@@ -466,6 +530,27 @@ public class StageManager : Singleton<StageManager>
     public TextMeshProUGUI GetBossHpText()
     {
         return progressTxt;
+    }
+
+    public void OnBossBtn()
+    {
+        if (infiniteMode != null)
+        {
+            StopCoroutine(infiniteMode);
+        }
+        saveManager.SetFieldData(nameof(userData.isInfinite), false);
+
+        ResetSpawnedEnemy();
+        NextStageData();
+        StartCoroutine(delayBossBtn());
+    }
+
+    private IEnumerator delayBossBtn()
+    {
+        fadeOut.gameObject.SetActive(true);
+        Debug.Log("ReEnterBoss");
+        yield return fadeOut.FadeInOut();
+        InitStage();
     }
     #endregion
 }
