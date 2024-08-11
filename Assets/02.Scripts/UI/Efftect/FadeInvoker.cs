@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class FadeInvoker : MonoBehaviour
 {
     [SerializeField] private Image image;
-    public WaitForSeconds waitFadeTime = new WaitForSeconds(0.5f);
+    public WaitForSeconds waitFadeTime = new WaitForSeconds(1f);
     private bool isUsing;
 
     public void StartFadeIn()
