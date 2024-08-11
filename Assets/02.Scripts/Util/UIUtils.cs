@@ -90,8 +90,7 @@ public static class UIUtils
                 return 0;
         }
     }
-
-    
+  
     public static int GetEvolveValue(MyAtvData myData, ActiveData data)
     {
         string rankTxt = string.Format("{0}Rank", data.rank);
@@ -149,5 +148,4 @@ public static class UIUtils
                 return 0;
         }
     }
-
 }
