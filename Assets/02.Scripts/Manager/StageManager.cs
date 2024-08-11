@@ -173,10 +173,10 @@ public class StageManager : Singleton<StageManager>
         else
         {
             stageFade.gameObject.SetActive(true);
+            Debug.Log("Fade Out 1단계");
             yield return stageFade.FadeOut();
+            Debug.Log("Fade Out 정상적으로 실행됨");
         }
-
-        
 
         if (isBossStage && !isDungeon)
         { 
