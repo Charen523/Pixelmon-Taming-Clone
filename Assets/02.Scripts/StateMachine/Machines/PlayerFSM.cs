@@ -59,8 +59,8 @@ public class PlayerFSM : FSM
 
     public void FadeEffect()
     {
-        StageManager.Instance.fadeOut.gameObject.SetActive(true);
-        StageManager.Instance.fadeOut.StartFadeInOut();
+        StageManager.Instance.fader.gameObject.SetActive(true);
+        StageManager.Instance.fader.StartFadeIn();
     }
 
     // Gizmos를 사용하여 탐지 반경을 시각적으로 표시
