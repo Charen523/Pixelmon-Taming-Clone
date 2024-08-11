@@ -88,7 +88,7 @@ public class Spawner : MonoBehaviour
     {
         for (int i = 0; i < isActivatedEnemy.Count; i++)
         {
-            StartCoroutine(FadeMonster(isActivatedEnemy[i]));
+            isActivatedEnemy[i].gameObject.SetActive(false);
         }
         isActivatedEnemy.Clear();
     }
