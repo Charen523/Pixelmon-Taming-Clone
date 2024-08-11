@@ -27,7 +27,9 @@ public class DropItem : SerializedMonoBehaviour
         .Prepend(sr.DOFade(0, 0))
         .Append(sr.DOFade(1, 1f))
         .Join(transform.DOShakeScale(0.5f, itemScale.x, 5, 1f, false))
-        .Append(sr.DOFade(0, 1.5f));
+        .Append(sr.DOFade(0, 0.75f))
+        .OnComplete(() => gameObject.SetActive(false));
+
     }
 
     [ContextMenu("Test")]
@@ -55,6 +57,5 @@ public class DropItem : SerializedMonoBehaviour
     {
         RewardManager.Instance.GetReward(itemName, amount);
         amount = 0;
-        
     }
 }
