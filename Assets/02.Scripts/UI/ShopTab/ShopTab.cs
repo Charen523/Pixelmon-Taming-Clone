@@ -6,11 +6,6 @@ public class ShopTab : UIBase
 {
     [SerializeField] private SkillGacha skillGachaTab;
 
-    private void Awake()
-    {
-        skillGachaTab.gameObject.SetActive(true);       
-    }
-
     private void OnEnable()
     {
         skillGachaTab.SetSkillGacha();

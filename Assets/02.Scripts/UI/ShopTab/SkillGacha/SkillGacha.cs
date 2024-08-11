@@ -1,18 +1,20 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SkillGacha : MonoBehaviour
 {
-    [SerializeField] private SkillGachaBtn OneBtn;
-    [SerializeField] private SkillGachaBtn TenBtn;
+    [SerializeField] private SkillGachaBtn FiveBtn;
+    [SerializeField] private SkillGachaBtn FifteenBtn;
     [SerializeField] private SkillGachaBtn ThirtyBtn;
+    [SerializeField] private TextMeshProUGUI TicketCostTxt;
 
     private UserData userData => SaveManager.Instance.userData;
     private UISkillGachaPopup skillGachaPopup;
     private MyAtvData randSkill;
     private int oneCostTicket = 1; // 1티켓 == 1회 뽑기
-    private int oneCostDia = 100;  // 100다이아 == 1회 뽑기
+    private int oneCostDia = 200;  // 200다이아 == 1회 뽑기
 
     private async void Awake()
     {
@@ -27,20 +29,20 @@ public class SkillGacha : MonoBehaviour
     public void SetSkillGacha()
     {
         SetBtnInteractable();
-        SetBtnCostUIs();
     }
 
     #region UI
     private void SetBtnInteractable()
     {
-        UpdateButnInteractable(OneBtn.Btn, 1);
-        UpdateButnInteractable(TenBtn.Btn, 10);
+        UpdateButnInteractable(FiveBtn.Btn, 5);
+        UpdateButnInteractable(FifteenBtn.Btn, 15);
         UpdateButnInteractable(ThirtyBtn.Btn, 30);
     }
 
-    private void UpdateButnInteractable(Button button, int requiredAmount)
+    public void UpdateButnInteractable(Button button, int requiredAmount)
     {
-        if ((userData.skillTicket / oneCostTicket + userData.diamond / oneCostDia) >= requiredAmount)
+        if ((userData.skillTicket >= requiredAmount * oneCostTicket) 
+            || (userData.diamond >= requiredAmount * oneCostDia))
             button.interactable = true;
         else
             button.interactable = false;
@@ -51,39 +53,8 @@ public class SkillGacha : MonoBehaviour
         if (dirtyUI == DirtyUI.Diamond || dirtyUI == DirtyUI.SkillTicket)
         {
             SetBtnInteractable();
-            SetBtnCostUIs();
-        }
-            
-    }
-    private void SetBtnCostUIs()
-    {
-        SetBtnCostUI(OneBtn, 1);
-        SetBtnCostUI(TenBtn, 10);
-        SetBtnCostUI(ThirtyBtn, 30);
-    }
-    private void SetBtnCostUI(SkillGachaBtn btn, int multiplier)
-    {
-        int totalCostTicket = oneCostTicket * multiplier;
-        int totalCostDia = oneCostDia * multiplier;
-
-        if (userData.skillTicket >= totalCostTicket)
-        {
-            btn.SetTicket(totalCostTicket);
-            btn.HideDia();
-        }
-        else if (multiplier > 1 && userData.skillTicket >= oneCostTicket)
-        {
-            int neededTickets = userData.skillTicket / oneCostTicket;
-            int reaminingCost = totalCostTicket - neededTickets;
-            int neededDiamonds = (reaminingCost / oneCostTicket) * oneCostDia;
-
-            btn.SetAllCost(neededTickets, neededDiamonds);
-        }
-        else
-        {
-            btn.SetDia(totalCostDia);
-            btn.HideTicket();
-        }
+            TicketCostTxt.text = userData.skillTicket.ToString();
+        }            
     }
     #endregion
 
@@ -92,20 +63,11 @@ public class SkillGacha : MonoBehaviour
         int totalCostTicket = oneCostTicket * multiplier;
         int totalCostDia = oneCostDia * multiplier;
 
-        if (userData.skillTicket >= totalCostTicket) // 티켓 먼저 소모
+        if (userData.skillTicket >= totalCostTicket) // 티켓
         {
             SaveManager.Instance.SetFieldData(nameof(userData.skillTicket), -totalCostTicket, true);
         }
-        else if (multiplier > 1 && userData.skillTicket >= oneCostTicket)
-        {
-            int remainingTickets = userData.skillTicket % oneCostTicket;
-            int reaminingCost = totalCostTicket - userData.skillTicket / oneCostTicket;
-            int neededDiamonds = (reaminingCost / oneCostTicket) * oneCostDia;
-
-            SaveManager.Instance.SetFieldData(nameof(userData.diamond), -neededDiamonds, true);
-            SaveManager.Instance.SetFieldData(nameof(userData.skillTicket), remainingTickets);
-        }
-        else
+        else // 다이아
         {
             SaveManager.Instance.SetFieldData(nameof(userData.diamond), -totalCostDia, true);
         }
@@ -142,10 +104,9 @@ public class SkillGacha : MonoBehaviour
                 SaveManager.Instance.SetFieldData(nameof(userData.ownedSkills), ownedSkills);
             }
             SkillManager.Instance.AddSkill(id);
-            Debug.Log("스킬 id : " + id);
         }
 
         skillGachaPopup.SetActive(true);
-        skillGachaPopup.SetPopup(count, resultDatas);
+        skillGachaPopup.SetPopup(count, resultDatas, this);
     }
 }
