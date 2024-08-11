@@ -48,7 +48,7 @@ public class StageManager : Singleton<StageManager>
     private readonly float bossLimitTime = 30;
 
     public int dgIndex = 0;
-    private DgMonster boss;
+    public DgMonster dgBoss;
     #endregion
 
     #region Coroutine & WaitUntil
@@ -61,6 +61,7 @@ public class StageManager : Singleton<StageManager>
     #endregion
 
     #region Flags
+    private bool isStgFade;
     private bool isBossStage;
     private bool isBossCleared;
     public bool isBossDieDone;
@@ -85,7 +86,11 @@ public class StageManager : Singleton<StageManager>
     [SerializeField] private GameObject bossBtn;
 
     public Spawner spawner;
-    public FadeInvoker fader;
+    public FadeInvoker stageFade;
+    public FadeInvoker allFade;
+
+    Transform middleBar;
+    Transform bottomBar;
     #endregion
 
     protected override void Awake()
@@ -109,11 +114,12 @@ public class StageManager : Singleton<StageManager>
         diffNum = int.Parse(userData.curStage.Substring(0, 2));
         worldNum = int.Parse(userData.curStage.Substring(2, 2));
         stageNum = int.Parse(userData.curStage.Substring(4, 2));
-        
+        ChangeMapByTheme();
+
         killCount = userData.curHuntCount;
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
         GameManager.Instance.OnPlayerDie += OnPlayerDie;
         GameManager.Instance.OnEnemyDie += OnEnemyDie;
@@ -122,6 +128,17 @@ public class StageManager : Singleton<StageManager>
         proceedBossStg = new WaitUntil(() => BossStage());
         proceedDgStg = new WaitUntil(() => DungeonStage());
         bossDieDone = new WaitUntil(() => isBossDieDone == true);
+
+        while (middleBar == null)
+        {
+            var middleBarObject = UIManager.Get<UIMiddleBar>();
+            if (middleBarObject != null)
+            {
+                middleBar = middleBarObject.transform;
+            }
+            yield return null; 
+        }
+        bottomBar = UIManager.Instance.parents[2].GetChild(0);
 
         InitStage();
     }
@@ -147,9 +164,19 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator StartStage()
     {
-        fader.gameObject.SetActive(true);
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1f);
-        yield return fader.FadeOut(waitForSeconds);
+        if (!isStgFade)
+        {
+            isStgFade = true;
+            allFade.gameObject.SetActive(true);
+            yield return allFade.FadeOut();
+        }
+        else
+        {
+            stageFade.gameObject.SetActive(true);
+            yield return stageFade.FadeOut();
+        }
+
+        
 
         if (isBossStage && !isDungeon)
         { 
@@ -163,8 +190,8 @@ public class StageManager : Singleton<StageManager>
                 yield return bossDieDone;
                 ResetSpawnedEnemy();
 
-                fader.gameObject.SetActive(true);
-                yield return fader.FadeIn();
+                stageFade.gameObject.SetActive(true);
+                yield return stageFade.FadeIn();
                 NextStageData();  
             }
             else if (!isDungeon)
@@ -180,23 +207,34 @@ public class StageManager : Singleton<StageManager>
 
             if (!isDungeon)
             {
-                fader.gameObject.SetActive(true);
-                yield return fader.FadeIn();
+                stageFade.gameObject.SetActive(true);
+                yield return stageFade.FadeIn();
                 NextStageData();
             }
         }
         
         if (isDungeon)
         {
-            fader.gameObject.SetActive(true);
-            yield return fader.FadeIn();
+            allFade.gameObject.SetActive(true);
+            yield return allFade.FadeIn();
             InitDgStage();
-            yield return fader.FadeOut();
+            yield return allFade.FadeOut();
 
             yield return proceedDgStg;
 
-            fader.gameObject.SetActive(true);
-            yield return fader.FadeIn();
+            allFade.gameObject.SetActive(true);
+            yield return allFade.FadeIn();
+            isStgFade = false;
+
+            ChangeMapByTheme();
+
+            Vector3 middleBarPosition = middleBar.position;
+            middleBarPosition.y += 620;
+            middleBar.position = middleBarPosition;
+
+            Vector3 bottomBarPosition = bottomBar.position;
+            bottomBarPosition.y += 620;
+            bottomBar.position = bottomBarPosition;
         }
 
         InitStage();
@@ -229,8 +267,8 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator InfiniteStage()
     {
-        fader.gameObject.SetActive(true);
-        yield return fader.FadeOut();
+        stageFade.gameObject.SetActive(true);
+        yield return stageFade.FadeOut();
 
         while (true)
         {
@@ -289,8 +327,18 @@ public class StageManager : Singleton<StageManager>
     private void InitDgStage()
     {
         bossLeftTime = bossLimitTime;
-        boss = spawner.GetDgMonster(dgIndex);
-        boss.InitDgMonster(dgIndex);
+        dgBoss = spawner.GetDgMonster(dgIndex);
+        dgBoss.InitDgMonster(dgIndex);
+        MapManager.Instance.OnMapChanged(dgIndex);
+
+        Vector3 middleBarPosition = middleBar.position;
+        middleBarPosition.y -= 620;
+        middleBar.position = middleBarPosition;
+
+        Vector3 bottomBarPosition = bottomBar.position;
+        bottomBarPosition.y -= 620;
+        bottomBar.position = bottomBarPosition;
+
         InitStageUI();
     }
 
@@ -298,16 +346,16 @@ public class StageManager : Singleton<StageManager>
     {
         if (!isDungeon)
         {//중도포기 버튼.
-            Destroy(boss.gameObject);
+            Destroy(dgBoss.gameObject);
             return true;
         }
 
-        stageTitleTxt.text = $"Dungeon Lv.{boss.dgLv}";
+        stageTitleTxt.text = $"Dungeon Lv.{dgBoss.dgLv}";
         StageTimer();
 
         if (bossLeftTime == 0)
         {//TimeOver
-            Destroy(boss.gameObject);
+            Destroy(dgBoss.gameObject);
             isDungeon = false;
             return true;
         }
@@ -429,7 +477,7 @@ public class StageManager : Singleton<StageManager>
 
         if (isDungeon)
         {
-            Destroy(boss.gameObject);
+            Destroy(dgBoss.gameObject);
             isDungeon = false;
         }
     }
@@ -438,6 +486,7 @@ public class StageManager : Singleton<StageManager>
     #region UI
     private void InitStageUI()
     {
+        Player.Instance.transform.position = Vector3.zero;
         if (progressCoroutine != null)
         {
             StopCoroutine(progressCoroutine);
@@ -446,9 +495,10 @@ public class StageManager : Singleton<StageManager>
 
         if (isDungeon)
         {
+            Player.Instance.transform.position += Vector3.down * 3;
             bossTimeSldr.gameObject.SetActive(true);
             bossBtn.SetActive(false);
-            stageTitleTxt.text = $"Dungeon Lv.{boss.dgLv}";
+            stageTitleTxt.text = $"Dungeon Lv.{dgBoss.dgLv}";
             StageIcon.gameObject.SetActive(false);
         }
         else if (userData.isInfinite)
@@ -483,6 +533,22 @@ public class StageManager : Singleton<StageManager>
             progressSldr.value = prevProgress;
             progressTxt.text = string.Format($"{(int)(prevProgress * 100)}%");
             progressCoroutine = StartCoroutine(SetProgressBar());
+        }
+    }
+
+    private void ChangeMapByTheme()
+    {
+        switch (themeNum)
+        {
+            case 2:
+                MapManager.Instance.OnMapChanged((int)MapList.Theme2);
+                break;
+            case 3:
+                MapManager.Instance.OnMapChanged((int)MapList.Theme3);
+                break;
+            default:
+                MapManager.Instance.OnMapChanged((int)MapList.Theme1);
+                break;
         }
     }
 
@@ -553,8 +619,8 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator delayBossBtn()
     {
-        fader.gameObject.SetActive(true);
-        yield return fader.FadeIn();
+        stageFade.gameObject.SetActive(true);
+        yield return stageFade.FadeIn();
         InitStage();
     }
     #endregion

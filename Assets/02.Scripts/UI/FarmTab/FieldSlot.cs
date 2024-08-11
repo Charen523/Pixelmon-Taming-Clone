@@ -116,7 +116,7 @@ public class FieldSlot : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("돈 없음 popup");
+                farmTab.ShowWarn("골드가 부족합니다!!");
                 return;
             }
         }
@@ -128,7 +128,7 @@ public class FieldSlot : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("다이아 없음 popup");
+                farmTab.ShowWarn("다이아가 부족합니다!!");
                 return;
             }
         }

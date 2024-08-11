@@ -17,7 +17,7 @@ public class UIManager : Singleton<UIManager>
 {
     public event Action<DirtyUI> UpdateUI;
 
-    [SerializeField] private List<Transform> parents;
+    [SerializeField] public List<Transform> parents;
     public Transform canvas;
     public Button tabOverlay;
     

@@ -46,7 +46,6 @@ public abstract class UpgradeSlot : MonoBehaviour
                 if (_curLv > maxLv)
                 {
                     _curLv = maxLv;
-                    Debug.LogWarning("CurLv에 부여된 값이 maxLv보다 큽니다.");
                 }
 
                 if (isStart)
