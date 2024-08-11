@@ -346,7 +346,7 @@ public class StageManager : Singleton<StageManager>
     {
         if (!isDungeon)
         {//중도포기 버튼.
-            Destroy(dgBoss.gameObject);
+            dgBoss.DisableDgMonster();
             return true;
         }
 
@@ -355,7 +355,7 @@ public class StageManager : Singleton<StageManager>
 
         if (bossLeftTime == 0)
         {//TimeOver
-            Destroy(dgBoss.gameObject);
+            dgBoss.DisableDgMonster();
             isDungeon = false;
             return true;
         }

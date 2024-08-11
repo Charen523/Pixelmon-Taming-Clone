@@ -40,12 +40,6 @@ public class DgMonster : MonoBehaviour
         dgProgress = await UIManager.Show<UIDungeonProgress>();
     }
 
-    private void OnDestroy()
-    {
-        SaveCurLv();
-        dgProgress.SetActive(false);
-        
-    }
 
     public void InitDgMonster(int index)
     {
@@ -108,5 +102,18 @@ public class DgMonster : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    public void DisableDgMonster()
+    {
+        StartCoroutine(KillDgMonster());
+    }
+
+    public IEnumerator KillDgMonster()
+    {
+        yield return new WaitForSeconds(1f);
+        SaveCurLv();
+        dgProgress.SetActive(false);
+        Destroy(gameObject);
     }
 }
