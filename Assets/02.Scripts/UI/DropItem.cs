@@ -2,8 +2,6 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
 
 public class DropItem : SerializedMonoBehaviour
 {
@@ -12,7 +10,7 @@ public class DropItem : SerializedMonoBehaviour
     Vector3 itemScale;
     [SerializeField] string itemName;
     [SerializeField] int amount;
-    [SerializeField] float waitTime = 1.5f;
+    [SerializeField] float waitTime = 1.25f;
     [SerializeField] WaitForSeconds delayTime;
     private void Awake()
     {
@@ -27,7 +25,7 @@ public class DropItem : SerializedMonoBehaviour
         .Prepend(sr.DOFade(0, 0))
         .Append(sr.DOFade(1, 1f))
         .Join(transform.DOShakeScale(0.5f, itemScale.x, 5, 1f, false))
-        .Append(sr.DOFade(0, 0.75f))
+        .Append(sr.DOFade(0, 1.5f))
         .OnComplete(() => gameObject.SetActive(false));
 
     }
@@ -36,6 +34,7 @@ public class DropItem : SerializedMonoBehaviour
     public void ExeCuteSequence(GameObject _enemy, int _amount)
     {
         amount = _amount;
+        sr.color = Color.white;
         transform.position = _enemy.transform.position;    
         StartCoroutine(MoveToPlayer());
     }
