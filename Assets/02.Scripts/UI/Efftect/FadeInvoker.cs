@@ -16,11 +16,11 @@ public class FadeInvoker : MonoBehaviour
 
     public IEnumerator FadeIn()
     {
-        Debug.Log("1");
         if (!isUsing)
         {
             isUsing = true;
             image.color = new Color(0, 0, 0, 0);
+            yield return waitFadeTime;
             image.DOFade(1f, 0.5f);
             yield return waitFadeTime;
             isUsing = false;
@@ -29,7 +29,6 @@ public class FadeInvoker : MonoBehaviour
 
     public IEnumerator FadeOut(WaitForSeconds time = null)
     {
-        Debug.Log("2");
         if (!isUsing)
         {
             isUsing = true;

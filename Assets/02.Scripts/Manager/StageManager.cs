@@ -147,7 +147,6 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator StartStage()
     {
-        Debug.Log("Starting Stage");
         fader.gameObject.SetActive(true);
         WaitForSeconds waitForSeconds = new WaitForSeconds(1f);
         yield return fader.FadeOut(waitForSeconds);
@@ -164,7 +163,6 @@ public class StageManager : Singleton<StageManager>
                 yield return bossDieDone;
                 ResetSpawnedEnemy();
 
-                Debug.Log("Boss Cleared");
                 fader.gameObject.SetActive(true);
                 yield return fader.FadeIn();
                 NextStageData();  
@@ -182,7 +180,6 @@ public class StageManager : Singleton<StageManager>
 
             if (!isDungeon)
             {
-                Debug.Log("NormalEnd");
                 fader.gameObject.SetActive(true);
                 yield return fader.FadeIn();
                 NextStageData();
@@ -191,16 +188,13 @@ public class StageManager : Singleton<StageManager>
         
         if (isDungeon)
         {
-            Debug.Log("dungeonEnter");
             fader.gameObject.SetActive(true);
             yield return fader.FadeIn();
             InitDgStage();
-            Debug.Log("dungeonEnterEnd");
             yield return fader.FadeOut();
 
             yield return proceedDgStg;
 
-            Debug.Log("dungeonExit");
             fader.gameObject.SetActive(true);
             yield return fader.FadeIn();
         }
@@ -235,7 +229,6 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator InfiniteStage()
     {
-        Debug.Log("InfiniteEnter");
         fader.gameObject.SetActive(true);
         yield return fader.FadeOut();
 
@@ -560,7 +553,6 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator delayBossBtn()
     {
-        Debug.Log("ReEnterBoss");
         fader.gameObject.SetActive(true);
         yield return fader.FadeIn();
         InitStage();
