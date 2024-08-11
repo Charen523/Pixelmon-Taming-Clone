@@ -227,6 +227,7 @@ public class UIPixelmonPopUp : UIBase
         SetEvolvedCount();
         SetPsvEffect();
         SetOwnedEffect();
+        pxmTab.CheckedEvolve();
         Debug.Log("합성완료(팝업)");
     }
 

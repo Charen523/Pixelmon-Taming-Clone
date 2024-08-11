@@ -9,16 +9,15 @@ using UnityEngine.UI;
 public class PixelmonTab : UIBase
 {
     [Header("UI")]
-    [SerializeField]
-    private Toggle prossessToggle;
-
-    [SerializeField]
-    private TextMeshProUGUI foodCountTxt;
-
-    [SerializeField] TextMeshProUGUI ownSkillEffectTxt;
+    [SerializeField] private Toggle prossessToggle;
+    [SerializeField] private TextMeshProUGUI foodCountTxt;
+    [SerializeField] private TextMeshProUGUI ownSkillEffectTxt;
+    public Image evolveIcon;
+    public Sprite[] btnColor;
 
     public GameObject equipOverlay;
     public int choiceId;
+    public bool isAdvancable;
     public TabState tabState;
 
     public UnityAction<int> unLockAction;
@@ -54,7 +53,7 @@ public class PixelmonTab : UIBase
     public PixelmonEquipSlot[] equipData = new PixelmonEquipSlot[5];
     #endregion
 
-    private async void Awake()
+    protected override async void Awake()
     {
         saveManager = SaveManager.Instance;
         userData = saveManager.userData;
@@ -95,26 +94,39 @@ public class PixelmonTab : UIBase
             equipData[i].pxmtab = this;
         }
 
-        CheckedData();
+        OnProssessionToggle();
         SetfoodCount();
+        CheckedEvolve();
+        InitInfo();
     }
 
     public void InitInfo()
     {
+        ownSkillEffectTxt.text = $"캐릭터의 HP {pixelmonManager.perHp:N0}%, 방어력 {pixelmonManager.perDef:N0}% 증가";
+    }
 
+    public void CheckedEvolve()
+    {
+        if (isAdvancable)
+            evolveIcon.sprite = btnColor[1];
+        else
+        {
+            foreach (var data in ownedData)
+            {
+                if (data.myPxmData.isAdvancable)
+                {
+                    isAdvancable = true;
+                    evolveIcon.sprite = btnColor[1];
+                }
+            }
+            if(!isAdvancable)
+                evolveIcon.sprite = btnColor[0];
+        }
     }
 
     public void SetfoodCount()
     {
         foodCountTxt.text = userData.food.ToString();
-    }
-
-    public void CheckedData()
-    {
-        //findall 로 널일떄만
-        //possessData = allData.FindAll(obj => obj.isPossessed);
-        //noneData = allData.FindAll(obj => !obj.isPossessed);
-        OnProssessionToggle();
     }
 
     public void OnProssessionToggle()
@@ -173,15 +185,20 @@ public class PixelmonTab : UIBase
 
     public void OnAutoEvolved()
     {
+        if (!isAdvancable) return;
         foreach (var data in ownedData)
         {
-            if (data.myPxmData.isAdvancable)
+            while (data.myPxmData.isAdvancable)
             {
+                if (data.myPxmData.star >= 5) break;
                 data.OnEvolved();
-                Debug.Log($"{data.myPxmData.id} 합성완료");
             }
+            Debug.Log($"{data.myPxmData.id} 합성완료");
         }
+        isAdvancable = false;
+        evolveIcon.sprite = btnColor[0];
     }
+
 
     public void GetPixelmon(int index)
     {
