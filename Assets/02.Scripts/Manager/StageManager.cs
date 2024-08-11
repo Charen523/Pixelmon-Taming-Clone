@@ -164,6 +164,11 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator StartStage()
     {
+        if (QuestManager.Instance.isStageQ)
+        {
+            QuestManager.Instance.OnQuestEvent();
+        }
+
         if (!isStgFade)
         {
             isStgFade = true;
