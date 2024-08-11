@@ -12,6 +12,19 @@ public class UIEggLvPopup : UIBase
     [SerializeField] private TextMeshProUGUI CurLvNum;
     [SerializeField] private TextMeshProUGUI NextLvNum;
 
+    #region 확률표
+    [SerializeField] private TextMeshProUGUI CommonCurNum;
+    [SerializeField] private TextMeshProUGUI CommonNextNum;
+    [SerializeField] private TextMeshProUGUI AdvancedCurNum;
+    [SerializeField] private TextMeshProUGUI AdvancedNextNum;
+    [SerializeField] private TextMeshProUGUI RareCurNum;
+    [SerializeField] private TextMeshProUGUI RareNextNum;
+    [SerializeField] private TextMeshProUGUI EpicCurNum;
+    [SerializeField] private TextMeshProUGUI EpicNextNum;
+    [SerializeField] private TextMeshProUGUI LegendaryCurNum;
+    [SerializeField] private TextMeshProUGUI LegendaryNextNum;
+    #endregion
+
     #region Lv업 게이지
     [SerializeField] private TextMeshProUGUI Desc;
     [SerializeField] private TextMeshProUGUI PriceTxt;
@@ -36,6 +49,13 @@ public class UIEggLvPopup : UIBase
     private int skipDia = 1000;
     #endregion
 
+    #region 버튼 색상 Sprite
+    [SerializeField] private Sprite GaugeUpSprite;
+    [SerializeField] private Sprite LvUpSprite;
+    [SerializeField] private Sprite SkipSprite;
+    [SerializeField] private Sprite GraySprite;
+    #endregion
+
     private string[] descs = { "Lv업 게이지", "Lv업 중" };
     private UIMiddleBar uiMiddleBar;
     private UserData userData => SaveManager.Instance.userData;
@@ -44,6 +64,9 @@ public class UIEggLvPopup : UIBase
     private void Start()
     {
         UIManager.Instance.UpdateUI += UpdateEggLvPopupUI;
+
+        UpdateLvAndRateUI();
+
         for (int i = 0; i < userData.eggLv / 5 + 2; i++)
         {
             lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
@@ -55,8 +78,7 @@ public class UIEggLvPopup : UIBase
     public void SetPopup(UIMiddleBar middleBar)
     {
         uiMiddleBar = middleBar;
-        UpdateLvAndRateUI();
-
+        
         if (userData.isLvUpMode) // Lv업 중
             SetLvUpMode();
         else // Lv업 게이지
@@ -80,37 +102,89 @@ public class UIEggLvPopup : UIBase
     }
 
     private void UpdateLvAndRateUI()
-    {
+    { 
         CurLvNum.text = userData.eggLv.ToString();
         NextLvNum.text = (userData.eggLv + 1).ToString();
+
+        var curNum = DataManager.Instance.GetData<EggRateData>(userData.eggLv.ToString());
+        var nextNum = DataManager.Instance.GetData<EggRateData>((userData.eggLv + 1).ToString());
+
+        CommonCurNum.text = curNum.common.ToString();
+        CommonNextNum.text = nextNum.common.ToString();
+        AdvancedCurNum.text = curNum.advanced.ToString();
+        AdvancedNextNum.text = nextNum.advanced.ToString();
+        RareCurNum.text = curNum.rare.ToString();
+        RareNextNum.text = nextNum.rare.ToString();
+        EpicCurNum.text = curNum.epic.ToString();
+        EpicNextNum.text = nextNum.epic.ToString();
+        LegendaryCurNum.text = curNum.legendary.ToString();
+        LegendaryNextNum.text = nextNum.legendary.ToString();
+    }
+
+    public enum EggLvBtnType
+    {
+        GaugeUp,
+        LvUp,
+        DiaBtn,
+        AdBtn
+    }
+    private void SetBtnSprite(EggLvBtnType type, Button btn, bool isInteractable)
+    {
+        if (!isInteractable)
+        {
+            btn.image.sprite = GraySprite;
+            btn.interactable = false;
+        }            
+        else
+        {
+            btn.interactable = true;
+            switch (type)
+            {
+                case EggLvBtnType.GaugeUp: btn.image.sprite = GaugeUpSprite; break;
+                case EggLvBtnType.LvUp: btn.image.sprite = LvUpSprite; break;
+                case EggLvBtnType.DiaBtn:
+                case EggLvBtnType.AdBtn:
+                    btn.image.sprite = SkipSprite; break;
+            }
+        }
     }
 
     private void SetLvUpBtn()
     {
         if (userData.fullGaugeCnt == lvUpGauges.Count)
         {
-            LvUpBtn.interactable = true;
-            GaugeUpBtn.interactable = false;
+            SetBtnSprite(EggLvBtnType.LvUp, LvUpBtn, true);
+            SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, false);
         }
         else
         {
-            LvUpBtn.interactable = false;
-            GaugeUpBtn.interactable = true;
+            SetBtnSprite(EggLvBtnType.LvUp, LvUpBtn, false);
+            SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, true);
         }
     }
 
     private void SetGaugeUpBtn()
     {
-        if(userData.gold >= price)
-            GaugeUpBtn.interactable = true;
-        else GaugeUpBtn.interactable = false;
+        if (userData.gold >= price)
+        {
+            SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, true);
+        }
+        else
+        {
+            SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, false);
+        }
     }
 
     private void SetDiaBtn()
     {
         if(userData.diamond >= skipDia)
-            DiaBtn.interactable = true;
-        else DiaBtn.interactable = false;
+        {
+            SetBtnSprite(EggLvBtnType.DiaBtn, DiaBtn, true);
+        }           
+        else 
+        {
+            SetBtnSprite(EggLvBtnType.DiaBtn, DiaBtn, false);
+        }
     }
 
     private void SetLvUpMode()
@@ -146,6 +220,7 @@ public class UIEggLvPopup : UIBase
 
     public void OnClickGaugeUpBtn()
     {
+        Debug.Log("Click");
         lvUpGauges[userData.fullGaugeCnt].GaugeUp();
         SaveManager.Instance.SetFieldData(nameof(userData.fullGaugeCnt), 1, true);
         SaveManager.Instance.SetFieldData(nameof(userData.gold), -price, true);
