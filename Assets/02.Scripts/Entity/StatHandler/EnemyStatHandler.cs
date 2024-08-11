@@ -22,9 +22,9 @@ public class EnemyStatHandler : MonoBehaviour
         float deltaStage = (world - 1) * 20 + stage;
 
 
-        enemyAtk = data.atk * (deltaStage * 101 * 0.01f) * deltaDiff;
-        enemyMaxHp = data.hp * (deltaStage * 101 * 0.01f) * deltaDiff;
-        enemyDef = data.def * (deltaStage * 101 * 0.01f) * deltaDiff;
+        enemyAtk = data.atk * ((deltaStage + 100) * 0.01f) * deltaDiff;
+        enemyMaxHp = data.hp * ((deltaStage * 5 + 100) * 0.01f) * deltaDiff;
+        enemyDef = data.def * ((deltaStage + 100) * 0.01f) * deltaDiff;
 
         enemy.healthSystem.initEnemyHealth(enemyMaxHp);
     }
