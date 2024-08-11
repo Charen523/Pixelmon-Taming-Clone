@@ -142,14 +142,17 @@ public class QuestManager : Singleton<QuestManager>
 
         switch (curQIndex)
         {
-            case "Q2":
-            case "Q4":
-                break;
             case "Q1":
-                progress = userData.userLv;
+                progress = 0;
+                break;
+            case "Q2":
+                progress = 0;
                 break;
             case "Q3":
-                 progress = StageProgress;
+                progress = StageProgress;
+                break;
+            case "Q4":
+                progress = userData.userLv;
                 break;
         }
 
