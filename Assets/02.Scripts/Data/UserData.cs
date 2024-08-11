@@ -24,6 +24,9 @@ public class UserData
 
     #region Tutorial
     public bool isDoneTutorialMsg = false;
+    public bool isOpenSkillTab = false;
+    public bool isOpenFarmTab = false;
+    public bool isOpenDungeonTab = false;
     #endregion
 
     #region Stage Info
