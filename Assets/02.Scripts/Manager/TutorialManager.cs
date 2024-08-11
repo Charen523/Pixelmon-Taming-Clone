@@ -14,6 +14,8 @@ public class TutorialManager : Singleton<TutorialManager>
     public GameObject FarmLock;
     public GameObject DungeonLock;
 
+    public GameObject TutorialArrow;
+
     protected override void Awake()
     {
         base.Awake();
@@ -31,7 +33,10 @@ public class TutorialManager : Singleton<TutorialManager>
         if (userData.isOpenDungeonTab)
             DungeonLock.SetActive(false);
 
-        StageManager.Instance.OnChangeThemeNum += OpenTab;
+        if (SaveManager.Instance.userData.isSetArrowOnEgg)
+            TutorialArrow.SetActive(false);
+
+            StageManager.Instance.OnChangeThemeNum += OpenTab;
     }
 
     private void OpenTab(int num)
@@ -63,5 +68,21 @@ public class TutorialManager : Singleton<TutorialManager>
                 }                 
                 break;
         }
+    }
+
+    public void SetArrow(GameObject obj, float addYPos)
+    {
+        Vector3 currentPosition = obj.transform.position;
+        Vector3 newPosition = new Vector3(currentPosition.x, currentPosition.y + addYPos, currentPosition.z);
+        TutorialArrow.transform.position = newPosition;
+    }
+
+    public void HideArrow()
+    {
+        if (!SaveManager.Instance.userData.isSetArrowOnEgg)
+        {
+            TutorialArrow.SetActive(false);
+            SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.isSetArrowOnEgg), true);
+        }           
     }
 }
