@@ -15,21 +15,11 @@ public class Enemy : SerializedMonoBehaviour
         if (fsm == null)
         {
             GetComponent<EnemyFSM>();
-
-            if (fsm == null)
-            {
-                Debug.LogError($"{gameObject.name} 객체에 stateMachine 부여되지 않음!");
-            }
         }
 
         if (healthSystem == null )
         {
             GetComponent<EnemyHealthSystem>();
-
-            if (healthSystem == null)
-            {
-                Debug.LogError($"{gameObject.name} 객체에 healthSystem이 부여되지 않음!");
-            }
         }
 
         fsm.Init();

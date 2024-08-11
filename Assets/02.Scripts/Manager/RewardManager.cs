@@ -36,18 +36,27 @@ public class RewardManager : Singleton<RewardManager>
 
     public void GetReward(string itemName, int _amount)
     {
-        //TODO: 현재 스테이지에 비례하는 보상량 증가
-        if (itemName == nameof(userData.gold) || itemName == nameof(userData.userExp))
-        {
-            BigInteger amount = _amount;
-            SaveManager.Instance.SetFieldData(itemName, amount, true);
+        switch(itemName)
+        {//TODO: 땜빵으로 떼운 스테이지별 증가 보상
+            case nameof(userData.gold):
+            case nameof(userData.userExp):
+                BigInteger amount1 = _amount;
+                amount1 *= StageManager.Instance.worldNum * (StageManager.Instance.diffNum + 1);
+                SaveManager.Instance.SetFieldData(itemName, amount1, true);
+                break;
+            case nameof(userData.diamond):
+                int amount2 = _amount;
+                amount2 *= (StageManager.Instance.worldNum + StageManager.Instance.diffNum * 10);
+                SaveManager.Instance.SetFieldData(itemName, amount1, true);
+                break;
+            default:
+                int amount3 = _amount;
+                SaveManager.Instance.SetFieldData(itemName, amount1, true);
+                break;
         }
-        else
-        {
-            int amount = _amount;
-            SaveManager.Instance.SetFieldData(itemName, amount, true);
-        }
+
     }
+
     private bool CheckDropRate(float rate)
     {
         return UnityEngine.Random.Range(0, 100) <= rate;

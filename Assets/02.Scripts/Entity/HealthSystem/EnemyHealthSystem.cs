@@ -10,11 +10,6 @@ public class EnemyHealthSystem : HealthSystem
         if (enemy == null)
         {
             enemy = GetComponent<Enemy>();
-
-            if (enemy == null)
-            {
-                Debug.LogError($"{gameObject.name} 객체에 Enemy 클래스 없음!");
-            }
         }
     }
 
