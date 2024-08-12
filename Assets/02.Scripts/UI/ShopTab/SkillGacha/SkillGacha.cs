@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,16 @@ public class SkillGacha : MonoBehaviour
     private int oneCostTicket = 1; // 1티켓 == 1회 뽑기
     private int oneCostDia = 200;  // 200다이아 == 1회 뽑기
 
+    private Dictionary<string, List<ActiveData>> RankDatas = new Dictionary<string, List<ActiveData>>();
+    private Dictionary<string, float> rankProb = new Dictionary<string, float>
+{
+    { "SS", 0.02f },
+    { "S", 0.08f },
+    { "A", 0.15f },
+    { "B", 0.25f },
+    { "C", 0.50f }
+};
+
     private async void Awake()
     {
         skillGachaPopup = await UIManager.Show<UISkillGachaPopup>();
@@ -24,6 +35,16 @@ public class SkillGacha : MonoBehaviour
     private void Start()
     {
         UIManager.Instance.UpdateUI += UpdateCostUI;
+
+        var datas = DataManager.Instance.activeData.data;
+        for (int i = 0; i < datas.Count; i++)
+        {
+            // 키가 이미 존재하는지 확인
+            if (RankDatas.ContainsKey(datas[i].rank))
+                RankDatas[datas[i].rank].Add(datas[i]);
+            else
+                RankDatas.Add(datas[i].rank, new List<ActiveData> { datas[i] });
+        }
     }
 
     public void SetSkillGacha()
@@ -75,23 +96,40 @@ public class SkillGacha : MonoBehaviour
         Gacha(multiplier);
     }
 
+    private string RandRank()
+    {
+        int randProb = UnityEngine.Random.Range(1, 101);
+
+        float cumProb = 0;
+        foreach (var prob in rankProb)
+        {
+            cumProb += prob.Value * 100;
+            if (randProb <= cumProb)
+            {
+                Debug.Log("Selected Rank: " + prob.Key);
+                return prob.Key;
+            }
+        }
+
+        return null;
+    }
     private void Gacha(int count)
     {     
         ActiveData[] resultDatas = new ActiveData[count];       
         var ownedSkills = userData.ownedSkills;
-        int id;
 
         for (int i = 0; i < count; i++)
         {
             randSkill = new MyAtvData();
             resultDatas[i] = new ActiveData();
 
-            id = UnityEngine.Random.Range(0, DataManager.Instance.activeData.data.Count);
-            resultDatas[i] = DataManager.Instance.activeData.data[id];
+            var rankList = RankDatas[RandRank()];
+            int randIndex = UnityEngine.Random.Range(0, rankList.Count);
+            resultDatas[i] = rankList[randIndex];
 
-            if (SkillManager.Instance.skillTab.allData[id].myAtvData.isOwned) // 이미 있는 스킬
+            if (SkillManager.Instance.skillTab.allData[resultDatas[i].id].myAtvData.isOwned) // 이미 있는 스킬
             {
-                int index = SkillManager.Instance.skillTab.allData[id].atvData.dataIndex;
+                int index = SkillManager.Instance.skillTab.allData[resultDatas[i].id].atvData.dataIndex;
                 if(index != -1)
                     SaveManager.Instance.UpdateSkillData(index, "evolvedCount", ownedSkills[index].evolvedCount + 1);
             }
@@ -103,7 +141,7 @@ public class SkillGacha : MonoBehaviour
                 ownedSkills.Add(randSkill);
                 SaveManager.Instance.SetFieldData(nameof(userData.ownedSkills), ownedSkills);
             }
-            SkillManager.Instance.AddSkill(id);
+            SkillManager.Instance.AddSkill(resultDatas[i].id);
         }
 
         skillGachaPopup.SetActive(true);
