@@ -504,11 +504,12 @@ public class StageManager : Singleton<StageManager>
             progressCoroutine = null;
         }
 
+        bossTxt.gameObject.SetActive(false);
+
         if (isDungeon)
         {
             Player.Instance.transform.position += Vector3.down * 3;
             bossTimeSldr.gameObject.SetActive(true);
-            bossTxt.gameObject.SetActive(false);
             bossBtn.SetActive(false);
             stageTitleTxt.text = $"Dungeon Lv.{dgBoss.dgLv}";
             StageIcon.gameObject.SetActive(false);
@@ -516,7 +517,6 @@ public class StageManager : Singleton<StageManager>
         else if (userData.isInfinite)
         {
             bossTimeSldr.gameObject.SetActive(false);
-            bossTxt.gameObject.SetActive(false);
             bossBtn.SetActive(true);
             stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.gameObject.SetActive(true);
@@ -538,7 +538,6 @@ public class StageManager : Singleton<StageManager>
         else
         {
             bossTimeSldr.gameObject.SetActive(false);
-            bossTxt.gameObject.SetActive(false);
             bossBtn.SetActive(false);
             stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.gameObject.SetActive(true);
