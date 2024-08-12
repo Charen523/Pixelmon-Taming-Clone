@@ -7,7 +7,7 @@ public class UserData
 {
     #region Private User
     public string userId;
-    public string userName = "song이름";
+    public string userName = "아그니스";
     public int userLv = 1;
     public string _exp = "0";
     public BigInteger userExp = 0;
@@ -23,6 +23,7 @@ public class UserData
     #endregion
 
     #region Tutorial
+    public bool isEggHatched = false;
     public bool isDoneTutorialMsg = false;
     public bool isOpenSkillTab = false;
     public bool isOpenFarmTab = false;
