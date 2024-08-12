@@ -85,11 +85,15 @@ public class QuestManager : Singleton<QuestManager>
     private void SetQuestCountTxt()
     {
         int goal = curGoal;
-        int progress = Mathf.Min(curProgress, goal); 
+        int progress = curProgress;
         if (isStageQ)
         {
             progress = progress > goal ? 1 : 0;
             goal = 1;
+        }
+        else
+        {
+            progress = Mathf.Min(curProgress, goal); 
         }
 
         if (progress < goal)
