@@ -146,7 +146,13 @@ public class PixelmonTab : UIBase
         for (int i = 0; i < equipData.Length; i++)
         {
             if (!equipData[i].isLocked)
+            {
                 arrCount++;
+                if (equipData[i].myPxmData != null && equipData[i].myPxmData.isEquipped)
+                {
+                    UnEquipSlot(equipData[i].slotIndex, equipData[i].myPxmData.id);
+                }
+            }
         }
 
         if(arrCount == 0) return;
@@ -244,17 +250,17 @@ public class PixelmonTab : UIBase
     public void EquipedPixelmon(int slotIndex)
     {
         equipData[slotIndex].Equip(allData[choiceId].myPxmData);
-        allData[choiceId].equipIcon.SetActive(true);
         pixelmonManager.equipAction?.Invoke(slotIndex, equipData[slotIndex].myPxmData);
+        allData[choiceId].equipIcon.SetActive(true);
         equipOverlay.gameObject.SetActive(false);        
         tabState = TabState.Normal;
     }
 
     public void UnEquipSlot(int slotIndex, int choiceId)
     {
-        pixelmonManager.unEquipAction?.Invoke(slotIndex);
         allData[choiceId].myPxmData.isEquipped = false;
         allData[choiceId].equipIcon.SetActive(false);
+        pixelmonManager.unEquipAction?.Invoke(slotIndex);
         equipData[slotIndex].UnEquip();
     }
 

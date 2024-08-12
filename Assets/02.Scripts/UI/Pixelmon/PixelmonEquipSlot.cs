@@ -84,22 +84,25 @@ public class PixelmonEquipSlot : PixelmonSlot
 
     public override void OnClick()
     {
-        if (isLocked) return;
+        if (isLocked)
+        {
+            UIManager.Instance.ShowWarn("슬롯이 잠겨있습니다. 추후 개방");
+            return;
+        }
         if (myPxmData == null && pxmtab.tabState != TabState.Equip)
         {
+            UIManager.Instance.ShowWarn("슬롯이 비어있습니다!");
             return;
         }
         else if (myPxmData == null && pxmtab.tabState == TabState.Equip)
         {
             pxmtab.EquipedPixelmon(slotIndex);
-            player.LocatedPixelmon();
         }
         else if (pxmtab.tabState == TabState.Equip)
         {
             if (myPxmData.isEquipped)
                 pxmtab.UnEquipSlot(slotIndex, myPxmData.id);
             pxmtab.EquipedPixelmon(slotIndex);
-            player.LocatedPixelmon();
         }
         else if(pxmtab.tabState != TabState.Equip)
         {

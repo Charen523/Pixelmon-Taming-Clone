@@ -14,7 +14,6 @@ public class Player : Singleton<Player>
 
     [Header("LocatedPixelmon")]
     public float radius = 2.0f;
-    public int currentPixelmonCount;
     public Pixelmon[] pixelmons = new Pixelmon[5];
 
     private void Start()
@@ -54,12 +53,12 @@ public class Player : Singleton<Player>
 
     public void LocatedPixelmon()
     {
-        if(currentPixelmonCount == 0) return;
         var pxmList = pixelmons.ToList().FindAll((obj) => obj != null);
+        if(pxmList.Count == 0) return;
         int angle = 360 / pxmList.Count;
         int currentAngle = -90;
 
-        switch (currentPixelmonCount)
+        switch (pxmList.Count)
         {
             case 2:
                 currentAngle = 0;
