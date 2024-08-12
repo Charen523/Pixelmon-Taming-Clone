@@ -177,7 +177,9 @@ public class StageManager : Singleton<StageManager>
         {
             isStgFade = true;
             allFade.gameObject.SetActive(true);
+            Debug.Log("fade 1단계");
             yield return allFade.FadeOut();
+            Debug.Log("fade 5단계");
         }
         else
         {
@@ -527,7 +529,7 @@ public class StageManager : Singleton<StageManager>
             bossTimeSldr.gameObject.SetActive(true);
             bossTxt.gameObject.SetActive(true);
             bossBtn.SetActive(false);
-            stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum} Boss";
+            stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.gameObject.SetActive(true);
             StageIcon.sprite = iconSprite[1];
             progressSldr.value = 1;
