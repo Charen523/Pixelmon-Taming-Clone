@@ -138,4 +138,9 @@ public class UIManager : Singleton<UIManager>
     {
         UpdateUI?.Invoke(dirtyUI);
     }
+
+    public async void ShowWarn(string msg)
+    {
+        await Show<WarnPopup>(msg);
+    }
 }

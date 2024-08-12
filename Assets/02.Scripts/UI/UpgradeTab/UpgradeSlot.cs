@@ -103,11 +103,11 @@ public abstract class UpgradeSlot : MonoBehaviour
     }
 
     #region UI Methods
-    public async void BuyBtn()
+    public void BuyBtn()
     {
         if (nextPrice > ownGold)
         {
-            await UIManager.Show<WarnPopup>("골드가 부족합니다!!");
+            UIManager.Instance.ShowWarn("골드가 부족합니다!!");
         }
         else
         {

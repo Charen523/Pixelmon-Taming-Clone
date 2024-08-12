@@ -23,12 +23,11 @@ public class WarnPopup : UIBase
 
     public override void Opened(object[] param)
     {
-        warnTxt.text = param[0].ToString();
-
         if (myCoroutine != null)
         {
             return;
         }
+        warnTxt.text = param[0].ToString();
         myCoroutine = StartCoroutine(ShowWarning());
     }
 
