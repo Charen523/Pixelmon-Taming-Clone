@@ -88,19 +88,21 @@ public class QuestManager : Singleton<QuestManager>
         int progress = Mathf.Min(curProgress, goal); 
         if (isStageQ)
         {
-            progress = progress >= goal ? 1 : 0;
+            progress = progress > goal ? 1 : 0;
             goal = 1;
         }
 
-        if (progress < goal)
+        if (!isStageQ)
         {
-            countTxt.text = $"<color=#FF2525>({progress} / {goal})</color>";
+            if (progress < goal)
+            {
+                countTxt.text = $"<color=#FF2525>({progress} / {goal})</color>";
+            }
+            else
+            {
+                countTxt.text = $"<color=#82FF55>({progress} / {goal})</color>";
+            }
         }
-        else
-        {
-            countTxt.text = $"<color=#82FF55>({progress} / {goal})</color>";
-        }
-
     }
 
     public void QuestClearBtn()
@@ -155,7 +157,6 @@ public class QuestManager : Singleton<QuestManager>
                 progress = userData.userLv;
                 break;
         }
-
         saveManager.SetData(nameof(userData.questProgress), progress);
     }
 

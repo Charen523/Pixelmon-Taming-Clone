@@ -31,8 +31,36 @@ public class UIBottomBar : MonoBehaviour
         }
     }
 
-    public void OnvalueChanged()
+    public void OnvalueChanged(int index)
     {
+        if (TutorialManager.Instance.Locks[index].activeInHierarchy)
+        {
+            string msg = "";
+            switch(index)
+            {
+                case 0:
+                    msg = "해금조건: 첫 알뽑기";
+                    break;
+                case 1:
+                    msg = "해금조건: 첫 알뽑기";
+                    break;
+                case 2:
+                    msg = "해금조건: 쉬움 1 - 5 클리어";
+                    break;
+                case 3:
+                    msg = "해금조건: 쉬움 1 - 10 클리어";
+                    break;
+                case 4:
+                    msg = "해금조건: 쉬움 1 - 15 클리어";
+                    break;
+                case 5:
+                    msg = "해금조건: 쉬움 1 - 5 클리어";
+                    break;
+            }
+            UIManager.Instance.ShowWarn(msg);
+            return;
+        }
+
         overlayPanel.SetActive(selectedIndex >= 0);
         uiTabs.ForEach(obj => obj.gameObject.SetActive(false)); //모든 탭 끄기.
         if (selectedIndex >= 0)

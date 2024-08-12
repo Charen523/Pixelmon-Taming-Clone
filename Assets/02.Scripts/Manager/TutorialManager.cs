@@ -9,10 +9,7 @@ public enum OpenTabType
 }
 public class TutorialManager : Singleton<TutorialManager>
 {
-    public GameObject ShopLock;
-    public GameObject SkillLock;
-    public GameObject FarmLock;
-    public GameObject DungeonLock;
+    public GameObject[] Locks;
 
     public GameObject TutorialArrow;
 
@@ -23,15 +20,15 @@ public class TutorialManager : Singleton<TutorialManager>
 
         if (userData.isOpenSkillTab)
         {
-            ShopLock.SetActive(false);
-            SkillLock.SetActive(false);
+            Locks[5].SetActive(false);
+            Locks[2].SetActive(false);
         }
         
         if(userData.isOpenFarmTab)
-            FarmLock.SetActive(false);
+            Locks[3].SetActive(false);
 
         if (userData.isOpenDungeonTab)
-            DungeonLock.SetActive(false);
+            Locks[4].SetActive(false);
 
         if (SaveManager.Instance.userData.isSetArrowOnEgg)
             TutorialArrow.SetActive(false);
@@ -49,22 +46,22 @@ public class TutorialManager : Singleton<TutorialManager>
                 if (!userData.isOpenSkillTab)
                 {
                     SaveManager.Instance.SetFieldData(nameof(userData.isOpenSkillTab), true);
-                    ShopLock.SetActive(false);
-                    SkillLock.SetActive(false);
+                    Locks[5].SetActive(false);
+                    Locks[2].SetActive(false);
                 }
                 break;
             case 3:
                 if (!userData.isOpenFarmTab)
                 {
                     SaveManager.Instance.SetFieldData(nameof(userData.isOpenFarmTab), true);
-                    FarmLock.SetActive(false);
+                    Locks[3].SetActive(false);
                 }                    
                 break;
             case 1:
                 if (!userData.isOpenDungeonTab)
                 {
                     SaveManager.Instance.SetFieldData(nameof(userData.isOpenDungeonTab), true);
-                    DungeonLock.SetActive(false);
+                    Locks[4].SetActive(false);
                 }                 
                 break;
         }
