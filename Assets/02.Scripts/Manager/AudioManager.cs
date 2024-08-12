@@ -18,22 +18,6 @@ public class AudioManager : Singleton<AudioManager>
     public bool[] isMuted = new bool[3];
     private float[] preVolumes = new float[3];
 
-    protected override void Awake()
-    {
-        isDontDestroyOnLoad = true;
-        base.Awake();
-
-        bgmAudioSource = GetComponent<AudioSource>();
-        if (bgmAudioSource == null)
-        {
-            bgmAudioSource = gameObject.AddComponent<AudioSource>();
-        }
-
-        // BGM 믹서 그룹 설정
-        bgmAudioSource.outputAudioMixerGroup = bgmMixerGroup;
-        bgmAudioSource.loop = true;
-    }
-
     private void Start()
     {
         ChangeBackGroundMusic(BgmIndex.Intro);
@@ -49,66 +33,36 @@ public class AudioManager : Singleton<AudioManager>
 
     public static void PlayClip(AudioClip clip)
     {
-        //효과음.
+        //효과음?
     }
 
-    public void SetMasterVolume(float volume)
+    public void ToggleMute(int index)
     {
-        audioMixer.SetFloat("MasterVolume", volume);
-    }
+        string audioName;
 
-    public void SetBGMVolume(float volume)
-    {
-        audioMixer.SetFloat("BGMVolume", volume);
-    }
-
-    public void SetSFXVolume(float volume)
-    {
-        audioMixer.SetFloat("SFXVolume", volume);
-    }
-
-    public void ToggleMasterMute()
-    {
-        isMuted[0] = !isMuted[0];
-
-        if (isMuted[0])
+        switch (index)
         {
-            audioMixer.GetFloat("MasterVolume", out preVolumes[0]);
-            audioMixer.SetFloat("MasterVolume", -80);
+            case 1:
+                audioName = "BGMVolume";
+                break;
+            case 2:
+                audioName = "SFXVolume";
+                break;
+            default:
+                audioName = "MasterVolume";
+                break;
+        }
+
+        isMuted[index] = !isMuted[index];
+
+        if (isMuted[index])
+        {
+            audioMixer.GetFloat(audioName, out preVolumes[index]);
+            audioMixer.SetFloat(audioName, -80);
         }
         else
         {
-            audioMixer.SetFloat("MasterVolume", preVolumes[0]);
-        }
-    }
-
-    public void ToggleBGMMute()
-    {
-        isMuted[1] = !isMuted[1];
-
-        if (isMuted[1])
-        {
-            audioMixer.GetFloat("BGMVolume", out preVolumes[1]);
-            audioMixer.SetFloat("BGMVolume", -80);
-        }
-        else
-        {
-            audioMixer.SetFloat("BGMVolume", preVolumes[1]);
-        }
-    }
-
-    public void ToggleSFXMute()
-    {
-        isMuted[2] = !isMuted[2];
-
-        if (isMuted[2])
-        {
-            audioMixer.GetFloat("SFXVolume", out preVolumes[2]);
-            audioMixer.SetFloat("SFXVolume", -80);
-        }
-        else
-        {
-            audioMixer.SetFloat("SFXVolume", preVolumes[2]);
+            audioMixer.SetFloat(audioName, preVolumes[index]);
         }
     }
 }
