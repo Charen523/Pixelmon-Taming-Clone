@@ -134,6 +134,13 @@ public class EggHatch : MonoBehaviour
 
     public IEnumerator ClickEgg(Button btn)
     {
+        if (userData.isEggHatched == false)
+        {
+            SaveManager.Instance.SetFieldData(nameof(userData.isEggHatched), true);
+            TutorialManager.Instance.Locks[0].SetActive(false);
+            TutorialManager.Instance.Locks[1].SetActive(false);
+        }
+
         btn.interactable = false;
         if (userData.isGetPxm)
         {

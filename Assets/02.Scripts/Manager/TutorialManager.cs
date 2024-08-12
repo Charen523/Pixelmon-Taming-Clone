@@ -18,6 +18,12 @@ public class TutorialManager : Singleton<TutorialManager>
         base.Awake();
         var userData = SaveManager.Instance.userData;
 
+        if (userData.isEggHatched)
+        {
+            Locks[0].SetActive(false);
+            Locks[1].SetActive(false);
+        }
+
         if (userData.isOpenSkillTab)
         {
             Locks[5].SetActive(false);
