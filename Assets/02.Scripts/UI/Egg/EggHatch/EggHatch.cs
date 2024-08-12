@@ -192,7 +192,7 @@ public class EggHatch : MonoBehaviour
         }
         if (totalProb != 100)
         {
-            Debug.LogError("확률 합 != 100");
+            //Debug.LogError("확률 합 != 100");
         }
         #endregion
 

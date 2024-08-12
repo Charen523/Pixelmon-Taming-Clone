@@ -177,9 +177,9 @@ public class StageManager : Singleton<StageManager>
         {
             isStgFade = true;
             allFade.gameObject.SetActive(true);
-            Debug.Log("fade 1단계");
+            //Debug.Log("fade 1단계");
             yield return allFade.FadeOut();
-            Debug.Log("fade 5단계");
+            //Debug.Log("fade 5단계");
         }
         else
         {

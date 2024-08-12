@@ -86,11 +86,11 @@ public class ResourceManager : Singleton<ResourceManager>
             case AsyncOperationStatus.None:
                 break;
             case AsyncOperationStatus.Succeeded:
-                Debug.Log("다운로드 성공!");
+                //Debug.Log("다운로드 성공!");
                 break;
             case AsyncOperationStatus.Failed:
-                Debug.Log("다운로드 실패 : " + handle.OperationException.Message);
-                Debug.LogError(handle.OperationException.ToString());
+                //Debug.Log("다운로드 실패 : " + handle.OperationException.Message);
+                //Debug.LogError(handle.OperationException.ToString());
                 break;
             default:
                 break;
@@ -131,7 +131,7 @@ public class ResourceManager : Singleton<ResourceManager>
         }
         catch (Exception e)
         {
-            Debug.LogError(e.Message);
+            //Debug.LogError(e.Message);
         }
         return default;
     }
@@ -154,7 +154,7 @@ public class ResourceManager : Singleton<ResourceManager>
         }
         catch (Exception e)
         {
-            Debug.LogError(e.Message);
+            //Debug.LogError(e.Message);
         }
         return default;
     }
@@ -169,7 +169,7 @@ public class ResourceManager : Singleton<ResourceManager>
         }
         catch (Exception e)
         {
-            Debug.LogWarning(e.Message);
+            //Debug.LogWarning(e.Message);
         }
         return default;
     }
@@ -194,7 +194,7 @@ public class ResourceManager : Singleton<ResourceManager>
         }
         catch (Exception e)
         {
-            Debug.LogError(e.Message);
+            //Debug.LogError(e.Message);
         }
         return default;
     }

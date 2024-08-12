@@ -182,12 +182,12 @@ public class UIPixelmonPopUp : UIBase
             saveManager.UpdatePixelmonData(myData.id, "ownEffectValue", myData.ownEffectValue);
             PixelmonManager.Instance.UpdatePlayerStat(data.lvHpRate, data.lvDefRate);
             SetOwnedEffect();
-            Debug.Log("레벨 업!");
+            //Debug.Log("레벨 업!");
         }
         else
         {
             UIManager.Instance.ShowWarn("남은 먹이가 없습니다.");
-            Debug.Log("남은 먹이가 없습니다.");
+            //Debug.Log("남은 먹이가 없습니다.");
         }
     }
 
@@ -243,7 +243,7 @@ public class UIPixelmonPopUp : UIBase
         SetPsvEffect();
         SetOwnedEffect();
         pxmTab.CheckedEvolve();
-        Debug.Log("합성완료(팝업)");
+        //Debug.Log("합성완료(팝업)");
     }
 
     public void SetEvolvedCount()

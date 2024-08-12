@@ -39,7 +39,7 @@ public class MyPixelmonData
         }
         else
         {
-            Debug.LogWarning($"{fieldName}라는 변수를 MyPixelmonData에서 찾을 수 없습니다.");
+            //Debug.LogWarning($"{fieldName}라는 변수를 MyPixelmonData에서 찾을 수 없습니다.");
         }
     }
 

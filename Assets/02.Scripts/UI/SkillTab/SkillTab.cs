@@ -202,7 +202,7 @@ public class SkillTab : UIBase, IPointerDownHandler
             if (data.myAtvData.isAdvancable)
             {
                 data.OnEvolved();
-                Debug.Log($"{data.myAtvData.id} 합성완료");
+                //Debug.Log($"{data.myAtvData.id} 합성완료");
             }
         }
         isAdvancable = false;

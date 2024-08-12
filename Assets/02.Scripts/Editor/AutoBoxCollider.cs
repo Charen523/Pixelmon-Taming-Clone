@@ -20,7 +20,7 @@ public class AutoBoxCollider : MonoBehaviour
             }
             else
             {
-                Debug.LogError("No SpriteRenderer found in the selected GameObject.");
+                //Debug.LogError("No SpriteRenderer found in the selected GameObject.");
             }
         }
     }

@@ -120,7 +120,7 @@ public static class UIUtils
         }
         else
         {
-            Debug.LogError("색상 코드 변환에 실패했습니다: " + hexColor);
+            //Debug.LogError("색상 코드 변환에 실패했습니다: " + hexColor);
         }
     }
 
