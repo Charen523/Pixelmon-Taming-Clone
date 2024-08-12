@@ -12,7 +12,6 @@ public class UITopBar : UIBase
     [SerializeField] private Image characImg;
     [SerializeField] private TextMeshProUGUI lvTxt;
 
-    [SerializeField] private TextMeshProUGUI userName;
     [SerializeField] private TextMeshProUGUI goldTxt;
     [SerializeField] private TextMeshProUGUI gemTxt;
 
@@ -53,8 +52,6 @@ public class UITopBar : UIBase
     private void InitTopUIData()
     {
         lvTxt.text = $"Lv.{saveManager.userData.userLv}";
-        
-        userName.text = saveManager.userData.userName;
         UpdateGoldUI();
         UpdateDiamondUI();
         UpdateExpUI();
