@@ -33,33 +33,43 @@ public class UIBottomBar : MonoBehaviour
 
     public void OnvalueChanged(int index)
     {
-        if (TutorialManager.Instance.Locks[index].activeInHierarchy)
+        try
         {
-            string msg = "";
-            switch(index)
+            if (TutorialManager.Instance.Locks[index].activeInHierarchy)
             {
-                case 0:
-                    msg = "해금조건: 첫 알뽑기";
-                    break;
-                case 1:
-                    msg = "해금조건: 첫 알뽑기";
-                    break;
-                case 2:
-                    msg = "해금조건: 쉬움 1 - 5 클리어";
-                    break;
-                case 3:
-                    msg = "해금조건: 쉬움 1 - 10 클리어";
-                    break;
-                case 4:
-                    msg = "해금조건: 쉬움 1 - 15 클리어";
-                    break;
-                case 5:
-                    msg = "해금조건: 쉬움 1 - 5 클리어";
-                    break;
+                string msg = "";
+                switch (index)
+                {
+                    case 0:
+                        msg = "해금조건: 첫 알뽑기";
+                        UIManager.Instance.ShowWarn(msg);
+                        return;
+                    case 1:
+                        msg = "해금조건: 첫 알뽑기";
+                        UIManager.Instance.ShowWarn(msg);
+                        return;
+                    case 2:
+                        msg = "해금조건: 쉬움 1 - 5 클리어";
+                        UIManager.Instance.ShowWarn(msg);
+                        return;
+                    case 3:
+                        msg = "해금조건: 쉬움 1 - 10 클리어";
+                        UIManager.Instance.ShowWarn(msg);
+                        return;
+                    case 4:
+                        msg = "해금조건: 쉬움 1 - 15 클리어";
+                        UIManager.Instance.ShowWarn(msg);
+                        return;
+                    case 5:
+                        msg = "해금조건: 쉬움 1 - 5 클리어";
+                        UIManager.Instance.ShowWarn(msg);
+                        return;
+                    default:
+                        break;
+                }
             }
-            UIManager.Instance.ShowWarn(msg);
-            return;
         }
+        catch (IndexOutOfRangeException) { }
 
         overlayPanel.SetActive(selectedIndex >= 0);
         uiTabs.ForEach(obj => obj.gameObject.SetActive(false)); //모든 탭 끄기.
