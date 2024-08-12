@@ -116,7 +116,7 @@ public class FieldSlot : MonoBehaviour
             }
             else
             {
-                farmTab.ShowWarn("골드가 부족합니다!!");
+                UIManager.Instance.ShowWarn("골드가 부족합니다!!");
                 return;
             }
         }
@@ -128,7 +128,7 @@ public class FieldSlot : MonoBehaviour
             }
             else
             {
-                farmTab.ShowWarn("다이아가 부족합니다!!");
+                UIManager.Instance.ShowWarn("다이아가 부족합니다!!");
                 return;
             }
         }

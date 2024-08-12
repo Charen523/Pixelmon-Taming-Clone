@@ -116,7 +116,7 @@ public class QuestManager : Singleton<QuestManager>
         }
         else
         {
-            ShowWarn("퀘스트 조건이 충족되지 않았습니다!!");
+            UIManager.Instance.ShowWarn("퀘스트 조건이 충족되지 않았습니다!!");
         }
     }
     #endregion
@@ -226,10 +226,5 @@ public class QuestManager : Singleton<QuestManager>
     public void OnQuestEvent()
     {
         QuestEvent?.Invoke();
-    }
-
-    public async void ShowWarn(string msg)
-    {
-        await UIManager.Show<WarnPopup>(msg);
     }
 }

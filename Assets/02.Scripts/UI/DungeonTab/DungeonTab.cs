@@ -108,8 +108,4 @@ public class DungeonTab : UIBase
         string result = $"{keys[type]}/3";
         return result;
     }
-    public async void ShowWarn(string msg)
-    {
-        await UIManager.Show<WarnPopup>(msg);
-    }
 }
