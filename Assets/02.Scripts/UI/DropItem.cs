@@ -10,7 +10,7 @@ public class DropItem : SerializedMonoBehaviour
     Vector3 itemScale;
     [SerializeField] string itemName;
     [SerializeField] int amount;
-    [SerializeField] float waitTime = 1.25f;
+    [SerializeField] float waitTime = 1.5f;
     [SerializeField] WaitForSeconds delayTime;
     private void Awake()
     {
@@ -25,8 +25,9 @@ public class DropItem : SerializedMonoBehaviour
         .Prepend(sr.DOFade(0, 0))
         .Append(sr.DOFade(1, 1f))
         .Join(transform.DOShakeScale(0.5f, itemScale.x, 5, 1f, false))
-        .Append(sr.DOFade(0, 1.5f))
-        .OnComplete(() => gameObject.SetActive(false));
+        .SetDelay(0.5f)
+        .Append(sr.DOFade(0, 1.0f))
+        .OnComplete(() => GetReward());
 
     }
 
@@ -41,6 +42,7 @@ public class DropItem : SerializedMonoBehaviour
     IEnumerator MoveToPlayer()
     {
         mySequence.Restart();
+        RewardManager.Instance.GetReward(itemName, amount);
         yield return delayTime;
         float time = 0;
         while (time <= waitTime)
@@ -48,13 +50,12 @@ public class DropItem : SerializedMonoBehaviour
             time += Time.deltaTime;
             transform.position = Vector2.Lerp(transform.position, Player.Instance.gameObject.transform.position, time / 2);
             yield return null;
-            GetReward();
         }
     }
 
     public void GetReward()
     {
-        RewardManager.Instance.GetReward(itemName, amount);
         amount = 0;
+        gameObject.SetActive(false);
     }
 }
