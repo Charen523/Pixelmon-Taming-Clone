@@ -108,4 +108,9 @@ public class DungeonTab : UIBase
         string result = $"{keys[type]}/3";
         return result;
     }
+
+    public void LockDungeon()
+    {
+        UIManager.Instance.ShowWarn("업데이트 예정입니다.");
+    }
 }

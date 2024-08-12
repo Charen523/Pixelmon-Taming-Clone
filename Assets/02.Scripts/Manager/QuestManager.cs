@@ -92,16 +92,13 @@ public class QuestManager : Singleton<QuestManager>
             goal = 1;
         }
 
-        if (!isStageQ)
+        if (progress < goal)
         {
-            if (progress < goal)
-            {
-                countTxt.text = $"<color=#FF2525>({progress} / {goal})</color>";
-            }
-            else
-            {
-                countTxt.text = $"<color=#82FF55>({progress} / {goal})</color>";
-            }
+            countTxt.text = $"<color=#FF2525>({progress} / {goal})</color>";
+        }
+        else
+        {
+            countTxt.text = $"<color=#82FF55>({progress} / {goal})</color>";
         }
     }
 
