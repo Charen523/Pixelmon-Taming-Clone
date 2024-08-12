@@ -37,7 +37,7 @@ public class SkillEquipSlot : MonoBehaviour
     {
         if (skillTab.tabState == TabState.Normal && myAtvData == null)
         {
-            Debug.Log("데이터가 없습니다.");
+            UIManager.Instance.ShowWarn("장착된 스킬이 없습니다.");
             return;
         }
         else if (skillTab.tabState == TabState.Normal && myAtvData.isEquipped)
@@ -49,7 +49,7 @@ public class SkillEquipSlot : MonoBehaviour
             if (DataManager.Instance.activeData.data[skillTab.choiceId].isCT)
             {
                 //스킬이 쿨타임 안내
-                Debug.Log("해당 스킬이 쿨타임 중");
+                UIManager.Instance.ShowWarn("해당 스킬이 쿨타임 중입니다.");
                 skillTab.OnCancelEquip();
                 return;
             }

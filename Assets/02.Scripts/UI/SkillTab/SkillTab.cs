@@ -121,7 +121,7 @@ public class SkillTab : UIBase, IPointerDownHandler
         if (!allData[choiceId].myAtvData.isOwned)
         {
             //미보유 안내문구
-
+            UIManager.Instance.ShowWarn("미 보유 상태입니다.");
             return;
         }
 

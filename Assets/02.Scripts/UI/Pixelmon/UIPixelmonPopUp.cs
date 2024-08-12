@@ -134,7 +134,11 @@ public class UIPixelmonPopUp : UIBase
 
     public void OnEquip()
     {
-        if (!myData.isOwned) return;
+        if (!myData.isOwned)
+        {
+            UIManager.Instance.ShowWarn("미보유 상태입니다.");
+            return;
+        }
         if (!myData.isEquipped)
         {
             pxmTab.tabState = TabState.Equip;
@@ -150,7 +154,17 @@ public class UIPixelmonPopUp : UIBase
 
     public void OnFeeding()
     {
-        if (!myData.isOwned || myData.lv >= 50) return;
+        if (!myData.isOwned)
+        {
+            UIManager.Instance.ShowWarn("미 보유 상태입니다.");
+            return;
+        }
+        else if (myData.lv >= 50)
+        {
+            UIManager.Instance.ShowWarn("이미 최대레벨 입니다.");
+            return;
+        }
+
         if (saveManager.userData.food >= myData.maxExp)
         {
             saveManager.SetDeltaData("food", -myData.maxExp);
@@ -172,6 +186,7 @@ public class UIPixelmonPopUp : UIBase
         }
         else
         {
+            UIManager.Instance.ShowWarn("남은 먹이가 없습니다.");
             Debug.Log("남은 먹이가 없습니다.");
         }
     }

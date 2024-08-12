@@ -94,7 +94,6 @@ public class PixelmonManager : Singleton<PixelmonManager>
         player.pixelmons[index].data = pxmData[myData.id];
         player.pixelmons[index].fsm.anim.runtimeAnimatorController = await ResourceManager.Instance.LoadAsset<RuntimeAnimatorController>(myData.rcode, eAddressableType.animator);
         player.pixelmons[index].InitPxm();
-        player.currentPixelmonCount++;
         player.LocatedPixelmon();
         SkillManager.Instance.ExecuteSkill(player.pixelmons[index], index);
     }
@@ -104,10 +103,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
         player.pixelmons[index].fsm.InvokeAttack(false);
         player.pixelmons[index].gameObject.SetActive(false);
         player.pixelmons[index]= null;
-        player.currentPixelmonCount--;
         player.LocatedPixelmon();
-
-        saveManager.SetData("equippedPxms", userData.equippedPxms);
     }
 
     public void UnLockedPixelmon(int index)
