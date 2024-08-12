@@ -114,6 +114,8 @@ public abstract class UpgradeSlot : MonoBehaviour
             CurLv = nextLv;
             CurValue = nextValue;
 
+            SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.gold), -nextPrice, true);
+
             if (curUpgradeRate == 0)
             {
                 upgradeTab.CurrentToggle(0);
@@ -123,8 +125,6 @@ public abstract class UpgradeSlot : MonoBehaviour
                 CalculatePrice(curUpgradeRate);
             }
             SetLvTxt();
-            
-            SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.gold), -nextPrice, true);
         }
     }
 

@@ -52,7 +52,7 @@ public class UserData
     #endregion
 
     #region Hatch Egg
-    public int eggCount = 3;
+    public int eggCount = 10;
     public bool isGetPxm = true;
     public bool isOwnedPxm = false;
     public PixelmonData hatchPxmData = null;
