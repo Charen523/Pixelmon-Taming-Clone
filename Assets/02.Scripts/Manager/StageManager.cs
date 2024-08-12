@@ -86,6 +86,7 @@ public class StageManager : Singleton<StageManager>
 
     [SerializeField] private Slider bossTimeSldr;
     [SerializeField] private TextMeshProUGUI bossTimeTxt;
+    [SerializeField] private TextMeshProUGUI bossTxt;
     [SerializeField] private GameObject bossBtn;
 
     public Spawner spawner;
@@ -176,7 +177,9 @@ public class StageManager : Singleton<StageManager>
         {
             isStgFade = true;
             allFade.gameObject.SetActive(true);
+            Debug.Log("fade 1단계");
             yield return allFade.FadeOut();
+            Debug.Log("fade 5단계");
         }
         else
         {
@@ -505,6 +508,7 @@ public class StageManager : Singleton<StageManager>
         {
             Player.Instance.transform.position += Vector3.down * 3;
             bossTimeSldr.gameObject.SetActive(true);
+            bossTxt.gameObject.SetActive(false);
             bossBtn.SetActive(false);
             stageTitleTxt.text = $"Dungeon Lv.{dgBoss.dgLv}";
             StageIcon.gameObject.SetActive(false);
@@ -512,6 +516,7 @@ public class StageManager : Singleton<StageManager>
         else if (userData.isInfinite)
         {
             bossTimeSldr.gameObject.SetActive(false);
+            bossTxt.gameObject.SetActive(false);
             bossBtn.SetActive(true);
             stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.gameObject.SetActive(true);
@@ -522,8 +527,9 @@ public class StageManager : Singleton<StageManager>
         else if (isBossStage)
         {
             bossTimeSldr.gameObject.SetActive(true);
+            bossTxt.gameObject.SetActive(true);
             bossBtn.SetActive(false);
-            stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum} Boss";
+            stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.gameObject.SetActive(true);
             StageIcon.sprite = iconSprite[1];
             progressSldr.value = 1;
@@ -532,6 +538,7 @@ public class StageManager : Singleton<StageManager>
         else
         {
             bossTimeSldr.gameObject.SetActive(false);
+            bossTxt.gameObject.SetActive(false);
             bossBtn.SetActive(false);
             stageTitleTxt.text = $"{SetDiffTxt(diffNum)} {worldNum}-{stageNum}";
             StageIcon.gameObject.SetActive(true);
