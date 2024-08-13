@@ -35,7 +35,7 @@ public class UIBottomBar : MonoBehaviour
     {
         try
         {
-            if (TutorialManager.Instance.Locks[index].activeInHierarchy)
+            if (GuideManager.Instance.Locks[index].activeInHierarchy)
             {
                 string msg = "";
                 switch (index)

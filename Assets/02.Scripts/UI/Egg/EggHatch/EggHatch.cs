@@ -33,7 +33,7 @@ public class EggHatch : MonoBehaviour
     private async void Awake()
     {
         HatchResultPopup = await UIManager.Show<UIHatchResultPopup>();
-        TutorialManager.Instance.SetArrow(BreakAnim.gameObject, 60);
+        GuideManager.Instance.SetArrow(BreakAnim.gameObject, 60);
     }
 
     private void Start()
@@ -123,7 +123,7 @@ public class EggHatch : MonoBehaviour
 
     public void OnClickEgg(Button btn)
     {
-        TutorialManager.Instance.HideArrow();
+        GuideManager.Instance.HideArrow();
         if (userData.eggCount > 0 || userData.isGetPxm == false)
             StartCoroutine(ClickEgg(btn));
         else
@@ -137,8 +137,8 @@ public class EggHatch : MonoBehaviour
         if (userData.isEggHatched == false)
         {
             SaveManager.Instance.SetFieldData(nameof(userData.isEggHatched), true);
-            TutorialManager.Instance.Locks[0].SetActive(false);
-            TutorialManager.Instance.Locks[1].SetActive(false);
+            GuideManager.Instance.Locks[0].SetActive(false);
+            GuideManager.Instance.Locks[1].SetActive(false);
         }
 
         btn.interactable = false;
