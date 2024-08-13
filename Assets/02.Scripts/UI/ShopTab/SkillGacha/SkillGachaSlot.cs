@@ -9,10 +9,10 @@ public class SkillGachaSlot : MonoBehaviour
     public GameObject SRank;
     public GameObject SSRank;
 
-    public void InitSlot(Sprite bg, Sprite icon)
+    public void InitSlot(Sprite bg, Sprite icon, float duration)
     {
         Bg.sprite = bg;
         Icon.sprite = icon;
-        transform.DORotate(new Vector3(0, 360, 0), 0.5f, RotateMode.FastBeyond360);
+        transform.DORotate(new Vector3(0, 360, 0), duration, RotateMode.FastBeyond360);
     }
 }

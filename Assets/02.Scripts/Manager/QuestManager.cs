@@ -114,6 +114,7 @@ public class QuestManager : Singleton<QuestManager>
             SetNewQuestId();
             ResetProgress();
             SetQuestUI();
+            Firebase.Analytics.FirebaseAnalytics.LogEvent($"repeat cycle:{curRepeat}, QuestNum:{curQIndex}");
         }
         else
         {

@@ -93,9 +93,22 @@ public class StageManager : Singleton<StageManager>
     public FadeInvoker stageFade;
     public FadeInvoker allFade;
 
+    [SerializeField] private RectTransform canvasRect;
     Transform middleBar;
+    Vector3 middlePos;
+    Vector3 dungeonPos;
     Transform bottomBar;
     #endregion
+
+    private void CalculateBound()
+    {
+        middlePos = middleBar.position;
+        Vector3 canvasCenter = canvasRect.transform.position;
+        Vector2 canvasSize = canvasRect.rect.size;
+        Vector3 extents = new Vector3(canvasSize.x / 2, canvasSize.y / 2, 0);
+        Bounds canvasBounds = new Bounds(canvasCenter, extents * 2);
+        dungeonPos = new Vector3(middlePos.x, canvasBounds.min.y, 0);
+    }
 
     protected override void Awake()
     {
@@ -143,7 +156,7 @@ public class StageManager : Singleton<StageManager>
             yield return null; 
         }
         bottomBar = UIManager.Instance.parents[2].GetChild(0);
-
+        CalculateBound();
         InitStage();
     }
     #region Stage
@@ -241,13 +254,8 @@ public class StageManager : Singleton<StageManager>
 
             ChangeMapByTheme();
 
-            Vector3 middleBarPosition = middleBar.position;
-            middleBarPosition.y += 620;
-            middleBar.position = middleBarPosition;
-
-            Vector3 bottomBarPosition = bottomBar.position;
-            bottomBarPosition.y += 620;
-            bottomBar.position = bottomBarPosition;
+            middleBar.position = middlePos;
+            bottomBar.gameObject.SetActive(true);
         }
 
         InitStage();
@@ -344,14 +352,8 @@ public class StageManager : Singleton<StageManager>
         dgBoss.InitDgMonster(dgIndex);
         MapManager.Instance.OnMapChanged(dgIndex);
 
-        Vector3 middleBarPosition = middleBar.position;
-        middleBarPosition.y -= 620;
-        middleBar.position = middleBarPosition;
-
-        Vector3 bottomBarPosition = bottomBar.position;
-        bottomBarPosition.y -= 620;
-        bottomBar.position = bottomBarPosition;
-
+        middleBar.position = dungeonPos;
+        bottomBar.gameObject.SetActive(false);
         InitStageUI();
     }
 

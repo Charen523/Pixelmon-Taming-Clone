@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 enum eTabs
 {
-    UIUpgradeTab,
     UIPixelmonTab,
+    UIUpgradeTab,
     UISkilltab,
     UIFarmTab,
     UIDungeonTab,
@@ -35,7 +35,7 @@ public class UIBottomBar : MonoBehaviour
     {
         try
         {
-            if (TutorialManager.Instance.Locks[index].activeInHierarchy)
+            if (GuideManager.Instance.Locks[index].activeInHierarchy)
             {
                 string msg = "";
                 switch (index)

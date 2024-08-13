@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -19,13 +20,17 @@ public class SkillGacha : MonoBehaviour
 
     private Dictionary<string, List<ActiveData>> RankDatas = new Dictionary<string, List<ActiveData>>();
     private Dictionary<string, float> rankProb = new Dictionary<string, float>
-{
-    { "SS", 0.02f },
-    { "S", 0.08f },
-    { "A", 0.15f },
-    { "B", 0.25f },
-    { "C", 0.50f }
-};
+    {
+        { "SS", 3.4f },
+        { "S", 7.6f },
+        { "A", 16.7f },
+        { "B", 25.5f },
+        { "C", 46.8f }
+    };
+
+    public float slotDurationTime = 0.5f;
+    private WaitForSeconds waitSlotDuration;
+    private bool isDoneGacha;
 
     private async void Awake()
     {
@@ -35,6 +40,8 @@ public class SkillGacha : MonoBehaviour
     private void Start()
     {
         UIManager.Instance.UpdateUI += UpdateCostUI;
+
+        waitSlotDuration = new WaitForSeconds(slotDurationTime);
 
         var datas = DataManager.Instance.activeData.data;
         for (int i = 0; i < datas.Count; i++)
@@ -50,6 +57,7 @@ public class SkillGacha : MonoBehaviour
     public void SetSkillGacha()
     {
         SetBtnInteractable();
+        isDoneGacha = true;
     }
 
     #region UI
@@ -81,6 +89,7 @@ public class SkillGacha : MonoBehaviour
 
     public void OnClickBtn(int multiplier)
     {
+        if (!isDoneGacha) return;
         int totalCostTicket = oneCostTicket * multiplier;
         int totalCostDia = oneCostDia * multiplier;
 
@@ -93,12 +102,12 @@ public class SkillGacha : MonoBehaviour
             SaveManager.Instance.SetFieldData(nameof(userData.diamond), -totalCostDia, true);
         }
 
-        Gacha(multiplier);
+        StartCoroutine(Gacha(multiplier));       
     }
 
     private string RandRank()
     {
-        int randProb = UnityEngine.Random.Range(1, 101);
+        int randProb = UnityEngine.Random.Range(100, 10001);
 
         float cumProb = 0;
         foreach (var prob in rankProb)
@@ -112,8 +121,10 @@ public class SkillGacha : MonoBehaviour
 
         return null;
     }
-    private void Gacha(int count)
-    {     
+    private IEnumerator Gacha(int count)
+    {
+        isDoneGacha = false;
+
         ActiveData[] resultDatas = new ActiveData[count];       
         var ownedSkills = userData.ownedSkills;
 
@@ -145,5 +156,7 @@ public class SkillGacha : MonoBehaviour
 
         skillGachaPopup.SetActive(true);
         skillGachaPopup.SetPopup(count, resultDatas, this);
+        yield return waitSlotDuration;
+        isDoneGacha = true;
     }
 }

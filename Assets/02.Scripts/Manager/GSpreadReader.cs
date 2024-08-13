@@ -65,7 +65,6 @@ public abstract class GSpreadReader<V> : Singleton<V> where V : GSpreadReader<V>
     }
 
     public static GSpreadReader<V> gSpread;
-    [SerializeField] private bool isAutoLoading = false;
     [SerializeField] private string url;
     [SerializeField] private List<SheetInfo> sheets;
     [NonSerialized] public bool isInit = false;
@@ -74,10 +73,9 @@ public abstract class GSpreadReader<V> : Singleton<V> where V : GSpreadReader<V>
     {
         base.Awake();
         gSpread = this;
-        if (isAutoLoading) Init();
     }
 
-    public async void Init()
+    public async Task<bool> Init()
     {
         float progress = 1.0f;
         foreach (var sheet in sheets)
@@ -87,12 +85,21 @@ public abstract class GSpreadReader<V> : Singleton<V> where V : GSpreadReader<V>
             var op = req.SendWebRequest();
             //UILoading.Instance.SetProgress(op, $"{sheet.className} 데이터 로딩중");
             await op;
+
+            // 네트워크 오류 또는 서버 응답 코드 확인
+            if (req.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError($"Error fetching data for {sheet.className}: {req.error}");
+                UILoading.Instance.SetProgress(progress++ / sheets.Count, $"{sheet.className} 데이터 로딩 실패");
+                return false; // 오류 발생 시 false 반환
+            }
             var res = req.downloadHandler.text;
             //Debug.Log(res);
             sheet.datas = TsvToDic(res);
             UILoading.Instance.SetProgress(progress++/sheets.Count, "데이터 불러오는 중");
         }
         ImportDatas();
+        return true; // 모든 시트 로딩 성공 시 true 반환
     }
 
     List<Dictionary<string, string>> TsvToDic(string data)

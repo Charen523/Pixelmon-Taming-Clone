@@ -61,7 +61,7 @@ public class UISkillGachaPopup : UIBase
             if (slot[i].SSRank.gameObject.activeInHierarchy) slot[i].SSRank.gameObject.SetActive(false);
 
             slot[i].gameObject.SetActive(true);
-            slot[i].InitSlot(datas[i].bgIcon, datas[i].icon);
+            slot[i].InitSlot(datas[i].bgIcon, datas[i].icon, skillGacha.slotDurationTime);
 
             if (datas[i].rank == "S") slot[i].SRank.gameObject.SetActive(true);
             if (datas[i].rank == "SS") slot[i].SSRank.gameObject.SetActive(true);

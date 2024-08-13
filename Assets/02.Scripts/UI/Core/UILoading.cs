@@ -59,6 +59,8 @@ public class UILoading : Singleton<UILoading>
 
     public void SetProgress(float progress, string desc = "")
     {
+        if (!Application.isPlaying) return;
+
         this.desc.text = desc;
         slider.value = progress;
     }
@@ -66,6 +68,8 @@ public class UILoading : Singleton<UILoading>
     #region Basic Async
     public void SetProgress(AsyncOperation op, string desc = "")
     {
+        if (!Application.isPlaying) return;
+
         this.desc.text = desc;
         StartCoroutine(Progress(op));
     }
@@ -84,6 +88,8 @@ public class UILoading : Singleton<UILoading>
     #region Addressable Async
     public void SetProgress(AsyncOperationHandle op, string desc = "")
     {
+        if (!Application.isPlaying) return;
+
         this.desc.text = desc;
     }
 
@@ -97,4 +103,9 @@ public class UILoading : Singleton<UILoading>
         slider.value = 1;
     }
     #endregion
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
 }
