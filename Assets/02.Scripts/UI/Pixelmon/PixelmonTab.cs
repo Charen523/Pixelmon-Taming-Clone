@@ -15,7 +15,7 @@ public class PixelmonTab : UIBase
     public Image evolveIcon;
     public Sprite[] btnColor;
 
-    public GameObject equipOverlay;
+    public RectTransform equipOverlay;
     public int choiceId;
     public bool isAdvancable;
     public TabState tabState;
@@ -61,6 +61,8 @@ public class PixelmonTab : UIBase
         pixelmonManager = PixelmonManager.Instance;
         pixelmonManager.pxmTab = this;
         unLockAction += GetPixelmon;
+        equipOverlay.localScale = new Vector2(Screen.width, Screen.height);
+        //equipOverlay.SetActive(false);
         InitTab();
         infoPopUp = await UIManager.Show<UIPixelmonPopUp>();
     }
