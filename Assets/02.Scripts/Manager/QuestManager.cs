@@ -38,7 +38,7 @@ public class QuestManager : Singleton<QuestManager>
     [SerializeField] private TextMeshProUGUI countTxt;
     [SerializeField] private TextMeshProUGUI rewardTxt;
     [SerializeField] private Image rwdIcon;
-    [SerializeField] private Sprite rwdSprite;
+    [SerializeField] private Sprite[] rwdSprite;
     #endregion
 
     [SerializeField] private int maxQNum = 4;
@@ -71,6 +71,7 @@ public class QuestManager : Singleton<QuestManager>
     {
         SetQuestNameTxt();
         SetQuestCountTxt();
+        SetIconSprite();
         rewardTxt.text = curQData.rewardValue.ToString();
     }
 
@@ -118,6 +119,25 @@ public class QuestManager : Singleton<QuestManager>
         else
         {
             countTxt.text = $"<color=#82FF55>({progress} / {goal})</color>";
+        }
+    }
+
+    private void SetIconSprite()
+    {
+        switch (curQIndex)
+        {
+            case "Q1":
+                rwdIcon.sprite = rwdSprite[0];
+                break;
+            case "Q2":
+                rwdIcon.sprite = rwdSprite[1];
+                break;
+            case "Q3":
+                rwdIcon.sprite = rwdSprite[2];
+                break;
+            case "Q4":
+                rwdIcon.sprite = rwdSprite[3];
+                break;
         }
     }
 
