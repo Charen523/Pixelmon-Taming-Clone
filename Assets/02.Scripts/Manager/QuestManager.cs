@@ -74,7 +74,7 @@ public class QuestManager : Singleton<QuestManager>
         SetQuestCountTxt();
         SetIconSprite();
 
-        if (curQIndex == "Q3")
+        if (curQIndex == "Q2")
         {
             string result = Calculater.NumFormatter(curQData.rewardValue * (curRepeat + 1));
             rewardTxt.text = result;
@@ -155,7 +155,7 @@ public class QuestManager : Singleton<QuestManager>
     {
         if (IsQuestClear())
         {
-            if (curQIndex == "Q3")
+            if (curQIndex == "Q2")
             {
                 RewardManager.Instance.SpawnRewards(curQData.rewardType, curQData.rewardValue * (curRepeat + 1));
             }
