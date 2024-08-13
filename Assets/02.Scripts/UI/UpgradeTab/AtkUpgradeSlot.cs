@@ -18,6 +18,6 @@ public class AtkUpgradeSlot : UpgradeSlot
  
     protected override float ValuePerLv(int reachLv)
     {
-        return reachLv;
+        return 9 + reachLv;
     }
 }
