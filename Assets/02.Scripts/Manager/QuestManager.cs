@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -72,7 +73,16 @@ public class QuestManager : Singleton<QuestManager>
         SetQuestNameTxt();
         SetQuestCountTxt();
         SetIconSprite();
-        rewardTxt.text = curQData.rewardValue.ToString();
+
+        if (curQIndex == "Q3")
+        {
+            string result = Calculater.NumFormatter(curQData.rewardValue * (curRepeat + 1));
+            rewardTxt.text = result;
+        }
+        else
+        {
+            rewardTxt.text = curQData.rewardValue.ToString();
+        }
     }
 
     private void SetQuestNameTxt()
