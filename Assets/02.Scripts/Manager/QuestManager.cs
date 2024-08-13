@@ -1,6 +1,22 @@
 using System;
+using System.Numerics;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+
+public enum questType
+{
+    normalMonster,
+    bossMonster,
+    stage,
+    egg,
+    upgradeAtk,
+    skill,
+    feed,
+    seed,
+    harvest,
+    goldDungeon
+}
 
 public class QuestManager : Singleton<QuestManager>
 {
@@ -22,18 +38,19 @@ public class QuestManager : Singleton<QuestManager>
     [SerializeField] private TextMeshProUGUI questNameTxt;
     [SerializeField] private TextMeshProUGUI countTxt;
     [SerializeField] private TextMeshProUGUI rewardTxt;
+    [SerializeField] private Image rwdIcon;
+    [SerializeField] private Sprite[] rwdSprite;
     #endregion
 
     [SerializeField] private int maxQNum = 4;
 
-    public bool isHatchQ => curQIndex == "Q1";
-    public bool isMonsterQ => curQIndex == "Q2";
-    public bool isStageQ => curQIndex == "Q3";
-    public bool isUserLevelQ => curQIndex == "Q4";
+    public bool isMobQ => curQIndex == "Q1" || curQIndex == "Q4";
+    public bool isHatchQ => curQIndex == "Q2";
+    public bool isBossQ => curQIndex == "Q3";
+    //public bool isStageQ => curQIndex == "Q4";
 
-    private int StageProgress => stageManager.diffNum * 10000 + stageManager.worldNum * 100 + stageManager.stageNum;
+    private int StageProgress => int.Parse(userData.curStage);
     
-
     protected override void Awake()
     {
         isDontDestroyOnLoad = false;
@@ -55,29 +72,36 @@ public class QuestManager : Singleton<QuestManager>
     {
         SetQuestNameTxt();
         SetQuestCountTxt();
-        rewardTxt.text = curQData.rewardValue.ToString();
+        SetIconSprite();
+
+        if (curQIndex == "Q2")
+        {
+            string result = Calculater.NumFormatter(curQData.rewardValue * (curRepeat + 1));
+            rewardTxt.text = result;
+        }
+        else
+        {
+            rewardTxt.text = curQData.rewardValue.ToString();
+        }
     }
 
     private void SetQuestNameTxt()
     {
         string curDescription = curQData.description;
 
-        if (isStageQ)
-        {
-            int diff = curGoal / 10000;
-            string diffString = stageManager.SetDiffTxt(diff);
-            curDescription = curDescription.Replace("D", diffString);
+        //if (isStageQ)
+        //{
+        //    int diff = curGoal / 10000;
+        //    string diffString = stageManager.SetDiffTxt(diff);
+        //    curDescription = curDescription.Replace("D", diffString);
 
-            int world = (curGoal / 100) % 100;
-            curDescription = curDescription.Replace("W", world.ToString());
+        //    int world = (curGoal / 100) % 100;
+        //    curDescription = curDescription.Replace("W", world.ToString());
 
-            int stage = curGoal % 100;
-            curDescription = curDescription.Replace("S", stage.ToString());
-        }
-        else
-        {
-            curDescription = curDescription.Replace("N", curGoal.ToString());
-        }
+        //    int stage = curGoal % 100;
+        //    curDescription = curDescription.Replace("S", stage.ToString());
+        //}
+        curDescription = curDescription.Replace("N", curGoal.ToString());
 
         questNameTxt.text = curDescription;
     }
@@ -86,15 +110,17 @@ public class QuestManager : Singleton<QuestManager>
     {
         int goal = curGoal;
         int progress = curProgress;
-        if (isStageQ)
-        {
-            progress = progress > goal ? 1 : 0;
-            goal = 1;
-        }
-        else
-        {
-            progress = Mathf.Min(curProgress, goal); 
-        }
+        //if (isStageQ)
+        //{
+        //    progress = progress > goal ? 1 : 0;
+        //    goal = 1;
+        //}
+        //else
+        //{
+        //    progress = Mathf.Min(curProgress, goal); 
+        //}
+
+        progress = Mathf.Min(curProgress, goal);
 
         if (progress < goal)
         {
@@ -106,11 +132,38 @@ public class QuestManager : Singleton<QuestManager>
         }
     }
 
+    private void SetIconSprite()
+    {
+        switch (curQIndex)
+        {
+            case "Q1":
+                rwdIcon.sprite = rwdSprite[0];
+                break;
+            case "Q2":
+                rwdIcon.sprite = rwdSprite[1];
+                break;
+            case "Q3":
+                rwdIcon.sprite = rwdSprite[2];
+                break;
+            case "Q4":
+                rwdIcon.sprite = rwdSprite[3];
+                break;
+        }
+    }
+
     public void QuestClearBtn()
     {
         if (IsQuestClear())
         {
-            RewardManager.Instance.SpawnRewards(curQData.rewardType, curQData.rewardValue);
+            if (curQIndex == "Q2")
+            {
+                RewardManager.Instance.SpawnRewards(curQData.rewardType, curQData.rewardValue * (curRepeat + 1));
+            }
+            else
+            {
+                RewardManager.Instance.SpawnRewards(curQData.rewardType, curQData.rewardValue);
+            }
+            
             SetNewQuestId();
             ResetProgress();
             SetQuestUI();
@@ -144,44 +197,43 @@ public class QuestManager : Singleton<QuestManager>
     {
         int progress = 0;
 
-        switch (curQIndex)
-        {
-            case "Q1":
-                progress = 0;
-                break;
-            case "Q2":
-                progress = 0;
-                break;
-            case "Q3":
-                progress = StageProgress;
-                break;
-            case "Q4":
-                progress = userData.userLv;
-                break;
-        }
+        //switch (curQIndex)
+        //{
+        //    case "Q1":
+        //        progress = 0;
+        //        break;
+        //    case "Q2":
+        //        progress = 0;
+        //        break;
+        //    case "Q3":
+        //        progress = StageProgress;
+        //        break;
+        //    case "Q4":
+        //        progress = userData.userLv;
+        //        break;
+        //}
         saveManager.SetData(nameof(userData.questProgress), progress);
     }
 
     private void UpdateProgress()
     {
         int progress = curProgress;
-
-        switch (curQIndex)
-        {
-            case "Q1":
-                progress++;
-                break;
-            case "Q2":
-                progress++;
-                break;
-            case "Q3":
-                progress = StageProgress;
-                break;
-            case "Q4":
-                progress = userData.userLv;
-                break;
-        }
-
+        progress++;
+        //switch (curQIndex)
+        //{
+        //    case "Q1":
+        //        progress++;
+        //        break;
+        //    case "Q2":
+        //        progress++;
+        //        break;
+        //    case "Q3":
+        //        progress = StageProgress;
+        //        break;
+        //    case "Q4":
+        //        progress = userData.userLv;
+        //        break;
+        //}
         saveManager.SetData(nameof(userData.questProgress), progress);
         SetQuestCountTxt();
     }
@@ -189,39 +241,34 @@ public class QuestManager : Singleton<QuestManager>
     private int CurQuestGoal()
     {
         int goal = curQData.goal;
-
-        switch (curQIndex)
-        {
-            case "Q1":
-                goal = curRepeat + 2;
-                break;
-            case "Q2":
-                goal = ((curRepeat / 10) + 1) * 10;
-                break;
-            case "Q3":
-                goal = (curRepeat / 5) * 10000 + (2 + 2 * (curRepeat % 5)) * 100 + 1;
-                break;
-            case "Q4":
-                goal = ((curRepeat / 10) + 1) * 10;
-                break;
-            default:
-                goal = -1;
-                break;
-        }
-
+        //switch (curQIndex)
+        //{
+        //    case "Q1":
+        //        break;
+        //    case "Q2":
+        //        break;
+        //    case "Q3":
+        //        break;
+        //    case "Q4":
+        //        break;
+        //    default:
+        //        goal = -1;
+        //        break;
+        //}
         return goal;
     }
 
     private bool IsQuestClear()
     {
-        if (isStageQ)
-        {
-            return curProgress > curGoal;
-        }
-        else
-        {
-            return curProgress >= curGoal;
-        }
+        return curProgress >= curGoal;
+        //if (isStageQ)
+        //{
+        //    return curProgress > curGoal;
+        //}
+        //else
+        //{
+        //    return curProgress >= curGoal;
+        //}
     }
     #endregion
 

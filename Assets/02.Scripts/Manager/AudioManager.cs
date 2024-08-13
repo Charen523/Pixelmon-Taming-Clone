@@ -20,7 +20,7 @@ public class AudioManager : Singleton<AudioManager>
 
     private void Start()
     {
-        ChangeBackGroundMusic(BgmIndex.Intro);
+        //ChangeBackGroundMusic(BgmIndex.Intro);
     }
 
     public void ChangeBackGroundMusic(BgmIndex clip)

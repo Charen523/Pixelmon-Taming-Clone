@@ -187,10 +187,10 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator StartStage()
     {
-        if (QuestManager.Instance.isStageQ)
-        {
-            QuestManager.Instance.OnQuestEvent();
-        }
+        //if (QuestManager.Instance.isStageQ)
+        //{
+        //    QuestManager.Instance.OnQuestEvent();
+        //}
 
         if (!isStgFade)
         {
@@ -467,7 +467,12 @@ public class StageManager : Singleton<StageManager>
         }
 
         RewardManager.Instance.SpawnRewards(enemy.gameObject, enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
-        if (QuestManager.Instance.isMonsterQ)
+        
+        if (QuestManager.Instance.isMobQ && !enemy.statHandler.data.isBoss)
+        {
+            QuestManager.Instance.OnQuestEvent();
+        }
+        else if (QuestManager.Instance.isBossQ && enemy.statHandler.data.isBoss)
         {
             QuestManager.Instance.OnQuestEvent();
         }
