@@ -14,6 +14,11 @@ public class FadeInvoker : MonoBehaviour
         StartCoroutine(FadeIn());
     }
 
+    public void StartFadeOut()
+    {
+        StartCoroutine(FadeOut());
+    }
+
     public IEnumerator FadeIn()
     {
         if (!isUsing)
@@ -35,13 +40,10 @@ public class FadeInvoker : MonoBehaviour
                 time = waitFadeTime;
 
             image.color = Color.black;
-            //Debug.Log("fade 2단계");
             yield return time;
-            //Debug.Log("fade 3단계");
             yield return image.DOFade(0f, 0.5f).WaitForCompletion();
 
             isUsing = false;
-            //Debug.Log("fade 4단계");
             gameObject.SetActive(false);
         }
     }
