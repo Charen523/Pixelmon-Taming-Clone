@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
+    [SerializeField] private GameObject DataLoadWarningPopup;
     public static bool isInit;
 
     public event Action<Enemy> OnEnemyDie;
@@ -27,7 +28,7 @@ public class GameManager : Singleton<GameManager>
     {
         UILoading.Show();
 
-        DataManager.Instance.Init();
+        StartDataLoading();
         yield return new WaitUntil(() => DataManager.Instance.isInit);
 
         ResourceManager.Instance.Init();
@@ -38,6 +39,28 @@ public class GameManager : Singleton<GameManager>
 
         UILoading.Instance.HideProgress();
     }
+
+    private async void StartDataLoading()
+    {
+        bool result = await DataManager.Instance.Init();
+
+        if (!result) // 데이터 로드 실패
+        {
+            DataLoadWarningPopup.SetActive(true);
+        }
+    }
+
+    public void OnClickExitBtn()
+    {
+#if UNITY_EDITOR
+        // 에디터 모드에서 플레이 모드 종료
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+    // 빌드된 애플리케이션에서는 애플리케이션 종료
+    Application.Quit();
+#endif
+    }
+
     public async void InitData()
     {
         await DataManager.Instance.SetBaseData();
