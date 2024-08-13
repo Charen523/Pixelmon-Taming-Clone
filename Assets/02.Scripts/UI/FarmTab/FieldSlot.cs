@@ -95,6 +95,7 @@ public class FieldSlot : MonoBehaviour
                 buyBtn.transform.parent.gameObject.SetActive(false);
                 harvestBtn.gameObject.SetActive(true);
                 /*UI Settings*/
+                curSprite.gameObject.SetActive(true);
                 curSprite.sprite = plantImgs[fieldData.cropClass];
                 timeSldr.gameObject.SetActive(false);
                 /*TMP Settings*/
