@@ -39,6 +39,7 @@ public class UIHatchResultPopup : UIBase
     [SerializeField] private TextMeshProUGUI OwnDefenseValueTxt;
     #endregion
     [SerializeField] private Button rePlaceBtn;
+    [SerializeField] private TextMeshProUGUI CollectTxt;
 
     private EggHatch eggHatch;
     private UserData userData => SaveManager.Instance.userData;
@@ -77,6 +78,7 @@ public class UIHatchResultPopup : UIBase
 
     private void OwnedPxmUI()
     {
+        CollectTxt.text = "보관";
         UIPsv[0].NewPsvRankTxt.gameObject.SetActive(true);
         UIPsv[0].OldPsvValueTxt.gameObject.SetActive(true);
         UIPsv[0].ArrowImg.gameObject.SetActive(true);
@@ -103,6 +105,7 @@ public class UIHatchResultPopup : UIBase
 
     private void FirstPxmUI()
     {
+        CollectTxt.text = "수집";
         UIPsv[0].PsvNameTxt.text = eggHatch.PsvData[0].PsvName;
         UIPsv[0].OldPsvRankTxt.text = eggHatch.PsvData[0].NewPsvRank.ToString();
         UIPsv[0].NewPsvValueTxt.text = new StringBuilder().Append(eggHatch.PsvData[0].NewPsvValue.ToString("F2")).Append('%').ToString();
@@ -125,10 +128,10 @@ public class UIHatchResultPopup : UIBase
         }
         else // 수집하기
         {
-            if (!eggHatch.IsOwnedPxm)
+            if (!eggHatch.IsOwnedPxm)                
                 GetFirst();
             else
-                GetRepetition();
+                GetRepetition();               
         }
         eggHatch.GetPixelmon();
 
