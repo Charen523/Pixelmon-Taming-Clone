@@ -13,8 +13,13 @@ public class MyAtvData
     public bool isAdvancable;
     //같은 카드 중복개수
     public int evolvedCount = 0;
+
+    //장착한 픽셀몬 ID
+    public int pxmId = -1;
     //장착 여부
     public bool isEquipped;
+    //등록 여부
+    public bool isAttached;
     //보유 여부
     public bool isOwned;
 

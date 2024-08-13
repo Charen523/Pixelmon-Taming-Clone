@@ -71,28 +71,40 @@ public class SkillEquipSlot : MonoBehaviour
         atvData = data;
         myAtvData = myData;
         equipIcon.sprite = atvData.icon;
-        myData.isEquipped = true;
-        myPxmData.atvSkillId = atvData.id;
+        
         saveManager.userData.equippedSkills[slotIndex] = atvData.id;
         saveManager.SetData("equippedSkills", saveManager.userData.equippedSkills);
+
+        PixelmonManager.Instance.pxmTab.equipData[slotIndex].myPxmData.atvSkillId = atvData.id;
         saveManager.userData.equippedPxms[slotIndex].atvSkillId = atvData.id;
         saveManager.SetData("equippedPxms", saveManager.userData.equippedPxms);
+
+        myData.isEquipped = true;
+        myData.isAttached = true;
+        myData.pxmId = saveManager.userData.equippedPxms[slotIndex].id;
         saveManager.UpdateSkillData(atvData.dataIndex, nameof(myAtvData.isEquipped), true);
+        saveManager.UpdateSkillData(atvData.dataIndex, nameof(myAtvData.isAttached), true);
+        saveManager.UpdateSkillData(atvData.dataIndex, nameof(myAtvData.pxmId), myData.pxmId);
+
+
         saveManager.UpdatePixelmonData(saveManager.userData.equippedPxms[slotIndex].id, nameof(myPxmData.atvSkillId), atvData.id);
+
         SkillManager.Instance.ExecuteSkill(Player.Instance.pixelmons[slotIndex], slotIndex);
     }
 
     public void UnEquipAction()
     {
-        myPxmData.atvSkillId = -1;
-        myAtvData.isEquipped = false;
+        skillTab.UnAttachedAction(myAtvData.pxmId, myAtvData.id);
+        SetEquipSlot();
+    }
+
+    public void SetEquipSlot()
+    {
         equipIcon.sprite = null;
         atvData = null;
         myAtvData = null;
-        SaveManager.Instance.userData.equippedSkills[slotIndex] = -1;
-        SaveManager.Instance.SetData("equippedSkills", SaveManager.Instance.userData.equippedSkills);
-        SaveManager.Instance.userData.equippedPxms[slotIndex].atvSkillId = -1;
-        SaveManager.Instance.SetData("equippedPxms", SaveManager.Instance.userData.equippedPxms);
-        SaveManager.Instance.UpdatePixelmonData(SaveManager.Instance.userData.equippedPxms[slotIndex].id, nameof(myPxmData.atvSkillId), myPxmData.atvSkillId);
+
+        saveManager.userData.equippedSkills[slotIndex] = -1;
+        saveManager.SetData("equippedSkills", saveManager.userData.equippedSkills);
     }
 }

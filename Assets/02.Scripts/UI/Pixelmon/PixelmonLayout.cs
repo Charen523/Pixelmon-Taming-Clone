@@ -17,6 +17,7 @@ public class PixelmonLayout : MonoBehaviour
         if(SkillManager.Instance.layout == null)
             SkillManager.Instance.layout = this;
         pxmManager = PixelmonManager.Instance;
+        pxmManager.layout = this;
         pxmManager.equipAction += InsertIcon;
         pxmManager.unEquipAction += DeleteIcon;
         InitPxmLayout();

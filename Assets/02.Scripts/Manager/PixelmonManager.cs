@@ -15,6 +15,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
     private UserData userData;
     public Player player;
     public PixelmonTab pxmTab;
+    public PixelmonLayout layout;
 
     private List<PixelmonData> pxmData;
     public Pixelmon[] equippedPixelmon;
@@ -34,7 +35,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
         player = Player.Instance;
         equipAction += Equipped;
         unEquipAction += UnEquipped;
-        unlockSlotAction += unlockSlotAction;
+        unlockSlotAction += UnLockedSlots;
         InitUpgradeStatus();
         InitEquippedPixelmon();
         InitPlayerStat();
@@ -95,7 +96,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
         player.pixelmons[index].fsm.anim.runtimeAnimatorController = await ResourceManager.Instance.LoadAsset<RuntimeAnimatorController>(myData.rcode, eAddressableType.animator);
         player.pixelmons[index].InitPxm();
         player.LocatedPixelmon();
-        SkillManager.Instance.ExecuteSkill(player.pixelmons[index], index);
+        SkillManager.Instance.ExecuteSkill(Player.Instance.pixelmons[index], index);
     }
 
     private void UnEquipped(int index)
@@ -111,26 +112,30 @@ public class PixelmonManager : Singleton<PixelmonManager>
         pxmTab.unLockAction?.Invoke(index);
     }
 
-    public void UnLockedSlot(int index)
+    public void UnLockedSlots(int index)
     {
         switch (index) 
         {
             case 5:
-                pxmTab.equipData[2].isLocked = false;
-                pxmTab.equipData[2].stateIcon.sprite = plusIcon;
+                UnLockedSlot(2);
                 break;
             case 10:
-                pxmTab.equipData[3].isLocked = false;
-                pxmTab.equipData[3].stateIcon.sprite = plusIcon;
+                UnLockedSlot(3);
                 break;
-            case 15:
-                pxmTab.equipData[4].isLocked = false;
-                pxmTab.equipData[4].stateIcon.sprite = plusIcon;
-                unlockSlotAction = null;
+            case 30:
+                UnLockedSlot(4);
                 break;
             default:
                 break;
         }
+    }
+
+    private void UnLockedSlot(int index)
+    {
+        pxmTab.equipData[index].isLocked = false;
+        pxmTab.equipData[index].stateIcon.sprite = plusIcon;
+        layout.UnLockedIcon(index);
+        SkillManager.Instance.skillTab.skiltabLayout.UnLockedIcon(index);
     }
 
     public PixelmonData FindPixelmonData(int id)

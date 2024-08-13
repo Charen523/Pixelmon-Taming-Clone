@@ -46,7 +46,10 @@ public class SkillTab : UIBase, IPointerDownHandler
     #endregion
 
     public UnityAction<int> AddSkillAction;
+    public UnityAction<int, int> InsertSlotAcion;
+    public UnityAction<int> ClearSlotAcion;
     public TabState tabState = TabState.Normal;
+    public PixelmonLayout skiltabLayout;
     public Color[] bgIconColor;
     public TMP_ColorGradient[] txtColors;
     public SkillSlot choiceSlot;
@@ -63,6 +66,8 @@ public class SkillTab : UIBase, IPointerDownHandler
         skillManager = SkillManager.Instance;
         skillManager.skillTab = this;
         AddSkillAction += AddSkill;
+        InsertSlotAcion += InsertEquipSlot;
+        ClearSlotAcion += ClearEquipSlot;
         InitTab();
         infoPopUp = await UIManager.Show<UISkillPopUp>();
     }
@@ -125,24 +130,44 @@ public class SkillTab : UIBase, IPointerDownHandler
             return;
         }
 
-        if (!allData[choiceId].myAtvData.isEquipped)
+        if (allData[choiceId].myAtvData.isEquipped)
+        {
+            CheckedOverlap(allData[id].myAtvData.id);
+        }
+        else if (allData[choiceId].myAtvData.isAttached)
+            UnAttachedAction(allData[id].myAtvData.pxmId, id);
+        else
         {
             tabState = TabState.Equip;
             infoPopUp.gameObject.SetActive(false);
             equipOverlay.SetActive(true);
         }
-        else
-        {
-            CheckedOverlap(allData[id].myAtvData.id);
-        }
+            
     }
 
-
-    public void OnCancelEquip()
+    public void InsertEquipSlot(int index, int id)
     {
-        tabState = TabState.Normal;
-        infoPopUp.gameObject.SetActive(false);
-        equipOverlay.SetActive(false);
+        equipData[index].EquipAction(allData[id].atvData, allData[id].myAtvData);
+    }
+
+    public void ClearEquipSlot(int index)
+    {
+        equipData[index].UnEquipAction();
+    }
+
+    public void UnAttachedAction(int pxmId, int skillId)
+    {
+        var pxmData = PixelmonManager.Instance.pxmTab.allData[pxmId];
+        allData[skillId].myAtvData.isEquipped = false;
+        saveManager.UpdateSkillData(skillId, "isEquipped", allData[skillId].myAtvData.isEquipped);
+        pxmData.myPxmData.atvSkillId = -1;
+        saveManager.UpdatePixelmonData(pxmId, nameof(pxmData.myPxmData.atvSkillId), pxmData.myPxmData.atvSkillId);
+
+        allData[skillId].myAtvData.isAttached = false;
+        saveManager.UpdateSkillData(skillId, "isAttached", allData[skillId].myAtvData.isAttached);
+        allData[skillId].myAtvData.pxmId = -1;
+        saveManager.UpdateSkillData(skillId, "pxmId", allData[skillId].myAtvData.pxmId);
+        allData[skillId].SetEquipTxt();
     }
 
     public void CheckedOverlap(int id)
@@ -151,11 +176,17 @@ public class SkillTab : UIBase, IPointerDownHandler
         {
             if (data.myAtvData != null && data.myAtvData.id == id)
             {
-                skillManager.UnEquipSkill(data.slotIndex, id);
+                skillManager.UnEquipSkill(data.slotIndex);
                 break;
             }
         }
-            
+    }
+
+    public void OnCancelEquip()
+    {
+        tabState = TabState.Normal;
+        infoPopUp.gameObject.SetActive(false);
+        equipOverlay.SetActive(false);
     }
 
     public void AddSkill(int index)
