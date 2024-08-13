@@ -21,11 +21,18 @@ public class EnemyStatHandler : MonoBehaviour
 
         float deltaStage = (world - 1) * 20 + stage;
 
-
-        enemyAtk = data.atk * ((deltaStage + 100) * 0.01f) * deltaDiff;
-        enemyMaxHp = data.hp * ((deltaStage * 5 + 100) * 0.01f) * deltaDiff;
-        enemyDef = data.def * ((deltaStage + 100) * 0.01f) * deltaDiff;
-
+        if (data.isBoss)
+        {
+            enemyAtk = data.atk * ((deltaStage * 5 + 100) * 0.01f) * deltaDiff;
+            enemyMaxHp = data.hp * ((deltaStage * 20 + 100) * 0.01f) * deltaDiff;
+            enemyDef = data.def * ((deltaStage * 5 + 100) * 0.01f) * deltaDiff;
+        }
+        else
+        {
+            enemyAtk = data.atk * ((deltaStage * 5 + 100) * 0.01f) * deltaDiff;
+            enemyMaxHp = data.hp * ((deltaStage * 10 + 100) * 0.01f) * deltaDiff;
+            enemyDef = data.def * ((deltaStage * 5 + 100) * 0.01f) * deltaDiff;
+        }
         enemy.healthSystem.initEnemyHealth(enemyMaxHp);
     }
 
