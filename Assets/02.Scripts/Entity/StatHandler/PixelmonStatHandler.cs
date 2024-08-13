@@ -10,7 +10,7 @@ public static class PixelmonStatHandler
     public static void InitStatus(this PixelmonStatus status, PixelmonData data, MyPixelmonData myData)
     {
         status.perAtk = SetStatus(data.basePerAtk, myData.lv, data.lvAtkRate);
-        status.Atk = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Atk, myData.FindType(AbilityType.PSVAtk));
+        status.Atk = SetPlusStatus(1, myData.FindType(AbilityType.PSVAtk));
         status.Cri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Cri, myData.FindType(AbilityType.PSVCri));
         status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.PSVCriDmg), data.FindTraitType(criDmg, myData.lv));
         status.Dmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Dmg, myData.FindType(AbilityType.PSVDmg), data.FindTraitType(dmg, myData.lv));
@@ -206,20 +206,20 @@ public static class PixelmonStatHandler
             if (IsCritical(status.Cri + status.SCri))
             {
                 isCri = true;
-                dealDmg = (status.perAtk * status.Atk) * (perSkill + status.SDmg) * (100 + status.SCriDmg + status.CriDmg) / 100;
+                dealDmg = (10 + PixelmonManager.Instance.upgradeStatus.Atk) * (100 + status.perAtk + perSkill + status.SDmg + status.SCriDmg) / 100;
             }
             else
-                dealDmg = (status.perAtk * status.Atk) * (perSkill + status.SDmg);
+                dealDmg = (10 + PixelmonManager.Instance.upgradeStatus.Atk) * (100 + status.perAtk + perSkill + status.SDmg) / 100;
         }
         else
         {
             if (IsCritical(status.Cri))
             {
                 isCri= true;
-                dealDmg = 10 * (100 + status.perAtk + status.Atk + status.Dmg) / 100 * (100 + status.CriDmg) / 100;
+                dealDmg = (10 + PixelmonManager.Instance.upgradeStatus.Atk) * (100 + status.perAtk + status.Dmg + status.CriDmg) / 100;
             }
             else
-                dealDmg = 10 * (100 + status.perAtk + status.Atk + status.Dmg) / 100;
+                dealDmg = (10 + PixelmonManager.Instance.upgradeStatus.Atk) * (100 + status.perAtk + status.Dmg) / 100;
         }
         //버프가 있다면 dealDmg *= 1;
 
