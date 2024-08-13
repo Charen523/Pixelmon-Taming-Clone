@@ -145,8 +145,7 @@ public class FieldSlot : MonoBehaviour
         if (farmTab.PlantSeed())
         {
             RandomCrop();
-            if (fieldData.cropClass == 4) fieldData.leftTime = 3 * 2 * 3600f;
-            else fieldData.leftTime = fieldData.cropClass * 2 * 3600f;
+            fieldData.leftTime = 900f;
             passTime = fieldData.leftTime;
             fieldData.startTime = DateTime.Now.ToString();
             CurrentFieldState = FieldState.Seeded;
@@ -200,7 +199,7 @@ public class FieldSlot : MonoBehaviour
     private void RandomCrop()
     {
         int randNum = UnityEngine.Random.Range(0, 100);
-        if (randNum < 59)
+        if (randNum < 69)
         {
             fieldData.cropClass = 1;
         }
