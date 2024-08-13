@@ -215,10 +215,7 @@ public abstract class GSpreadReader<V> : Singleton<V> where V : GSpreadReader<V>
                     }
                 }
             }
-            catch (Exception e)
-            {
-                //Debug.Log($"Convert Failed {field.Name} by {e}");
-            }
+            catch (Exception) { }
         }
         return (T)dt;
     }
