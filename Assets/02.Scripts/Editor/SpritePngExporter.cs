@@ -62,7 +62,7 @@ public class SpritePngExporter : EditorWindow
             {
                 string filePath = Path.Combine(outputFolderPath, sprite.name + ".png");
                 File.WriteAllBytes(filePath, pngData);
-                Debug.Log("Saved: " + filePath);
+                //Debug.Log("Saved: " + filePath);
             }
         }
 

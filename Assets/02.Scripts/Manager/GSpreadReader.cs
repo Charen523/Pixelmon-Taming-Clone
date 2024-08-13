@@ -88,7 +88,7 @@ public abstract class GSpreadReader<V> : Singleton<V> where V : GSpreadReader<V>
             //UILoading.Instance.SetProgress(op, $"{sheet.className} 데이터 로딩중");
             await op;
             var res = req.downloadHandler.text;
-            Debug.Log(res);
+            //Debug.Log(res);
             sheet.datas = TsvToDic(res);
             UILoading.Instance.SetProgress(progress++/sheets.Count, "데이터 불러오는 중");
         }
@@ -215,10 +215,7 @@ public abstract class GSpreadReader<V> : Singleton<V> where V : GSpreadReader<V>
                     }
                 }
             }
-            catch (Exception e)
-            {
-                Debug.Log($"Convert Failed {field.Name} by {e}");
-            }
+            catch (Exception) { }
         }
         return (T)dt;
     }

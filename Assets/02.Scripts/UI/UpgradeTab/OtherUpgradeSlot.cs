@@ -15,7 +15,7 @@ public class OtherUpgradeSlot : UpgradeSlot
         }
         else
         {
-            nextValueTxt.text = nextValue.ToString() + "%";
+            nextValueTxt.text = nextValue.ToString("0.##") + "%";
         }
     }
 

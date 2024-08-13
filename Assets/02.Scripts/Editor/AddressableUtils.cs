@@ -147,7 +147,7 @@ internal class AddressableUtils : Editor
             {
                 case FtpStatusCode.ActionNotTakenFileUnavailable:
                     {
-                        Debug.Log("DeleteFolder ] Probably the folder already exist : ");
+                        //Debug.Log("DeleteFolder ] Probably the folder already exist : ");
                     }
                     break;
             }
@@ -181,7 +181,7 @@ internal class AddressableUtils : Editor
             {
                 case FtpStatusCode.ActionNotTakenFileUnavailable:
                     {
-                        Debug.Log("DeleteFolder ] Probably the folder already exist : ");
+                        //Debug.Log("DeleteFolder ] Probably the folder already exist : ");
                     }
                     break;
             }
@@ -214,7 +214,7 @@ internal class AddressableUtils : Editor
             {
                 case FtpStatusCode.ActionNotTakenFileUnavailable:
                     {
-                        Debug.Log("CreateFolders ] Probably the folder already exist : ");
+                        //Debug.Log("CreateFolders ] Probably the folder already exist : ");
                     }
                     break;
             }
@@ -254,7 +254,7 @@ internal class AddressableUtils : Editor
             {
                 case FtpStatusCode.ActionNotTakenFileUnavailable:
                     {
-                        Debug.Log("CreateFolders ] Probably the folder already exist : ");
+                        //Debug.Log("CreateFolders ] Probably the folder already exist : ");
                     }
                     break;
             }

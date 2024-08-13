@@ -40,7 +40,7 @@ public class ChangeFontTMPEditor : EditorWindow
     {
         if (newFont == null)
         {
-            Debug.LogError("Please assign a new font.");
+            //Debug.LogError("Please assign a new font.");
             return;
         }
 
@@ -53,14 +53,14 @@ public class ChangeFontTMPEditor : EditorWindow
             EditorUtility.SetDirty(text);
         }
 
-        Debug.Log("Font change completed in the current scene!");
+        //Debug.Log("Font change completed in the current scene!");
     }
 
     private void ChangeFontInPrefabs()
     {
         if (newFont == null)
         {
-            Debug.LogError("Please assign a new font.");
+            //Debug.LogError("Please assign a new font.");
             return;
         }
 
@@ -84,20 +84,20 @@ public class ChangeFontTMPEditor : EditorWindow
             }
         }
 
-        Debug.Log("Font change completed in all prefabs!");
+        //Debug.Log("Font change completed in all prefabs!");
     }
 
     private void ChangeFontInSelectedPrefab()
     {
         if (newFont == null)
         {
-            Debug.LogError("Please assign a new font.");
+            //Debug.LogError("Please assign a new font.");
             return;
         }
 
         if (selectedPrefab == null)
         {
-            Debug.LogError("Please assign a prefab.");
+            //Debug.LogError("Please assign a prefab.");
             return;
         }
 
@@ -113,6 +113,6 @@ public class ChangeFontTMPEditor : EditorWindow
             PrefabUtility.SavePrefabAsset(selectedPrefab);
         }
 
-        Debug.Log("Font change completed in the selected prefab!");
+        //Debug.Log("Font change completed in the selected prefab!");
     }
 }

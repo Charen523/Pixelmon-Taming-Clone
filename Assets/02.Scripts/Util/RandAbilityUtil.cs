@@ -34,7 +34,7 @@ public static class RandAbilityUtil
         }
         if (totalProb != 100)
         {
-            Debug.LogError("확률 합 != 100");
+            //Debug.LogError("확률 합 != 100");
             return (null, 0); // 확률 합이 100이 아닐 때 null과 0 반환
         }
         #endregion

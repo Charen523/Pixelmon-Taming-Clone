@@ -106,7 +106,6 @@ public class SkillGacha : MonoBehaviour
             cumProb += prob.Value * 100;
             if (randProb <= cumProb)
             {
-                Debug.Log("Selected Rank: " + prob.Key);
                 return prob.Key;
             }
         }

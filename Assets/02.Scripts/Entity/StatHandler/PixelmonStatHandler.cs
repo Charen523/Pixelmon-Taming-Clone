@@ -10,7 +10,7 @@ public static class PixelmonStatHandler
     public static void InitStatus(this PixelmonStatus status, PixelmonData data, MyPixelmonData myData)
     {
         status.perAtk = SetStatus(data.basePerAtk, myData.lv, data.lvAtkRate);
-        status.Atk = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Atk, myData.FindType(AbilityType.PSVAtk));
+        status.Atk = SetPlusStatus(1, myData.FindType(AbilityType.PSVAtk));
         status.Cri = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Cri, myData.FindType(AbilityType.PSVCri));
         status.CriDmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.CriDmg, myData.FindType(AbilityType.PSVCriDmg), data.FindTraitType(criDmg, myData.lv));
         status.Dmg = SetPlusStatus(PixelmonManager.Instance.upgradeStatus.Dmg, myData.FindType(AbilityType.PSVDmg), data.FindTraitType(dmg, myData.lv));

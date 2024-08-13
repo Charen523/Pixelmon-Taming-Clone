@@ -14,7 +14,7 @@ public class AddressableWrapper
             else
                 path = "http://newto.synology.me/DSAddressable";
 
-            Debug.Log("[Debug] runtime path : " + path);
+            //Debug.Log("[Debug] runtime path : " + path);
             return path;
         }
     }
@@ -24,7 +24,7 @@ public class AddressableWrapper
         get
         {
             string version = Application.version;
-            Debug.Log("[Debug] PlayerBuildVersion : " + version);
+            //Debug.Log("[Debug] PlayerBuildVersion : " + version);
             return version;
         }
     }
@@ -34,7 +34,7 @@ public class AddressableWrapper
         get
         {
             var target = Application.platform == RuntimePlatform.Android ? "Android" : Application.platform == RuntimePlatform.IPhonePlayer ? "ios" : "StandaloneWindows";
-            Debug.Log("[Debug] platform : " + target);
+            //Debug.Log("[Debug] platform : " + target);
             return target;
         }
     }

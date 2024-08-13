@@ -36,7 +36,7 @@ public class Enemy : SerializedMonoBehaviour
         if (collision.CompareTag("PixelmonProjectile"))
         {
             ProjectileController projectile = collision.gameObject.GetComponent<ProjectileController>();
-            healthSystem.TakeDamage(projectile.projectileDamage);
+            healthSystem.TakeDamage(projectile.projectileDamage, projectile.isCri);
             projectile.ResetProjectile();
         }
     }

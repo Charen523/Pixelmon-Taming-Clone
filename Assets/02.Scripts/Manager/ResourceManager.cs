@@ -1,12 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.Events;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.SocialPlatforms;
 
 public class ResourceManager : Singleton<ResourceManager>
 {
@@ -81,20 +77,6 @@ public class ResourceManager : Singleton<ResourceManager>
         UILoading.Instance.SetProgress(handle, "리소스 불러오는 중");
         //StartCoroutine(SetProgress(handle));
         await handle.Task;
-        switch (handle.Status)
-        {
-            case AsyncOperationStatus.None:
-                break;
-            case AsyncOperationStatus.Succeeded:
-                Debug.Log("다운로드 성공!");
-                break;
-            case AsyncOperationStatus.Failed:
-                Debug.Log("다운로드 실패 : " + handle.OperationException.Message);
-                Debug.LogError(handle.OperationException.ToString());
-                break;
-            default:
-                break;
-        }
         Addressables.Release(handle);
         InitAddressableMap();
     }
@@ -119,84 +101,52 @@ public class ResourceManager : Singleton<ResourceManager>
 
     public async Task<List<T>> LoadAssets<T>(string key, eAddressableType addressableType, eAssetType assetType)
     {
-        try
+        var paths = GetPaths(key, addressableType, assetType);
+        List<T> retList = new List<T>();
+        foreach (var path in paths)
         {
-            var paths = GetPaths(key, addressableType, assetType);
-            List<T> retList = new List<T>();
-            foreach (var path in paths)
-            {
-                retList.Add(await LoadAssetAsync<T>(path));
-            }
-            return retList;
+            retList.Add(await LoadAssetAsync<T>(path));
         }
-        catch (Exception e)
-        {
-            Debug.LogError(e.Message);
-        }
-        return default;
+        return retList;
     }
 
     public async Task<List<T>> LoadDataAssets<T>()
     {
-        try
-        {
-            var ao = Addressables.LoadAssetsAsync<TextAsset>("JsonData", null);
-            UILoading.Instance.SetProgress(ao, "데이터 불러오는 중");
-            var jsonData = await ao.Task;
+        var ao = Addressables.LoadAssetsAsync<TextAsset>("JsonData", null);
+        UILoading.Instance.SetProgress(ao, "데이터 불러오는 중");
+        var jsonData = await ao.Task;
 
-            List<T> retList = new List<T>();
-            foreach (var data in jsonData)
-            {
-                var obj = JsonUtility.FromJson<T>(data.text);
-                retList.Add(obj);
-            }
-            return retList;
-        }
-        catch (Exception e)
+        List<T> retList = new List<T>();
+        foreach (var data in jsonData)
         {
-            Debug.LogError(e.Message);
+            var obj = JsonUtility.FromJson<T>(data.text);
+            retList.Add(obj);
         }
-        return default;
+        return retList;
     }
 
 
     public async Task<T> LoadAsset<T>(string key, eAddressableType addressableType)
     {
-        try
-        {
-            var path = GetPath(key, addressableType);
-            return await LoadAssetAsync<T>(path);
-        }
-        catch (Exception e)
-        {
-            Debug.LogWarning(e.Message);
-        }
-        return default;
+        var path = GetPath(key, addressableType);
+        return await LoadAssetAsync<T>(path);
     }
     private async Task<T> LoadAssetAsync<T>(string path)
     {
-        try
+        if (path.Contains(".prefab") && typeof(T) != typeof(GameObject) || path.Contains("UI/"))
         {
-            if (path.Contains(".prefab") && typeof(T) != typeof(GameObject) || path.Contains("UI/"))
-            {
-                var obj = await Addressables.LoadAssetAsync<GameObject>(path).Task;
-                return obj.GetComponent<T>();
-            }
-            else if (path.Contains(".json"))
-            {
-                var textAsset = await Addressables.LoadAssetAsync<TextAsset>(path).Task;
-                return JsonUtility.FromJson<T>(textAsset.text);
-            }
-            else
-            {
-                return await Addressables.LoadAssetAsync<T>(path).Task;
-            }
+            var obj = await Addressables.LoadAssetAsync<GameObject>(path).Task;
+            return obj.GetComponent<T>();
         }
-        catch (Exception e)
+        else if (path.Contains(".json"))
         {
-            Debug.LogError(e.Message);
+            var textAsset = await Addressables.LoadAssetAsync<TextAsset>(path).Task;
+            return JsonUtility.FromJson<T>(textAsset.text);
         }
-        return default;
+        else
+        {
+            return await Addressables.LoadAssetAsync<T>(path).Task;
+        }
     }
     #endregion
 }

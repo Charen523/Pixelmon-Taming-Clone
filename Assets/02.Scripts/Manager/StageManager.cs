@@ -154,6 +154,12 @@ public class StageManager : Singleton<StageManager>
         InitStageUI();
         GameManager.Instance.NotifyStageStart();
 
+        if (!isStgFade)
+        {
+            isStgFade = true;
+            allFade.gameObject.SetActive(true);
+            allFade.StartFadeOut();
+        }
         if (userData.isInfinite)
         {
             killCount = 0;
@@ -177,9 +183,7 @@ public class StageManager : Singleton<StageManager>
         {
             isStgFade = true;
             allFade.gameObject.SetActive(true);
-            Debug.Log("fade 1단계");
             yield return allFade.FadeOut();
-            Debug.Log("fade 5단계");
         }
         else
         {

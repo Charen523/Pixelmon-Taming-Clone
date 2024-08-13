@@ -199,7 +199,7 @@ public class PixelmonTab : UIBase
                 if (data.myPxmData.star >= 5) break;
                 data.OnEvolved();
             }
-            Debug.Log($"{data.myPxmData.id} 합성완료");
+            //Debug.Log($"{data.myPxmData.id} 합성완료");
         }
         isAdvancable = false;
         evolveIcon.sprite = btnColor[0];

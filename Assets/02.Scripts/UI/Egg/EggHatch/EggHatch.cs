@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EggHatch : Singleton<EggHatch>
+public class EggHatch : MonoBehaviour
 {
     #region 애니메이션
     public AnimationData AnimData = new AnimationData();
@@ -192,7 +192,7 @@ public class EggHatch : Singleton<EggHatch>
         }
         if (totalProb != 100)
         {
-            Debug.LogError("확률 합 != 100");
+            //Debug.LogError("확률 합 != 100");
         }
         #endregion
 
