@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -38,8 +39,9 @@ public class UIHatchResultPopup : UIBase
     [SerializeField] private TextMeshProUGUI OwnHpValueTxt;
     [SerializeField] private TextMeshProUGUI OwnDefenseValueTxt;
     #endregion
+    [SerializeField] private GameObject CollectBtn;
+    [SerializeField] private GameObject OwnedBtn;
     [SerializeField] private Button rePlaceBtn;
-    [SerializeField] private TextMeshProUGUI CollectTxt;
 
     private EggHatch eggHatch;
     private UserData userData => SaveManager.Instance.userData;
@@ -78,7 +80,9 @@ public class UIHatchResultPopup : UIBase
 
     private void OwnedPxmUI()
     {
-        CollectTxt.text = "보관";
+        CollectBtn.SetActive(false);
+        OwnedBtn.SetActive(true);
+
         UIPsv[0].NewPsvRankTxt.gameObject.SetActive(true);
         UIPsv[0].OldPsvValueTxt.gameObject.SetActive(true);
         UIPsv[0].ArrowImg.gameObject.SetActive(true);
@@ -105,7 +109,9 @@ public class UIHatchResultPopup : UIBase
 
     private void FirstPxmUI()
     {
-        CollectTxt.text = "수집";
+        CollectBtn.SetActive(true);
+        OwnedBtn.SetActive(false);
+
         UIPsv[0].PsvNameTxt.text = eggHatch.PsvData[0].PsvName;
         UIPsv[0].OldPsvRankTxt.text = eggHatch.PsvData[0].NewPsvRank.ToString();
         UIPsv[0].NewPsvValueTxt.text = new StringBuilder().Append(eggHatch.PsvData[0].NewPsvValue.ToString("F2")).Append('%').ToString();
