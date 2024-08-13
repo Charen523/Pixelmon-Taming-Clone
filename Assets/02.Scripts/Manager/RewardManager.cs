@@ -47,7 +47,7 @@ public class RewardManager : Singleton<RewardManager>
             case nameof(userData.gold):
             case nameof(userData.userExp):
                 BigInteger amount1 = _amount;
-                amount1 *= StageManager.Instance.worldNum * (StageManager.Instance.diffNum + 1);
+                amount1 *= (StageManager.Instance.worldNum + StageManager.Instance.diffNum * 10);
                 SaveManager.Instance.SetFieldData(itemName, amount1, true);
                 break;
             default:
