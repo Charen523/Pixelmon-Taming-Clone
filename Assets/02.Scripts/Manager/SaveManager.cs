@@ -4,7 +4,6 @@ using UnityEngine;
 using System;
 using System.Threading.Tasks;
 using System.Numerics;
-using System.Reflection;
 
 public class SaveManager : Singleton<SaveManager>
 {
@@ -20,7 +19,7 @@ public class SaveManager : Singleton<SaveManager>
     protected override void Awake()
     {
         base.Awake();
-        initPath = Path.Combine(Application.dataPath, "initData.json");
+        initPath = "InitData";
         userPath = Path.Combine(Application.persistentDataPath, "userData.json");
         LoadData();
         SetFieldData(nameof(userData.gold), BigInteger.Parse(userData._gold));
@@ -37,15 +36,8 @@ public class SaveManager : Singleton<SaveManager>
     {
         path ??= userPath;
 
-        try
-        {
-            string jsonData = JsonUtility.ToJson(data, true);
-            File.WriteAllText(path, jsonData);
-        }
-        catch (Exception e)
-        {
-            //Debug.LogError($"{path}에 데이터를 저장하는데 실패함: {e.Message}");
-        }
+        string jsonData = JsonUtility.ToJson(data, true);
+        File.WriteAllText(path, jsonData);
     }
 
     public void LoadData()
@@ -54,15 +46,15 @@ public class SaveManager : Singleton<SaveManager>
         {
             LoadFromJson(userPath);
         }
-        else if (File.Exists(initPath))
+        else if (Resources.Load<TextAsset>(initPath) != null)
         {
-            LoadFromJson(initPath);
+            LoadFromResources(initPath);
             SaveToJson(userData, userPath);
         }
         else
         {
             userData = new UserData();
-            SaveToJson(userData, initPath);
+            SaveToJson(userData, userPath);
             LoadData();
         }
     }
@@ -77,6 +69,15 @@ public class SaveManager : Singleton<SaveManager>
         catch (Exception e)
         {
             //Debug.LogError($"{path}로부터 데이터를 로드하는 데에 실패했습니다: {e.Message}");
+        }
+    }
+
+    public void LoadFromResources(string resourceName)
+    {
+        TextAsset jsonData = Resources.Load<TextAsset>(resourceName);
+        if (jsonData != null)
+        {
+            userData = JsonUtility.FromJson<UserData>(jsonData.text);
         }
     }
 
