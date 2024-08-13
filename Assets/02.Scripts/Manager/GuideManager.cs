@@ -26,8 +26,8 @@ public class GuideManager : Singleton<GuideManager>
 
         if (userData.isOpenSkillTab)
         {
-            Locks[5].SetActive(false);
             Locks[2].SetActive(false);
+            Locks[5].SetActive(false);
         }
         
         if(userData.isOpenFarmTab)

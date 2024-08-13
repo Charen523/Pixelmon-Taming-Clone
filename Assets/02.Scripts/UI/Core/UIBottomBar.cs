@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 enum eTabs
 {
-    UIUpgradeTab,
     UIPixelmonTab,
+    UIUpgradeTab,
     UISkilltab,
     UIFarmTab,
     UIDungeonTab,
