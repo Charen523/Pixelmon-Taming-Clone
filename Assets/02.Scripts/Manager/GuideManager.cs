@@ -73,11 +73,11 @@ public class GuideManager : Singleton<GuideManager>
         }
     }
 
-    // obj의 피벗 y를 1로 맞추시오.
+    // obj의 피벗 y를 1(center-top)로 맞추시오. 더 위로 올리고 싶으면 addPos로 값 추가
     public void SetArrow(GameObject obj, float addYPos = 0)
     {
         Vector3 currentPosition = obj.transform.position;
-        Vector3 newPosition = new Vector3(currentPosition.x, currentPosition.y + addYPos, currentPosition.z);
+        Vector3 newPosition = new Vector3(currentPosition.x, currentPosition.y + 20f + addYPos, currentPosition.z);
         GuideArrow.transform.position = newPosition;
     }
 

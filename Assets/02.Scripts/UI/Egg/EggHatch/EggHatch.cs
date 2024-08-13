@@ -33,7 +33,7 @@ public class EggHatch : MonoBehaviour
     private async void Awake()
     {
         HatchResultPopup = await UIManager.Show<UIHatchResultPopup>();
-        GuideManager.Instance.SetArrow(BreakAnim.gameObject, 60);
+        GuideManager.Instance.SetArrow(BreakAnim.gameObject);
     }
 
     private void Start()
