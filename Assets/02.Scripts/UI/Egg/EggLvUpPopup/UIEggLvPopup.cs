@@ -102,23 +102,27 @@ public class UIEggLvPopup : UIBase
     }
 
     private void UpdateLvAndRateUI()
-    { 
+    {
+        if (userData.eggLv != 10)
+        {         
+            NextLvNum.text = (userData.eggLv + 1).ToString();          
+            var nextNum = DataManager.Instance.GetData<EggRateData>((userData.eggLv + 1).ToString());
+          
+            CommonNextNum.text = nextNum.common.ToString("F2") + "%";           
+            AdvancedNextNum.text = nextNum.advanced.ToString("F2") + "%";           
+            RareNextNum.text = nextNum.rare.ToString("F2") + "%";         
+            EpicNextNum.text = nextNum.epic.ToString("F2") + "%";           
+            LegendaryNextNum.text = nextNum.legendary.ToString("F2") + "%";
+        }
         CurLvNum.text = userData.eggLv.ToString();
-        NextLvNum.text = (userData.eggLv + 1).ToString();
-
         var curNum = DataManager.Instance.GetData<EggRateData>(userData.eggLv.ToString());
-        var nextNum = DataManager.Instance.GetData<EggRateData>((userData.eggLv + 1).ToString());
 
-        CommonCurNum.text = curNum.common.ToString();
-        CommonNextNum.text = nextNum.common.ToString();
-        AdvancedCurNum.text = curNum.advanced.ToString();
-        AdvancedNextNum.text = nextNum.advanced.ToString();
-        RareCurNum.text = curNum.rare.ToString();
-        RareNextNum.text = nextNum.rare.ToString();
-        EpicCurNum.text = curNum.epic.ToString();
-        EpicNextNum.text = nextNum.epic.ToString();
-        LegendaryCurNum.text = curNum.legendary.ToString();
-        LegendaryNextNum.text = nextNum.legendary.ToString();
+        CommonCurNum.text = curNum.common.ToString("F2") + "%";
+        AdvancedCurNum.text = curNum.advanced.ToString("F2") + "%";
+        RareCurNum.text = curNum.rare.ToString("F2") + "%";
+        EpicCurNum.text = curNum.epic.ToString("F2") + "%";
+        LegendaryCurNum.text = curNum.legendary.ToString("F2") + "%";
+
     }
 
     public enum EggLvBtnType
@@ -199,6 +203,7 @@ public class UIEggLvPopup : UIBase
 
         SetDiaBtn();
 
+        if (userData.eggLv == 10) return;
         updateTimerCoroutine = StartCoroutine(UpdateTimer());
     }
 
@@ -220,6 +225,7 @@ public class UIEggLvPopup : UIBase
 
     public void OnClickGaugeUpBtn()
     {
+        if (userData.eggLv == 10) return;
         lvUpGauges[userData.fullGaugeCnt].GaugeUp();
         SaveManager.Instance.SetFieldData(nameof(userData.fullGaugeCnt), 1, true);
         SaveManager.Instance.SetFieldData(nameof(userData.gold), -price, true);
@@ -228,6 +234,7 @@ public class UIEggLvPopup : UIBase
 
     public void OnClickLvUpBtn()
     {
+        if (userData.eggLv == 10) return;
         SaveManager.Instance.SetFieldData(nameof(userData.startLvUpTime), DateTime.Now.ToString());
         SaveManager.Instance.SetFieldData(nameof(userData.fullGaugeCnt), 0);
         foreach (var gauge in lvUpGauges)
