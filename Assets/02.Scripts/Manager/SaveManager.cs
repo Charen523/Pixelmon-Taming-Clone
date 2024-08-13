@@ -61,15 +61,8 @@ public class SaveManager : Singleton<SaveManager>
 
     public void LoadFromJson(string path)
     {
-        try
-        {
-            string jsonData = File.ReadAllText(path);
-            userData = JsonUtility.FromJson<UserData>(jsonData);
-        }
-        catch (Exception e)
-        {
-            //Debug.LogError($"{path}로부터 데이터를 로드하는 데에 실패했습니다: {e.Message}");
-        }
+        string jsonData = File.ReadAllText(path);
+        userData = JsonUtility.FromJson<UserData>(jsonData);
     }
 
     public void LoadFromResources(string resourceName)
@@ -91,7 +84,7 @@ public class SaveManager : Singleton<SaveManager>
         }
     }
 
-    private async void SaveDataAsync() //추후 저장데이터를 서버로 보낼 때 활성화
+    private async void SaveDataAsync()
     {
         await Task.Run(() => SaveToJson(userData));
     }
@@ -99,124 +92,73 @@ public class SaveManager : Singleton<SaveManager>
     public void SetData(string field, object value)
     {
         var fieldInfo = userData.GetType().GetField(field);
-        if (fieldInfo != null)
-        {
-            fieldInfo.SetValue(userData, value);
-            isDirty = true;
-        }
-        else
-        {
-            //Debug.LogWarning($"{field} 변수를 UserData에서 찾을 수 없습니다.");
-        }
+        fieldInfo.SetValue(userData, value);
+        isDirty = true;
     }
 
     public void SetDeltaData(string field, int value)
     {
         var fieldInfo = userData.GetType().GetField(field);
-        if (fieldInfo != null)
-        {
-            int currentValue = (int)fieldInfo.GetValue(userData);
-            fieldInfo.SetValue(userData, currentValue + value);
-            isDirty = true;
-        }
-        else
-        {
-            //Debug.LogWarning($"{field} 변수를 UserData에서 찾을 수 없습니다.");
-        }
+        int currentValue = (int)fieldInfo.GetValue(userData);
+        fieldInfo.SetValue(userData, currentValue + value);
+        isDirty = true;
     }
 
-    /// <summary>
-    /// SetData, SetDeltaData, SetGold 모두 섞은 하이브리드 메서드
-    /// </summary>
-    /// <param name="field">필드 이름: userData.(변수명) 형식으로 사용할 것.</param>
-    /// <param name="value">필드에 들어갈 값 또는 변화량.</param>
-    /// <param name="isDelta">만약 변화량이라면 true인 default매개변수</param>
     public void SetFieldData(string field, object value, bool isDelta = false)
     {
         var fieldInfo = userData.GetType().GetField(field);
-        if (fieldInfo != null)
+        var currentValue = fieldInfo.GetValue(userData);
+
+        if (isDelta)
         {
-            var currentValue = fieldInfo.GetValue(userData);
-
-            if (isDelta)
+            if (currentValue is int currentInt)
             {
-                if (currentValue is int currentInt)
+                fieldInfo.SetValue(userData, currentInt + (int)value);
+            }
+            else if (currentValue is BigInteger currentBigInt)
+            {
+                BigInteger bigIntValue = value switch
                 {
-                    fieldInfo.SetValue(userData, currentInt + (int)value);
-                }
-                else if (currentValue is BigInteger currentBigInt)
-                {
-                    BigInteger bigIntValue = value switch
-                    {
-                        int intValue => new BigInteger(intValue),
-                        BigInteger bigIntegerValue => bigIntegerValue,
-                        _ => throw new ArgumentException("value는 int 또는 BigInteger 형이어야 합니다.")
-                    };
+                    int intValue => new BigInteger(intValue),
+                    BigInteger bigIntegerValue => bigIntegerValue,
+                    _ => 0
+                };
 
-                    fieldInfo.SetValue(userData, currentBigInt + bigIntValue);
-                }
-                else
-                {
-                    //Debug.LogWarning($"Delta 연산이 지원되지 않는 타입입니다: {field}");
-                    return;
-                }
+                fieldInfo.SetValue(userData, currentBigInt + bigIntValue);
             }
-            else
-            {
-                fieldInfo.SetValue(userData, value);
-            }
-
-            if (field == nameof(userData.gold))
-            {
-                userData._gold = userData.gold.ToString();
-            }
-            else if (field == nameof(userData.userExp))
-            {
-                userData._exp = userData.userExp.ToString();
-            }
-
-            isDirty = true;
-
-            if (Enum.TryParse(field, true, out DirtyUI dirtyUI))
-            {
-                UIManager.Instance.InvokeUIChange(dirtyUI);
-            }
+            else return;
         }
         else
         {
-            //Debug.LogWarning($"{field} 변수를 UserData에서 찾을 수 없습니다.");
+            fieldInfo.SetValue(userData, value);
+        }
+
+        if (field == nameof(userData.gold))
+        {
+            userData._gold = userData.gold.ToString();
+        }
+        else if (field == nameof(userData.userExp))
+        {
+            userData._exp = userData.userExp.ToString();
+        }
+
+        isDirty = true;
+
+        if (Enum.TryParse(field, true, out DirtyUI dirtyUI))
+        {
+            UIManager.Instance.InvokeUIChange(dirtyUI);
         }
     }
 
-    /// <summary>
-    /// 주의: OwnedPixelmon만 바꿀 수 있는 메서드.
-    /// </summary>
-    /// <param name="index">owned에서 픽셀몬 데이터를 고칠 수 있는 index.</param>
-    /// <param name="field">바꿀 myPixelmonData의 필드명.</param>
-    /// <param name="value">새로 대입할 value</param>
     public void UpdatePixelmonData(int index, string field, object value)
     {
-        if (index >= 0 && index < userData.ownedPxms.Length)
-        {
-            userData.ownedPxms[index].UpdateField(field, value);
-            isDirty = true;
-        }
-        else
-        {
-            //Debug.LogWarning($"유효하지 않은 인덱스: {index}");
-        }
+        userData.ownedPxms[index].UpdateField(field, value);
+        isDirty = true;
     }
 
     public void UpdateSkillData(int index, string field, object value)
     {
-        if (index >= 0)
-        {
-            userData.ownedSkills[index].UpdateField(field, value);
-            isDirty = true;
-        }
-        else
-        {
-            //Debug.LogWarning($"유효하지 않은 인덱스: {index}");
-        }
+        userData.ownedSkills[index].UpdateField(field, value);
+        isDirty = true;
     }
 }
