@@ -114,8 +114,13 @@ public class QuestManager : Singleton<QuestManager>
         progress = Mathf.Min(curProgress, goal);
         countTxt.text = $"({progress} / {goal})";
 
-        if (IsQuestClear())
+        if (progress < goal)
         {
+            countTxt.text = $"<color=#FF2525>({progress} / {goal})</color>";
+        }
+        else
+        {
+            countTxt.text = $"<color=#82FF55>({progress} / {goal})</color>";
             questClear.SetActive(true);
         }
     }
