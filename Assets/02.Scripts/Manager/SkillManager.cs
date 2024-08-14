@@ -49,11 +49,11 @@ public class SkillManager : Singleton<SkillManager>
         if (pxm.myData.atvSkillId != -1 && pxm.data.skillCoroutine == null)
         {
             pxm.data.layoutIndex = index;
-            pxm.data.skillCoroutine = StartCoroutine(SkillAction(pxm, pxm.data.layoutIndex));
+            pxm.data.skillCoroutine = StartCoroutine(SkillAction(pxm, pxm.data.layoutIndex, pxm.data.id));
         }
     }
 
-    public IEnumerator SkillAction(Pixelmon pxm, int index)
+    public IEnumerator SkillAction(Pixelmon pxm, int index, int id)
     {
         yield return new WaitUntil(() => pxm.fsm.target != null);
         ActiveData data = skillTab.allData[pxm.myData.atvSkillId].atvData;
@@ -78,8 +78,9 @@ public class SkillManager : Singleton<SkillManager>
             skillCoolTime[index] = 0;
             data.isCT = false;
         }
-        pxm.data.layoutIndex = -1;
-        pxm.data.skillCoroutine = null;
+            pxm.data.skillCoroutine = null;
+        if (pxm.data.id != id)
+            ExecuteSkill(pxm, pxm.data.id);
     }
 
 
