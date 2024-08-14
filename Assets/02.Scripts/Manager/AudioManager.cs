@@ -3,7 +3,8 @@ using UnityEngine.Audio;
 
 public enum BgmIndex
 {
-    Intro
+    Intro,
+    Main
 }
 
 public class AudioManager : Singleton<AudioManager>

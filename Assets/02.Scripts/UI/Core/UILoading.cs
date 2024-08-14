@@ -50,6 +50,7 @@ public class UILoading : Singleton<UILoading>
         desc.gameObject.SetActive(false);
         TextEffect.SetActive(true);
         overlay.SetActive(true);
+        AudioManager.Instance.ChangeBackGroundMusic(BgmIndex.Main);
     }
 
     private void UpdateSliderValue()

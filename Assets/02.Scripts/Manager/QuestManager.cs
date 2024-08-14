@@ -37,6 +37,7 @@ public class QuestManager : Singleton<QuestManager>
     #region UI
     [SerializeField] private TextMeshProUGUI questNameTxt;
     [SerializeField] private TextMeshProUGUI countTxt;
+    [SerializeField] private GameObject questClear;
     [SerializeField] private TextMeshProUGUI rewardTxt;
     [SerializeField] private Image rwdIcon;
     [SerializeField] private Sprite[] rwdSprite;
@@ -110,25 +111,12 @@ public class QuestManager : Singleton<QuestManager>
     {
         int goal = curGoal;
         int progress = curProgress;
-        //if (isStageQ)
-        //{
-        //    progress = progress > goal ? 1 : 0;
-        //    goal = 1;
-        //}
-        //else
-        //{
-        //    progress = Mathf.Min(curProgress, goal); 
-        //}
-
         progress = Mathf.Min(curProgress, goal);
+        countTxt.text = $"({progress} / {goal})";
 
-        if (progress < goal)
+        if (IsQuestClear())
         {
-            countTxt.text = $"<color=#FF2525>({progress} / {goal})</color>";
-        }
-        else
-        {
-            countTxt.text = $"<color=#82FF55>({progress} / {goal})</color>";
+            questClear.SetActive(true);
         }
     }
 
@@ -163,7 +151,8 @@ public class QuestManager : Singleton<QuestManager>
             {
                 RewardManager.Instance.SpawnRewards(curQData.rewardType, curQData.rewardValue);
             }
-            
+
+            questClear.SetActive(false);
             SetNewQuestId();
             ResetProgress();
             SetQuestUI();
@@ -213,6 +202,7 @@ public class QuestManager : Singleton<QuestManager>
         //        break;
         //}
         saveManager.SetData(nameof(userData.questProgress), progress);
+        SetQuestCountTxt();
     }
 
     private void UpdateProgress()
