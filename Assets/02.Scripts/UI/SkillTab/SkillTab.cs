@@ -193,6 +193,7 @@ public class SkillTab : UIBase, IPointerDownHandler
     {
         if (!ownedData.Contains(allData[index]))
         {
+            allData[index].gameObject.SetActive(true);
             allData[index].atvData.dataIndex = userData.ownedSkills.Count - 1;
             allData[index].myAtvData.isOwned = true;
             ownedData.Add(allData[index]);

@@ -92,7 +92,7 @@ public class PixelmonTab : UIBase
         {
             PixelmonSlot slot = Instantiate(slotPrefab, contentTr);
             slot.InitSlot(this, dataManager.pixelmonData.data[i]);
-            if (userData.ownedPxms[i] != null && userData.ownedPxms[i].isOwned)
+            if (userData.ownedPxms.Count > i && userData.ownedPxms[i].isOwned)
             {
                 slot.myPxmData = userData.ownedPxms[index++];
                 ownedData.Add(slot);

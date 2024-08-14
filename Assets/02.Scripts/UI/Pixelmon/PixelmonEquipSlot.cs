@@ -91,9 +91,10 @@ public class PixelmonEquipSlot : PixelmonSlot
     {
         if (isLocked)
         {
-            UIManager.Instance.ShowWarn("슬롯이 잠겨있습니다. 추후 개방");
+            ShowUnlockInfo();
             return;
         }
+
         if (myPxmData == null && pxmtab.tabState != TabState.Equip)
         {
             UIManager.Instance.ShowWarn("슬롯이 비어있습니다!");
@@ -112,6 +113,24 @@ public class PixelmonEquipSlot : PixelmonSlot
         else if(pxmtab.tabState != TabState.Equip)
         {
             base.OnClick();
+        }
+    }
+
+    public void ShowUnlockInfo()
+    {
+        switch (slotIndex)
+        {
+            case 2:
+                UIManager.Instance.ShowWarn("유저 레벨 5Lv에 해금");
+                return;
+            case 3:
+                UIManager.Instance.ShowWarn("유저 레벨 10Lv에 해금");
+                return;
+            case 4:
+                UIManager.Instance.ShowWarn("유저 레벨 30Lv에 해금");
+                return;
+            default:
+                return;
         }
     }
 }

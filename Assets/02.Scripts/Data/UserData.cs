@@ -62,7 +62,7 @@ public class UserData
 
     #region Upgrade Tab
     public int[] UpgradeLvs = { 1, 1, 1, 1, 1, 1, 1 };
-    public bool[] isLockedSlot = { false, false, false, true, true };
+    public bool[] isLockedSlot = { false, false, true, true, true };
     #endregion
 
     #region Pixelmon Tab

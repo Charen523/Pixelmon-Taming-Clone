@@ -97,23 +97,23 @@ public class DataManager : GSpreadReader<DataManager>
             pixelmonData.data[i].id = i;
         }
 
+        while (SaveManager.Instance.userData.ownedPxms.Count <= pixelmonData.data.Count)
+        {
+            SaveManager.Instance.userData.ownedPxms.Add(new MyPixelmonData());
+        }
         var removeList = new List<string>();
         SaveManager.Instance.userData.ownedPxms.ForEach((obj) => {
             if (!string.IsNullOrEmpty(obj.rcode))
             {
                 var data = GetData<PixelmonData>(obj.rcode);
                 if (data != null)
-                {
                     obj.id = data.id;
-                }
                 else
-                {
                     removeList.Add(obj.rcode);
-                }
             }
         });
         SaveManager.Instance.userData.ownedPxms.RemoveAll(obj => removeList.Contains(obj.rcode));
-
+        SaveManager.Instance.SetData(nameof(SaveManager.Instance.userData.ownedPxms), SaveManager.Instance.userData.ownedPxms);
         isPxmInit = true;
     }
 
