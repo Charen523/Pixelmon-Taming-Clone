@@ -15,7 +15,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
     private UserData userData;
     public Player player;
     public PixelmonTab pxmTab;
-    public PixelmonLayout layout;
+    public PixelmonLayout[] layouts;
 
     private List<PixelmonData> pxmData;
     public Pixelmon[] equippedPixelmon;
@@ -134,8 +134,8 @@ public class PixelmonManager : Singleton<PixelmonManager>
     {
         pxmTab.equipData[index].isLocked = false;
         pxmTab.equipData[index].stateIcon.sprite = plusIcon;
-        layout.UnLockedIcon(index);
-        SkillManager.Instance.skillTab.skiltabLayout.UnLockedIcon(index);
+        layouts[0].UnLockedIcon(index);
+        layouts[1].UnLockedIcon(index);
     }
 
     public PixelmonData FindPixelmonData(int id)
