@@ -2,47 +2,80 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.U2D;
 using UnityEditor;
-using UnityEditor.SceneManagement;
-using System.IO;
 
-public class SpriteAtlasChecker : EditorWindow
+public class PrefabAtlasChecker : EditorWindow
 {
-    [MenuItem("Tools/Sprite Atlas Checker")]
+    // GameObject 배열을 직접 선언
+    public GameObject[] selectedPrefabs;
+
+    [MenuItem("Tools/Prefab Atlas Checker")]
     public static void ShowWindow()
     {
-        GetWindow<SpriteAtlasChecker>("Sprite Atlas Checker");
+        GetWindow<PrefabAtlasChecker>("Prefab Atlas Checker");
     }
 
     private void OnGUI()
     {
-        if (GUILayout.Button("Check Scene for Non-Atlas Sprites"))
+        GUILayout.Label("Drag & Drop Prefabs to Check", EditorStyles.boldLabel);
+
+        // 드래그 앤 드롭으로 여러 개의 프리팹을 받을 수 있게 함
+        EditorGUI.BeginChangeCheck();
+        int newSize = Mathf.Max(0, EditorGUILayout.IntField("Number of Prefabs", selectedPrefabs != null ? selectedPrefabs.Length : 0));
+        if (selectedPrefabs == null || newSize != selectedPrefabs.Length)
         {
-            CheckSceneForNonAtlasSprites();
+            GameObject[] newSelectedPrefabs = new GameObject[newSize];
+            for (int i = 0; i < Mathf.Min(newSize, selectedPrefabs != null ? selectedPrefabs.Length : 0); i++)
+            {
+                newSelectedPrefabs[i] = selectedPrefabs[i];
+            }
+            selectedPrefabs = newSelectedPrefabs;
         }
 
-        if (GUILayout.Button("Check All Prefabs for Non-Atlas Sprites"))
+        for (int i = 0; i < newSize; i++)
         {
-            CheckPrefabsForNonAtlasSprites();
+            selectedPrefabs[i] = (GameObject)EditorGUILayout.ObjectField($"Prefab {i + 1}", selectedPrefabs[i], typeof(GameObject), false);
+        }
+
+        if (GUILayout.Button("Check Prefabs for Non-Atlas Sprites"))
+        {
+            if (selectedPrefabs != null && selectedPrefabs.Length > 0)
+            {
+                CheckSelectedPrefabsForNonAtlasSprites();
+            }
+            else
+            {
+                Debug.LogWarning("No prefabs selected!");
+            }
         }
     }
 
-    private void CheckSceneForNonAtlasSprites()
+    private void CheckSelectedPrefabsForNonAtlasSprites()
     {
-        // 현재 씬에서 모든 Image와 SpriteRenderer 컴포넌트를 가져옴
-        Image[] images = FindObjectsOfType<Image>();
-        SpriteRenderer[] spriteRenderers = FindObjectsOfType<SpriteRenderer>();
-
-        // 모든 SpriteAtlas를 로드
         SpriteAtlas[] atlases = Resources.FindObjectsOfTypeAll<SpriteAtlas>();
 
-        // 비아틀라스 스프라이트를 출력
-        Debug.Log("Checking for non-atlas sprites in the scene...");
+        Debug.Log("Checking selected prefabs for non-atlas sprites...");
+
+        foreach (var prefab in selectedPrefabs)
+        {
+            if (prefab != null)
+            {
+                CheckGameObjectForNonAtlasSprites(prefab, atlases, AssetDatabase.GetAssetPath(prefab));
+            }
+        }
+
+        Debug.Log("Selected prefabs check complete.");
+    }
+
+    private void CheckGameObjectForNonAtlasSprites(GameObject gameObject, SpriteAtlas[] atlases, string assetPath)
+    {
+        Image[] images = gameObject.GetComponentsInChildren<Image>(true);
+        SpriteRenderer[] spriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>(true);
 
         foreach (var image in images)
         {
             if (image.sprite != null && !IsSpriteInAnyAtlas(image.sprite, atlases))
             {
-                Debug.Log("Image not in any atlas: " + image.gameObject.name + " - " + AssetDatabase.GetAssetPath(image.sprite));
+                Debug.Log("Prefab Image not in any atlas: " + gameObject.name + " - " + assetPath + " - " + AssetDatabase.GetAssetPath(image.sprite));
             }
         }
 
@@ -50,51 +83,9 @@ public class SpriteAtlasChecker : EditorWindow
         {
             if (spriteRenderer.sprite != null && !IsSpriteInAnyAtlas(spriteRenderer.sprite, atlases))
             {
-                Debug.Log("SpriteRenderer not in any atlas: " + spriteRenderer.gameObject.name + " - " + AssetDatabase.GetAssetPath(spriteRenderer.sprite));
+                Debug.Log("Prefab SpriteRenderer not in any atlas: " + gameObject.name + " - " + assetPath + " - " + AssetDatabase.GetAssetPath(spriteRenderer.sprite));
             }
         }
-
-        Debug.Log("Scene check complete.");
-    }
-
-    private void CheckPrefabsForNonAtlasSprites()
-    {
-        // 프로젝트의 모든 프리팹 경로 가져오기
-        string[] prefabGUIDs = AssetDatabase.FindAssets("t:Prefab");
-        SpriteAtlas[] atlases = Resources.FindObjectsOfTypeAll<SpriteAtlas>();
-
-        Debug.Log("Checking all prefabs for non-atlas sprites...");
-
-        foreach (var guid in prefabGUIDs)
-        {
-            string prefabPath = AssetDatabase.GUIDToAssetPath(guid);
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
-
-            if (prefab != null)
-            {
-                // 프리팹의 모든 Image와 SpriteRenderer 컴포넌트를 가져옴
-                Image[] images = prefab.GetComponentsInChildren<Image>(true);
-                SpriteRenderer[] spriteRenderers = prefab.GetComponentsInChildren<SpriteRenderer>(true);
-
-                foreach (var image in images)
-                {
-                    if (image.sprite != null && !IsSpriteInAnyAtlas(image.sprite, atlases))
-                    {
-                        Debug.Log("Prefab Image not in any atlas: " + prefab.name + " - " + prefabPath + " - " + AssetDatabase.GetAssetPath(image.sprite));
-                    }
-                }
-
-                foreach (var spriteRenderer in spriteRenderers)
-                {
-                    if (spriteRenderer.sprite != null && !IsSpriteInAnyAtlas(spriteRenderer.sprite, atlases))
-                    {
-                        Debug.Log("Prefab SpriteRenderer not in any atlas: " + prefab.name + " - " + prefabPath + " - " + AssetDatabase.GetAssetPath(spriteRenderer.sprite));
-                    }
-                }
-            }
-        }
-
-        Debug.Log("Prefab check complete.");
     }
 
     private bool IsSpriteInAnyAtlas(Sprite sprite, SpriteAtlas[] atlases)
