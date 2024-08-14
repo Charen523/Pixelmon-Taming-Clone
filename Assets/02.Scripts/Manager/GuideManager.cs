@@ -39,7 +39,7 @@ public class GuideManager : Singleton<GuideManager>
         if (SaveManager.Instance.userData.isSetArrowOnEgg)
             GuideArrow.SetActive(false);
 
-            StageManager.Instance.OnChangeThemeNum += OpenTab;
+            StageManager.Instance.OnOpenTab += OpenTab;
     }
 
     private void OpenTab(int num)
@@ -48,22 +48,22 @@ public class GuideManager : Singleton<GuideManager>
 
         switch (num)
         {
-            case 2:
+            case 3:
                 if (!userData.isOpenSkillTab)
                 {
                     SaveManager.Instance.SetFieldData(nameof(userData.isOpenSkillTab), true);
-                    Locks[5].SetActive(false);
                     Locks[2].SetActive(false);
+                    Locks[5].SetActive(false);
                 }
                 break;
-            case 3:
+            case 5:
                 if (!userData.isOpenFarmTab)
                 {
                     SaveManager.Instance.SetFieldData(nameof(userData.isOpenFarmTab), true);
                     Locks[3].SetActive(false);
                 }                    
                 break;
-            case 1:
+            case 7:
                 if (!userData.isOpenDungeonTab)
                 {
                     SaveManager.Instance.SetFieldData(nameof(userData.isOpenDungeonTab), true);
