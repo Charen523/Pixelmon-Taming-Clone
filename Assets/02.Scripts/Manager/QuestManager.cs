@@ -1,21 +1,21 @@
 using System;
-using System.Numerics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum questType
+public enum QuestType
 {
-    normalMonster,
-    bossMonster,
-    stage,
-    egg,
-    upgradeAtk,
-    skill,
-    feed,
-    seed,
-    harvest,
-    goldDungeon
+    Default,
+    Mob,
+    Boss,
+    Stage,
+    Egg,
+    UpgradeAtk,
+    Skill,
+    Feed,
+    Seed,
+    Harvest,
+    GoldDg
 }
 
 public class QuestManager : Singleton<QuestManager>
@@ -26,14 +26,18 @@ public class QuestManager : Singleton<QuestManager>
     private SaveManager saveManager;
     private UserData userData;
 
-    private QuestData curQData => DataManager.Instance.GetData<QuestData>(curQIndex);
+    private QuestData curQData;
+    private QuestType questType;
+    private string questId;
+    private string mainQIndex;
+    private int repeatCount;
+    private int repeatQIndex;
+    private readonly string maxMainQNum = "Q15";
+    private readonly int maxRepeatNum = 4;
+
     private int curGoal => CurQuestGoal();
-
-    [SerializeField] private string curQuestId => userData.questId;
-    private int curRepeat => int.Parse(curQuestId.Substring(0, 4));
-    public string curQIndex => curQuestId.Substring(4, 2);
     private int curProgress => userData.questProgress;
-
+    
     #region UI
     [SerializeField] private TextMeshProUGUI questNameTxt;
     [SerializeField] private TextMeshProUGUI countTxt;
@@ -43,15 +47,6 @@ public class QuestManager : Singleton<QuestManager>
     [SerializeField] private Sprite[] rwdSprite;
     #endregion
 
-    [SerializeField] private int maxQNum = 4;
-
-    public bool isMobQ => curQIndex == "Q1" || curQIndex == "Q4";
-    public bool isHatchQ => curQIndex == "Q2";
-    public bool isBossQ => curQIndex == "Q3";
-    //public bool isStageQ => curQIndex == "Q4";
-
-    private int StageProgress => int.Parse(userData.curStage);
-    
     protected override void Awake()
     {
         isDontDestroyOnLoad = false;
@@ -65,7 +60,9 @@ public class QuestManager : Singleton<QuestManager>
     private void Start()
     {
         QuestEvent += UpdateProgress;
+        GetQuestIndex();
         SetQuestUI();
+        curQData = DataManager.Instance.GetData<QuestData>(mainQIndex);
     }
     
     #region UI
@@ -75,9 +72,9 @@ public class QuestManager : Singleton<QuestManager>
         SetQuestCountTxt();
         SetIconSprite();
 
-        if (curQIndex == "Q2")
+        if (mainQIndex == "Q2")
         {
-            string result = Calculater.NumFormatter(curQData.rewardValue * (curRepeat + 1));
+            string result = Calculater.NumFormatter(curQData.rewardValue * (repeatCount + 1));
             rewardTxt.text = result;
         }
         else
@@ -127,7 +124,7 @@ public class QuestManager : Singleton<QuestManager>
 
     private void SetIconSprite()
     {
-        switch (curQIndex)
+        switch (mainQIndex)
         {
             case "Q1":
                 rwdIcon.sprite = rwdSprite[0];
@@ -148,9 +145,9 @@ public class QuestManager : Singleton<QuestManager>
     {
         if (IsQuestClear())
         {
-            if (curQIndex == "Q2")
+            if (mainQIndex == "Q2")
             {
-                RewardManager.Instance.SpawnRewards(curQData.rewardType, curQData.rewardValue * (curRepeat + 1));
+                RewardManager.Instance.SpawnRewards(curQData.rewardType, curQData.rewardValue * (repeatCount + 1));
             }
             else
             {
@@ -158,10 +155,10 @@ public class QuestManager : Singleton<QuestManager>
             }
 
             questClear.SetActive(false);
-            SetNewQuestId();
+            SetNewQuestIndex();
             ResetProgress();
-            SetQuestUI();
-            Firebase.Analytics.FirebaseAnalytics.LogEvent($"repeat cycle:{curRepeat}, QuestNum:{curQIndex}");
+            SetQuestUI();  
+            Firebase.Analytics.FirebaseAnalytics.LogEvent($"repeat cycle:{repeatCount}, QuestNum:{mainQIndex}");
         }
         else
         {
@@ -170,20 +167,52 @@ public class QuestManager : Singleton<QuestManager>
     }
     #endregion
 
-    private void SetNewQuestId()
+    private void SetNewQuestIndex()
     {
-        int repeatNum = curRepeat;
-        int index = int.Parse(curQIndex.Substring(1, 1));
-        string qNum = "Q" + (index + 1).ToString();
+        string qNum;
 
-        if (index == maxQNum)
+        if (repeatCount == 0)
         {
-            repeatNum++;
-            qNum = "Q1";
+            if (mainQIndex == maxMainQNum)
+            {
+                repeatCount++;
+                qNum = "1";
+            }
+            else
+            {
+                int index = int.Parse(mainQIndex.Substring(1, 1));
+                qNum = "Q" + (index + 1).ToString();
+            }
         }
+        else if (repeatQIndex == maxRepeatNum)
+        {
+            repeatQIndex++;
+            qNum = "1";
+        }
+        else { qNum = repeatQIndex.ToString(); }
 
-        string newId = repeatNum.ToString("D4") + qNum;
+        string newId = repeatCount.ToString("D4") + qNum;
         SaveManager.Instance.SetData(nameof(SaveManager.Instance.userData.questId), newId);
+        curQData = DataManager.Instance.GetData<QuestData>(mainQIndex);
+    }
+
+    private void GetQuestIndex()
+    {
+        questId = userData.questId;
+        repeatCount = int.Parse(questId.Substring(0, 4));
+        if (int.TryParse(questId.Substring(4, 2), out int index))
+        {
+            repeatQIndex = index;
+        }
+        else
+        {
+            mainQIndex = questId.Substring(4, 2);
+        }
+    }
+
+    public bool IsMyTurn(QuestType curType)
+    {
+        return curType == questType;
     }
 
     #region Quest Progress
