@@ -64,7 +64,7 @@ public class SkillManager : Singleton<SkillManager>
                 () => pxm.fsm.target != null &&
                 pxm.fsm.currentState == pxm.fsm.AttackState ||
                 !myData.isEquipped);
-            if (!myData.isEquipped) yield break;
+            if (!myData.isEquipped) break;
             data.isCT = true;
             actionStorage[data.id]?.Invoke(pxm, data, myData);
             skillCoolTime[index] = data.coolTime;

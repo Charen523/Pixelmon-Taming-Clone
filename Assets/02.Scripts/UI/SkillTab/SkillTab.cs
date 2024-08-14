@@ -159,14 +159,14 @@ public class SkillTab : UIBase, IPointerDownHandler
     {
         var pxmData = PixelmonManager.Instance.pxmTab.allData[pxmId];
         allData[skillId].myAtvData.isEquipped = false;
-        saveManager.UpdateSkillData(skillId, "isEquipped", allData[skillId].myAtvData.isEquipped);
+        saveManager.UpdateSkillData(allData[skillId].atvData.dataIndex, "isEquipped", allData[skillId].myAtvData.isEquipped);
         pxmData.myPxmData.atvSkillId = -1;
         saveManager.UpdatePixelmonData(pxmId, nameof(pxmData.myPxmData.atvSkillId), pxmData.myPxmData.atvSkillId);
 
         allData[skillId].myAtvData.isAttached = false;
-        saveManager.UpdateSkillData(skillId, "isAttached", allData[skillId].myAtvData.isAttached);
+        saveManager.UpdateSkillData(allData[skillId].atvData.dataIndex, "isAttached", allData[skillId].myAtvData.isAttached);
         allData[skillId].myAtvData.pxmId = -1;
-        saveManager.UpdateSkillData(skillId, "pxmId", allData[skillId].myAtvData.pxmId);
+        saveManager.UpdateSkillData(allData[skillId].atvData.dataIndex, "pxmId", allData[skillId].myAtvData.pxmId);
         allData[skillId].SetEquipTxt();
     }
 
