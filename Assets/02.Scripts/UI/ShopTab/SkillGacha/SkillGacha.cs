@@ -21,11 +21,11 @@ public class SkillGacha : MonoBehaviour
     private Dictionary<string, List<ActiveData>> RankDatas = new Dictionary<string, List<ActiveData>>();
     private Dictionary<string, float> rankProb = new Dictionary<string, float>
     {
-        { "SS", 3.4f },
-        { "S", 7.6f },
-        { "A", 16.7f },
-        { "B", 25.5f },
-        { "C", 46.8f }
+        { "SS", 0.1f },
+        { "S", 1.2f },
+        { "A", 7.4f },
+        { "B", 25.8f },
+        { "C", 65.5f }
     };
 
     public float slotDurationTime = 0.5f;
