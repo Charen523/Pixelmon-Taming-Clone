@@ -10,14 +10,18 @@ public class PixelmonLayout : MonoBehaviour
     public Image[] stateIcon;
     public Image[] timer;
 
-    PixelmonManager pxmManager;
+    PixelmonManager pxmManager => PixelmonManager.Instance;
+    SkillManager skillManager => SkillManager.Instance;
+
+    private void Awake()
+    {
+        if (skillManager.layout == null)
+            skillManager.layout = this;
+    }
+
     IEnumerator Start()
     {
         yield return new WaitUntil(() => GameManager.isInit);
-        if(SkillManager.Instance.layout == null)
-            SkillManager.Instance.layout = this;
-        pxmManager = PixelmonManager.Instance;
-        pxmManager.layout = this;
         pxmManager.equipAction += InsertIcon;
         pxmManager.unEquipAction += DeleteIcon;
         InitPxmLayout();
@@ -53,6 +57,6 @@ public class PixelmonLayout : MonoBehaviour
     }
     public void UnLockedIcon(int index)
     {
-        stateIcon[index].sprite = pxmManager.plusIcon;
+        stateIcon[index].sprite = PixelmonManager.Instance.plusIcon;
     }
 }
