@@ -98,10 +98,6 @@ public class UITopBar : UIBase
             userData.userLv++;
             lvTxt.text = $"Lv.{userData.userLv}";
             PixelmonManager.Instance.unlockSlotAction?.Invoke(userData.userLv);
-            if (QuestManager.Instance.isUserLevelQ)
-            {
-                QuestManager.Instance.OnQuestEvent();
-            }
         }
 
         BigInteger endExp = currentExp;

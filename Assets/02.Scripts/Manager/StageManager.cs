@@ -40,7 +40,7 @@ public class StageManager : Singleton<StageManager>
     public int stageNum;
     public int themeNum;
 
-    public event Action<int> OnChangeThemeNum;
+    public event Action<int> OnOpenTab;
 
     public int curSpawnCount = 0;
     private float curInterval = 0; //현재 시간 간격
@@ -69,6 +69,7 @@ public class StageManager : Singleton<StageManager>
     private bool isBossCleared;
     public bool isBossDieDone;
     public bool isDungeon;
+    public bool isDungeonClear;
     private bool isPlayerDead;
     #endregion
 
@@ -187,10 +188,10 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator StartStage()
     {
-        if (QuestManager.Instance.isStageQ)
-        {
-            QuestManager.Instance.OnQuestEvent();
-        }
+        //if (QuestManager.Instance.isStageQ)
+        //{
+        //    QuestManager.Instance.OnQuestEvent();
+        //}
 
         if (!isStgFade)
         {
@@ -372,6 +373,7 @@ public class StageManager : Singleton<StageManager>
         {//TimeOver
             dgBoss.DisableDgMonster();
             isDungeon = false;
+            isDungeonClear = true;
             return true;
         }
         return false;
@@ -416,12 +418,10 @@ public class StageManager : Singleton<StageManager>
             stageNum = 0;
             themeNum = 1;
             MapManager.Instance.OnMapChanged((int)MapList.Theme1);
-            OnChangeThemeNum?.Invoke(themeNum);
         }
         else if (stageNum % 5 == 0) //Next Theme
         {
             themeNum++;
-            
             if (themeNum == 2)
             {
                 MapManager.Instance.OnMapChanged((int)MapList.Theme2);
@@ -430,7 +430,6 @@ public class StageManager : Singleton<StageManager>
             {
                 MapManager.Instance.OnMapChanged((int)MapList.Theme3);
             }
-            OnChangeThemeNum?.Invoke(themeNum);
         }
         stageNum++;
         isBossStage = false;
@@ -439,6 +438,12 @@ public class StageManager : Singleton<StageManager>
         newRcode += themeNum;
         CurrentRcode = newRcode;
         newStageProgress = diffNum.ToString("D2") + worldNum.ToString("D2") + (stageNum).ToString("D2");
+
+        if (newStageProgress == "000103" || newStageProgress == "000105" || newStageProgress == "000107")
+        {
+            OnOpenTab?.Invoke(stageNum);
+        }
+
         saveManager.SetFieldData(nameof(userData.curStage), newStageProgress);
     }
 
@@ -467,7 +472,12 @@ public class StageManager : Singleton<StageManager>
         }
 
         RewardManager.Instance.SpawnRewards(enemy.gameObject, enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
-        if (QuestManager.Instance.isMonsterQ)
+        
+        if (QuestManager.Instance.isMobQ && !enemy.statHandler.data.isBoss)
+        {
+            QuestManager.Instance.OnQuestEvent();
+        }
+        else if (QuestManager.Instance.isBossQ && enemy.statHandler.data.isBoss)
         {
             QuestManager.Instance.OnQuestEvent();
         }

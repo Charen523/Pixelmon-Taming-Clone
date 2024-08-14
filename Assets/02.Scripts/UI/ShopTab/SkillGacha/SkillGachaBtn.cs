@@ -10,13 +10,13 @@ public class SkillGachaBtn : MonoBehaviour
     public GameObject Ticket;
     public GameObject Dia;
 
-    public void SetTicket(int cost)
+    public void SetTicket()
     {
         Dia.SetActive(false);
         Ticket.SetActive(true);
     }
 
-    public void SetDia(int cost)
+    public void SetDia()
     {
         Ticket.SetActive(false);
         Dia.SetActive(true);

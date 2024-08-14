@@ -31,9 +31,11 @@ public class UIBottomBar : MonoBehaviour
         }
     }
 
-    public void OnvalueChanged(int index)
+    public void OnvalueChanged()
     {
-        try
+        GameObject nextObject = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject;
+        
+        if (int.TryParse(nextObject.name, out int index))
         {
             if (GuideManager.Instance.Locks[index].activeInHierarchy)
             {
@@ -49,19 +51,19 @@ public class UIBottomBar : MonoBehaviour
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     case 2:
-                        msg = "해금조건: 쉬움 1 - 5 클리어";
+                        msg = "해금조건: 쉬움 1 - 2 클리어";
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     case 3:
-                        msg = "해금조건: 쉬움 1 - 10 클리어";
+                        msg = "해금조건: 쉬움 1 - 4 클리어";
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     case 4:
-                        msg = "해금조건: 쉬움 1 - 15 클리어";
+                        msg = "해금조건: 쉬움 1 - 6 클리어";
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     case 5:
-                        msg = "해금조건: 쉬움 1 - 5 클리어";
+                        msg = "해금조건: 쉬움 1 - 2 클리어";
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     default:
@@ -69,8 +71,7 @@ public class UIBottomBar : MonoBehaviour
                 }
             }
         }
-        catch (IndexOutOfRangeException) { }
-
+        
         overlayPanel.SetActive(selectedIndex >= 0);
         uiTabs.ForEach(obj => obj.gameObject.SetActive(false)); //모든 탭 끄기.
         if (selectedIndex >= 0)
