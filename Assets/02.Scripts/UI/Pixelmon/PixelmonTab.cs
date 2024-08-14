@@ -276,11 +276,7 @@ public class PixelmonTab : UIBase
     public void EquipedPixelmon(int slotIndex)
     {
         if (!saveManager.userData.isDoneTutorial)
-        {
-            GuideManager.Instance.GuideArrow.SetActive(false);
-            UIManager.Hide<Tutorial>();
-            saveManager.SetFieldData(nameof(saveManager.userData.isDoneTutorial), true);
-        }           
+            UIManager.Get<Tutorial>().TutorialDone();         
 
         equipData[slotIndex].Equip(allData[choiceId].myPxmData);
         pixelmonManager.equipAction?.Invoke(slotIndex, equipData[slotIndex].myPxmData);
