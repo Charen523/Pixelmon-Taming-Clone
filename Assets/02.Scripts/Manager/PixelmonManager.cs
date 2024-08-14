@@ -96,11 +96,14 @@ public class PixelmonManager : Singleton<PixelmonManager>
         player.pixelmons[index].fsm.anim.runtimeAnimatorController = await ResourceManager.Instance.LoadAsset<RuntimeAnimatorController>(myData.rcode, eAddressableType.animator);
         player.pixelmons[index].InitPxm();
         player.LocatedPixelmon();
+        if(player.pixelmons[index].data.id != myData.id)
+            player.pixelmons[index].data.skillCoroutine = null;
         SkillManager.Instance.ExecuteSkill(Player.Instance.pixelmons[index], index);
     }
 
     private void UnEquipped(int index)
     {
+        if (player.pixelmons[index] == null) return; 
         player.pixelmons[index].fsm.InvokeAttack(false);
         player.pixelmons[index].gameObject.SetActive(false);
         player.pixelmons[index]= null;
@@ -134,6 +137,8 @@ public class PixelmonManager : Singleton<PixelmonManager>
     {
         pxmTab.equipData[index].isLocked = false;
         pxmTab.equipData[index].stateIcon.sprite = plusIcon;
+        userData.isLockedSlot[index] = false;
+        saveManager.SetData(nameof(saveManager.userData.isLockedSlot), userData.isLockedSlot);
         layouts[0].UnLockedIcon(index);
         layouts[1].UnLockedIcon(index);
     }
