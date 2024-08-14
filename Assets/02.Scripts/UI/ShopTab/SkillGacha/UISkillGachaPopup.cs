@@ -33,9 +33,9 @@ public class UISkillGachaPopup : UIBase
 
     private void SetBtnInteractable()
     {
-        skillGacha.UpdateButnInteractable(FiveBtn.Btn, 5);
-        skillGacha.UpdateButnInteractable(FifteenBtn.Btn, 15);
-        skillGacha.UpdateButnInteractable(ThirtyBtn.Btn, 30);
+        skillGacha.UpdateButnInteractable(FiveBtn, 5);
+        skillGacha.UpdateButnInteractable(FifteenBtn, 15);
+        skillGacha.UpdateButnInteractable(ThirtyBtn, 30);
     }
 
     private void InitSlots()
