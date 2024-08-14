@@ -69,6 +69,7 @@ public class StageManager : Singleton<StageManager>
     private bool isBossCleared;
     public bool isBossDieDone;
     public bool isDungeon;
+    public bool isDungeonClear;
     private bool isPlayerDead;
     #endregion
 
@@ -372,6 +373,7 @@ public class StageManager : Singleton<StageManager>
         {//TimeOver
             dgBoss.DisableDgMonster();
             isDungeon = false;
+            isDungeonClear = true;
             return true;
         }
         return false;

@@ -112,7 +112,11 @@ public class DgMonster : MonoBehaviour
     public IEnumerator KillDgMonster()
     {
         yield return new WaitForSeconds(1f);
-        SaveCurLv();
+        if (StageManager.Instance.isDungeonClear)
+        {
+            SaveCurLv();
+            StageManager.Instance.isDungeonClear = false;
+        }
         dgProgress.SetActive(false);
         Destroy(gameObject);
     }
