@@ -11,12 +11,13 @@ public class PixelmonLayout : MonoBehaviour
     public Image[] timer;
 
     PixelmonManager pxmManager => PixelmonManager.Instance;
-    SkillManager skillManager => SkillManager.Instance;
 
     private void Awake()
     {
-        if (skillManager.layout == null)
-            skillManager.layout = this;
+        if (pxmManager.layouts[0] == null)
+            pxmManager.layouts[0] = this;
+        else
+            pxmManager.layouts[1] = this;
     }
 
     IEnumerator Start()
