@@ -114,6 +114,10 @@ public abstract class UpgradeSlot : MonoBehaviour
             CurLv = nextLv;
             CurValue = nextValue;
 
+            if (slotIndex == 0 && QuestManager.Instance.IsMyTurn(QuestType.UpgradeAtk))
+            {
+                QuestManager.Instance.OnQuestEvent();
+            }
             SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.gold), -nextPrice, true);
 
             if (curUpgradeRate == 0)

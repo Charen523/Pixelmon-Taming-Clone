@@ -8,6 +8,7 @@ public class StageManager : Singleton<StageManager>
 {
     private SaveManager saveManager;
     private UserData userData;
+    private QuestManager questManager;
 
     #region Stage Info
     [Header("Stage Info")]
@@ -197,10 +198,10 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator StartStage()
     {
-        //if (QuestManager.Instance.isStageQ)
-        //{
-        //    QuestManager.Instance.OnQuestEvent();
-        //}
+        if (questManager.IsMyTurn(QuestType.Stage))
+        {
+            questManager.OnQuestEvent();
+        }
 
         if (!isStgFade)
         {
@@ -383,6 +384,10 @@ public class StageManager : Singleton<StageManager>
             dgBoss.DisableDgMonster();
             isDungeon = false;
             isDungeonClear = true;
+            if (dgIndex == 0 && QuestManager.Instance.IsMyTurn(QuestType.GoldDg))
+            {
+                QuestManager.Instance.OnQuestEvent();
+            }
             return true;
         }
         return false;
@@ -482,13 +487,13 @@ public class StageManager : Singleton<StageManager>
 
         RewardManager.Instance.SpawnRewards(enemy.gameObject, enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
         
-        if (QuestManager.Instance.isMobQ && !enemy.statHandler.data.isBoss)
+        if (questManager.IsMyTurn(QuestType.Mob) && !enemy.statHandler.data.isBoss)
         {
-            QuestManager.Instance.OnQuestEvent();
+            questManager.OnQuestEvent();
         }
-        else if (QuestManager.Instance.isBossQ && enemy.statHandler.data.isBoss)
+        else if (questManager.IsMyTurn(QuestType.Boss) && enemy.statHandler.data.isBoss)
         {
-            QuestManager.Instance.OnQuestEvent();
+            questManager.OnQuestEvent();
         }
         saveManager.SetFieldData(nameof(userData.curHuntCount), 1, true);
     }
