@@ -9,13 +9,17 @@ public class PixelmonLayout : MonoBehaviour
     public Image[] thumbnailIcon;
     public Image[] stateIcon;
     public Image[] timer;
-
+    public bool isMiddleBar;
     PixelmonManager pxmManager => PixelmonManager.Instance;
+    SkillManager skillManager => SkillManager.Instance;
 
     private void Awake()
     {
-        if (pxmManager.layouts[0] == null)
+        if (isMiddleBar)
+        {
             pxmManager.layouts[0] = this;
+            skillManager.layout = this;
+        }
         else
             pxmManager.layouts[1] = this;
     }
