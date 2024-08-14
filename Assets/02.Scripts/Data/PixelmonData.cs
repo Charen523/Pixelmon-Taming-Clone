@@ -20,6 +20,7 @@ public class PixelmonData : IData
     public float basePerDef;
     public float lvDefRate;
 
+    public int rankIdx;
     //픽셀몬 아이콘
     public Sprite icon;
     public Sprite bgIcon;
