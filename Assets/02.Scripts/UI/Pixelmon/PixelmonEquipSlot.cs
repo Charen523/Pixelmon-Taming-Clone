@@ -60,7 +60,6 @@ public class PixelmonEquipSlot : PixelmonSlot
         stateIcon.gameObject.SetActive(false);
         lvTxt.gameObject.SetActive(true);
         lvTxt.text = string.Format("Lv.{0}", myData.lv);
- 
 
         saveManager.userData.equippedPxms[slotIndex] = myData;
         saveManager.SetData("equippedPxms", saveManager.userData.equippedPxms);
@@ -68,8 +67,14 @@ public class PixelmonEquipSlot : PixelmonSlot
 
     public void UnEquip()
     {
-        if(myPxmData.atvSkillId != -1)
-            SkillManager.Instance.UnEquipSkill(slotIndex, myPxmData.atvSkillId);
+        if (myPxmData.atvSkillId != -1)
+        {
+            SkillManager.Instance.skillTab.equipData[slotIndex].myAtvData.isEquipped = false;
+            saveManager.UpdateSkillData(
+                SkillManager.Instance.skillTab.equipData[slotIndex].atvData.dataIndex,
+                "isEquipped", SkillManager.Instance.skillTab.equipData[slotIndex].myAtvData.isEquipped);
+            SkillManager.Instance.skillTab.equipData[slotIndex].SetEquipSlot();
+        }
         pxmData = null;
         myPxmData = null;
         slotIcon.gameObject.SetActive(false);

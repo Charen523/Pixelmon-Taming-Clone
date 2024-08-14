@@ -33,7 +33,7 @@ public class UISkillPopUp : UIBase
 
     private void SetEquipTxt()
     {
-        if (copySlot.myAtvData.isEquipped)
+        if (copySlot.myAtvData.isEquipped || copySlot.myAtvData.isAttached)
         {
             equipTxt.text = unEquip;
             equipObj.SetActive(true);

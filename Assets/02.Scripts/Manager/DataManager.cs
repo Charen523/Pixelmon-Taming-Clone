@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DataManager : GSpreadReader<DataManager>
@@ -18,6 +19,7 @@ public class DataManager : GSpreadReader<DataManager>
     public GameData<QuestData> questData;
     public Sprite[] pxmBgIcons;
     public Sprite[] skillBgIcons;
+ 
 
     public bool isPxmInit;
     public async Task SetBaseData()
@@ -31,21 +33,27 @@ public class DataManager : GSpreadReader<DataManager>
             {
                 case "Common":
                     data.bgIcon = pxmBgIcons[0];
+                    data.rankIdx = 0;
                     break;
                 case "Advanced":
                     data.bgIcon = pxmBgIcons[1];
+                    data.rankIdx = 1;
                     break;
                 case "Rare":
                     data.bgIcon = pxmBgIcons[2];
+                    data.rankIdx = 2;
                     break;
                 case "Epic":
                     data.bgIcon = pxmBgIcons[3];
+                    data.rankIdx = 3;
                     break;
                 case "Legendary":
                     data.bgIcon = pxmBgIcons[4];
+                    data.rankIdx = 4;
                     break;
                 case "Unique":
                     data.bgIcon = pxmBgIcons[5];
+                    data.rankIdx = 5;
                     break;
                 default:
                     break;
@@ -60,7 +68,7 @@ public class DataManager : GSpreadReader<DataManager>
             switch (data.rank)
             {
                 case "C":
-                    data.bgIcon = skillBgIcons[0];
+                    data.bgIcon = skillBgIcons[0]; 
                     break;
                 case "B":
                     data.bgIcon = skillBgIcons[1];
@@ -78,6 +86,33 @@ public class DataManager : GSpreadReader<DataManager>
                     break;
             }
         }
+
+        pixelmonData.data.Sort((x, y) =>
+        {
+            return x.rankIdx.CompareTo(y.rankIdx);
+        });
+
+        for(int i = 0; i < pixelmonData.data.Count; i++) 
+        {
+            pixelmonData.data[i].id = i;
+        }
+
+        var removeList = new List<string>();
+        SaveManager.Instance.userData.ownedPxms.ForEach((obj) => {
+            if (!string.IsNullOrEmpty(obj.rcode))
+            {
+                var data = GetData<PixelmonData>(obj.rcode);
+                if (data != null)
+                {
+                    obj.id = data.id;
+                }
+                else
+                {
+                    removeList.Add(obj.rcode);
+                }
+            }
+        });
+        SaveManager.Instance.userData.ownedPxms.RemoveAll(obj => removeList.Contains(obj.rcode));
 
         isPxmInit = true;
     }

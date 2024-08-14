@@ -214,6 +214,7 @@ public class PixelmonTab : UIBase
         {
             pixelmonManager.UpdatePlayerStat(
                 allData[index].pxmData.basePerHp, allData[index].pxmData.basePerDef);
+            allData[index].gameObject.SetActive(true);
             allData[index].myPxmData.isOwned = true;
             ownedData.Add(allData[index]);
             noneData.Remove(allData[index]);
@@ -253,6 +254,9 @@ public class PixelmonTab : UIBase
     {
         equipData[slotIndex].Equip(allData[choiceId].myPxmData);
         pixelmonManager.equipAction?.Invoke(slotIndex, equipData[slotIndex].myPxmData);
+
+        if (allData[choiceId].myPxmData.atvSkillId != -1)
+            SkillManager.Instance.skillTab.InsertSlotAcion(slotIndex, allData[choiceId].myPxmData.atvSkillId);
         allData[choiceId].equipIcon.SetActive(true);
         equipOverlay.gameObject.SetActive(false);        
         tabState = TabState.Normal;

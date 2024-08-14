@@ -105,7 +105,7 @@ public class SkillSlot : MonoBehaviour
 
     public void SetEquipTxt()
     {
-        if(myAtvData.isEquipped)
+        if(myAtvData.isAttached)
             equipIcon.gameObject.SetActive(true);
         else equipIcon.gameObject.SetActive(false);
     }

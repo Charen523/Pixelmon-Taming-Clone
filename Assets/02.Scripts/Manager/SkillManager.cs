@@ -46,8 +46,11 @@ public class SkillManager : Singleton<SkillManager>
 
     public void ExecuteSkill(Pixelmon pxm, int index)
     {
-        if(pxm.myData.atvSkillId != -1)
-            StartCoroutine(SkillAction(pxm, index));
+        if (pxm.myData.atvSkillId != -1 && pxm.data.skillCoroutine == null)
+        {
+            pxm.data.layoutIndex = index;
+            pxm.data.skillCoroutine = StartCoroutine(SkillAction(pxm, pxm.data.layoutIndex));
+        }
     }
 
     public IEnumerator SkillAction(Pixelmon pxm, int index)
@@ -61,21 +64,22 @@ public class SkillManager : Singleton<SkillManager>
                 () => pxm.fsm.target != null &&
                 pxm.fsm.currentState == pxm.fsm.AttackState ||
                 !myData.isEquipped);
-            if (!myData.isEquipped) yield break;
+            if (!myData.isEquipped) break;
             data.isCT = true;
             actionStorage[data.id]?.Invoke(pxm, data, myData);
             skillCoolTime[index] = data.coolTime;
-            layout.timer[index].gameObject.SetActive(true);
             while (0 <= skillCoolTime[index])
             {
                 skillCoolTime[index] -= Time.deltaTime;
-                layout.timer[index].fillAmount = skillCoolTime[index] / data.coolTime;
+                if (layout.timer[index] != null)
+                    layout.timer[index].fillAmount = skillCoolTime[index] / data.coolTime;
                 yield return null;
             }
-            layout.timer[index].gameObject.SetActive(false);
             skillCoolTime[index] = 0;
             data.isCT = false;
         }
+        pxm.data.layoutIndex = -1;
+        pxm.data.skillCoroutine = null;
     }
 
 
@@ -93,10 +97,9 @@ public class SkillManager : Singleton<SkillManager>
         }
     }
 
-    public void UnEquipSkill(int slotIndex, int skillId)
+    public void UnEquipSkill(int slotIndex)
     {
         skillTab.equipData[slotIndex].UnEquipAction();
-        skillTab.allData[skillId].UnEquipAction();
     }
 
     public void AddSkill(int id)

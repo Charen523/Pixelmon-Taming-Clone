@@ -67,7 +67,7 @@ public class UserData
 
     #region Pixelmon Tab
     public MyPixelmonData[] equippedPxms = new MyPixelmonData[5];
-    public MyPixelmonData[] ownedPxms = new MyPixelmonData[20];
+    public List<MyPixelmonData> ownedPxms = new List<MyPixelmonData>();
     #endregion 
 
     #region Skill Tab

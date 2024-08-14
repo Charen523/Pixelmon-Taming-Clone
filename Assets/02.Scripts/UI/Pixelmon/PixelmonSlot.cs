@@ -89,7 +89,6 @@ public class PixelmonSlot : MonoBehaviour
             evolveBarImg.sprite = pxmtab.btnColor[1];
             pxmtab.evolveIcon.sprite = pxmtab.btnColor[1];
             pxmtab.isAdvancable = true;
-            //pxmtab.userData.ownedPxms[myPxmData.id].isAdvancable = true;
             pxmtab.saveManager.UpdatePixelmonData(myPxmData.id, "isAdvancable", true);
         }
         else
