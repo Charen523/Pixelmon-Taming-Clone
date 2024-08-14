@@ -139,6 +139,14 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator Start()
     {
+        if (!userData.isDoneTutorial)
+        {
+            isStgFade = true;
+            allFade.gameObject.SetActive(true);
+            allFade.StartFadeOut();
+        }
+        while (!userData.isDoneTutorial) yield return null;
+
         GameManager.Instance.OnPlayerDie += OnPlayerDie;
         GameManager.Instance.OnEnemyDie += OnEnemyDie;
 
@@ -154,12 +162,13 @@ public class StageManager : Singleton<StageManager>
             {
                 middleBar = middleBarObject.transform;
             }
-            yield return null; 
+            yield return null;
         }
         bottomBar = UIManager.Instance.parents[2].GetChild(0);
         CalculateBound();
         InitStage();
     }
+
     #region Stage
     public void InitStage()
     {

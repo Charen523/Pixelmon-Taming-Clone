@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,10 +17,10 @@ public class Player : Singleton<Player>
     public float radius = 2.0f;
     public Pixelmon[] pixelmons = new Pixelmon[5];
 
-    private void Start()
+    private IEnumerator Start()
     {
+        while(!SaveManager.Instance.userData.isDoneTutorial) yield return null;
         fsm.Init();
-        //LocatedPixelmon();
     }
 
     public void ChangePixelmonsState(PixelmonState newState)

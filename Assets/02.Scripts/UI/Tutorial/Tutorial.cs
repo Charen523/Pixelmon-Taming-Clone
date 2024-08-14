@@ -31,6 +31,7 @@ public class Tutorial : UIBase
 
     public void TutorialDone()
     {
+        GuideManager.Instance.GuideArrow.SetActive(false);
         saveManager.SetFieldData(nameof(saveManager.userData.isDoneTutorial), true);
         UIManager.Hide<Tutorial>();
     }
