@@ -46,7 +46,6 @@ public class SkillGacha : MonoBehaviour
         var datas = DataManager.Instance.activeData.data;
         for (int i = 0; i < datas.Count; i++)
         {
-            // 키가 이미 존재하는지 확인
             if (RankDatas.ContainsKey(datas[i].rank))
                 RankDatas[datas[i].rank].Add(datas[i]);
             else
@@ -57,24 +56,30 @@ public class SkillGacha : MonoBehaviour
     public void SetSkillGacha()
     {
         SetBtnInteractable();
+        TicketCostTxt.text = userData.skillTicket.ToString();
         isDoneGacha = true;
     }
 
     #region UI
     private void SetBtnInteractable()
     {
-        UpdateButnInteractable(FiveBtn.Btn, 5);
-        UpdateButnInteractable(FifteenBtn.Btn, 15);
-        UpdateButnInteractable(ThirtyBtn.Btn, 30);
+        UpdateButnInteractable(FiveBtn, 5);
+        UpdateButnInteractable(FifteenBtn, 15);
+        UpdateButnInteractable(ThirtyBtn, 30);
     }
 
-    public void UpdateButnInteractable(Button button, int requiredAmount)
+    public void UpdateButnInteractable(SkillGachaBtn skillGachaBtn, int requiredAmount)
     {
-        if ((userData.skillTicket >= requiredAmount * oneCostTicket) 
-            || (userData.diamond >= requiredAmount * oneCostDia))
-            button.interactable = true;
-        else
-            button.interactable = false;
+        skillGachaBtn.Btn.interactable = true;
+        if (userData.skillTicket >= requiredAmount * oneCostTicket)
+        {
+            skillGachaBtn.SetTicket();
+        }
+        else if (userData.diamond >= requiredAmount * oneCostDia)
+        {
+            skillGachaBtn.SetDia();
+        }          
+        else skillGachaBtn.Btn.interactable = false;
     }
 
     private void UpdateCostUI(DirtyUI dirtyUI)
