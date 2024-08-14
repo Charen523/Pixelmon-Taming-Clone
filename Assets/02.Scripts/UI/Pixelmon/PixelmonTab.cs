@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -65,6 +66,23 @@ public class PixelmonTab : UIBase
         //equipOverlay.SetActive(false);
         InitTab();
         infoPopUp = await UIManager.Show<UIPixelmonPopUp>();
+    }
+
+    private void OnEnable()
+    {
+        StartCheckTutorial();
+    }
+
+    public void StartCheckTutorial()
+    {
+        if (!SaveManager.Instance.userData.isDoneTutorial && userData.isSetArrowOnEgg)
+            StartCoroutine(CheckTutorial());
+    }
+
+    private IEnumerator CheckTutorial()
+    {
+        yield return new WaitForSeconds(0.2f);
+        GuideManager.Instance.SetArrow(allData[0].gameObject, 40f);
     }
 
     public void InitTab()
@@ -227,6 +245,9 @@ public class PixelmonTab : UIBase
         tabState = TabState.Normal;
         equipOverlay.gameObject.SetActive(false);
         infoPopUp.gameObject.SetActive(false);
+
+        if (!SaveManager.Instance.userData.isDoneTutorial)
+            GuideManager.Instance.SetArrow(allData[0].gameObject, 40f);
     }
     
     public void OnEquip()
@@ -234,6 +255,8 @@ public class PixelmonTab : UIBase
         if (tabState == TabState.Equip) 
         {
             equipOverlay.gameObject.SetActive(true);
+            if (!SaveManager.Instance.userData.isDoneTutorial)
+                GuideManager.Instance.SetArrow(equipData[0].gameObject, 40f);
         }
         else if(tabState == TabState.UnEquip) 
         {
@@ -252,6 +275,13 @@ public class PixelmonTab : UIBase
 
     public void EquipedPixelmon(int slotIndex)
     {
+        if (!saveManager.userData.isDoneTutorial)
+        {
+            GuideManager.Instance.GuideArrow.SetActive(false);
+            UIManager.Hide<Tutorial>();
+            saveManager.SetFieldData(nameof(saveManager.userData.isDoneTutorial), true);
+        }           
+
         equipData[slotIndex].Equip(allData[choiceId].myPxmData);
         pixelmonManager.equipAction?.Invoke(slotIndex, equipData[slotIndex].myPxmData);
 

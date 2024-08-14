@@ -143,4 +143,9 @@ public class UIManager : Singleton<UIManager>
     {
         await Show<WarnPopup>(msg);
     }
+
+    public async void ShowMaskOverlay(Transform parents, Vector3 pos, float width = 100f, float height = 100f)
+    {
+        await Show<MaskOverlay>(parents, pos, width, height);
+    }
 }

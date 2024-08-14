@@ -1,3 +1,4 @@
+using DG.Tweening.Core.Easing;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -71,7 +72,10 @@ public class UIBottomBar : MonoBehaviour
                 }
             }
         }
-        
+
+        if (!SaveManager.Instance.userData.isDoneTutorial)
+            GuideManager.Instance.SetArrow(GuideManager.Instance.PxmToggle.gameObject);
+
         overlayPanel.SetActive(selectedIndex >= 0);
         uiTabs.ForEach(obj => obj.gameObject.SetActive(false)); //모든 탭 끄기.
         if (selectedIndex >= 0)

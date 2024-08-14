@@ -17,6 +17,7 @@ public class UILoading : Singleton<UILoading>
         base.Awake();
         gameObject.SetActive(false);
 
+        if (!Application.isPlaying) return;
         slider.onValueChanged.AddListener(delegate { UpdateSliderValue(); });
     }
 

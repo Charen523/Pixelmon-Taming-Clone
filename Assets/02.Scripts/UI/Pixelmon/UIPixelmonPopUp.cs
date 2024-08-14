@@ -73,6 +73,15 @@ public class UIPixelmonPopUp : UIBase
         infoIndex = dataIndex;
         
         SetData();
+
+        if((dataIndex == 0) && !saveManager.userData.isDoneTutorial)
+            GuideManager.Instance.SetArrow(equipBtn.gameObject, 40f);
+    }
+
+    public void OnClickOverlay()
+    {
+        this.gameObject.SetActive(false);
+        pxmTab.StartCheckTutorial();
     }
 
     public void OnPreviousInfo()

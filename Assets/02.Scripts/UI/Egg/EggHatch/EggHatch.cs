@@ -1,3 +1,4 @@
+using DG.Tweening.Core.Easing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,7 +34,8 @@ public class EggHatch : MonoBehaviour
     private async void Awake()
     {
         HatchResultPopup = await UIManager.Show<UIHatchResultPopup>();
-        GuideManager.Instance.SetArrow(BreakAnim.gameObject);
+        if (!SaveManager.Instance.userData.isSetArrowOnEgg)
+            GuideManager.Instance.SetArrow(BreakAnim.gameObject);
     }
 
     private void Start()
@@ -61,24 +63,31 @@ public class EggHatch : MonoBehaviour
 
     private bool Gacha()
     {
-        #region 확률에 따라 픽셀몬 등급 랜덤뽑기
-        Rank = PerformPxmGacha(userData.eggLv.ToString());
-
-        // 등급에 해당하는 픽셀몬 랜덤뽑기
-        var pxmData = DataManager.Instance.pixelmonData.data;
-        List<PixelmonData> randPxmData = new List<PixelmonData>(pxmData.Count);
-
-        for (int i = 0; i < pxmData.Count; i++)
+        if(userData.isDoneTutorial == false)
         {
-            if (pxmData[i].rank == Rank.ToString())
-            {
-                randPxmData.Add(pxmData[i]);
-            }
+            HatchPxmData = DataManager.Instance.pixelmonData.data[0];
+            Rank = (PixelmonRank)Enum.Parse(typeof(PixelmonRank), HatchPxmData.rank);
         }
+        else
+        {
+            #region 확률에 따라 픽셀몬 등급 랜덤뽑기
+            Rank = PerformPxmGacha(userData.eggLv.ToString());
 
-        HatchPxmData = randPxmData[UnityEngine.Random.Range(0, randPxmData.Count)];
+            // 등급에 해당하는 픽셀몬 랜덤뽑기
+            var pxmData = DataManager.Instance.pixelmonData.data;
+            List<PixelmonData> randPxmData = new List<PixelmonData>(pxmData.Count);
+
+            for (int i = 0; i < pxmData.Count; i++)
+            {
+                if (pxmData[i].rank == Rank.ToString())
+                {
+                    randPxmData.Add(pxmData[i]);
+                }
+            }
+            HatchPxmData = randPxmData[UnityEngine.Random.Range(0, randPxmData.Count)];            
+            #endregion
+        }
         SaveManager.Instance.SetFieldData(nameof(userData.hatchPxmData), HatchPxmData);
-        #endregion
 
         #region 픽셀몬 능력치 랜덤뽑기
         IsOwnedPxm = false;
@@ -123,13 +132,13 @@ public class EggHatch : MonoBehaviour
 
     public void OnClickEgg(Button btn)
     {
-        GuideManager.Instance.HideArrow();
+        if(UIManager.Get<Tutorial>() != null)
+            UIManager.Get<Tutorial>().HatchEgg();
+
         if (userData.eggCount > 0 || userData.isGetPxm == false)
             StartCoroutine(ClickEgg(btn));
         else
-        {
             UIManager.Instance.ShowWarn("알이 부족합니다!!");
-        }
     }
 
     public IEnumerator ClickEgg(Button btn)
@@ -149,6 +158,7 @@ public class EggHatch : MonoBehaviour
             {
                 QuestManager.Instance.OnQuestEvent();
             }
+            
             Gacha();
             yield return SetPxmHatchAnim();
         }
