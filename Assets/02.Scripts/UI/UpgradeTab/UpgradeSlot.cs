@@ -7,10 +7,10 @@ using UnityEngine.UI;
 public enum UpgradeIndex
 {
     Atk,
-    Cri,
-    CriDmg,
     Dmg,
     SDmg,
+    Cri,
+    CriDmg,
     SCri,
     SCriDmg
 }

@@ -33,8 +33,8 @@ public class QuestManager : Singleton<QuestManager>
     private int questNum;
     private string curIndex;
     private int repeatCount;
-    private readonly string maxMainQNum = "Q15";
-    private readonly int maxRepeatNum = 4;
+    private readonly string maxMainQNum = "Q56";
+    private readonly int maxRepeatNum = 6;
 
     private QuestType curType;
     private int curGoal;
@@ -143,7 +143,10 @@ public class QuestManager : Singleton<QuestManager>
         if (IsQuestClear())
         {
             Firebase.Analytics.FirebaseAnalytics.LogEvent($"QuestIndex_{questNum}");
-            RewardManager.Instance.SpawnRewards(data.rewardType, curRwd);
+            if (data.rewardType != "")
+            {
+                RewardManager.Instance.SpawnRewards(data.rewardType, curRwd);
+            }
             questClear.SetActive(false);
             SetQuestIndex();
             ResetProgress();
