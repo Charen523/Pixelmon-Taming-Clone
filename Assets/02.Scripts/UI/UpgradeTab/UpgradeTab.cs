@@ -8,8 +8,13 @@ public class UpgradeTab : UIBase
     private int lastToggleIndex = 1;
 
     public Dictionary<UpgradeIndex, QuestType> questMapping = new Dictionary<UpgradeIndex, QuestType>
-    { {UpgradeIndex.Atk, QuestType.UpgradeAtk },
-        {UpgradeIndex.Dmg, QuestType.UpgradeDmg}
+    {   {UpgradeIndex.Atk, QuestType.UpgradeAtk },
+        {UpgradeIndex.Dmg, QuestType.UpgradeDmg},
+        {UpgradeIndex.SDmg, QuestType.Default },
+        {UpgradeIndex.Cri, QuestType.Default },
+        {UpgradeIndex.CriDmg, QuestType.Default },
+        {UpgradeIndex.SCri, QuestType.Default },
+        {UpgradeIndex.SCriDmg, QuestType.Default }
     };
 
     protected override void Awake()
