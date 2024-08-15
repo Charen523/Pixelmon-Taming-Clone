@@ -27,7 +27,7 @@ public class QuestManager : Singleton<QuestManager>
     private SaveManager saveManager;
     private UserData userData;
 
-    private QuestData data;
+    public QuestData data;
     private int questNum;
     private string mainQIndex;
     private int repeatCount;
@@ -38,12 +38,12 @@ public class QuestManager : Singleton<QuestManager>
     private QuestType curType;
     private int curGoal;
     private int curProgress;
-    private int curRwd;
+    public int curRwd;
 
     #region UI
     [SerializeField] private TextMeshProUGUI questNameTxt;
     [SerializeField] private TextMeshProUGUI countTxt;
-    [SerializeField] private GameObject questClear;
+    [SerializeField] public GameObject questClear;
     [SerializeField] private TextMeshProUGUI rewardTxt;
     [SerializeField] private Image rwdIcon;
     [SerializeField] private Sprite[] rwdSprite;
@@ -67,7 +67,7 @@ public class QuestManager : Singleton<QuestManager>
     }
     
     #region UI
-    private void SetQuestUI()
+    public void SetQuestUI()
     {
         SetQuestNameTxt();
         SetQuestCountTxt();
@@ -97,7 +97,7 @@ public class QuestManager : Singleton<QuestManager>
         questNameTxt.text = $"{questNum}. " + curDescription;
     }
 
-    private void SetQuestCountTxt()
+    public void SetQuestCountTxt()
     {
         int goal = curGoal;
         int progress = Mathf.Min(curProgress, goal);
@@ -196,7 +196,7 @@ public class QuestManager : Singleton<QuestManager>
         curGoal = data.goal;
     }
 
-    private void SetQuestIndex()
+    public void SetQuestIndex()
     {
         string qNum;
 
@@ -249,7 +249,7 @@ public class QuestManager : Singleton<QuestManager>
     }
 
     #region Quest Progress
-    private void ResetProgress()
+    public void ResetProgress()
     {
         int progress;
 
