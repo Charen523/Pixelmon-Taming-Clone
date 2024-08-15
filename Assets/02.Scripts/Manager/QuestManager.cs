@@ -94,8 +94,6 @@ public class QuestManager : Singleton<QuestManager>
         {
             curDescription = curDescription.Replace("N", curGoal.ToString());
         }
-        if (questNameTxt == null)
-            Debug.Log("왜:");
         questNameTxt.text = $"{questNum}. " + curDescription;
     }
 
@@ -208,13 +206,11 @@ public class QuestManager : Singleton<QuestManager>
             {//마지막 메인Q
                 repeatCount++;
                 qNum = "01";
-                data = DataManager.Instance.GetData<QuestData>(repeatQIndex.ToString());
             }
             else
             {//메인Q 진행중
-                int index = int.Parse(mainQIndex.Substring(1, 1));
+                int index = int.Parse(mainQIndex.Substring(1, mainQIndex.Length - 1));
                 qNum = "Q" + (index + 1).ToString();
-                data = DataManager.Instance.GetData<QuestData>(mainQIndex);
             }
         }
         else if (repeatQIndex == maxRepeatNum)
@@ -222,15 +218,15 @@ public class QuestManager : Singleton<QuestManager>
             repeatCount++;
             repeatQIndex = 1;
             qNum = repeatQIndex.ToString();
-            data = DataManager.Instance.GetData<QuestData>(repeatQIndex.ToString());
         }
         else
         {//반복Q 진행중
             repeatQIndex++;
             qNum = repeatQIndex.ToString("D2");
-            data = DataManager.Instance.GetData<QuestData>(repeatQIndex.ToString());
+            
         }
 
+        data = DataManager.Instance.GetData<QuestData>(qNum);
         string newId = repeatCount.ToString() + "_" + qNum;
         saveManager.SetData(nameof(userData.questIndex), newId);
 
