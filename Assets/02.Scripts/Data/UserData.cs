@@ -39,7 +39,7 @@ public class UserData
     #endregion
 
     #region Main Quest
-    public string questId = "0000Q1";
+    public string questIndex = "0_Q1";
     public int questProgress = 0;
     #endregion
 
