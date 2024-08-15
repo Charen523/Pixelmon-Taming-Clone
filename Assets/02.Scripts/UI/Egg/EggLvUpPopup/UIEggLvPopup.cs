@@ -279,6 +279,11 @@ public class UIEggLvPopup : UIBase
         SaveManager.Instance.SetFieldData(nameof(userData.startLvUpTime), null);
         SaveManager.Instance.SetFieldData(nameof(userData.eggLv), 1, true);    
         SetGaugeMode();
+
+        if (QuestManager.Instance.IsMyTurn(QuestType.Nest))
+        {
+            QuestManager.Instance.OnQuestEvent();
+        }
     }
 
     private IEnumerator UpdateTimer()

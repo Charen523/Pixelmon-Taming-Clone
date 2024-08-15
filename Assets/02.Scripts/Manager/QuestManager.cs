@@ -233,8 +233,7 @@ public class QuestManager : Singleton<QuestManager>
                 progress = userData.userLv;
                 break;
             case QuestType.Nest:
-                //TODO: progress = ;
-                progress = 0;
+                progress = userData.eggLv;
                 break;
             case QuestType.UpgradeAtk:
                 progress = userData.UpgradeLvs[0];
@@ -261,6 +260,9 @@ public class QuestManager : Singleton<QuestManager>
                 break;
             case QuestType.UserLv:
                 progress = userData.userLv;
+                break;
+            case QuestType.Nest:
+                progress = userData.eggLv;
                 break;
             case QuestType.UpgradeAtk:
                 progress = userData.UpgradeLvs[0];
