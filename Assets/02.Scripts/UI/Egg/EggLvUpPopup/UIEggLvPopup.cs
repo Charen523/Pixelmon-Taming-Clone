@@ -262,7 +262,6 @@ public class UIEggLvPopup : UIBase
     //TODO : 광고넣기
     public void OnClickAdBtn()
     {
-        UIManager.Instance.ShowWarn("준비중 입니다!");
     }
 
     public void OnClickDiaBtn()
