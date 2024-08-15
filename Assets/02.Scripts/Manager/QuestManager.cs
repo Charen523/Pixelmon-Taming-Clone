@@ -18,8 +18,7 @@ public enum QuestType
     Skill,
     Feed,
     Seed,
-    Harvest,
-    GoldDg
+    Harvest
 }
 
 public class QuestManager : Singleton<QuestManager>
@@ -169,6 +168,7 @@ public class QuestManager : Singleton<QuestManager>
         else
         {
             questNum = int.Parse(curIndex[1..]);
+            GuideManager.Instance.guideNum = questNum;
         }
 
         data = DataManager.Instance.GetData<QuestData>(curIndex);
@@ -193,6 +193,7 @@ public class QuestManager : Singleton<QuestManager>
             {
                 int index = int.Parse(curIndex[1..]);
                 qNum = "Q" + (index + 1).ToString();
+                GuideManager.Instance.guideNum = index;
             }
         }
         else if (int.Parse(curIndex[1..]) == maxRepeatNum)
