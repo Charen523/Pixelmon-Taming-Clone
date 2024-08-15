@@ -207,6 +207,12 @@ public class PixelmonTab : UIBase
                 equipData[i].OnClick(); 
             }
         }
+
+        
+        if (GuideManager.Instance.guideNum == 2 && QuestManager.Instance.IsMyTurn(QuestType.Default) )
+        {
+            QuestManager.Instance.OnQuestEvent();
+        }
     }
 
     public void OnAutoEvolved()
