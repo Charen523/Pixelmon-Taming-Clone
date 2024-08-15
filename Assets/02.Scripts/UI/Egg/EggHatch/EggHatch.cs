@@ -152,13 +152,6 @@ public class EggHatch : MonoBehaviour
 
     public IEnumerator ClickEgg(Button btn)
     {
-        if (userData.isEggHatched == false)
-        {
-            SaveManager.Instance.SetFieldData(nameof(userData.isEggHatched), true);
-            GuideManager.Instance.Locks[0].SetActive(false);
-            GuideManager.Instance.Locks[1].SetActive(false);
-        }
-
         btn.interactable = false;
         if (userData.isGetPxm)
         {
@@ -240,5 +233,12 @@ public class EggHatch : MonoBehaviour
 
         SaveManager.Instance.SetFieldData(nameof(userData.isGetPxm), true);
         isDoneGetPxm = true;
+
+        if (userData.isEggHatched == false)
+        {
+            SaveManager.Instance.SetFieldData(nameof(userData.isEggHatched), true);
+            GuideManager.Instance.Locks[0].SetActive(false);
+            GuideManager.Instance.Locks[1].SetActive(false);
+        }
     }
 }
