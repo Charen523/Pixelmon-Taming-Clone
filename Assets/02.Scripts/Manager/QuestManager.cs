@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,9 +30,8 @@ public class QuestManager : Singleton<QuestManager>
 
     public QuestData data;
     private int questNum;
-    private string mainQIndex;
+    private string curIndex;
     private int repeatCount;
-    private int repeatQIndex = -1;
     private readonly string maxMainQNum = "Q15";
     private readonly int maxRepeatNum = 4;
 
@@ -180,17 +180,17 @@ public class QuestManager : Singleton<QuestManager>
     {
         string[] splitId = userData.questIndex.Split('_');
         repeatCount = int.Parse(splitId[0]);
-        if (int.TryParse(splitId[1], out int index))
+        curIndex = splitId[1];
+        if (splitId[1][0] == 'R')
         {
-            repeatQIndex = index;
-            questNum = (repeatCount - 1) * maxRepeatNum + repeatQIndex;
-            data = DataManager.Instance.GetData<QuestData>(repeatQIndex.ToString());
+            int repNum = int.Parse(splitId[1][1..]);
+            questNum = (repeatCount - 1) * maxRepeatNum + repNum;
+            data = DataManager.Instance.GetData<QuestData>(repNum.ToString());
         }
         else
         {
-            mainQIndex = splitId[1];
-            questNum = int.Parse(mainQIndex.Substring(1, mainQIndex.Length - 1));
-            data = DataManager.Instance.GetData<QuestData>(mainQIndex);
+            questNum = int.Parse(curIndex.Substring(1, curIndex.Length - 1));
+            data = DataManager.Instance.GetData<QuestData>(curIndex);
         }
 
         curType = data.type;
@@ -202,33 +202,31 @@ public class QuestManager : Singleton<QuestManager>
     {
         string qNum;
 
+        questNum++;
         if (repeatCount == 0)
         {
-            if (mainQIndex == maxMainQNum)
-            {//마지막 메인Q
+            if (curIndex == maxMainQNum)
+            {
                 repeatCount++;
-                qNum = "1";
-                repeatQIndex = 1;
+                qNum = "R1";
             }
             else
-            {//메인Q 진행중
-                int index = int.Parse(mainQIndex.Substring(1, mainQIndex.Length - 1));
+            {
+                int index = int.Parse(curIndex[1..]);
                 qNum = "Q" + (index + 1).ToString();
-                mainQIndex = qNum;
             }
         }
-        else if (repeatQIndex == maxRepeatNum)
-        {//마지막 반복Q
+        else if (int.Parse(curIndex[1..]) == maxRepeatNum)
+        {
             repeatCount++;
-            repeatQIndex = 1;
-            qNum = repeatQIndex.ToString();
+            qNum = "R1";
         }
         else
         {//반복Q 진행중
-            repeatQIndex++;
-            qNum = repeatQIndex.ToString();
-            
+            int index = int.Parse(curIndex[1..]);
+            qNum = "R" + (index + 1).ToString();
         }
+        curIndex = qNum;
 
         data = DataManager.Instance.GetData<QuestData>(qNum);
         string newId = repeatCount.ToString() + "_" + qNum;
