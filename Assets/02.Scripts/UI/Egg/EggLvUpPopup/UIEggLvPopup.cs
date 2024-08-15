@@ -106,23 +106,25 @@ public class UIEggLvPopup : UIBase
         if (userData.eggLv != 10)
         {         
             NextLvNum.text = (userData.eggLv + 1).ToString();          
-            var nextNum = DataManager.Instance.GetData<EggRateData>((userData.eggLv + 1).ToString());
+            var nextData= DataManager.Instance.GetData<EggRateData>((userData.eggLv + 1).ToString());
           
-            CommonNextNum.text = nextNum.common.ToString("F2") + "%";           
-            AdvancedNextNum.text = nextNum.advanced.ToString("F2") + "%";           
-            RareNextNum.text = nextNum.rare.ToString("F2") + "%";         
-            EpicNextNum.text = nextNum.epic.ToString("F2") + "%";           
-            LegendaryNextNum.text = nextNum.legendary.ToString("F2") + "%";
+            CommonNextNum.text = nextData.common.ToString("F2") + "%";           
+            AdvancedNextNum.text = nextData.advanced.ToString("F2") + "%";           
+            RareNextNum.text = nextData.rare.ToString("F2") + "%";         
+            EpicNextNum.text = nextData.epic.ToString("F2") + "%";           
+            LegendaryNextNum.text = nextData.legendary.ToString("F2") + "%";
         }
+        else if(userData.eggLv == 10)
+            NextLvNum.text = "X";
+
         CurLvNum.text = userData.eggLv.ToString();
-        var curNum = DataManager.Instance.GetData<EggRateData>(userData.eggLv.ToString());
+        var curData = DataManager.Instance.GetData<EggRateData>(userData.eggLv.ToString());
 
-        CommonCurNum.text = curNum.common.ToString("F2") + "%";
-        AdvancedCurNum.text = curNum.advanced.ToString("F2") + "%";
-        RareCurNum.text = curNum.rare.ToString("F2") + "%";
-        EpicCurNum.text = curNum.epic.ToString("F2") + "%";
-        LegendaryCurNum.text = curNum.legendary.ToString("F2") + "%";
-
+        CommonCurNum.text = curData.common.ToString("F2") + "%";
+        AdvancedCurNum.text = curData.advanced.ToString("F2") + "%";
+        RareCurNum.text = curData.rare.ToString("F2") + "%";
+        EpicCurNum.text = curData.epic.ToString("F2") + "%";
+        LegendaryCurNum.text = curData.legendary.ToString("F2") + "%";
     }
 
     public enum EggLvBtnType
@@ -155,40 +157,40 @@ public class UIEggLvPopup : UIBase
 
     private void SetLvUpBtn()
     {
-        if (userData.fullGaugeCnt == lvUpGauges.Count)
+        if(userData.eggLv == 10)
         {
-            SetBtnSprite(EggLvBtnType.LvUp, LvUpBtn, true);
+            SetBtnSprite(EggLvBtnType.LvUp, LvUpBtn, false);
             SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, false);
         }
         else
         {
-            SetBtnSprite(EggLvBtnType.LvUp, LvUpBtn, false);
-            SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, true);
+            if ((userData.fullGaugeCnt == lvUpGauges.Count))
+            {
+                SetBtnSprite(EggLvBtnType.LvUp, LvUpBtn, true);
+                SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, false);
+            }
+            else
+            {
+                SetBtnSprite(EggLvBtnType.LvUp, LvUpBtn, false);
+                SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, true);
+            }
         }
     }
 
     private void SetGaugeUpBtn()
     {
         if (userData.gold >= price)
-        {
             SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, true);
-        }
         else
-        {
             SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, false);
-        }
     }
 
     private void SetDiaBtn()
     {
         if(userData.diamond >= skipDia)
-        {
-            SetBtnSprite(EggLvBtnType.DiaBtn, DiaBtn, true);
-        }           
+            SetBtnSprite(EggLvBtnType.DiaBtn, DiaBtn, true);           
         else 
-        {
             SetBtnSprite(EggLvBtnType.DiaBtn, DiaBtn, false);
-        }
     }
 
     private void SetLvUpMode()
@@ -210,15 +212,24 @@ public class UIEggLvPopup : UIBase
     private void SetGaugeMode()
     {
         SaveManager.Instance.SetFieldData(nameof(userData.isLvUpMode), false);
-        Desc.text = descs[0];
+        if (userData.eggLv == 10)
+        {
+            Desc.text = "최대 레벨 도달";
+            Gauges.gameObject.SetActive(false);
+            GaugeAndLvUp.SetActive(false);
+            PriceTxt.text = "-";
+        }
+        else if (userData.eggLv < 10)
+        {
+            Desc.text = descs[0];
+            Gauges.gameObject.SetActive(true);
+            GaugeAndLvUp.SetActive(true);
 
-        Gauges.gameObject.SetActive(true);
-        GaugeAndLvUp.SetActive(true);
+            price = Calculater.CalPrice(userData.eggLv, 1000, 100, 50);
+            PriceTxt.text = Calculater.NumFormatter(price);
+        }
         Clock.SetActive(false);
         Skip.SetActive(false);
-
-        price = Calculater.CalPrice(userData.eggLv, 1000, 100, 50);
-        PriceTxt.text = Calculater.NumFormatter(price);
         SetLvUpBtn();
         SetGaugeUpBtn();
     }

@@ -42,4 +42,10 @@ public class Singleton<T> : SerializedMonoBehaviour where T : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    private void OnDestroy()
+    {
+        if (instance != null)
+            Destroy(gameObject);
+    }
 }
