@@ -40,11 +40,8 @@ public class CheatManager : Singleton<CheatManager>
 
     private void QuestCheat()
     {
-        RewardManager.Instance.SpawnRewards(QuestManager.Instance.data.rewardType, QuestManager.Instance.curRwd);
-        QuestManager.Instance.questClear.SetActive(false);
-        QuestManager.Instance.SetQuestIndex();
-        QuestManager.Instance.ResetProgress();
-        QuestManager.Instance.SetQuestUI();
+        QuestManager.Instance.curProgress = QuestManager.Instance.data.goal;
+        Debug.Log(QuestManager.Instance.curProgress);
     }
 #endif
 }
