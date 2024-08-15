@@ -143,7 +143,10 @@ public class QuestManager : Singleton<QuestManager>
         if (IsQuestClear())
         {
             Firebase.Analytics.FirebaseAnalytics.LogEvent($"QuestIndex_{questNum}");
-            RewardManager.Instance.SpawnRewards(data.rewardType, curRwd);
+            if (data.rewardType != "")
+            {
+                RewardManager.Instance.SpawnRewards(data.rewardType, curRwd);
+            }
             questClear.SetActive(false);
             SetQuestIndex();
             ResetProgress();
