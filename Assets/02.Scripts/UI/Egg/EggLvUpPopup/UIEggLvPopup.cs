@@ -61,18 +61,21 @@ public class UIEggLvPopup : UIBase
     private UserData userData => SaveManager.Instance.userData;
     private Coroutine updateTimerCoroutine;
 
-    private void Start()
-    {
+    public override void Opened(object[] param) 
+    { 
+        base.Opened(param);      
         UIManager.Instance.UpdateUI += UpdateEggLvPopupUI;
+        
+        SetPopup(param[0] as UIMiddleBar);
 
         UpdateLvAndRateUI();
 
         for (int i = 0; i < userData.eggLv / 5 + 2; i++)
         {
             lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
-            if(i < userData.fullGaugeCnt)
+            if (i < userData.fullGaugeCnt)
                 lvUpGauges[i].GaugeUp();
-        }        
+        }
     }
 
     public void SetPopup(UIMiddleBar middleBar)
@@ -93,10 +96,12 @@ public class UIEggLvPopup : UIBase
                 UpdateLvAndRateUI();
                 break;
             case DirtyUI.Gold:
-                SetGaugeUpBtn();
+                if(GaugeUpBtn.interactable == false) 
+                    SetGaugeUpBtn();
                 break;
             case DirtyUI.Diamond:
-                SetDiaBtn();
+                if (DiaBtn.interactable == false)
+                    SetDiaBtn();
                 break;
         }
     }
@@ -157,28 +162,27 @@ public class UIEggLvPopup : UIBase
 
     private void SetLvUpBtn()
     {
-        if(userData.eggLv == 10)
+        if (userData.eggLv == 10)
         {
             SetBtnSprite(EggLvBtnType.LvUp, LvUpBtn, false);
             SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, false);
         }
+        else if (userData.fullGaugeCnt == lvUpGauges.Count)
+        {
+            SetBtnSprite(EggLvBtnType.LvUp, LvUpBtn, true);
+            SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, false);
+        }
         else
         {
-            if ((userData.fullGaugeCnt == lvUpGauges.Count))
-            {
-                SetBtnSprite(EggLvBtnType.LvUp, LvUpBtn, true);
-                SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, false);
-            }
-            else
-            {
-                SetBtnSprite(EggLvBtnType.LvUp, LvUpBtn, false);
-                SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, true);
-            }
+            SetBtnSprite(EggLvBtnType.LvUp, LvUpBtn, false);
+            SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, true);
         }
     }
 
     private void SetGaugeUpBtn()
     {
+        if (userData.fullGaugeCnt == lvUpGauges.Count) return;
+
         if (userData.gold >= price)
             SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, true);
         else
@@ -227,6 +231,7 @@ public class UIEggLvPopup : UIBase
 
             price = Calculater.CalPrice(userData.eggLv, 1000, 100, 50);
             PriceTxt.text = Calculater.NumFormatter(price);
+            Canvas.ForceUpdateCanvases();
         }
         Clock.SetActive(false);
         Skip.SetActive(false);
