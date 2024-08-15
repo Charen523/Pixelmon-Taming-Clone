@@ -133,13 +133,18 @@ public class EggHatch : MonoBehaviour
 
     public void OnClickEgg(Button btn)
     {
-        if ((userData.isEggHatched == true) && (userData.isDoneTutorial == false))
-        {
-            UIManager.Instance.ShowWarn("튜토리얼을 진행해주세요!");
-            return;
-        }
         if (UIManager.Get<Tutorial>() != null)
-            UIManager.Get<Tutorial>().HatchEgg();
+        {
+            if (userData.isEggHatched == true)
+            {
+                UIManager.Instance.ShowWarn("튜토리얼을 진행해주세요!");
+                return;
+            }
+            else
+            {
+                UIManager.Get<Tutorial>().HatchEgg();
+            }
+        }
 
         if (userData.eggCount > 0 || userData.isGetPxm == false)
             StartCoroutine(ClickEgg(btn));

@@ -21,7 +21,7 @@ public class UIMiddleBar : UIBase
 
     protected override async void Awake()
     {
-        EggLvPopup = await UIManager.Show<UIEggLvPopup>();
+        EggLvPopup = await UIManager.Show<UIEggLvPopup>(this);
     }
     private void Start()
     {
