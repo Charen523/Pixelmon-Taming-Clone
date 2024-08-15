@@ -107,6 +107,11 @@ public class SkillGacha : MonoBehaviour
             SaveManager.Instance.SetFieldData(nameof(userData.diamond), -totalCostDia, true);
         }
 
+        if (QuestManager.Instance.IsMyTurn(QuestType.Skill))
+        {
+            QuestManager.Instance.OnQuestEvent();
+        }
+
         StartCoroutine(Gacha(multiplier));       
     }
 

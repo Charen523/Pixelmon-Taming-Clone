@@ -149,6 +149,10 @@ public class FieldSlot : MonoBehaviour
             passTime = fieldData.leftTime;
             fieldData.startTime = DateTime.Now.ToString();
             CurrentFieldState = FieldState.Seeded;
+            if (QuestManager.Instance.IsMyTurn(QuestType.Seed))
+            {
+                QuestManager.Instance.OnQuestEvent();
+            }
         }
         farmTab.SaveFarmData();
     }
@@ -171,6 +175,11 @@ public class FieldSlot : MonoBehaviour
         farmTab.HarvestYield(yield);
         CurrentFieldState = FieldState.Empty;
         farmTab.SaveFarmData();
+
+        if (QuestManager.Instance.IsMyTurn(QuestType.Harvest))
+        {
+            QuestManager.Instance.OnQuestEvent();
+        }
     }
 
     public void SetPriceTxt()

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static Unity.VisualScripting.Dependencies.Sqlite.SQLite3;
 
 public class EggHatch : MonoBehaviour
 {
@@ -159,7 +160,7 @@ public class EggHatch : MonoBehaviour
         if (userData.isGetPxm)
         {
             SaveManager.Instance.SetFieldData(nameof(userData.eggCount), -1, true);
-            if (QuestManager.Instance.isHatchQ)
+            if (QuestManager.Instance.IsMyTurn(QuestType.Egg))
             {
                 QuestManager.Instance.OnQuestEvent();
             }

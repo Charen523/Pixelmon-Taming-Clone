@@ -8,6 +8,7 @@ public class StageManager : Singleton<StageManager>
 {
     private SaveManager saveManager;
     private UserData userData;
+    private QuestManager questManager;
 
     #region Stage Info
     [Header("Stage Info")]
@@ -117,7 +118,7 @@ public class StageManager : Singleton<StageManager>
         base.Awake();
 
         saveManager = SaveManager.Instance;
-        userData = saveManager.userData;   
+        userData = saveManager.userData;
         InitData();
     }
 
@@ -166,6 +167,7 @@ public class StageManager : Singleton<StageManager>
         }
         bottomBar = UIManager.Instance.parents[2].GetChild(0);
         CalculateBound();
+        questManager = QuestManager.Instance;//Stage가 Quest Instance 생성보다 먼저라 캐싱 시점을 미룸.
         InitStage();
     }
 
@@ -197,10 +199,10 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator StartStage()
     {
-        //if (QuestManager.Instance.isStageQ)
-        //{
-        //    QuestManager.Instance.OnQuestEvent();
-        //}
+        if (questManager.IsMyTurn(QuestType.Stage))
+        {
+            questManager.OnQuestEvent();
+        }
 
         if (!isStgFade)
         {
@@ -383,6 +385,10 @@ public class StageManager : Singleton<StageManager>
             dgBoss.DisableDgMonster();
             isDungeon = false;
             isDungeonClear = true;
+            if (dgIndex == 0 && QuestManager.Instance.IsMyTurn(QuestType.GoldDg))
+            {
+                QuestManager.Instance.OnQuestEvent();
+            }
             return true;
         }
         return false;
@@ -482,13 +488,13 @@ public class StageManager : Singleton<StageManager>
 
         RewardManager.Instance.SpawnRewards(enemy.gameObject, enemyData.rewardType, enemyData.rewardValue, enemyData.rewardRate);
         
-        if (QuestManager.Instance.isMobQ && !enemy.statHandler.data.isBoss)
+        if (questManager.IsMyTurn(QuestType.Mob) && !enemy.statHandler.data.isBoss)
         {
-            QuestManager.Instance.OnQuestEvent();
+            questManager.OnQuestEvent();
         }
-        else if (QuestManager.Instance.isBossQ && enemy.statHandler.data.isBoss)
+        else if (questManager.IsMyTurn(QuestType.Boss) && enemy.statHandler.data.isBoss)
         {
-            QuestManager.Instance.OnQuestEvent();
+            questManager.OnQuestEvent();
         }
         saveManager.SetFieldData(nameof(userData.curHuntCount), 1, true);
     }
