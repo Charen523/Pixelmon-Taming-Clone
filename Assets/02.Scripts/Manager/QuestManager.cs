@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,29 +22,28 @@ public enum QuestType
 
 public class QuestManager : Singleton<QuestManager>
 {
-    public event Action QuestEvent;
+    public event Action<int> QuestEvent;
 
     private StageManager stageManager;
     private SaveManager saveManager;
     private UserData userData;
 
-    private QuestData data;
+    public QuestData data;
     private int questNum;
-    private string mainQIndex;
+    private string curIndex;
     private int repeatCount;
-    private int repeatQIndex = -1;
     private readonly string maxMainQNum = "Q15";
     private readonly int maxRepeatNum = 4;
 
     private QuestType curType;
     private int curGoal;
-    private int curProgress;
-    private int curRwd;
+    public int curProgress;
+    public int curRwd;
 
     #region UI
     [SerializeField] private TextMeshProUGUI questNameTxt;
     [SerializeField] private TextMeshProUGUI countTxt;
-    [SerializeField] private GameObject questClear;
+    [SerializeField] public GameObject questClear;
     [SerializeField] private TextMeshProUGUI rewardTxt;
     [SerializeField] private Image rwdIcon;
     [SerializeField] private Sprite[] rwdSprite;
@@ -51,6 +51,7 @@ public class QuestManager : Singleton<QuestManager>
 
     protected override void Awake()
     {
+        isDontDestroyOnLoad = false;
         base.Awake();
 
         stageManager = StageManager.Instance;
@@ -67,7 +68,7 @@ public class QuestManager : Singleton<QuestManager>
     }
     
     #region UI
-    private void SetQuestUI()
+    public void SetQuestUI()
     {
         SetQuestNameTxt();
         SetQuestCountTxt();
@@ -94,12 +95,10 @@ public class QuestManager : Singleton<QuestManager>
         {
             curDescription = curDescription.Replace("N", curGoal.ToString());
         }
-        if (questNameTxt == null)
-            Debug.Log("왜:");
         questNameTxt.text = $"{questNum}. " + curDescription;
     }
 
-    private void SetQuestCountTxt()
+    public void SetQuestCountTxt()
     {
         int goal = curGoal;
         int progress = Mathf.Min(curProgress, goal);
@@ -181,56 +180,55 @@ public class QuestManager : Singleton<QuestManager>
     {
         string[] splitId = userData.questIndex.Split('_');
         repeatCount = int.Parse(splitId[0]);
-        if (int.TryParse(splitId[1], out int index))
+        curIndex = splitId[1];
+        if (splitId[1][0] == 'R')
         {
-            repeatQIndex = index;
-            questNum = (repeatCount - 1) * maxRepeatNum + repeatQIndex;
-            data = DataManager.Instance.GetData<QuestData>(repeatQIndex.ToString());
+            int repNum = int.Parse(splitId[1][1..]);
+            questNum = (repeatCount - 1) * maxRepeatNum + repNum;
+            data = DataManager.Instance.GetData<QuestData>(repNum.ToString());
         }
         else
         {
-            mainQIndex = splitId[1];
-            questNum = int.Parse(mainQIndex.Substring(1, mainQIndex.Length - 1));
-            data = DataManager.Instance.GetData<QuestData>(mainQIndex);
+            questNum = int.Parse(curIndex.Substring(1, curIndex.Length - 1));
+            data = DataManager.Instance.GetData<QuestData>(curIndex);
         }
 
         curType = data.type;
         curGoal = data.goal;
+        curProgress = userData.questProgress;
     }
 
-    private void SetQuestIndex()
+    public void SetQuestIndex()
     {
         string qNum;
 
+        questNum++;
         if (repeatCount == 0)
         {
-            if (mainQIndex == maxMainQNum)
-            {//마지막 메인Q
+            if (curIndex == maxMainQNum)
+            {
                 repeatCount++;
-                qNum = "01";
-                data = DataManager.Instance.GetData<QuestData>(repeatQIndex.ToString());
+                qNum = "R1";
             }
             else
-            {//메인Q 진행중
-                int index = int.Parse(mainQIndex.Substring(1, 1));
+            {
+                int index = int.Parse(curIndex[1..]);
                 qNum = "Q" + (index + 1).ToString();
-                data = DataManager.Instance.GetData<QuestData>(mainQIndex);
             }
         }
-        else if (repeatQIndex == maxRepeatNum)
-        {//마지막 반복Q
+        else if (int.Parse(curIndex[1..]) == maxRepeatNum)
+        {
             repeatCount++;
-            repeatQIndex = 1;
-            qNum = repeatQIndex.ToString();
-            data = DataManager.Instance.GetData<QuestData>(repeatQIndex.ToString());
+            qNum = "R1";
         }
         else
         {//반복Q 진행중
-            repeatQIndex++;
-            qNum = repeatQIndex.ToString("D2");
-            data = DataManager.Instance.GetData<QuestData>(repeatQIndex.ToString());
+            int index = int.Parse(curIndex[1..]);
+            qNum = "R" + (index + 1).ToString();
         }
+        curIndex = qNum;
 
+        data = DataManager.Instance.GetData<QuestData>(qNum);
         string newId = repeatCount.ToString() + "_" + qNum;
         saveManager.SetData(nameof(userData.questIndex), newId);
 
@@ -241,19 +239,11 @@ public class QuestManager : Singleton<QuestManager>
 
     public bool IsMyTurn(QuestType type)
     {
-        try
-        {
-            return type == curType;
-        }
-        catch
-        {
-            curType = data.type;
-            return type == curType;
-        }
+        return type == curType;
     }
 
     #region Quest Progress
-    private void ResetProgress()
+    public void ResetProgress()
     {
         int progress;
 
@@ -277,7 +267,7 @@ public class QuestManager : Singleton<QuestManager>
         SetQuestCountTxt();
     }
 
-    private void UpdateProgress()
+    private void UpdateProgress(int value)
     {
         int progress = curProgress;
         switch (curType)
@@ -295,8 +285,8 @@ public class QuestManager : Singleton<QuestManager>
                 progress++;
                 break;
         }
-        saveManager.SetData(nameof(userData.questProgress), progress);
-        curProgress = progress;
+        saveManager.SetData(nameof(userData.questProgress), progress + value);
+        curProgress = progress + value;
         SetQuestCountTxt();
     }
 
@@ -313,8 +303,8 @@ public class QuestManager : Singleton<QuestManager>
     }
     #endregion
 
-    public void OnQuestEvent()
+    public void OnQuestEvent(int value = 0)
     {
-        QuestEvent?.Invoke();
+        QuestEvent?.Invoke(value);
     }
 }
