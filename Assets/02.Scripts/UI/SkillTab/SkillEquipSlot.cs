@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class SkillEquipSlot : MonoBehaviour
 {
-    private SaveManager saveManager;
+    private SaveManager saveManager => SaveManager.Instance;
     public SkillTab skillTab;
     public ActiveData atvData;
     public MyAtvData myAtvData;
@@ -17,7 +17,6 @@ public class SkillEquipSlot : MonoBehaviour
     private void Start()
     {
         skillTab = SkillManager.Instance.skillTab;
-        saveManager = SaveManager.Instance;
         ChangedInfo();
     }
 
@@ -59,12 +58,18 @@ public class SkillEquipSlot : MonoBehaviour
             skillTab.allData[skillTab.choiceId].EquipAction();
             EquipAction(skillTab.allData[skillTab.choiceId].atvData, skillTab.allData[skillTab.choiceId].myAtvData);
             skillTab.OnCancelEquip();
+
+            if (GuideManager.Instance.guideNum == 8)
+            {
+                QuestManager.Instance.OnQuestEvent();
+            }
         }
         else
         {
             skillTab.OnCancelEquip();
         }
     }
+
 
     public void EquipAction(ActiveData data, MyAtvData myData)
     {
@@ -85,10 +90,9 @@ public class SkillEquipSlot : MonoBehaviour
         saveManager.UpdateSkillData(atvData.dataIndex, nameof(myAtvData.isEquipped), true);
         saveManager.UpdateSkillData(atvData.dataIndex, nameof(myAtvData.isAttached), true);
         saveManager.UpdateSkillData(atvData.dataIndex, nameof(myAtvData.pxmId), myData.pxmId);
-
+        
 
         saveManager.UpdatePixelmonData(saveManager.userData.equippedPxms[slotIndex].id, nameof(myPxmData.atvSkillId), atvData.id);
-
         SkillManager.Instance.ExecuteSkill(Player.Instance.pixelmons[slotIndex], slotIndex);
     }
 
@@ -103,8 +107,7 @@ public class SkillEquipSlot : MonoBehaviour
         equipIcon.sprite = null;
         atvData = null;
         myAtvData = null;
-
         saveManager.userData.equippedSkills[slotIndex] = -1;
-        saveManager.SetData("equippedSkills", saveManager.userData.equippedSkills);
+        saveManager.SetData(nameof(saveManager.userData.equippedSkills), saveManager.userData.equippedSkills);
     }
 }
