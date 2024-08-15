@@ -42,12 +42,16 @@ public class RewardManager : Singleton<RewardManager>
 
     public void GetReward(string itemName, int _amount)
     {
-        switch(itemName)
-        {//TODO: 땜빵으로 떼운 스테이지별 증가 보상
+        int stageCount = StageManager.Instance.stageNum
+                    + StageManager.Instance.worldNum * 15
+                    + StageManager.Instance.diffNum * 15 * 10;
+
+        switch (itemName)
+        {
             case nameof(userData.gold):
             case nameof(userData.userExp):
                 BigInteger amount1 = _amount;
-                amount1 *= (StageManager.Instance.worldNum + StageManager.Instance.diffNum * 10);
+                amount1 *= (stageCount * 105 / 100);
                 SaveManager.Instance.SetFieldData(itemName, amount1, true);
                 break;
             default:
