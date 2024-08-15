@@ -21,7 +21,7 @@ public enum QuestType
 
 public class QuestManager : Singleton<QuestManager>
 {
-    public event Action QuestEvent;
+    public event Action<int> QuestEvent;
 
     private StageManager stageManager;
     private SaveManager saveManager;
@@ -37,7 +37,7 @@ public class QuestManager : Singleton<QuestManager>
 
     private QuestType curType;
     private int curGoal;
-    private int curProgress;
+    public int curProgress;
     public int curRwd;
 
     #region UI
@@ -51,6 +51,7 @@ public class QuestManager : Singleton<QuestManager>
 
     protected override void Awake()
     {
+        isDontDestroyOnLoad = false;
         base.Awake();
 
         stageManager = StageManager.Instance;
@@ -194,6 +195,7 @@ public class QuestManager : Singleton<QuestManager>
 
         curType = data.type;
         curGoal = data.goal;
+        curProgress = userData.questProgress;
     }
 
     public void SetQuestIndex()
@@ -205,12 +207,14 @@ public class QuestManager : Singleton<QuestManager>
             if (mainQIndex == maxMainQNum)
             {//마지막 메인Q
                 repeatCount++;
-                qNum = "01";
+                qNum = "1";
+                repeatQIndex = 1;
             }
             else
             {//메인Q 진행중
                 int index = int.Parse(mainQIndex.Substring(1, mainQIndex.Length - 1));
                 qNum = "Q" + (index + 1).ToString();
+                mainQIndex = qNum;
             }
         }
         else if (repeatQIndex == maxRepeatNum)
@@ -222,7 +226,7 @@ public class QuestManager : Singleton<QuestManager>
         else
         {//반복Q 진행중
             repeatQIndex++;
-            qNum = repeatQIndex.ToString("D2");
+            qNum = repeatQIndex.ToString();
             
         }
 
@@ -237,15 +241,7 @@ public class QuestManager : Singleton<QuestManager>
 
     public bool IsMyTurn(QuestType type)
     {
-        try
-        {
-            return type == curType;
-        }
-        catch
-        {
-            curType = data.type;
-            return type == curType;
-        }
+        return type == curType;
     }
 
     #region Quest Progress
@@ -273,7 +269,7 @@ public class QuestManager : Singleton<QuestManager>
         SetQuestCountTxt();
     }
 
-    private void UpdateProgress()
+    private void UpdateProgress(int value)
     {
         int progress = curProgress;
         switch (curType)
@@ -291,8 +287,8 @@ public class QuestManager : Singleton<QuestManager>
                 progress++;
                 break;
         }
-        saveManager.SetData(nameof(userData.questProgress), progress);
-        curProgress = progress;
+        saveManager.SetData(nameof(userData.questProgress), progress + value);
+        curProgress = progress + value;
         SetQuestCountTxt();
     }
 
@@ -309,8 +305,8 @@ public class QuestManager : Singleton<QuestManager>
     }
     #endregion
 
-    public void OnQuestEvent()
+    public void OnQuestEvent(int value = 0)
     {
-        QuestEvent?.Invoke();
+        QuestEvent?.Invoke(value);
     }
 }

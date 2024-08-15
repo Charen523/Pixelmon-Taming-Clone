@@ -109,7 +109,7 @@ public class SkillGacha : MonoBehaviour
 
         if (QuestManager.Instance.IsMyTurn(QuestType.Skill))
         {
-            QuestManager.Instance.OnQuestEvent();
+            QuestManager.Instance.OnQuestEvent(multiplier);
         }
 
         StartCoroutine(Gacha(multiplier));       
