@@ -56,7 +56,7 @@ public class UIEggLvPopup : UIBase
     [SerializeField] private Sprite GraySprite;
     #endregion
 
-    private string[] descs = { "Lv업 게이지", "Lv업 중" };
+    private string[] descs = { "레벨업 게이지", "레벨업 중", "최대 레벨 도달" };
     private UIMiddleBar uiMiddleBar;
     private UserData userData => SaveManager.Instance.userData;
     private Coroutine updateTimerCoroutine;
@@ -214,7 +214,7 @@ public class UIEggLvPopup : UIBase
         SaveManager.Instance.SetFieldData(nameof(userData.isLvUpMode), false);
         if (userData.eggLv == 10)
         {
-            Desc.text = "최대 레벨 도달";
+            Desc.text = descs[2];
             Gauges.gameObject.SetActive(false);
             GaugeAndLvUp.SetActive(false);
             PriceTxt.text = "-";
@@ -258,7 +258,7 @@ public class UIEggLvPopup : UIBase
     //TODO : 광고넣기
     public void OnClickAdBtn()
     {
-
+        UIManager.Instance.ShowWarn("준비중 입니다!");
     }
 
     public void OnClickDiaBtn()
