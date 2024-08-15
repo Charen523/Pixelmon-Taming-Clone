@@ -193,7 +193,7 @@ public class QuestManager : Singleton<QuestManager>
             {
                 int index = int.Parse(curIndex[1..]);
                 qNum = "Q" + (index + 1).ToString();
-                GuideManager.Instance.guideNum = index;
+                GuideManager.Instance.guideNum = index + 1;
             }
         }
         else if (int.Parse(curIndex[1..]) == maxRepeatNum)
