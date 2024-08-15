@@ -100,7 +100,6 @@ public class UIEggLvPopup : UIBase
                     SetGaugeUpBtn();
                 break;
             case DirtyUI.Diamond:
-                if (DiaBtn.interactable == false)
                     SetDiaBtn();
                 break;
         }
@@ -263,7 +262,6 @@ public class UIEggLvPopup : UIBase
     //TODO : 광고넣기
     public void OnClickAdBtn()
     {
-        UIManager.Instance.ShowWarn("준비중 입니다!");
     }
 
     public void OnClickDiaBtn()
@@ -276,6 +274,7 @@ public class UIEggLvPopup : UIBase
 
     private void LvUp()
     {
+        StopAllCoroutines();
         SaveManager.Instance.SetFieldData(nameof(userData.startLvUpTime), null);
         SaveManager.Instance.SetFieldData(nameof(userData.eggLv), 1, true);    
         SetGaugeMode();
