@@ -16,8 +16,9 @@ public class SkillManager : Singleton<SkillManager>
     public List<UnityAction<Pixelmon, ActiveData, MyAtvData>> actionStorage = new List<UnityAction<Pixelmon, ActiveData, MyAtvData>>();
     private UnityAction<Pixelmon, ActiveData, MyAtvData> skillAction;
     public PixelmonLayout layout;
-    public float[] skillCoolTime = new float[5];
-
+    public float[] skillCoolTime;
+    public Pixelmon[] reStartInfo;
+    public Coroutine[] skillCoroutine;
     public DataManager dataManager;
     public SaveManager saveManager;
     protected override void Awake()
@@ -25,6 +26,8 @@ public class SkillManager : Singleton<SkillManager>
         base.Awake();
         dataManager = DataManager.Instance;
         saveManager = SaveManager.Instance;
+        skillCoolTime = new float[dataManager.activeData.data.Count];
+        skillCoroutine = new Coroutine[dataManager.activeData.data.Count];
     }
 
     // Start is called before the first frame update
@@ -42,53 +45,66 @@ public class SkillManager : Singleton<SkillManager>
             if (prefablst.Count > i && prefablst[i] != null)
                 SpawnSkill(i);
         }
+        
     }
 
     public void ExecuteSkill(Pixelmon pxm, int index)
     {
-        if (pxm.myData.atvSkillId != -1 && pxm.data.skillCoroutine == null)
+        if (pxm.myData.atvSkillId != -1 && skillCoroutine[pxm.myData.atvSkillId] == null)
         {
-            pxm.data.layoutIndex = index;
-            pxm.data.skillCoroutine = StartCoroutine(SkillAction(pxm, pxm.data.layoutIndex, pxm.data.id));
+            skillCoroutine[pxm.myData.atvSkillId] = StartCoroutine(SkillAction(pxm, index, pxm.myData.atvSkillId));
         }
     }
 
     public IEnumerator SkillAction(Pixelmon pxm, int index, int id)
     {
+        bool isExit = false;
         yield return new WaitUntil(() => pxm.fsm.target != null);
         ActiveData data = skillTab.allData[pxm.myData.atvSkillId].atvData;
         MyAtvData myData = skillTab.allData[pxm.myData.atvSkillId].myAtvData;
-        while (myData.isEquipped)
+        while (myData.isEquipped && Player.Instance.pixelmons[index] != null)
         {
-            yield return new WaitUntil(
-                () => pxm.fsm.target != null &&
-                pxm.fsm.currentState == pxm.fsm.AttackState ||
-                !myData.isEquipped);
-            if (!myData.isEquipped) break;
-            data.isCT = true;
-            actionStorage[data.id]?.Invoke(pxm, data, myData);
-            skillCoolTime[index] = data.coolTime;
-            while (0 <= skillCoolTime[index])
+            if (skillCoolTime[id] == 0)
             {
-                skillCoolTime[index] -= Time.deltaTime;
-                if (layout.timer[index] != null)
-                    layout.timer[index].fillAmount = skillCoolTime[index] / data.coolTime;
+                yield return new WaitUntil(
+                    () => pxm.fsm.target != null &&
+                    pxm.fsm.currentState == pxm.fsm.AttackState ||
+                    !myData.isEquipped);
+                if (!myData.isEquipped || Player.Instance.pixelmons[index] == null)
+                {
+                    layout.timer[index].fillAmount = 0;
+                    skillCoroutine[pxm.myData.atvSkillId] = null;
+                    break;
+                }
+                actionStorage[data.id]?.Invoke(pxm, data, myData);
+                data.isCT = true;
+                skillCoolTime[id] = data.coolTime;
+            }
+            while (0 <= skillCoolTime[id])
+            {
+                skillCoolTime[id] -= Time.deltaTime;  
+                layout.timer[index].fillAmount = skillCoolTime[id] / data.coolTime;
+                if (Player.Instance.pixelmons[index] != pxm)
+                {
+                    layout.timer[index].fillAmount = 0;
+                    skillCoroutine[pxm.myData.atvSkillId] = null;
+                    isExit = true;
+                }
                 yield return null;
             }
-            skillCoolTime[index] = 0;
+            skillCoolTime[id] = 0;
             data.isCT = false;
+            if (isExit)
+                break;
         }
-            pxm.data.skillCoroutine = null;
-        if (pxm.data.id != id)
-            ExecuteSkill(pxm, pxm.data.id);
+        data.isCT = false;
     }
-
 
     public void OnSkillAction(Pixelmon pxm, ActiveData atvData, MyAtvData myAtvData)
     {
-        var targets = pxm.fsm.Search(atvData.count);
-        if(targets.Count == 0) return;
-        for (int i = 0; i < atvData.count; i++)
+        var targets = pxm.fsm.Search(1);
+        if(targets.Count == 0 || pxm.myData.atvSkillId == -1) return;
+        for (int i = 0; i < 1; i++)
         {
             //프리팹 생성
             var skill = dicSkill[pxm.myData.atvSkillId][i];

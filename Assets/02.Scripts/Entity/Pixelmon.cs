@@ -10,7 +10,6 @@ public class Pixelmon : MonoBehaviour
     public PixelmonFSM fsm;
     public PixelmonStatus status = new PixelmonStatus();
     public SpriteRenderer spriteRenderer;
-
     private void Start()
     {
         fsm.InitStates();

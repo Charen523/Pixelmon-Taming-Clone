@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -80,8 +81,8 @@ public class PixelmonManager : Singleton<PixelmonManager>
         {
             if (userData.equippedPxms[i].isEquipped)
             {
-                
-                Equipped(i, userData.equippedPxms[i]); 
+                Equipped(i, userData.equippedPxms[i]);
+                SkillManager.Instance.ExecuteSkill(Player.Instance.pixelmons[i], i);
             }
         }
         //player.LocatedPixelmon();
@@ -96,9 +97,6 @@ public class PixelmonManager : Singleton<PixelmonManager>
         player.pixelmons[index].fsm.anim.runtimeAnimatorController = await ResourceManager.Instance.LoadAsset<RuntimeAnimatorController>(myData.rcode, eAddressableType.animator);
         player.pixelmons[index].InitPxm();
         player.LocatedPixelmon();
-        if(player.pixelmons[index].data.id != myData.id)
-            player.pixelmons[index].data.skillCoroutine = null;
-        SkillManager.Instance.ExecuteSkill(Player.Instance.pixelmons[index], index);
     }
 
     private void UnEquipped(int index)
@@ -106,7 +104,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
         if (player.pixelmons[index] == null) return; 
         player.pixelmons[index].fsm.InvokeAttack(false);
         player.pixelmons[index].gameObject.SetActive(false);
-        player.pixelmons[index]= null;
+        player.pixelmons[index] = null;
         player.LocatedPixelmon();
     }
 

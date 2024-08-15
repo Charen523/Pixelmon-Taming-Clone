@@ -209,7 +209,7 @@ public class PixelmonTab : UIBase
         }
 
         
-        if (GuideManager.Instance.guideNum == 4 && QuestManager.Instance.IsMyTurn(QuestType.Default) )
+        if (GuideManager.Instance.guideNum == 4)
         {
             QuestManager.Instance.OnQuestEvent();
         }
