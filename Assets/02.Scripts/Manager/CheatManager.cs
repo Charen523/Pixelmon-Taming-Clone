@@ -41,7 +41,6 @@ public class CheatManager : Singleton<CheatManager>
     private void QuestCheat()
     {
         QuestManager.Instance.curProgress = QuestManager.Instance.data.goal;
-        Debug.Log(QuestManager.Instance.curProgress);
     }
 #endif
 }
