@@ -191,6 +191,7 @@ public class UIPixelmonPopUp : UIBase
             saveManager.UpdatePixelmonData(myData.id, "ownEffectValue", myData.ownEffectValue);
             PixelmonManager.Instance.UpdatePlayerStat(data.lvHpRate, data.lvDefRate);
             SetOwnedEffect();
+            SetFoodCount();
             //Debug.Log("레벨 업!");
         }
         else
