@@ -64,7 +64,7 @@ public class EggHatch : MonoBehaviour
 
     private bool Gacha()
     {
-        if(userData.isDoneTutorial == false)
+        if (userData.isEggHatched == false)
         {
             HatchPxmData = DataManager.Instance.pixelmonData.data[0];
             Rank = (PixelmonRank)Enum.Parse(typeof(PixelmonRank), HatchPxmData.rank);
@@ -133,7 +133,12 @@ public class EggHatch : MonoBehaviour
 
     public void OnClickEgg(Button btn)
     {
-        if(UIManager.Get<Tutorial>() != null)
+        if ((userData.isEggHatched == true) && (userData.isDoneTutorial == false))
+        {
+            UIManager.Instance.ShowWarn("튜토리얼을 진행해주세요!");
+            return;
+        }
+        if (UIManager.Get<Tutorial>() != null)
             UIManager.Get<Tutorial>().HatchEgg();
 
         if (userData.eggCount > 0 || userData.isGetPxm == false)

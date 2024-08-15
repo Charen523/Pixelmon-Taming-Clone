@@ -15,6 +15,7 @@ public class UILoading : Singleton<UILoading>
     protected override void Awake()
     {
         base.Awake();
+        isUILoading = true;
         gameObject.SetActive(false);
 
         if (!Application.isPlaying) return;
