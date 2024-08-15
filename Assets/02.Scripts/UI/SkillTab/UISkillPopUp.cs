@@ -57,7 +57,7 @@ public class UISkillPopUp : UIBase
         skillTab.OnEquip(id);
         SetEquipTxt();
 
-        if (GuideManager.Instance.guideNum == 23 && QuestManager.Instance.IsMyTurn(QuestType.Default))
+        if (GuideManager.Instance.guideNum == 8 && QuestManager.Instance.IsMyTurn(QuestType.Default))
         {
             QuestManager.Instance.OnQuestEvent();
         }
