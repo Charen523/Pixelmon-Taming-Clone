@@ -199,11 +199,6 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator StartStage()
     {
-        if (questManager.IsMyTurn(QuestType.Stage))
-        {
-            questManager.OnQuestEvent();
-        }
-
         if (!isStgFade)
         {
             isStgFade = true;
@@ -227,6 +222,11 @@ public class StageManager : Singleton<StageManager>
                 isBossCleared = false;
                 yield return bossDieDone;
                 ResetSpawnedEnemy();
+
+                if (questManager.IsMyTurn(QuestType.Stage))
+                {
+                    questManager.OnQuestEvent();
+                }
 
                 stageFade.gameObject.SetActive(true);
                 yield return stageFade.FadeIn();
@@ -385,9 +385,9 @@ public class StageManager : Singleton<StageManager>
             dgBoss.DisableDgMonster();
             isDungeon = false;
             isDungeonClear = true;
-            if (dgIndex == 0 && QuestManager.Instance.IsMyTurn(QuestType.GoldDg))
+            if (dgIndex == 0 && GuideManager.Instance.guideNum == 10)
             {
-                QuestManager.Instance.OnQuestEvent();
+                questManager.OnQuestEvent();
             }
             return true;
         }

@@ -82,14 +82,14 @@ public class FarmTab : UIBase
 
     public bool PlantSeed()
     {
-        if (seedCount == 0)
+        if (seedCount < 5)
         {
             UIManager.Instance.ShowWarn("씨앗이 부족합니다!!");
             return false;
         }
         else
         {
-            saveManager.SetFieldData(nameof(saveManager.userData.seed), -1, true);
+            saveManager.SetFieldData(nameof(saveManager.userData.seed), -5, true);
             return true;
         }
     }

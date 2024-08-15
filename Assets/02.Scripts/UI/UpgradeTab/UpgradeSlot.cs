@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Numerics;
 using TMPro;
 using UnityEngine;
@@ -22,6 +23,7 @@ public abstract class UpgradeSlot : MonoBehaviour
     [HideInInspector] public UpgradeTab upgradeTab;
     [SerializeField] private UpgradeIndex slotIndex;
     [SerializeField] protected int maxLv;
+    
 
     [Header("Upgrade UI")]
     [SerializeField] private TextMeshProUGUI slotLevelTxt;
@@ -114,10 +116,11 @@ public abstract class UpgradeSlot : MonoBehaviour
             CurLv = nextLv;
             CurValue = nextValue;
 
-            if (slotIndex == 0 && QuestManager.Instance.IsMyTurn(QuestType.UpgradeAtk))
+            if (QuestManager.Instance.IsMyTurn(upgradeTab.questMapping[slotIndex]))
             {
                 QuestManager.Instance.OnQuestEvent();
             }
+
             SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.gold), -nextPrice, true);
 
             if (curUpgradeRate == 0)

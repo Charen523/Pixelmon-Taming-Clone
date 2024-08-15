@@ -12,12 +12,13 @@ public enum QuestType
     Boss,
     Stage,
     Egg,
+    Nest,
     UpgradeAtk,
+    UpgradeDmg,
     Skill,
     Feed,
     Seed,
-    Harvest,
-    GoldDg
+    Harvest
 }
 
 public class QuestManager : Singleton<QuestManager>
@@ -78,23 +79,7 @@ public class QuestManager : Singleton<QuestManager>
     private void SetQuestNameTxt()
     {
         string curDescription = data.description;
-
-        if (curType == QuestType.Stage)
-        {
-            int diff = curGoal / 10000;
-            string diffString = stageManager.SetDiffTxt(diff);
-            curDescription = curDescription.Replace("D", diffString);
-
-            int world = (curGoal / 100) % 100;
-            curDescription = curDescription.Replace("W", world.ToString());
-
-            int stage = curGoal % 100;
-            curDescription = curDescription.Replace("S", stage.ToString());
-        }
-        else
-        {
-            curDescription = curDescription.Replace("N", curGoal.ToString());
-        }
+        curDescription = curDescription.Replace("N", curGoal.ToString());
         questNameTxt.text = $"{questNum}. " + curDescription;
     }
 
@@ -102,20 +87,6 @@ public class QuestManager : Singleton<QuestManager>
     {
         int goal = curGoal;
         int progress = Mathf.Min(curProgress, goal);
-
-        if (curType == QuestType.Stage)
-        {
-            if (IsQuestClear())
-            {
-                progress = 1;
-                goal = 1;
-            }
-            else
-            {
-                progress = 0;
-                goal = 1;
-            }
-        }
         
         if (progress < goal)
         {
@@ -130,6 +101,7 @@ public class QuestManager : Singleton<QuestManager>
 
     private void SetRwdUI()
     {
+        rwdIcon.gameObject.SetActive(true);
         switch (data.rewardType)
         {
             case "RWD_Gold":
@@ -153,9 +125,17 @@ public class QuestManager : Singleton<QuestManager>
             case "RWD_Skill":
                 rwdIcon.sprite = rwdSprite[6];
                 break;
+            default:
+                rwdIcon.gameObject.SetActive(false);
+                rewardTxt.text = "";
+                curRwd = 0;
+                break;
         }
-        rewardTxt.text = data.rewardValue.ToString();
-        curRwd = data.rewardValue;
+        if (data.rewardType != "")
+        {
+            rewardTxt.text = data.rewardValue.ToString();
+            curRwd = data.rewardValue;
+        }
     }
 
     public void QuestClearBtn()
@@ -183,16 +163,15 @@ public class QuestManager : Singleton<QuestManager>
         curIndex = splitId[1];
         if (splitId[1][0] == 'R')
         {
-            int repNum = int.Parse(splitId[1][1..]);
-            questNum = (repeatCount - 1) * maxRepeatNum + repNum;
-            data = DataManager.Instance.GetData<QuestData>(repNum.ToString());
+            questNum = (repeatCount - 1) * maxRepeatNum + int.Parse(splitId[1][1..]) + 15;
         }
         else
         {
-            questNum = int.Parse(curIndex.Substring(1, curIndex.Length - 1));
-            data = DataManager.Instance.GetData<QuestData>(curIndex);
+            questNum = int.Parse(curIndex[1..]);
+            GuideManager.Instance.guideNum = questNum;
         }
 
+        data = DataManager.Instance.GetData<QuestData>(curIndex);
         curType = data.type;
         curGoal = data.goal;
         curProgress = userData.questProgress;
@@ -214,6 +193,7 @@ public class QuestManager : Singleton<QuestManager>
             {
                 int index = int.Parse(curIndex[1..]);
                 qNum = "Q" + (index + 1).ToString();
+                GuideManager.Instance.guideNum = index + 1;
             }
         }
         else if (int.Parse(curIndex[1..]) == maxRepeatNum)
@@ -252,11 +232,15 @@ public class QuestManager : Singleton<QuestManager>
             case QuestType.UserLv:
                 progress = userData.userLv;
                 break;
-            case QuestType.Stage:
-                progress = int.Parse(userData.curStage);
+            case QuestType.Nest:
+                //TODO: progress = ;
+                progress = 0;
                 break;
             case QuestType.UpgradeAtk:
                 progress = userData.UpgradeLvs[0];
+                break;
+            case QuestType.UpgradeDmg:
+                progress = userData.UpgradeLvs[1];
                 break;
             default:
                 progress = 0;
@@ -272,14 +256,17 @@ public class QuestManager : Singleton<QuestManager>
         int progress = curProgress;
         switch (curType)
         {
+            case QuestType.Default:
+                progress = 1;
+                break;
             case QuestType.UserLv:
                 progress = userData.userLv;
                 break;
-            case QuestType.Stage:
-                progress = int.Parse(userData.curStage);
-                break;
             case QuestType.UpgradeAtk:
                 progress = userData.UpgradeLvs[0];
+                break;
+            case QuestType.UpgradeDmg:
+                progress = userData.UpgradeLvs[1];
                 break;
             default:
                 progress++;
@@ -292,14 +279,7 @@ public class QuestManager : Singleton<QuestManager>
 
     private bool IsQuestClear()
     {
-        if (curType == QuestType.Stage)
-        {
-            return curProgress > curGoal;
-        }
-        else
-        {
-            return curProgress >= curGoal;
-        }
+        return curProgress >= curGoal;
     }
     #endregion
 
