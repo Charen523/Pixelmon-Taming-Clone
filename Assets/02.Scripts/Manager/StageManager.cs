@@ -118,7 +118,7 @@ public class StageManager : Singleton<StageManager>
         base.Awake();
 
         saveManager = SaveManager.Instance;
-        userData = saveManager.userData;   
+        userData = saveManager.userData;
         InitData();
     }
 
@@ -167,6 +167,7 @@ public class StageManager : Singleton<StageManager>
         }
         bottomBar = UIManager.Instance.parents[2].GetChild(0);
         CalculateBound();
+        questManager = QuestManager.Instance;//Stage가 Quest Instance 생성보다 먼저라 캐싱 시점을 미룸.
         InitStage();
     }
 
