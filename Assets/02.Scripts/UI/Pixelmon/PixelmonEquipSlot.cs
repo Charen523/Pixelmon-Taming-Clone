@@ -102,6 +102,10 @@ public class PixelmonEquipSlot : PixelmonSlot
         }
         else if (myPxmData == null && pxmtab.tabState == TabState.Equip)
         {
+            if (GuideManager.Instance.guideNum == 1 && QuestManager.Instance.IsMyTurn(QuestType.Default))
+            {
+                QuestManager.Instance.OnQuestEvent();
+            }
             pxmtab.EquipedPixelmon(slotIndex);
         }
         else if (pxmtab.tabState == TabState.Equip)

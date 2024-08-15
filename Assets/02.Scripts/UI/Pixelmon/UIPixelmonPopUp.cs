@@ -198,6 +198,11 @@ public class UIPixelmonPopUp : UIBase
             UIManager.Instance.ShowWarn("남은 먹이가 없습니다.");
             //Debug.Log("남은 먹이가 없습니다.");
         }
+
+        if (QuestManager.Instance.IsMyTurn(QuestType.Feed))
+        {
+            QuestManager.Instance.OnQuestEvent();
+        }
     }
 
     public void SetChangeBtn()
