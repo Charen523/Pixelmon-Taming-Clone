@@ -7,19 +7,22 @@ public class Singleton<T> : SerializedMonoBehaviour where T : MonoBehaviour
 {
     private static T instance;
     [Tooltip("씬 이동 시 : true 비파괴/ false 파괴")]
-    [SerializeField]
-    protected bool isDontDestroyOnLoad = true;
+    [SerializeField] protected bool isDontDestroyOnLoad = true;
+    protected static bool isUILoading = false;
     public static T Instance
     {
         get
         {
-            if (instance == null)
+            if (!isUILoading)
             {
-                instance = FindObjectOfType<T>();
                 if (instance == null)
                 {
-                    GameObject go = new GameObject(typeof(T).Name);
-                    instance = go.AddComponent<T>();
+                    instance = FindObjectOfType<T>();
+                    if (instance == null)
+                    {
+                        GameObject go = new GameObject(typeof(T).Name);
+                        instance = go.AddComponent<T>();
+                    }
                 }
             }
             return instance;
