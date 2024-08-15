@@ -25,7 +25,6 @@ public class PixelmonData : IData
     public Sprite icon;
     public Sprite bgIcon;
 
-    public int layoutIndex;
     public Coroutine skillCoroutine;
 
     string IData.Rcode => rcode;

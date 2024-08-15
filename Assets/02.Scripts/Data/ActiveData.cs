@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 
-
 [Serializable]
 public class ActiveData : IData
 {
@@ -15,7 +14,7 @@ public class ActiveData : IData
     public bool isCT;
     public float coolTime;
     public float maxRate;
-
+    
     public string prefabrcode;
     public int count = 1;
     public float range;
@@ -24,7 +23,6 @@ public class ActiveData : IData
     public int dataIndex;
     public Sprite icon;
     public Sprite bgIcon;
-
 
     public string Rcode => rcode;
 

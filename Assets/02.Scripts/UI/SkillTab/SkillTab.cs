@@ -147,7 +147,7 @@ public class SkillTab : UIBase, IPointerDownHandler
 
     public void InsertEquipSlot(int index, int id)
     {
-        equipData[index].EquipAction(allData[id].atvData, allData[id].myAtvData);
+        equipData[index].EquipAction(allData[id].atvData, allData[id].myAtvData, index);
     }
 
     public void ClearEquipSlot(int index)
