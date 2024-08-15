@@ -62,6 +62,56 @@ public class EggHatch : MonoBehaviour
         }
     }
 
+    public void OnClickEgg(Button btn)
+    {
+        if (UIManager.Get<Tutorial>() != null)
+        {
+            if (userData.isEggHatched == true){
+                UIManager.Instance.ShowWarn("튜토리얼을 진행해주세요!");
+                return;
+            }
+            else
+            {
+                UIManager.Get<Tutorial>().HatchEgg();
+            }
+        }           
+
+        if (userData.eggCount > 0 || userData.isGetPxm == false)
+            StartCoroutine(ClickEgg(btn));
+        else
+            UIManager.Instance.ShowWarn("알이 부족합니다!!");
+    }
+
+    public IEnumerator ClickEgg(Button btn)
+    {
+        if (userData.isEggHatched == false)
+        {
+            SaveManager.Instance.SetFieldData(nameof(userData.isEggHatched), true);
+            GuideManager.Instance.Locks[0].SetActive(false);
+            GuideManager.Instance.Locks[1].SetActive(false);
+        }
+
+        btn.interactable = false;
+        if (userData.isGetPxm)
+        {
+            SaveManager.Instance.SetFieldData(nameof(userData.eggCount), -1, true);
+            if (QuestManager.Instance.isHatchQ)
+            {
+                QuestManager.Instance.OnQuestEvent();
+            }
+            
+            Gacha();
+            yield return SetPxmHatchAnim();
+        }
+
+        isDoneGetPxm = false;
+
+        HatchResultPopup.SetActive(true);
+        HatchResultPopup.SetPopup(this);
+        btn.interactable = true;
+
+        yield return getPixelmon;      
+    }
     private bool Gacha()
     {
         if (userData.isEggHatched == false)
@@ -131,6 +181,7 @@ public class EggHatch : MonoBehaviour
         PsvData[0].NewPsvValue = randAbility.AbilityValue;
     }
 
+<<<<<<< Updated upstream
     public void OnClickEgg(Button btn)
     {
         if ((userData.isEggHatched == true) && (userData.isDoneTutorial == false))
@@ -177,6 +228,8 @@ public class EggHatch : MonoBehaviour
 
         yield return getPixelmon;      
     }
+=======
+>>>>>>> Stashed changes
 
     private IEnumerator SetPxmHatchAnim()
     {
