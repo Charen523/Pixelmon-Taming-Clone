@@ -14,9 +14,9 @@ public class DgMonster : MonoBehaviour
     private BigInteger maxHealth 
         => Calculater.CalPrice(dgLv, baseHealth, d1Health, d2Health);
     private BigInteger currentHealth;
-    private int baseHealth = 4000;
-    private int d1Health = 2000;
-    private int d2Health = 3000;
+    [SerializeField] private int baseHealth = 100;
+    [SerializeField] private int d1Health = 50;
+    [SerializeField] private int d2Health = 50;
 
     [SerializeField] private Slider hpSlider;
     [SerializeField] private TextMeshProUGUI hpTxt;
