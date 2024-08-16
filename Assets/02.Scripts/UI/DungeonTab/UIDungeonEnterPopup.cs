@@ -101,6 +101,7 @@ public class UIDungeonEnterPopup : UIBase
                 case DungeonType.Skill:
                     break;
             }
+            keyValue.text = dungeonTab.GetKeyString((int)type);
         }
     }
 }

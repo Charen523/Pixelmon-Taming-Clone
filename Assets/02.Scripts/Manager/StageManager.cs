@@ -261,6 +261,7 @@ public class StageManager : Singleton<StageManager>
             yield return proceedDgStg;
 
             allFade.gameObject.SetActive(true);
+            yield return new WaitForSeconds(3f);
             yield return allFade.FadeIn();
             isStgFade = false;
 
