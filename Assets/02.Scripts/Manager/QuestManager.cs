@@ -166,7 +166,7 @@ public class QuestManager : Singleton<QuestManager>
         curIndex = splitId[1];
         if (splitId[1][0] == 'R')
         {
-            questNum = (repeatCount - 1) * maxRepeatNum + int.Parse(splitId[1][1..]) + 15;
+            questNum = (repeatCount - 1) * maxRepeatNum + int.Parse(splitId[1][1..]) + 56;
         }
         else
         {
