@@ -65,7 +65,11 @@ public class QuestManager : Singleton<QuestManager>
         QuestEvent += UpdateProgress;
         GetQuestIndex();
         SetQuestUI();
-        Firebase.Analytics.FirebaseAnalytics.LogEvent($"Start_QuestIndex_{questNum}");
+        Firebase.Analytics.FirebaseAnalytics.LogEvent("1_LogTest_1");
+        Firebase.Analytics.FirebaseAnalytics.LogEvent($"2_Start_QuestIndex_{questNum}");
+        Firebase.Analytics.FirebaseAnalytics.LogEvent(questNum.ToString());
+        Firebase.Analytics.FirebaseAnalytics.LogEvent(string.Format("4_StartQIndex{0}", questNum));
+        Firebase.Analytics.FirebaseAnalytics.LogEvent("5");
     }
     
     #region UI
