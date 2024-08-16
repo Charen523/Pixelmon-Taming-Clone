@@ -14,9 +14,9 @@ public class DgMonster : MonoBehaviour
     private BigInteger maxHealth 
         => Calculater.CalPrice(dgLv, baseHealth, d1Health, d2Health);
     private BigInteger currentHealth;
-    private int baseHealth = 1000;
-    private int d1Health = 4000;
-    private int d2Health = 5000;
+    private int baseHealth = 4000;
+    private int d1Health = 2000;
+    private int d2Health = 3000;
 
     [SerializeField] private Slider hpSlider;
     [SerializeField] private TextMeshProUGUI hpTxt;
@@ -50,6 +50,7 @@ public class DgMonster : MonoBehaviour
 
         hpSlider = StageManager.Instance.GetBossSlider();
         hpTxt = StageManager.Instance.GetBossHpText();
+        currentHealth = maxHealth;
         StartCoroutine(bossHealthSlider());
     }
 
