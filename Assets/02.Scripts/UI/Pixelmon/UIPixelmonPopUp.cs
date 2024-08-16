@@ -183,6 +183,7 @@ public class UIPixelmonPopUp : UIBase
             lvTxt.text = string.Format($"{myData.lv}/50");
             pxmTab.allData[myData.id].SetPxmLv();
             myData.PxmLvUp();
+            pxmTab.allData[infoIndex].SetPxmLv();
             SetStartEffect();
             PixelmonManager.Instance.ApplyStatus(data, myData);
 
@@ -191,6 +192,7 @@ public class UIPixelmonPopUp : UIBase
             saveManager.UpdatePixelmonData(myData.id, "ownEffectValue", myData.ownEffectValue);
             PixelmonManager.Instance.UpdatePlayerStat(data.lvHpRate, data.lvDefRate);
             SetOwnedEffect();
+            pxmTab.SetfoodCount();
             SetFoodCount();
             //Debug.Log("레벨 업!");
         }

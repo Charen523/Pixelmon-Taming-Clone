@@ -71,6 +71,7 @@ public class PixelmonTab : UIBase
     private void OnEnable()
     {
         StartCheckTutorial();
+        SetfoodCount();
     }
 
     public void StartCheckTutorial()
