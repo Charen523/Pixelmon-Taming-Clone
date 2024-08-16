@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class PixelmonStatHandler
@@ -135,21 +136,7 @@ public static class PixelmonStatHandler
         }
         else
         {
-            PsvSkill newSkill = new PsvSkill();
-            BasePsvData basePsvData;
-            do
-            {
-                basePsvData = RandAbilityUtil.RandAilityData();
-            }
-            while (PsvOverlapCheck(myData, basePsvData));
-
-            var randAbility = RandAbilityUtil.PerformAbilityGacha((AbilityType)basePsvData.psvEnum, basePsvData.maxRate);
-            newSkill.psvType = (AbilityType)basePsvData.psvEnum;
-            newSkill.psvName = basePsvData.rcode;
-            newSkill.psvRank = randAbility.AbilityRank;
-            newSkill.psvValue = randAbility.AbilityValue;
-            myData.psvSkill.Add(newSkill);
-
+            myData.psvSkill.Add(RandomPsv(myData.psvSkill));
             foreach (var pxm in Player.Instance.pixelmons)
             {
                 if (pxm != null && pxm.myData != null && pxm.myData.id == myData.id)
@@ -158,16 +145,61 @@ public static class PixelmonStatHandler
                     break;
                 }
             }
-
             SaveManager.Instance.UpdatePixelmonData(myData.id, nameof(myData.psvSkill), myData.psvSkill);
         }
     }
 
-    public static bool PsvOverlapCheck(MyPixelmonData myData, BasePsvData psvData)
+    public static void PsvRoulette(this MyPixelmonData myData, bool[] isLocked)
     {
+        List<PsvSkill> originPsv = new List<PsvSkill>();
         for (int i = 0; i < myData.psvSkill.Count; i++)
         {
-            if (psvData.rcode == myData.psvSkill[i].psvName)
+            if (!isLocked[i])
+            {
+                originPsv.Add(myData.psvSkill[i]);
+            }
+        }
+        List<PsvSkill> newSkill = new List<PsvSkill>();
+        newSkill.Capacity = 5;
+        for (int i = 0; i < myData.psvSkill.Count; i++) 
+        {
+            if (!isLocked[i])
+            {
+                newSkill[i] = RandomPsv(originPsv);
+            }
+            else
+            {
+                newSkill[i] = myData.psvSkill[i];
+            }
+        }
+        myData.psvSkill = newSkill.ToList();
+        SaveManager.Instance.UpdatePixelmonData(myData.id, nameof(myData.psvSkill), myData.psvSkill);
+    }
+
+
+    public static PsvSkill RandomPsv(List<PsvSkill> psvList)
+    {
+        PsvSkill newSkill = new PsvSkill();
+        BasePsvData basePsvData;
+        do
+        {
+            basePsvData = RandAbilityUtil.RandAilityData();
+        }
+        while (PsvOverlapCheck(psvList, basePsvData));
+
+        var randAbility = RandAbilityUtil.PerformAbilityGacha((AbilityType)basePsvData.psvEnum, basePsvData.maxRate);
+        newSkill.psvType = (AbilityType)basePsvData.psvEnum;
+        newSkill.psvName = basePsvData.rcode;
+        newSkill.psvRank = randAbility.AbilityRank;
+        newSkill.psvValue = randAbility.AbilityValue;
+        return newSkill;
+    }
+
+    public static bool PsvOverlapCheck(List<PsvSkill> psvList, BasePsvData psvData)
+    {
+        for (int i = 0; i < psvList.Count; i++)
+        {
+            if (psvData.rcode == psvList[i].psvName)
             {
                 return true;
             }
@@ -178,6 +210,7 @@ public static class PixelmonStatHandler
 
     public static List<PsvSkill> PxmPsvEffect(this PixelmonStatus status, MyPixelmonData myData, bool[] isLocked)
     {
+
         List<PsvSkill> newSkills = new List<PsvSkill>();
         for (int i = 0; i < myData.psvSkill.Count; i++)
         {

@@ -148,6 +148,7 @@ public class SkillTab : UIBase, IPointerDownHandler
     public void InsertEquipSlot(int index, int id)
     {
         equipData[index].EquipAction(allData[id].atvData, allData[id].myAtvData, index);
+        allData[id].SetEquipTxt();
     }
 
     public void ClearEquipSlot(int index)
@@ -162,7 +163,6 @@ public class SkillTab : UIBase, IPointerDownHandler
         saveManager.UpdateSkillData(allData[skillId].atvData.dataIndex, "isEquipped", allData[skillId].myAtvData.isEquipped);
         pxmData.myPxmData.atvSkillId = -1;
         saveManager.UpdatePixelmonData(pxmId, nameof(pxmData.myPxmData.atvSkillId), pxmData.myPxmData.atvSkillId);
-
         allData[skillId].myAtvData.isAttached = false;
         saveManager.UpdateSkillData(allData[skillId].atvData.dataIndex, "isAttached", allData[skillId].myAtvData.isAttached);
         allData[skillId].myAtvData.pxmId = -1;
