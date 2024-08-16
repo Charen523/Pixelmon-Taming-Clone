@@ -10,8 +10,6 @@ public class SkillSlot : MonoBehaviour
     public SkillTab skillTab;
     public ActiveData atvData;
     public MyAtvData myAtvData;
-    DataManager dataManager;
-
 
     #region 슬롯정보
     [SerializeField] protected int slotIndex;
@@ -29,7 +27,8 @@ public class SkillSlot : MonoBehaviour
     #region UI
     public TextMeshProUGUI skillRankTxt;
     [SerializeField] private GameObject lockIcon;
-    [SerializeField] private GameObject equipIcon;
+    [SerializeField] private TextMeshProUGUI equipIcon;
+    [SerializeField] private TMP_ColorGradient[] equipGradient;
     [SerializeField] protected TextMeshProUGUI skillLv;
     [SerializeField] private Slider evolveSldr;
     [SerializeField] private Image evolveBarImg;
@@ -39,7 +38,6 @@ public class SkillSlot : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        dataManager = DataManager.Instance;
         if(slotBtn != null )
             slotBtn.onClick.AddListener(() => { OnClick(); });
     }
@@ -51,14 +49,14 @@ public class SkillSlot : MonoBehaviour
 
     public void EquipAction()
     {
-        equipIcon.SetActive(true);
+        equipIcon.gameObject.SetActive(true);
         myAtvData.isEquipped = true;
     }
 
     public void UnEquipAction()
     {
         myAtvData.isEquipped = false;
-        equipIcon.SetActive(false);
+        equipIcon.gameObject.SetActive(false);
     }
 
     public void InitSlot(SkillTab tab, ActiveData data)
@@ -105,8 +103,16 @@ public class SkillSlot : MonoBehaviour
 
     public void SetEquipTxt()
     {
-        if(myAtvData.isAttached)
+        if (myAtvData.isEquipped)
+        {
             equipIcon.gameObject.SetActive(true);
+            equipIcon.colorGradientPreset = equipGradient[0];
+        }
+        else if (myAtvData.isAttached)
+        {
+            equipIcon.gameObject.SetActive(true);
+            equipIcon.colorGradientPreset = equipGradient[1];
+        }
         else equipIcon.gameObject.SetActive(false);
     }
 

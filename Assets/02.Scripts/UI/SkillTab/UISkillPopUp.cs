@@ -56,5 +56,6 @@ public class UISkillPopUp : UIBase
     {
         skillTab.OnEquip(id);
         SetEquipTxt();
+        gameObject.SetActive(false);
     }
 }

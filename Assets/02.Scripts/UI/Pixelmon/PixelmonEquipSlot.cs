@@ -9,8 +9,10 @@ using UnityEngine.UI;
 
 public class PixelmonEquipSlot : PixelmonSlot
 {
-    public Player player;
-    public PixelmonManager pxmManager;
+    public Player player => Player.Instance;
+    public PixelmonManager pxmManager => PixelmonManager.Instance;
+    public SkillManager skillManager => SkillManager.Instance;
+    public UIManager uiManager => UIManager.Instance;
     public SaveManager saveManager;
     public bool isLocked = true;
     public Image stateIcon;
@@ -21,8 +23,6 @@ public class PixelmonEquipSlot : PixelmonSlot
 
     private void Start()
     {
-        player = Player.Instance;
-        pxmManager = PixelmonManager.Instance;
         slotBtn.onClick.AddListener(OnClick);
         ChangedInfo();      
     }
@@ -69,11 +69,12 @@ public class PixelmonEquipSlot : PixelmonSlot
     {
         if (myPxmData.atvSkillId != -1)
         {
-            SkillManager.Instance.skillTab.equipData[slotIndex].myAtvData.isEquipped = false;
+            skillManager.skillTab.equipData[slotIndex].myAtvData.isEquipped = false;
             saveManager.UpdateSkillData(
-                SkillManager.Instance.skillTab.equipData[slotIndex].atvData.dataIndex,
-                "isEquipped", SkillManager.Instance.skillTab.equipData[slotIndex].myAtvData.isEquipped);
-            SkillManager.Instance.skillTab.equipData[slotIndex].SetEquipSlot();
+                skillManager.skillTab.equipData[slotIndex].atvData.dataIndex,
+                "isEquipped", skillManager.skillTab.equipData[slotIndex].myAtvData.isEquipped);
+            skillManager.skillTab.equipData[slotIndex].SetEquipSlot();
+            skillManager.skillTab.allData[myPxmData.atvSkillId].SetEquipTxt();
         }
         pxmData = null;
         myPxmData = null;
@@ -97,7 +98,7 @@ public class PixelmonEquipSlot : PixelmonSlot
 
         if (myPxmData == null && pxmtab.tabState != TabState.Equip)
         {
-            UIManager.Instance.ShowWarn("슬롯이 비어있습니다!");
+            uiManager.ShowWarn("슬롯이 비어있습니다!");
             return;
         }
         else if (myPxmData == null && pxmtab.tabState == TabState.Equip)
@@ -125,13 +126,13 @@ public class PixelmonEquipSlot : PixelmonSlot
         switch (slotIndex)
         {
             case 2:
-                UIManager.Instance.ShowWarn("유저 레벨 5Lv에 해금");
+                uiManager.ShowWarn("유저 레벨 5Lv에 해금");
                 return;
             case 3:
-                UIManager.Instance.ShowWarn("유저 레벨 10Lv에 해금");
+                uiManager.ShowWarn("유저 레벨 10Lv에 해금");
                 return;
             case 4:
-                UIManager.Instance.ShowWarn("유저 레벨 30Lv에 해금");
+                uiManager.ShowWarn("유저 레벨 30Lv에 해금");
                 return;
             default:
                 return;
