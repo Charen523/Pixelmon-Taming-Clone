@@ -84,10 +84,10 @@ public class SkillManager : Singleton<SkillManager>
             {
                 skillCoolTime[id] -= Time.deltaTime;  
                 layout.timer[index].fillAmount = skillCoolTime[id] / data.coolTime;
-                if (Player.Instance.pixelmons[index] != pxm)
+                if (Player.Instance.pixelmons[index] != pxm || Player.Instance.pixelmons[index] != null && Player.Instance.pixelmons[index].myData.atvSkillId != id)
                 {
                     layout.timer[index].fillAmount = 0;
-                    skillCoroutine[pxm.myData.atvSkillId] = null;
+                    skillCoroutine[id] = null;
                     isExit = true;
                 }
                 yield return null;
@@ -98,6 +98,7 @@ public class SkillManager : Singleton<SkillManager>
                 break;
         }
         data.isCT = false;
+        skillCoroutine[id] = null;
     }
 
     public void OnSkillAction(Pixelmon pxm, ActiveData atvData, MyAtvData myAtvData)
