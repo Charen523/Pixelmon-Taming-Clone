@@ -20,6 +20,7 @@ public class DgMonster : MonoBehaviour
 
     [SerializeField] private Slider hpSlider;
     [SerializeField] private TextMeshProUGUI hpTxt;
+    [SerializeField] private Animator anim;
 
     private int goldRwdBNum = 100000;
     private int goldRwdD1 = 300000;
@@ -111,7 +112,8 @@ public class DgMonster : MonoBehaviour
 
     public IEnumerator KillDgMonster()
     {
-        yield return new WaitForSeconds(1f);
+        anim.SetTrigger("dgEnd");
+        yield return new WaitForSeconds(3f);
         if (StageManager.Instance.isDungeonClear)
         {
             SaveCurLv();
