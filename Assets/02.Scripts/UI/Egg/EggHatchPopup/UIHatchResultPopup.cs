@@ -190,6 +190,7 @@ public class UIHatchResultPopup : UIBase
             });
         }
         SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "psvSkill", newPsvs);
+        SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "evolvedCount", ++userData.ownedPxms[eggHatch.HatchPxmData.id].evolvedCount);
         PixelmonManager.Instance.ApplyStatus(PixelmonManager.Instance.pxmTab.allData[eggHatch.HatchPxmData.id].pxmData, PixelmonManager.Instance.pxmTab.allData[eggHatch.HatchPxmData.id].myPxmData);
     }
 }
