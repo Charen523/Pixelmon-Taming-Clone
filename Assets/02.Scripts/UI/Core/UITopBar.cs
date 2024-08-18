@@ -21,9 +21,9 @@ public class UITopBar : UIBase
     #endregion
 
     #region Data Fields
-    [SerializeField] private int bNum = 1000;
-    [SerializeField] private int d1 = 1000;
-    [SerializeField] private int d2 = 500;
+    private int bNum = 10000;
+    private int d1 = 50000;
+    private int d2 = 10000;
 
     private BigInteger currentExp => saveManager.userData.userExp; 
     private BigInteger tempMaxExp => Calculater.CalPrice(userData.userLv, bNum, d1, d2); //임시 변수
