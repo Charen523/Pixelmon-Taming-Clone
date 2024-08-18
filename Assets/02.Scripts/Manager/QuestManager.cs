@@ -200,6 +200,7 @@ public class QuestManager : Singleton<QuestManager>
                 int index = int.Parse(curIndex[1..]);
                 qNum = "Q" + (++index).ToString();
                 guideManager.guideNum = index;
+                guideManager.GuideNumTrigger(index);
                 guideManager.SetBottomLock();
             }
         }
