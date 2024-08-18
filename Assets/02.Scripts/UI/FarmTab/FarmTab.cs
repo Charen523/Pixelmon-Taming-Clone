@@ -60,6 +60,17 @@ public class FarmTab : UIBase
         i++;
     }
 
+    private void OnDisable()
+    {
+        for (int i = 0; i < fieldSlots.Length; i++)
+        {
+            if (fieldSlots[i].GetFoodObj.activeSelf)
+            {
+                fieldSlots[i].GetFoodObj.SetActive(false);
+            }
+        }
+    }
+
     private void UpdateFieldUI(DirtyUI dirtyUI)
     {
         switch (dirtyUI)
@@ -91,37 +102,6 @@ public class FarmTab : UIBase
         {
             saveManager.SetFieldData(nameof(saveManager.userData.seed), -5, true);
             return true;
-        }
-    }
-
-    public void HarvestYield(int yield)
-    {
-        if (yield == 4)
-        {
-            saveManager.SetFieldData(nameof(saveManager.userData.food), 100, true);
-            return;
-        }
-
-        yield = yield switch
-        {
-            1 => 2,
-            2 => 4,
-            3 => 7,
-            _ => 0
-        };
-
-        int randNum = Random.Range(0, 100);
-        if (randNum < 40)
-        {
-            saveManager.SetFieldData(nameof(saveManager.userData.food), yield * 3, true);
-        }
-        else if (randNum < 75)
-        {
-            saveManager.SetFieldData(nameof(saveManager.userData.food), yield * 5, true);
-        }
-        else
-        {
-            saveManager.SetFieldData(nameof(saveManager.userData.food), yield * 8, true);
         }
     }
 

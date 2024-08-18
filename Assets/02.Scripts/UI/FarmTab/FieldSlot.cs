@@ -42,6 +42,9 @@ public class FieldSlot : MonoBehaviour
     [SerializeField] private Slider timeSldr;
     [SerializeField] private TextMeshProUGUI timeTxt;
     [SerializeField] private TextMeshProUGUI priceTxt;
+
+    public GameObject GetFoodObj;
+    [SerializeField] private TextMeshProUGUI harvestTxt;
     #endregion
 
     Coroutine growingCoroutine;
@@ -159,20 +162,8 @@ public class FieldSlot : MonoBehaviour
 
     public void OnHarvestBtn()
     {
-        int yield = 0;
-        switch (fieldData.cropClass)
-        {
-            case 1:
-                yield = 1;
-                break;
-            case 2:
-                yield = 3;
-                break;
-            case 3:
-                yield = 10;
-                break;
-        }
-        farmTab.HarvestYield(yield);
+        HarvestYield(fieldData.cropClass);
+        GetFoodObj.SetActive(true);
         CurrentFieldState = FieldState.Empty;
         farmTab.SaveFarmData();
 
@@ -253,5 +244,41 @@ public class FieldSlot : MonoBehaviour
         {
             fieldData.currentFieldState = FieldState.Harvest;
         }
+    }
+
+    public void HarvestYield(int yield)
+    {
+        if (yield == 4)
+        {
+            saveManager.SetFieldData(nameof(saveManager.userData.food), 100, true);
+            harvestTxt.text = "x100";
+            return;
+        }
+
+        yield = yield switch
+        {
+            1 => 2,
+            2 => 4,
+            3 => 7,
+            _ => 0
+        };
+
+        int randNum = UnityEngine.Random.Range(0, 100);
+        if (randNum < 40)
+        {
+            yield *= 3;
+            saveManager.SetFieldData(nameof(saveManager.userData.food), yield, true);
+        }
+        else if (randNum < 75)
+        {
+            yield *= 5;
+            saveManager.SetFieldData(nameof(saveManager.userData.food), yield, true);
+        }
+        else
+        {
+            yield *= 8;
+            saveManager.SetFieldData(nameof(saveManager.userData.food), yield, true);
+        }
+        harvestTxt.text = "x" + yield;
     }
 }
