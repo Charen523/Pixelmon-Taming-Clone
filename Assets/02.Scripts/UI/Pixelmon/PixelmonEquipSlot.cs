@@ -1,10 +1,3 @@
-using DG.Tweening.Core.Easing;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
-using Unity.VisualScripting;
-using UnityEngine;
 using UnityEngine.UI;
 
 public class PixelmonEquipSlot : PixelmonSlot
@@ -103,7 +96,7 @@ public class PixelmonEquipSlot : PixelmonSlot
         }
         else if (myPxmData == null && pxmtab.tabState == TabState.Equip)
         {
-            if (GuideManager.Instance.guideNum == 1)
+            if (GuideManager.Instance.guideNum == GuideManager.Instance.equipPixelmon)
             {
                 QuestManager.Instance.OnQuestEvent();
             }

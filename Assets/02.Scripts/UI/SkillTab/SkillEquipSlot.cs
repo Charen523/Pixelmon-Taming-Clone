@@ -59,7 +59,7 @@ public class SkillEquipSlot : MonoBehaviour
             EquipAction(skillTab.allData[skillTab.choiceId].atvData, skillTab.allData[skillTab.choiceId].myAtvData, slotIndex);
             skillTab.OnCancelEquip();
 
-            if (GuideManager.Instance.guideNum == 23)
+            if (GuideManager.Instance.guideNum == GuideManager.Instance.skillEquip)
             {
                 QuestManager.Instance.OnQuestEvent();
             }

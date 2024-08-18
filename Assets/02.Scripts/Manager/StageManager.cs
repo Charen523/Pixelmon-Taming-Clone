@@ -375,7 +375,7 @@ public class StageManager : Singleton<StageManager>
             isDungeon = false;
             isDungeonClear = true;
             dgBoss.DisableDgMonster();
-            if (dgIndex == 0 && GuideManager.Instance.guideNum == 51)
+            if (dgIndex == 0 && GuideManager.Instance.guideNum == GuideManager.Instance.goldDg)
             {
                 questManager.OnQuestEvent();
             }
