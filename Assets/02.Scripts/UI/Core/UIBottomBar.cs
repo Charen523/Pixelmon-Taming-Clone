@@ -1,4 +1,3 @@
-using DG.Tweening.Core.Easing;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -44,27 +43,25 @@ public class UIBottomBar : MonoBehaviour
                 switch (index)
                 {
                     case 0:
-                        msg = "해금조건: 첫 알뽑기";
-                        UIManager.Instance.ShowWarn(msg);
                         return;
                     case 1:
-                        msg = "해금조건: 첫 알뽑기";
+                        msg = "해금조건: 퀘스트8 클리어";
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     case 2:
-                        msg = "해금조건: 쉬움 1 - 2 클리어";
+                        msg = "해금조건: 퀘스트20 클리어";
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     case 3:
-                        msg = "해금조건: 쉬움 1 - 4 클리어";
+                        msg = "해금조건: 퀘스트34 클리어";
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     case 4:
-                        msg = "해금조건: 쉬움 1 - 6 클리어";
+                        msg = "해금조건: 퀘스트50 클리어";
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     case 5:
-                        msg = "해금조건: 쉬움 1 - 2 클리어";
+                        msg = "해금조건: 퀘스트20 클리어";
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     default:
