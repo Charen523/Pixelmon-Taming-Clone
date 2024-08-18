@@ -49,10 +49,15 @@ public class RewardManager : Singleton<RewardManager>
         switch (itemName)
         {
             case nameof(userData.gold):
-            case nameof(userData.userExp):
                 BigInteger amount1 = _amount;
                 amount1 *= (stageCount * 105 / 100);
                 SaveManager.Instance.SetFieldData(itemName, amount1, true);
+                break;
+            case nameof(userData.userExp):
+                amount1 = _amount;
+                amount1 *= ((stageCount - 1) * 5 + 100) / 100;
+                SaveManager.Instance.SetFieldData(itemName, amount1, true);
+                
                 break;
             default:
                 int amount3 = _amount;
