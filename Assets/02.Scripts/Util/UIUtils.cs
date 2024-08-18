@@ -35,15 +35,15 @@ public static class UIUtils
         slider.value = endValue;
     }
 
-    public static string TranslateRank(this PixelmonRank rank)
+    public static string TranslateRank(this PxmRank rank)
     {
         switch (rank)
         {
-            case PixelmonRank.Common: return "일반";
-            case PixelmonRank.Advanced: return "고급";
-            case PixelmonRank.Rare: return "희귀";
-            case PixelmonRank.Epic: return "영웅";
-            case PixelmonRank.Legendary: return "전설";
+            case PxmRank.Common: return "일반";
+            case PxmRank.Advanced: return "고급";
+            case PxmRank.Rare: return "희귀";
+            case PxmRank.Epic: return "영웅";
+            case PxmRank.Legendary: return "전설";
         }
         return null;
     }

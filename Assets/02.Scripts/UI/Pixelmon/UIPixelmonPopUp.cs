@@ -104,7 +104,7 @@ public class UIPixelmonPopUp : UIBase
 
     private void InitInfo()
     {
-        var rank = (PixelmonRank)SetRankSprite(data.rank);
+        var rank = (PxmRank)SetRankSprite(data.rank);
         rankTxt.text = rank.TranslateRank();
         rankIcon.sprite = rankSprites[SetRankSprite(data.rank)];
         pxmNameTxt.text = data.name;
