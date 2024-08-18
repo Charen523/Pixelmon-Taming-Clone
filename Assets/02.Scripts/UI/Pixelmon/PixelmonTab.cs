@@ -210,7 +210,7 @@ public class PixelmonTab : UIBase
         }
 
         
-        if (GuideManager.Instance.guideNum == 4)
+        if (GuideManager.Instance.guideNum == 3)
         {
             QuestManager.Instance.OnQuestEvent();
         }
