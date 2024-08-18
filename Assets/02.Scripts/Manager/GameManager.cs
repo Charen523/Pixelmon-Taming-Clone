@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private GameObject DataLoadWarningPopup;
+    [SerializeField] private GameObject exitPanel;
     public static bool isInit;
 
     public event Action<Enemy> OnEnemyDie;
@@ -22,6 +25,7 @@ public class GameManager : Singleton<GameManager>
     public void OnInit()
     {
         StartCoroutine(OnManagerInit());
+        StartCoroutine(OnBackButtonPressed());
     }
 
     public IEnumerator OnManagerInit()
@@ -47,6 +51,16 @@ public class GameManager : Singleton<GameManager>
         if (!result) // 데이터 로드 실패
         {
             DataLoadWarningPopup.SetActive(true);
+        }
+    }
+
+    private IEnumerator OnBackButtonPressed()
+    {
+        while (true)
+        {
+            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Escape));
+            Task showPanelTask = UIManager.Show<GameExitPanel>();
+            while (!showPanelTask.IsCompleted) yield return null;
         }
     }
 
