@@ -1,7 +1,3 @@
-using DG.Tweening.Core.Easing;
-using System;
-using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public enum OpenTabType
@@ -10,6 +6,7 @@ public enum OpenTabType
     Farm,
     Dungeon
 }
+
 public class GuideManager : Singleton<GuideManager>
 {
     public GameObject[] Locks;
