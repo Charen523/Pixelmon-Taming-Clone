@@ -26,6 +26,7 @@ public class DgMonster : MonoBehaviour
     private int goldRwdBNum = 100000;
     private int goldRwdD1 = 300000;
     private int goldRwdD2 = 100000;
+    BigInteger myReward => Calculater.CalPrice(dgLv - 1, goldRwdBNum, goldRwdD1, goldRwdD2);
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -83,7 +84,6 @@ public class DgMonster : MonoBehaviour
         dgLvs[dgIndex] = dgLv;
         SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.bestDgLvs), dgLvs);
         
-        BigInteger myReward = Calculater.CalPrice(dgLv - 1, goldRwdBNum, goldRwdD1, goldRwdD2);
         SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.gold), myReward, true);
     }
 
@@ -114,16 +114,22 @@ public class DgMonster : MonoBehaviour
 
     public IEnumerator KillDgMonster()
     {
-        anim.SetTrigger("dgEnd");
         coll.enabled = false;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1);
         if (StageManager.Instance.isDungeonClear)
         {
+            anim.SetTrigger("dgEnd");
             SaveCurLv();
+            yield return new WaitForSeconds(3f);
             StageManager.Instance.isDungeonClear = false;
         }
         dgProgress.SetActive(false);
         coll.enabled = true;
         Destroy(gameObject);
+    }
+
+    public async void ShowRwdPopup()
+    {
+        await UIManager.Show<UIDgResultPopup>(myReward);
     }
 }
