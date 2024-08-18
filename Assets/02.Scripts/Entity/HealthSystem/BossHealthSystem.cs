@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Numerics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,8 +10,8 @@ public class BossHealthSystem : MonoBehaviour
     [SerializeField] private Slider bossHpBar;
     [SerializeField] private TextMeshProUGUI bossHpTxt;
 
-    [SerializeField] private float currentHealth => enemy.healthSystem.currentHealth;
-    [SerializeField] private float maxHealth => enemy.healthSystem.maxHealth;
+    [SerializeField] private BigInteger currentHealth => enemy.healthSystem.currentHealth;
+    [SerializeField] private BigInteger maxHealth => enemy.healthSystem.maxHealth;
 
     Coroutine bossCoroutine;
 
@@ -25,7 +26,7 @@ public class BossHealthSystem : MonoBehaviour
     {
         while(true)
         {
-            bossHpBar.value = currentHealth / maxHealth;
+            bossHpBar.value = (float)(currentHealth / maxHealth);
             bossHpTxt.text = ((int)(bossHpBar.value * 100)).ToString() + "%";
 
             if (currentHealth <= 0)

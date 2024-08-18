@@ -1,13 +1,14 @@
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 public class ProjectileController : SerializedMonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
 
-    public float projectileDamage;
+    public BigInteger projectileDamage;
     public bool isCri;
 
     private Vector2 startPosition;
@@ -40,7 +41,7 @@ public class ProjectileController : SerializedMonoBehaviour
     }
 
     //Invoke쪽에서 전달해야 할 변수들.
-    public void GetAttackSign(Vector3 startPos, Vector2 direction, float damage, bool isCritical ,float bulletRange, float speed)
+    public void GetAttackSign(Vector3 startPos, Vector2 direction, BigInteger damage, bool isCritical ,float bulletRange, float speed)
     {
         startPosition = startPos; //날아가기 시작하는 지점.
         shootDirection = direction; //날아갈 방향.

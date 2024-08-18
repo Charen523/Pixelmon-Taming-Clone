@@ -55,10 +55,11 @@ public class DgMonster : MonoBehaviour
         StartCoroutine(bossHealthSlider());
     }
 
-    private void TakeDamage(float delta)
+    private void TakeDamage(BigInteger delta)
     {
-        BigInteger damage = (BigInteger)Mathf.Max(0, delta);
-        PoolManager.Instance.SpawnFromPool<DamageText>("TXT00001").ShowDamageText((int)damage, gameObject.transform.position);
+        BigInteger damage = 0;
+        if (delta > 0) damage = delta;
+        PoolManager.Instance.SpawnFromPool<DamageText>("TXT00001").ShowDamageText(damage, gameObject.transform.position);
         currentHealth -= damage;
 
         while (damage > 0)

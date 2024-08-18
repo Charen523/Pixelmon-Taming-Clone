@@ -1,3 +1,4 @@
+using System.Numerics;
 using UnityEngine;
 
 public class EnemyStatHandler : MonoBehaviour
@@ -6,9 +7,9 @@ public class EnemyStatHandler : MonoBehaviour
     public EnemyData data;
 
     #region Enemy Status
-    public float enemyAtk;
-    public float enemyMaxHp;
-    public float enemyDef;
+    public BigInteger enemyAtk;
+    public BigInteger enemyMaxHp;
+    public BigInteger enemyDef;
     #endregion
 
     public void UpdateEnemyStats()
@@ -19,24 +20,24 @@ public class EnemyStatHandler : MonoBehaviour
         int world = StageManager.Instance.worldNum;
         int stage = StageManager.Instance.stageNum;
 
-        float deltaStage = (world - 1) * 20 + stage;
+        int deltaStage = (world - 1) * 20 + stage;
 
         if (data.isBoss)
         {
-            enemyAtk = data.atk * ((deltaStage * 5 + 100) * 0.01f) * deltaDiff;
-            enemyMaxHp = data.hp * ((deltaStage * 20 + 100) * 0.01f) * deltaDiff;
-            enemyDef = data.def * ((deltaStage * 5 + 100) * 0.01f) * deltaDiff;
+            enemyAtk =  data.Atk * (deltaStage * 5 + 100)  * deltaDiff / 100;
+            enemyMaxHp = data.Hp * (deltaStage * 20 + 100)  * deltaDiff / 100;
+            enemyDef = data.Def * (deltaStage * 5 + 100) * deltaDiff / 100;
         }
         else
         {
-            enemyAtk = data.atk * ((deltaStage * 5 + 100) * 0.01f) * deltaDiff;
-            enemyMaxHp = data.hp * ((deltaStage * 10 + 100) * 0.01f) * deltaDiff;
-            enemyDef = data.def * ((deltaStage * 5 + 100) * 0.01f) * deltaDiff;
+            enemyAtk = data.Atk * (deltaStage * 5 + 100) * deltaDiff / 100;
+            enemyMaxHp = data.Hp * (deltaStage * 10 + 100) * deltaDiff / 100;
+            enemyDef = data.Def * (deltaStage * 5 + 100) * deltaDiff / 100;
         }
         enemy.healthSystem.initEnemyHealth(enemyMaxHp);
     }
 
-    public float GetDamage()
+    public BigInteger GetDamage()
     {
         return enemyAtk;
     }
