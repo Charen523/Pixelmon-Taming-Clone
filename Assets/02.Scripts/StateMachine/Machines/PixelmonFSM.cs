@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
+using System.Numerics;
 using UnityEngine;
 
 public class PixelmonFSM : FSM
@@ -52,8 +52,8 @@ public class PixelmonFSM : FSM
                     for (int i = 0; i < enemies.Count; i++)
                     {
                         target = enemies[i].gameObject;
-                        Vector2 direction = enemies[i].transform.position - transform.position;
-                        (float, bool) damage = pixelmon.status.GetTotalDamage(pixelmon.myData);
+                        UnityEngine.Vector2 direction = enemies[i].transform.position - transform.position;
+                        (BigInteger, bool) damage = pixelmon.status.GetTotalDamage(pixelmon.myData);
                         PoolManager.Instance.SpawnFromPool<ProjectileController>("ATV00000").GetAttackSign(transform.position, direction, damage.Item1, damage.Item2, minDistance, 5);
                     };
                 }

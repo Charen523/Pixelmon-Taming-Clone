@@ -1,14 +1,16 @@
+using System.Numerics;
+
 public class PlayerHealthSystem : HealthSystem
 { 
-    public void InitHealth(float hp)
+    public void InitHealth(BigInteger hp)
     {
         maxHealth = hp;
         currentHealth = maxHealth;
     }
 
-    public override void TakeDamage(float delta, bool isCri = false, bool isPlayer = true)
+    public override void TakeDamage(BigInteger delta, bool isCri = false, bool isPlayer = true)
     {
-        def = Player.Instance.statHandler.def;
+        def = (int)Player.Instance.statHandler.def;
         base.TakeDamage(delta, isCri, isPlayer);
     }
 

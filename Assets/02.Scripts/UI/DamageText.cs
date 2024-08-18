@@ -1,7 +1,9 @@
 using Sirenix.OdinInspector;
 using System.Collections;
+using System.Numerics;
 using TMPro;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 public class DamageText : SerializedMonoBehaviour
 {
@@ -18,13 +20,14 @@ public class DamageText : SerializedMonoBehaviour
         cam = Camera.main;
     }
 
-    public void ShowDamageText(int damage, Vector3 pos, bool isCri = false, bool isPlayer = false)
+    public void ShowDamageText(BigInteger damage, Vector3 pos, bool isCri = false, bool isPlayer = false)
     {
         if (OnDamage != null)
             StopCoroutine(ShowText(pos));
 
         if (damage > 0)
-            damageTxt.text = string.Format("{0:#,###}", damage);
+            damageTxt.text = Calculater.NumFormatter(damage);
+                //string.Format("{0:#,###}", damage);
         else if (damage <= 0 && isPlayer)
         {
             gameObject.SetActive(false);

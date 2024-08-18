@@ -1,5 +1,7 @@
 using System;
+using System.Numerics;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 public class EnemyHealthSystem : HealthSystem
 {
@@ -17,18 +19,21 @@ public class EnemyHealthSystem : HealthSystem
 
     protected override void Update()
     {
-        fillBar.localScale = new Vector3(currentHealth / maxHealth, 1, 1);
+        if(currentHealth <= 0)
+            fillBar.localScale = new Vector3(0, 1, 1);
+        else
+            fillBar.localScale = new Vector3((float)currentHealth / (float)maxHealth, 1, 1);
     }
 
-    public void initEnemyHealth(float hp)
+    public void initEnemyHealth(BigInteger hp)
     {
         maxHealth = hp;
         currentHealth = maxHealth;
     }
 
-    public override void TakeDamage(float delta, bool isCri = false, bool isPlayer = false)
+    public override void TakeDamage(BigInteger delta, bool isCri = false, bool isPlayer = false)
     {
-        def = enemy.statHandler.enemyDef;
+        def = (int)enemy.statHandler.enemyDef;
         base.TakeDamage(delta, isCri, isPlayer);
     }
 
