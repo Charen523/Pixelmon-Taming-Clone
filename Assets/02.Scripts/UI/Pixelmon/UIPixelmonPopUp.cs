@@ -12,8 +12,7 @@ public class UIPixelmonPopUp : UIBase
     private PixelmonData data;
     [SerializeField]
     private MyPixelmonData myData;
-    [SerializeField]
-    private SaveManager saveManager;
+    private SaveManager saveManager => SaveManager.Instance;
     #endregion
 
     #region UI
@@ -43,6 +42,8 @@ public class UIPixelmonPopUp : UIBase
     [SerializeField] private TextMeshProUGUI[] ownEffectValue;
 
     [SerializeField] private Button equipBtn;
+    [SerializeField] private Image equipImg;
+    [SerializeField] private Sprite[] equipSprites;
     [SerializeField] private TextMeshProUGUI equipTxt;
 
     [SerializeField] private Button feedingBtn;
@@ -67,20 +68,16 @@ public class UIPixelmonPopUp : UIBase
     private string maxLv = "-";
     public void ShowPopUp(int dataIndex, PixelmonTab tab)
     {
-        if(saveManager == null)
-            saveManager = SaveManager.Instance;
         pxmTab = tab;
         infoIndex = dataIndex;
-        
         SetData();
-
         if((dataIndex == 0) && !saveManager.userData.isDoneTutorial)
             GuideManager.Instance.SetArrow(equipBtn.gameObject, 40f);
     }
 
     public void OnClickOverlay()
     {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
         pxmTab.StartCheckTutorial();
     }
 
@@ -128,6 +125,10 @@ public class UIPixelmonPopUp : UIBase
         if (myData.isOwned)
         {
             equipBtn.gameObject.SetActive(true);
+            if(myData.isEquipped)
+                equipImg.sprite = equipSprites[1];
+            else
+                equipImg.sprite = equipSprites[0];
             evolvedBtn.gameObject.SetActive(true);
             feedingBtn.gameObject.SetActive(true);
             skillBtn.gameObject.SetActive(true);
@@ -145,16 +146,18 @@ public class UIPixelmonPopUp : UIBase
     {
         if (!myData.isOwned)
         {
-            UIManager.Instance.ShowWarn("미보유 상태입니다.");
+            UIManager.Instance.ShowWarn("승급에 필요한 재료가 부족합니다.");
             return;
         }
         if (!myData.isEquipped)
         {
+            equipImg.sprite = equipSprites[0];
             pxmTab.tabState = TabState.Equip;
             pxmTab.OnEquip();     
         }
         else
         {
+            equipImg.sprite = equipSprites[1];
             pxmTab.tabState = TabState.UnEquip;
             pxmTab.OnEquip();
         }
@@ -165,7 +168,7 @@ public class UIPixelmonPopUp : UIBase
     {
         if (!myData.isOwned)
         {
-            UIManager.Instance.ShowWarn("미 보유 상태입니다.");
+            UIManager.Instance.ShowWarn("레벨업에 필요한 먹이가 부족합니다.");
             return;
         }
         else if (myData.lv >= 50)
@@ -198,7 +201,7 @@ public class UIPixelmonPopUp : UIBase
         }
         else
         {
-            UIManager.Instance.ShowWarn("남은 먹이가 없습니다.");
+            UIManager.Instance.ShowWarn("먹이의 개수가 부족합니다.");
             //Debug.Log("남은 먹이가 없습니다.");
         }
 
@@ -240,7 +243,7 @@ public class UIPixelmonPopUp : UIBase
             demandFoodCount.text = myData.maxExp.ToString();
             if (saveManager.userData.food >= myData.maxExp && myData.isOwned)
             {
-                curFoodCount.color = Color.yellow;
+                curFoodCount.color = Color.white;
                 feedingArrow.SetActive(true);
             }
             else
@@ -275,7 +278,7 @@ public class UIPixelmonPopUp : UIBase
         demandCardCount.text = UIUtils.GetEvolveValue(myData, data).ToString();
         if (myData.evolvedCount >= UIUtils.GetEvolveValue(myData, data))
         {
-            curCardCount.color = Color.yellow;
+            curCardCount.color = Color.white;
             evolvedArrow.SetActive(true);
         }
         else
