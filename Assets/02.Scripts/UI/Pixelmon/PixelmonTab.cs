@@ -13,6 +13,7 @@ public class PixelmonTab : UIBase
     [SerializeField] private Toggle prossessToggle;
     [SerializeField] private TextMeshProUGUI foodCountTxt;
     [SerializeField] private TextMeshProUGUI ownSkillEffectTxt;
+    [SerializeField] private GameObject allSetBtn;
     public Image evolveIcon;
     public Sprite[] btnColor;
 
@@ -23,22 +24,18 @@ public class PixelmonTab : UIBase
 
     public UnityAction<int> unLockAction;
     #region 슬롯, 팝업
-    [SerializeField]
-    private UIPixelmonPopUp infoPopUp;
+    [SerializeField] private UIPixelmonPopUp infoPopUp;
     //픽셀몬 슬롯 프리팹
-    [SerializeField]
-    private PixelmonSlot slotPrefab;
+    [SerializeField] private PixelmonSlot slotPrefab;
     //전체 슬롯 부모 오브젝트 위치
-    [SerializeField]
-    private Transform contentTr;
+    [SerializeField] private Transform contentTr;
     #endregion
 
     #region 매니저
     public SaveManager saveManager;
-    [SerializeField]
     private PixelmonManager pixelmonManager;
-    [SerializeField]
     private DataManager dataManager;
+    private GuideManager guideManager;
     #endregion
 
     #region Info
@@ -54,12 +51,15 @@ public class PixelmonTab : UIBase
     public PixelmonEquipSlot[] equipData = new PixelmonEquipSlot[5];
     #endregion
 
+    private bool isGuideOn = false;
+
     protected override async void Awake()
     {
         saveManager = SaveManager.Instance;
         userData = saveManager.userData;
-        dataManager = DataManager.Instance;
         pixelmonManager = PixelmonManager.Instance;
+        dataManager = DataManager.Instance;
+        guideManager = GuideManager.Instance;
         pixelmonManager.pxmTab = this;
         unLockAction += GetPixelmon;
         equipOverlay.localScale = new Vector2(Screen.width, Screen.height);
@@ -74,6 +74,14 @@ public class PixelmonTab : UIBase
         SetfoodCount();
     }
 
+    private void OnDisable()
+    {
+        if (isGuideOn)
+        {
+            guideManager.GuideNumTrigger(guideManager.guideNum);
+        }
+    }
+
     public void StartCheckTutorial()
     {
         if (!SaveManager.Instance.userData.isDoneTutorial && userData.isSetArrowOnEgg)
@@ -83,7 +91,25 @@ public class PixelmonTab : UIBase
     private IEnumerator CheckTutorial()
     {
         yield return new WaitForSeconds(0.2f);
-        GuideManager.Instance.SetArrow(allData[0].gameObject, 40f);
+        guideManager.SetArrow(allData[0].gameObject, 40f);
+    }
+
+    public void InvokePixelmonTabGuide()
+    {
+        isGuideOn = true;
+
+        switch (guideManager.guideNum)
+        {
+            case 3:
+                guideManager.GuideArrow.SetActive(true);
+                guideManager.SetArrow(allSetBtn);
+                break;
+        }
+    }
+
+    private IEnumerator CheckGuide()
+    {
+        yield return null;
     }
 
     public void InitTab()
@@ -158,7 +184,6 @@ public class PixelmonTab : UIBase
         }
     }
 
-
     public void OnArrangeAll()
     {
         if (ownedData.Count == 0) return;
@@ -208,11 +233,16 @@ public class PixelmonTab : UIBase
                 equipData[i].OnClick(); 
             }
         }
-
         
-        if (GuideManager.Instance.guideNum == GuideManager.Instance.setAllPixelmon)
+        if (guideManager.guideNum == guideManager.setAllPixelmon)
         {
             QuestManager.Instance.OnQuestEvent();
+
+            if (isGuideOn)
+            {
+                guideManager.GuideArrow.SetActive(false);
+                isGuideOn = false;
+            }
         }
     }
 
@@ -231,7 +261,6 @@ public class PixelmonTab : UIBase
         isAdvancable = false;
         evolveIcon.sprite = btnColor[0];
     }
-
 
     public void GetPixelmon(int index)
     {
@@ -254,7 +283,7 @@ public class PixelmonTab : UIBase
         infoPopUp.gameObject.SetActive(false);
 
         if (!SaveManager.Instance.userData.isDoneTutorial)
-            GuideManager.Instance.SetArrow(allData[0].gameObject, 40f);
+            guideManager.SetArrow(allData[0].gameObject, 40f);
     }
     
     public void OnEquip()
@@ -263,7 +292,7 @@ public class PixelmonTab : UIBase
         {
             equipOverlay.gameObject.SetActive(true);
             if (!SaveManager.Instance.userData.isDoneTutorial)
-                GuideManager.Instance.SetArrow(equipData[0].gameObject, 40f);
+                guideManager.SetArrow(equipData[0].gameObject, 40f);
         }
         else if(tabState == TabState.UnEquip) 
         {
@@ -278,7 +307,6 @@ public class PixelmonTab : UIBase
             tabState = TabState.Normal;
         }
     }
-
 
     public void EquipedPixelmon(int slotIndex)
     {
