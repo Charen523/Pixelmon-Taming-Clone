@@ -41,8 +41,9 @@ public class DgMonster : MonoBehaviour
     private async void Awake()
     {
         dgProgress = await UIManager.Show<UIDungeonProgress>();
+        Player.Instance.statHandler.data.baseAtkRange = 2;
+        Player.Instance.fsm.ChangeState(Player.Instance.fsm.DetectState);
     }
-
 
     public void InitDgMonster(int index)
     {
@@ -115,16 +116,17 @@ public class DgMonster : MonoBehaviour
 
     public IEnumerator KillDgMonster()
     {
+        dgProgress.SetActive(false);
         coll.enabled = false;
-        yield return new WaitForSeconds(1);
+        Player.Instance.statHandler.data.baseAtkRange = 4;
+        yield return new WaitForSeconds(0.5f);
         if (StageManager.Instance.isDungeonClear)
         {
             anim.SetTrigger("dgEnd");
             SaveCurLv();
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(2f);
             StageManager.Instance.isDungeonClear = false;
         }
-        dgProgress.SetActive(false);
         coll.enabled = true;
         Destroy(gameObject);
     }

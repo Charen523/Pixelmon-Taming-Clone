@@ -41,8 +41,6 @@ public class StageManager : Singleton<StageManager>
     public int stageNum;
     public int themeNum;
 
-    public event Action<int> OnOpenTab;
-
     public int curSpawnCount = 0;
     private float curInterval = 0; //현재 시간 간격
     private readonly float spawnInterval = 2f; //스폰 간격
@@ -96,21 +94,9 @@ public class StageManager : Singleton<StageManager>
     public FadeInvoker allFade;
 
     [SerializeField] private RectTransform canvasRect;
-    Transform middleBar;
-    Vector3 middlePos;
-    Vector3 dungeonPos;
-    Transform bottomBar;
+    GameObject middleBar;
+    GameObject bottomBar;
     #endregion
-
-    private void CalculateBound()
-    {
-        middlePos = middleBar.position;
-        Vector3 canvasCenter = canvasRect.transform.position;
-        Vector2 canvasSize = canvasRect.rect.size;
-        Vector3 extents = new Vector3(canvasSize.x / 2, canvasSize.y / 2, 0);
-        Bounds canvasBounds = new Bounds(canvasCenter, extents * 2);
-        dungeonPos = new Vector3(middlePos.x, canvasBounds.min.y, 0);
-    }
 
     protected override void Awake()
     {
@@ -158,16 +144,15 @@ public class StageManager : Singleton<StageManager>
 
         while (middleBar == null)
         {
-            var middleBarObject = UIManager.Get<UIMiddleBar>();
-            if (middleBarObject != null)
+            var middleBarObj = UIManager.Get<UIMiddleBar>();
+            if (middleBarObj != null)
             {
-                middleBar = middleBarObject.transform;
+                middleBar = middleBarObj.gameObject;
             }
             yield return null;
         }
-        bottomBar = UIManager.Instance.parents[2].GetChild(0);
-        CalculateBound();
-        questManager = QuestManager.Instance;//Stage가 Quest Instance 생성보다 먼저라 캐싱 시점을 미룸.
+        bottomBar = UIManager.Instance.parents[2].GetChild(0).gameObject;
+        questManager = QuestManager.Instance;
         InitStage();
     }
 
@@ -261,14 +246,18 @@ public class StageManager : Singleton<StageManager>
             yield return proceedDgStg;
 
             allFade.gameObject.SetActive(true);
-            yield return new WaitForSeconds(3f);
+            if (isDungeonClear)
+            {
+                yield return new WaitForSeconds(3f);
+            }
             yield return allFade.FadeIn();
             isStgFade = false;
 
             ChangeMapByTheme();
 
-            middleBar.position = middlePos;
+            middleBar.gameObject.SetActive(true);
             bottomBar.gameObject.SetActive(true);
+            killCount = userData.curHuntCount;
         }
 
         InitStage();
@@ -365,7 +354,7 @@ public class StageManager : Singleton<StageManager>
         dgBoss.InitDgMonster(dgIndex);
         MapManager.Instance.OnMapChanged(dgIndex);
 
-        middleBar.position = dungeonPos;
+        middleBar.gameObject.SetActive(false);
         bottomBar.gameObject.SetActive(false);
         InitStageUI();
     }
@@ -383,10 +372,10 @@ public class StageManager : Singleton<StageManager>
 
         if (bossLeftTime == 0)
         {//TimeOver
-            dgBoss.DisableDgMonster();
             isDungeon = false;
             isDungeonClear = true;
-            if (dgIndex == 0 && GuideManager.Instance.guideNum == 51)
+            dgBoss.DisableDgMonster();
+            if (dgIndex == 0 && GuideManager.Instance.guideNum == GuideManager.Instance.goldDg)
             {
                 questManager.OnQuestEvent();
             }
@@ -454,11 +443,6 @@ public class StageManager : Singleton<StageManager>
         newRcode += themeNum;
         CurrentRcode = newRcode;
         newStageProgress = diffNum.ToString("D2") + worldNum.ToString("D2") + (stageNum).ToString("D2");
-
-        if (newStageProgress == "000103" || newStageProgress == "000105" || newStageProgress == "000107")
-        {
-            OnOpenTab?.Invoke(stageNum);
-        }
 
         saveManager.SetFieldData(nameof(userData.curStage), newStageProgress);
     }

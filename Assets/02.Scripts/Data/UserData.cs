@@ -25,9 +25,6 @@ public class UserData
     #region Tutorial
     public bool isEggHatched = false;
     public bool isDoneTutorial = false;
-    public bool isOpenSkillTab = false;
-    public bool isOpenFarmTab = false;
-    public bool isOpenDungeonTab = false;
     public bool isSetArrowOnEgg = false;
     #endregion
 
