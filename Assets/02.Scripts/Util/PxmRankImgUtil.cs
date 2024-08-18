@@ -4,14 +4,14 @@ using UnityEngine;
 [System.Serializable]
 public class BaseBg
 {
-    public PixelmonRank rank;
+    public PxmRank rank;
     public Sprite img;
-    public List<Dictionary<PixelmonRank, Sprite>> bgs;
+    public List<Dictionary<PxmRank, Sprite>> bgs;
 }
 
 public static class PxmRankImgUtil
 {
-    public static Sprite GetRankImage(PixelmonRank rank, List<BaseBg> bgs)
+    public static Sprite GetRankImage(PxmRank rank, List<BaseBg> bgs)
     {
         foreach (BaseBg bg in bgs)
         {

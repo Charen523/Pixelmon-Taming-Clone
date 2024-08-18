@@ -52,9 +52,9 @@ public class UIHatchResultPopup : UIBase
         this.eggHatch = eggHatch;
         #region 소환된 픽셀몬 정보 UI        
         pxmName.text = eggHatch.HatchPxmData.name;
-        rateTxt.text = UIUtils.TranslateRank(eggHatch.Rank);
-        rateBg.sprite = PxmRankImgUtil.GetRankImage(eggHatch.Rank, rateBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
-        pixelmonBg.sprite = PxmRankImgUtil.GetRankImage(eggHatch.Rank, pixelmonBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
+        rateTxt.text = UIUtils.TranslateRank(eggHatch.PxmRank);
+        rateBg.sprite = PxmRankImgUtil.GetRankImage(eggHatch.PxmRank, rateBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
+        pixelmonBg.sprite = PxmRankImgUtil.GetRankImage(eggHatch.PxmRank, pixelmonBgs.ConvertAll<BaseBg>(bg => (BaseBg)bg));
         pixelmonImg.sprite = eggHatch.HatchedPixelmonImg.sprite;
         #endregion
 
@@ -128,69 +128,6 @@ public class UIHatchResultPopup : UIBase
 
     public void OnClickGetPixelmon(bool isReplaceBtn)
     {
-        if (isReplaceBtn && eggHatch.IsOwnedPxm == true) // 교체하기(교체 및 수집)
-        {
-            ReplacePsv();
-        }
-        else // 수집하기
-        {
-            if (!eggHatch.IsOwnedPxm)                
-                GetFirst();
-            else
-                GetRepetition();               
-        }
-        eggHatch.GetPixelmon();
-
-        SetActive(false);
-    }
-
-    private void GetFirst()
-    {
-        #region Init Value
-        List<PsvSkill> firstPsv = new List<PsvSkill>();
-        firstPsv.Add(new PsvSkill
-        {
-            psvType = eggHatch.PsvData[0].PsvType,
-            psvName = eggHatch.PsvData[0].PsvName,
-            psvRank = eggHatch.PsvData[0].NewPsvRank,
-            psvValue = eggHatch.PsvData[0].NewPsvValue
-        });
-
-        float[] ownEffectValue = { eggHatch.HatchPxmData.basePerHp, eggHatch.HatchPxmData.basePerDef };
-        #endregion
-
-        #region Update Value
-        SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "rcode", eggHatch.HatchPxmData.rcode);
-        SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "id", eggHatch.HatchPxmData.id);
-        SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "isOwned", true);
-        SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "atkValue", eggHatch.HatchPxmData.basePerAtk);
-        SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "psvSkill", firstPsv);
-        SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "ownEffectValue", ownEffectValue);
-        PixelmonManager.Instance.UnLockedPixelmon(eggHatch.HatchPxmData.id);
-        #endregion
-    }
-
-    private void GetRepetition()
-    {
-        SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "evolvedCount", ++userData.ownedPxms[eggHatch.HatchPxmData.id].evolvedCount);
-        PixelmonManager.Instance.UnLockedPixelmon(eggHatch.HatchPxmData.id);
-    }
-
-    private void ReplacePsv()
-    {
-        List<PsvSkill> newPsvs = new List<PsvSkill>();
-        for (int i = 0; i < eggHatch.HatchMyPxmData.psvSkill.Count; i++)
-        {
-            newPsvs.Add(new PsvSkill
-            {
-                psvType = eggHatch.HatchMyPxmData.psvSkill[i].psvType,
-                psvName = eggHatch.HatchMyPxmData.psvSkill[i].psvName,
-                psvRank = eggHatch.PsvData[i].NewPsvRank,
-                psvValue = eggHatch.PsvData[i].NewPsvValue
-            });
-        }
-        SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "psvSkill", newPsvs);
-        SaveManager.Instance.UpdatePixelmonData(eggHatch.HatchPxmData.id, "evolvedCount", ++userData.ownedPxms[eggHatch.HatchPxmData.id].evolvedCount);
-        PixelmonManager.Instance.ApplyStatus(PixelmonManager.Instance.pxmTab.allData[eggHatch.HatchPxmData.id].pxmData, PixelmonManager.Instance.pxmTab.allData[eggHatch.HatchPxmData.id].myPxmData);
+        eggHatch.GetPixelmon(isReplaceBtn);
     }
 }

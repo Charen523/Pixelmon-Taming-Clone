@@ -46,7 +46,7 @@ public enum PassiveType
     Farming
 }
 
-public enum PixelmonRank
+public enum PxmRank
 {
     Common,
     Advanced,
@@ -54,6 +54,18 @@ public enum PixelmonRank
     Epic,
     Legendary,
     Unique
+}
+
+public enum PsvRank
+{
+    F,
+    E,
+    D,
+    C,
+    B,
+    A,
+    S,
+    SS
 }
 
 public enum DirtyUI
