@@ -12,9 +12,9 @@ public class PixelmonManager : Singleton<PixelmonManager>
     public UnityAction<int> unEquipAction;
     public UnityAction<int> unlockSlotAction;
 
-    private SaveManager saveManager;
+    private SaveManager saveManager => SaveManager.Instance;
     private UserData userData;
-    public Player player;
+    public Player player => Player.Instance;
     public PixelmonTab pxmTab;
     public PixelmonLayout[] layouts;
 
@@ -31,12 +31,11 @@ public class PixelmonManager : Singleton<PixelmonManager>
     void Start()
     {
         pxmData = DataManager.Instance.pixelmonData.data;
-        saveManager = SaveManager.Instance;
         userData = saveManager.userData;
-        player = Player.Instance;
         equipAction += Equipped;
         unEquipAction += UnEquipped;
-        unlockSlotAction += UnLockedSlots;
+        if(saveManager.userData.userLv < 30)
+            unlockSlotAction += UnLockedSlots;
         InitUpgradeStatus();
         InitEquippedPixelmon();
         InitPlayerStat();
@@ -119,12 +118,16 @@ public class PixelmonManager : Singleton<PixelmonManager>
         {
             case 5:
                 UnLockedSlot(2);
+                UIManager.Instance.ShowWarn("3번째 픽셀몬 슬롯이 개방되었습니다.");
                 break;
             case 10:
                 UnLockedSlot(3);
+                UIManager.Instance.ShowWarn("3번째 픽셀몬 슬롯이 개방되었습니다.");
                 break;
             case 30:
                 UnLockedSlot(4);
+                unlockSlotAction -= UnLockedSlots;
+                UIManager.Instance.ShowWarn("3번째 픽셀몬 슬롯이 개방되었습니다.");
                 break;
             default:
                 break;

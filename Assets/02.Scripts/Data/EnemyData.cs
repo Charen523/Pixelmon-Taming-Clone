@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 
 [Serializable]
 public class EnemyData : IData
@@ -9,10 +10,13 @@ public class EnemyData : IData
     public string spawnWorldId;
     public bool isBoss;
     public float spd;
-    public float atk;
+    private int atk;
+    public BigInteger Atk { get { return atk; } set { atk = (int)value; } }
     public float atkRange;
-    public float hp;
-    public float def;
+    private int hp;
+    public BigInteger Hp { get { return hp; } set { hp = (int)value; } }
+    private int def;
+    public BigInteger Def { get { return def; } set { def = (int)value; } }
     public string rewardTypes;
     public string rewardRates;
     public string rewardValues;

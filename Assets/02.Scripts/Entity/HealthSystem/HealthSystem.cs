@@ -2,34 +2,41 @@ using Sirenix.OdinInspector;
 using System;
 using UnityEngine.UI;
 using UnityEngine;
+using System.Numerics;
 
 public abstract class HealthSystem : SerializedMonoBehaviour
 {
     public Image hpBar;
 
     /*체력변수*/
-    public float maxHealth = 1;
-    public float currentHealth;
-    protected float def;
+    public BigInteger maxHealth = 1;
+    public BigInteger currentHealth;
+    protected int def;
 
     protected virtual void Update()
     {
-        hpBar.fillAmount = currentHealth / maxHealth;
+        hpBar.fillAmount = (float)(currentHealth / maxHealth);
     }
 
-    public virtual void GetHealed(float delta)
+    public virtual void GetHealed(int delta)
     {
         if (currentHealth != 0)
         {
-            currentHealth = MathF.Min(maxHealth, currentHealth + delta);
+            if (maxHealth >= currentHealth + delta)
+                currentHealth = currentHealth + delta;
+            else
+                currentHealth = maxHealth;
         }
     }
 
-    public virtual void TakeDamage(float delta, bool isCri = false, bool isPlayer = false)
+    public virtual void TakeDamage(BigInteger delta, bool isCri = false, bool isPlayer = false)
     {
-        float damage = Mathf.Max(0, delta - def);
-        currentHealth = Mathf.Max(0, currentHealth - damage);
-        PoolManager.Instance.SpawnFromPool<DamageText>("TXT00001").ShowDamageText((int)damage, gameObject.transform.position, isCri, isPlayer);        
+        BigInteger damage = delta - def;
+        if(damage > currentHealth)
+        currentHealth = 0;
+        else
+            currentHealth = currentHealth - damage;
+        PoolManager.Instance.SpawnFromPool<DamageText>("TXT00001").ShowDamageText(damage, gameObject.transform.position, isCri, isPlayer);        
         if (currentHealth == 0)
         {
             NoticeDead();

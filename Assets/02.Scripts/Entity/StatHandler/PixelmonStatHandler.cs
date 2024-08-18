@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using UnityEngine;
 
 public static class PixelmonStatHandler
@@ -230,29 +231,29 @@ public static class PixelmonStatHandler
         return newSkills;
     }
     
-    public static (float,bool) GetTotalDamage(this PixelmonStatus status, MyPixelmonData myData, bool isSkill = false, float perSkill = 1)
+    public static (BigInteger, bool) GetTotalDamage(this PixelmonStatus status, MyPixelmonData myData, bool isSkill = false, float perSkill = 1)
     {
-        float dealDmg;
+        BigInteger dealDmg;
         bool isCri = false;
         if (isSkill)
         {
             if (IsCritical(status.Cri + status.SCri))
             {
                 isCri = true;
-                dealDmg = (10 + PixelmonManager.Instance.upgradeStatus.Atk) * (100 + status.perAtk + perSkill + status.SDmg) / 100 * (100 + status.SCriDmg) / 100;
+                dealDmg = (BigInteger)((10 + PixelmonManager.Instance.upgradeStatus.Atk) * (100 + status.perAtk + perSkill + status.SDmg) / 100 * (100 + status.SCriDmg) / 100);
             }
             else
-                dealDmg = (10 + PixelmonManager.Instance.upgradeStatus.Atk) * (100 + status.perAtk + perSkill + status.SDmg) / 100;
+                dealDmg = (BigInteger)((10 + PixelmonManager.Instance.upgradeStatus.Atk) * (100 + status.perAtk + perSkill + status.SDmg) / 100);
         }
         else
         {
             if (IsCritical(status.Cri))
             {
                 isCri= true;
-                dealDmg = (10 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + status.perAtk + status.Dmg)/100) * ((100 + status.CriDmg) / 100);
+                dealDmg = (BigInteger)((10 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + status.perAtk + status.Dmg)/100) * ((100 + status.CriDmg) / 100));
             }
             else
-                dealDmg = (10 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + status.perAtk + status.Dmg)/100);
+                dealDmg = (BigInteger)((10 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + status.perAtk + status.Dmg)/100));
         }
         //버프가 있다면 dealDmg *= 1;
 
