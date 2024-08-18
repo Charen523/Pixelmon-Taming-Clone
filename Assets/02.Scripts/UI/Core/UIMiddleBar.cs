@@ -12,16 +12,20 @@ public class EggImg : BaseBg
 {
 }
 public class UIMiddleBar : UIBase
-{
+{    
     public TextMeshProUGUI EggLvText;
     public TextMeshProUGUI EggCntText;
 
+    public EggHatch EggHatch;
+
     private UIEggLvPopup EggLvPopup;
+    private UIAutoEggHatch AutoEggHatch;
     private UserData userData => SaveManager.Instance.userData;
 
     protected override async void Awake()
     {
         EggLvPopup = await UIManager.Show<UIEggLvPopup>(this);
+        AutoEggHatch = await UIManager.Show<UIAutoEggHatch>(EggHatch);
     }
     private void Start()
     {
@@ -56,5 +60,7 @@ public class UIMiddleBar : UIBase
 
     public void OnClickAutoBtn()
     {
+        //EggHatch.isAutoMode = false;
+        AutoEggHatch.SetActive(true);
     }
 }

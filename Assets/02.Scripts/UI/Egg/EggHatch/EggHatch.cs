@@ -15,7 +15,7 @@ public class EggHatch : MonoBehaviour
     #endregion
 
     #region 알뽑기 결과
-    public PixelmonRank Rank;
+    public PxmRank PxmRank;
     public Image HatchedPixelmonImg;
     public PixelmonData HatchPxmData;
     public MyPixelmonData HatchMyPxmData;
@@ -26,6 +26,14 @@ public class EggHatch : MonoBehaviour
     private bool isDoneGetPxm;
 
     private UIHatchResultPopup HatchResultPopup;
+    #endregion
+
+    #region 알 자동 뽑기
+    public bool isAutoMode;
+    private bool isHighRankPsvSet;
+    private PxmRank autoPxmRank;
+    private PsvRank autoPsvRank;
+    private WaitForSeconds delayAutoTime;
     #endregion
 
     private UserData userData => SaveManager.Instance.userData;
@@ -41,6 +49,7 @@ public class EggHatch : MonoBehaviour
     {
         isDoneGetPxm = true;
         getPixelmon = new WaitUntil(() => isDoneGetPxm == true);
+        delayAutoTime = new WaitForSeconds(1f);
         HatchedPixelmonImg.gameObject.SetActive(false);
 
         AnimData.Initialize();
@@ -55,7 +64,7 @@ public class EggHatch : MonoBehaviour
             HatchPxmData = userData.hatchPxmData;
             HatchMyPxmData = userData.hatchMyPxmData;
             PsvData = userData.psvData;
-            Rank = (PixelmonRank)Enum.Parse(typeof(PixelmonRank), HatchPxmData.rank);
+            PxmRank = (PxmRank)Enum.Parse(typeof(PxmRank), HatchPxmData.rank);
             StartCoroutine(SetPxmHatchAnim());
         }
     }
@@ -65,12 +74,12 @@ public class EggHatch : MonoBehaviour
         if (UIManager.Get<Tutorial>() != null)
         {
             HatchPxmData = DataManager.Instance.pixelmonData.data[0];
-            Rank = (PixelmonRank)Enum.Parse(typeof(PixelmonRank), HatchPxmData.rank);
+            PxmRank = (PxmRank)Enum.Parse(typeof(PxmRank), HatchPxmData.rank);
         }
         else
         {
             #region 확률에 따라 픽셀몬 등급 랜덤뽑기
-            Rank = PerformPxmGacha(userData.eggLv.ToString());
+            PxmRank = PerformPxmGacha(userData.eggLv.ToString());
 
             // 등급에 해당하는 픽셀몬 랜덤뽑기
             var pxmData = DataManager.Instance.pixelmonData.data;
@@ -78,7 +87,7 @@ public class EggHatch : MonoBehaviour
 
             for (int i = 0; i < pxmData.Count; i++)
             {
-                if (pxmData[i].rank == Rank.ToString())
+                if (pxmData[i].rank == PxmRank.ToString())
                 {
                     randPxmData.Add(pxmData[i]);
                 }
@@ -116,6 +125,8 @@ public class EggHatch : MonoBehaviour
             var randAbility = RandAbilityUtil.PerformAbilityGacha(HatchMyPxmData.psvSkill[i].psvType, psvData.maxRate, HatchMyPxmData.psvSkill[i].psvValue);
             PsvData[i].NewPsvRank = randAbility.AbilityRank;
             PsvData[i].NewPsvValue = randAbility.AbilityValue;
+            if (isAutoMode && ((PsvRank)Enum.Parse(typeof(PsvRank), randAbility.AbilityRank) >= autoPsvRank))
+                isHighRankPsvSet = true;
         }
     }
 
@@ -130,7 +141,7 @@ public class EggHatch : MonoBehaviour
     }
 
     public void OnClickEgg(Button btn)
-    {
+    { 
         if (UIManager.Get<Tutorial>() != null)
         {
             if (userData.isEggHatched == true)
@@ -144,15 +155,24 @@ public class EggHatch : MonoBehaviour
             }
         }
 
-        if (userData.eggCount > 0 || userData.isGetPxm == false)
-            StartCoroutine(ClickEgg(btn));
-        else
-            UIManager.Instance.ShowWarn("알이 부족합니다!!");
+        StartCoroutine(ClickEgg(btn));
     }
 
-    public IEnumerator ClickEgg(Button btn)
+    public IEnumerator ClickEgg(Button btn = null)
     {
-        btn.interactable = false;
+        if (userData.eggCount <= 0)
+        {
+            UIManager.Instance.ShowWarn("알이 부족합니다!!");
+            isAutoMode = false;
+            yield break;
+        }
+
+        if (isAutoMode && btn != null)
+            isAutoMode = false;
+
+        if (btn != null)
+            btn.interactable = false;
+
         if (userData.isGetPxm)
         {
             SaveManager.Instance.SetFieldData(nameof(userData.eggCount), -1, true);
@@ -167,11 +187,42 @@ public class EggHatch : MonoBehaviour
 
         isDoneGetPxm = false;
 
-        HatchResultPopup.SetActive(true);
-        HatchResultPopup.SetPopup(this);
-        btn.interactable = true;
+        if (isAutoMode && isHighRankPsvSet && PxmRank >= autoPxmRank)
+        {
+            isAutoMode = false;
+            isHighRankPsvSet = false;
+        }
+
+        if (!isAutoMode)
+        {
+            HatchResultPopup.SetActive(true);
+            HatchResultPopup.SetPopup(this);
+        }
+        else
+        {
+            yield return delayAutoTime;
+            GetPixelmon(false);
+        }
+
+        if (btn != null)
+            btn.interactable = true;
 
         yield return getPixelmon;      
+    }
+
+    public void StartAutoEggHatch(PxmRank autoRank, PsvRank autoPsv)
+    {
+        StartCoroutine(AutoEggHatch(autoRank, autoPsv));
+    }
+
+    public IEnumerator AutoEggHatch(PxmRank autoRank, PsvRank autoPsv)
+    {
+        autoPxmRank = autoRank;
+        autoPsvRank = autoPsv;
+        while (isAutoMode)
+        {
+            yield return ClickEgg();
+        }           
     }
 
     private IEnumerator SetPxmHatchAnim()
@@ -179,7 +230,7 @@ public class EggHatch : MonoBehaviour
         HatchAnimGO.SetActive(true);
 
         // 애니메이션 실행
-        BreakAnim.SetInteger(AnimData.EggBreakParameterHash, (int)Rank);
+        BreakAnim.SetInteger(AnimData.EggBreakParameterHash, (int)PxmRank);
         HatchAnim.SetBool(AnimData.EggHatchParameterHash, true);
 
         // 애니메이션 끝난지 체크
@@ -190,7 +241,7 @@ public class EggHatch : MonoBehaviour
         HatchedPixelmonImg.sprite = HatchPxmData.icon;
     }
 
-    public PixelmonRank PerformPxmGacha(string rcode)
+    public PxmRank PerformPxmGacha(string rcode)
     {
         var data = DataManager.Instance.GetData<EggRateData>(rcode);
 
@@ -216,15 +267,28 @@ public class EggHatch : MonoBehaviour
             cumProb += probs[i] * 100;
             if (randProb <= cumProb)
             {
-                return (PixelmonRank)i;
+                return (PxmRank)i;
             }
         }
 
         throw new System.Exception("확률 합 != 100");
     }
 
-    public void GetPixelmon()
+    #region HatchResultPopup
+    public void GetPixelmon(bool isReplaceBtn)
     {
+        if (isReplaceBtn && IsOwnedPxm == true) // 교체하기(교체 및 수집)
+        {
+            ReplacePsv();
+        }
+        else // 수집하기
+        {
+            if (!IsOwnedPxm)
+                GetFirst();
+            else
+                GetRepetition();
+        }
+
         BreakAnim.SetInteger(AnimData.EggBreakParameterHash, -1);
         HatchAnim.SetBool(AnimData.EggHatchParameterHash, false);
 
@@ -234,11 +298,66 @@ public class EggHatch : MonoBehaviour
         SaveManager.Instance.SetFieldData(nameof(userData.isGetPxm), true);
         isDoneGetPxm = true;
 
+        //튜토리얼 체크
         if (userData.isEggHatched == false)
         {
             SaveManager.Instance.SetFieldData(nameof(userData.isEggHatched), true);
             GuideManager.Instance.Locks[0].SetActive(false);
             GuideManager.Instance.Locks[1].SetActive(false);
         }
+
+        HatchResultPopup.SetActive(false);
     }
+
+    private void GetFirst()
+    {
+        #region Init Value
+        List<PsvSkill> firstPsv = new List<PsvSkill>();
+        firstPsv.Add(new PsvSkill
+        {
+            psvType = PsvData[0].PsvType,
+            psvName = PsvData[0].PsvName,
+            psvRank = PsvData[0].NewPsvRank,
+            psvValue = PsvData[0].NewPsvValue
+        });
+
+        float[] ownEffectValue = { HatchPxmData.basePerHp, HatchPxmData.basePerDef };
+        #endregion
+
+        #region Update Value
+        SaveManager.Instance.UpdatePixelmonData(HatchPxmData.id, "rcode", HatchPxmData.rcode);
+        SaveManager.Instance.UpdatePixelmonData(HatchPxmData.id, "id", HatchPxmData.id);
+        SaveManager.Instance.UpdatePixelmonData(HatchPxmData.id, "isOwned", true);
+        SaveManager.Instance.UpdatePixelmonData(HatchPxmData.id, "atkValue", HatchPxmData.basePerAtk);
+        SaveManager.Instance.UpdatePixelmonData(HatchPxmData.id, "psvSkill", firstPsv);
+        SaveManager.Instance.UpdatePixelmonData(HatchPxmData.id, "ownEffectValue", ownEffectValue);
+        PixelmonManager.Instance.UnLockedPixelmon(HatchPxmData.id);
+        #endregion
+    }
+
+    private void GetRepetition()
+    {
+        SaveManager.Instance.UpdatePixelmonData(HatchPxmData.id, "evolvedCount", ++userData.ownedPxms[HatchPxmData.id].evolvedCount);
+        PixelmonManager.Instance.UnLockedPixelmon(HatchPxmData.id);
+    }
+
+    private void ReplacePsv()
+    {
+        List<PsvSkill> newPsvs = new List<PsvSkill>();
+        for (int i = 0; i < HatchMyPxmData.psvSkill.Count; i++)
+        {
+            newPsvs.Add(new PsvSkill
+            {
+                psvType = HatchMyPxmData.psvSkill[i].psvType,
+                psvName = HatchMyPxmData.psvSkill[i].psvName,
+                psvRank = PsvData[i].NewPsvRank,
+                psvValue = PsvData[i].NewPsvValue
+            });
+        }
+        SaveManager.Instance.UpdatePixelmonData(HatchPxmData.id, "psvSkill", newPsvs);
+        SaveManager.Instance.UpdatePixelmonData(HatchPxmData.id, "evolvedCount", ++userData.ownedPxms[HatchPxmData.id].evolvedCount);
+        PixelmonManager.Instance.ApplyStatus(PixelmonManager.Instance.pxmTab.allData[HatchPxmData.id].pxmData, 
+            PixelmonManager.Instance.pxmTab.allData[HatchPxmData.id].myPxmData);
+    }
+    #endregion
 }
