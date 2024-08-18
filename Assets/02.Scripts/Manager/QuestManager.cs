@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,6 +25,7 @@ public class QuestManager : Singleton<QuestManager>
     public event Action<int> QuestEvent;
 
     private StageManager stageManager;
+    private GuideManager guideManager;
     private SaveManager saveManager;
     private UserData userData;
 
@@ -56,14 +56,17 @@ public class QuestManager : Singleton<QuestManager>
         base.Awake();
 
         stageManager = StageManager.Instance;
+        guideManager = GuideManager.Instance;
         saveManager = SaveManager.Instance;
         userData = SaveManager.Instance.userData;
+
+        GetQuestIndex();
+        guideManager.SetBottomLock();
     }
 
     private void Start()
     {
         QuestEvent += UpdateProgress;
-        GetQuestIndex();
         SetQuestUI();
         Firebase.Analytics.FirebaseAnalytics.LogEvent($"Start_QuestIndex_{questNum}");
     }
@@ -171,7 +174,7 @@ public class QuestManager : Singleton<QuestManager>
         else
         {
             questNum = int.Parse(curIndex[1..]);
-            GuideManager.Instance.guideNum = questNum;
+            guideManager.guideNum = questNum;
         }
 
         data = DataManager.Instance.GetData<QuestData>(curIndex);
@@ -195,8 +198,9 @@ public class QuestManager : Singleton<QuestManager>
             else
             {
                 int index = int.Parse(curIndex[1..]);
-                qNum = "Q" + (index + 1).ToString();
-                GuideManager.Instance.guideNum = index + 1;
+                qNum = "Q" + (++index).ToString();
+                guideManager.guideNum = index;
+                guideManager.SetBottomLock();
             }
         }
         else if (int.Parse(curIndex[1..]) == maxRepeatNum)
