@@ -84,7 +84,6 @@ public class UITopBar : UIBase
 
     public void UpdateDiamondUI()
     {
-        gemTxt.text = Calculater.NumFormatter(saveManager.userData.diamond);
         gemTxt.text = saveManager.userData.diamond.ToString();
     }
 
