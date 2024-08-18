@@ -131,14 +131,14 @@ public class UIPixelmonPopUp : UIBase
                 equipImg.sprite = equipSprites[0];
             evolvedBtn.gameObject.SetActive(true);
             feedingBtn.gameObject.SetActive(true);
-            skillBtn.gameObject.SetActive(true);
+            //skillBtn.gameObject.SetActive(true);
         }
         else
         {
             equipBtn.gameObject.SetActive(false);
             evolvedBtn.gameObject.SetActive(false);
             feedingBtn.gameObject.SetActive(false);
-            skillBtn.gameObject.SetActive(false);
+            //skillBtn.gameObject.SetActive(false);
         }
     }
 
