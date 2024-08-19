@@ -52,6 +52,10 @@ public class GuideManager : Singleton<GuideManager>
         {
             OnGuideAction?.Invoke(guideNum);
         }
+        else
+        {
+            GuideArrow.SetActive(false);
+        }
     }
 
     public void SetBottomLock()
