@@ -2,26 +2,17 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum OpenTabType
-{
-    Skill,
-    Farm,
-    Dungeon
-}
-
 public class GuideManager : Singleton<GuideManager>
 {
     public GameObject[] Locks;
     public GameObject GuideArrow;
     public GameObject PxmToggle;
     public int guideNum = 0;
-    public int guideArrowIndex = 0;
     private UserData userData => SaveManager.Instance.userData;
 
     #region Tutorial Start Indexes
-    private readonly HashSet<int> guideNumSet = new HashSet<int> { 3, 6, 9, 10, 21, 23, 35, 45, 51 };
+    private readonly HashSet<int> guideNumSet = new HashSet<int> { 0, 1, 3, 6, 9, 10, 21, 23, 35, 45, 51 };
     public event Action<int> OnGuideAction;
-    public event Action<int> OnArrowAction;
 
     public readonly int equipPixelmon = 1;
     public readonly int setAllPixelmon = 3;
@@ -39,7 +30,7 @@ public class GuideManager : Singleton<GuideManager>
     private readonly int tabUpgr = 8;
     private readonly int tabSkill = 20;
     private readonly int tabFarm = 34;
-    private readonly int tabFarm2 = 45;
+    public readonly int tabFarm2 = 45;
     private readonly int tabDg = 50;
     #endregion
 
@@ -63,19 +54,11 @@ public class GuideManager : Singleton<GuideManager>
         }
     }
 
-    public void GuideArrowNumTrigger(int arrowNum)
-    {
-        OnArrowAction?.Invoke(arrowNum);
-    }
-
     public void SetBottomLock()
     {
-        Locks[0].SetActive(false);
-
-        if (guideNum == 1 && SaveManager.Instance.userData.isSetArrowOnEgg)
+        if (guideNum > 0)
         {
-            GuideArrow.SetActive(false);
-            return;
+            Locks[0].SetActive(false);
         }
         
         if (guideNum > tabUpgr)
