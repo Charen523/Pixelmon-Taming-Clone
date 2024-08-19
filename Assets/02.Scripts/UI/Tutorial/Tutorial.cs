@@ -1,35 +1,11 @@
-using UnityEngine;
 
 public class Tutorial : UIBase
 {
-    [SerializeField] private GameObject TutorialMsg;
-
-    private SaveManager saveManager => SaveManager.Instance;
-
-    protected override void Awake()
+    public void OnTutorialOff()
     {
-        base.Awake();
-        if (saveManager.userData.isSetArrowOnEgg && (!saveManager.userData.isDoneTutorial))
-        {
-            TutorialMsg.SetActive(false);
-            GuideManager.Instance.GuideArrow.SetActive(true);
-            GuideManager.Instance.SetArrow(GuideManager.Instance.PxmToggle.gameObject);
-        }           
-    }
-
-    public void HatchEgg()
-    {
-        if (!saveManager.userData.isSetArrowOnEgg)
-        {
-            saveManager.SetFieldData(nameof(saveManager.userData.isSetArrowOnEgg), true);
-            GuideManager.Instance.SetArrow(GuideManager.Instance.PxmToggle.gameObject);
-        }
-    }
-
-    public void TutorialDone()
-    {
-        GuideManager.Instance.GuideArrow.SetActive(false);
-        saveManager.SetFieldData(nameof(saveManager.userData.isDoneTutorial), true);
+        SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.tutoIndex), 1); //여신 종료.
+        GuideManager.Instance.GuideNumTrigger(GuideManager.Instance.guideNum); //0번 이벤트: 알까기.
+        GuideManager.Instance.GuideArrow.SetActive(true); //화살표 ON.
         UIManager.Hide<Tutorial>();
     }
 }
