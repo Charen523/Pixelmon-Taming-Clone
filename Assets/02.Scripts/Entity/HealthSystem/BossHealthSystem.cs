@@ -26,7 +26,7 @@ public class BossHealthSystem : MonoBehaviour
     {
         while(true)
         {
-            bossHpBar.value = (float)(currentHealth / maxHealth);
+            bossHpBar.value = (float)(currentHealth * 10000 / maxHealth) / 10000;
             bossHpTxt.text = ((int)(bossHpBar.value * 100)).ToString() + "%";
 
             if (currentHealth <= 0)

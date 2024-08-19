@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 
 public class UIPixelmonPopUp : UIBase
@@ -46,16 +47,16 @@ public class UIPixelmonPopUp : UIBase
     [SerializeField] private Sprite[] equipSprites;
     [SerializeField] private TextMeshProUGUI equipTxt;
 
-    [SerializeField] private Button feedingBtn;
-    [SerializeField] private GameObject feedingArrow;
+
+    [SerializeField] private Image feedingBtn;
     [SerializeField] private TextMeshProUGUI curFoodCount;
     [SerializeField] private TextMeshProUGUI demandFoodCount;
 
-    [SerializeField] private Button evolvedBtn;
-    [SerializeField] private GameObject evolvedArrow;
+    [SerializeField] private Image evolvedBtn;
     [SerializeField] private TextMeshProUGUI curCardCount;
     [SerializeField] private TextMeshProUGUI demandCardCount;
 
+    [SerializeField] private Sprite[] activativeColor;
     [SerializeField] private Button[] infoBtns;
     #endregion
 
@@ -245,13 +246,13 @@ public class UIPixelmonPopUp : UIBase
             demandFoodCount.text = myData.maxExp.ToString();
             if (saveManager.userData.food >= myData.maxExp && myData.isOwned)
             {
-                curFoodCount.color = Color.white;
-                feedingArrow.SetActive(true);
+                feedingBtn.sprite = activativeColor[0];
+                demandFoodCount.color = Color.white;
             }
             else
             {
-                curFoodCount.color = Color.red;
-                feedingArrow.SetActive(false);
+                feedingBtn.sprite = activativeColor[1];
+                demandFoodCount.color = Color.red;
             }
         }
     }
@@ -280,13 +281,13 @@ public class UIPixelmonPopUp : UIBase
         demandCardCount.text = UIUtils.GetEvolveValue(myData, data).ToString();
         if (myData.evolvedCount >= UIUtils.GetEvolveValue(myData, data))
         {
-            curCardCount.color = Color.white;
-            evolvedArrow.SetActive(true);
+            evolvedBtn.sprite = activativeColor[0];
+            demandCardCount.color = Color.white;
         }
         else
         {
-            curCardCount.color = Color.red;
-            evolvedArrow.SetActive(false);
+            evolvedBtn.sprite = activativeColor[1];
+            demandCardCount.color = Color.red;
         }
     }
 
