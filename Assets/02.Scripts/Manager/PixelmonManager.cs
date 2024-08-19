@@ -15,7 +15,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
     private SaveManager saveManager => SaveManager.Instance;
     private UserData userData;
     public Player player => Player.Instance;
-    public PixelmonTab pxmTab;
+    public UIPixelmonTab pxmTab;
     public PixelmonLayout[] layouts;
 
     private List<PixelmonData> pxmData;
