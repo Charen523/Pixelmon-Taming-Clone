@@ -81,4 +81,8 @@ public class UserData
     public int key2 = 3;
     public string lastConnectTime;
     #endregion
+
+    #region Ads
+    public int adsCount = 4;
+    #endregion
 }

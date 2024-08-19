@@ -37,20 +37,9 @@ public class DungeonTab : UIBase
     {
         if (isInit)
         {
-            string lastTime = userData.lastConnectTime;
             keys[0] = userData.key0;
             keys[1] = userData.key1;
             keys[2] = userData.key2;
-
-            if (DateTime.TryParse(lastTime, out DateTime date))
-            {
-                if (date.Date < DateTime.Now.Date)
-                {
-                    //하루 뒤.
-                    ResetKey();
-                }
-            }
-            saveManager.SetFieldData(nameof(userData.lastConnectTime), DateTime.Now.ToString());
 
             if (chargeTimeCoroutine != null)
             {
@@ -77,7 +66,6 @@ public class DungeonTab : UIBase
     private IEnumerator UpdateChargeTime()
     {
         DateTime midnight = DateTime.Now.Date.AddDays(1);
-
         while (true)
         {
             DateTime now = DateTime.Now;
@@ -87,20 +75,8 @@ public class DungeonTab : UIBase
                                                 timeUntilMidnight.Hours,
                                                 timeUntilMidnight.Minutes,
                                                 timeUntilMidnight.Seconds);
-            if (now >= midnight)
-            {
-                ResetKey();
-                midnight = midnight.AddDays(1);
-            }
             yield return new WaitForSeconds(1f);
         }
-    }
-
-    private void ResetKey()
-    {
-        saveManager.SetFieldData(nameof(userData.key0), 3);
-        saveManager.SetFieldData(nameof(userData.key1), 3);
-        saveManager.SetFieldData(nameof(userData.key2), 3);
     }
 
     public string GetKeyString(int type)
