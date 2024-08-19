@@ -23,9 +23,7 @@ public class UserData
     #endregion
 
     #region Tutorial
-    public bool isEggHatched = false;
-    public bool isDoneTutorial = false;
-    public bool isSetArrowOnEgg = false;
+    public int tutoIndex = 0; //0:first, 1:egg, 2:getPxm, 3:pxmTab, 4:end.
     #endregion
 
     #region Stage Info

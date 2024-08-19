@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class PixelmonTab : UIBase
+public class UIPixelmonTab : UIBase
 {
     [Header("UI")]
     [SerializeField] private Toggle prossessToggle;
@@ -51,7 +51,7 @@ public class PixelmonTab : UIBase
     public PixelmonEquipSlot[] equipData = new PixelmonEquipSlot[5];
     #endregion
 
-    private bool isGuideOn = false;
+    public bool isGuideOn = false;
 
     protected override async void Awake()
     {
@@ -70,7 +70,6 @@ public class PixelmonTab : UIBase
 
     private void OnEnable()
     {
-        StartCheckTutorial();
         SetfoodCount();
     }
 
@@ -82,34 +81,24 @@ public class PixelmonTab : UIBase
         }
     }
 
-    public void StartCheckTutorial()
-    {
-        if (!SaveManager.Instance.userData.isDoneTutorial && userData.isSetArrowOnEgg)
-            StartCoroutine(CheckTutorial());
-    }
-
-    private IEnumerator CheckTutorial()
-    {
-        yield return new WaitForSeconds(0.2f);
-        guideManager.SetArrow(allData[0].gameObject, 40f);
-    }
-
     public void InvokePixelmonTabGuide()
     {
         isGuideOn = true;
+        StartCoroutine(DelayPxmGuide());
+    }
 
+    private IEnumerator DelayPxmGuide()
+    {
+        yield return null;
         switch (guideManager.guideNum)
         {
+            case 1:
+                guideManager.SetArrow(allData[0].gameObject, 40f);
+                break;
             case 3:
-                guideManager.GuideArrow.SetActive(true);
                 guideManager.SetArrow(allSetBtn);
                 break;
         }
-    }
-
-    private IEnumerator CheckGuide()
-    {
-        yield return null;
     }
 
     public void InitTab()
@@ -282,8 +271,15 @@ public class PixelmonTab : UIBase
         equipOverlay.gameObject.SetActive(false);
         infoPopUp.gameObject.SetActive(false);
 
-        if (!SaveManager.Instance.userData.isDoneTutorial)
-            guideManager.SetArrow(allData[0].gameObject, 40f);
+        if (isGuideOn)
+        {
+            switch (guideManager.guideNum)
+            {
+                case 1:
+                    guideManager.SetArrow(allData[0].gameObject, 40f);
+                    break;
+            }
+        }
     }
     
     public void OnEquip()
@@ -291,8 +287,10 @@ public class PixelmonTab : UIBase
         if (tabState == TabState.Equip) 
         {
             equipOverlay.gameObject.SetActive(true);
-            if (!SaveManager.Instance.userData.isDoneTutorial)
+            if (isGuideOn && guideManager.guideNum == 1)
+            {
                 guideManager.SetArrow(equipData[0].gameObject, 40f);
+            }
         }
         else if(tabState == TabState.UnEquip) 
         {
@@ -309,10 +307,7 @@ public class PixelmonTab : UIBase
     }
 
     public void EquipedPixelmon(int slotIndex)
-    {
-        if (!saveManager.userData.isDoneTutorial)
-            UIManager.Get<Tutorial>().TutorialDone();         
-
+    {//TODO: Equip Guide
         equipData[slotIndex].Equip(allData[choiceId].myPxmData);
         pixelmonManager.equipAction?.Invoke(slotIndex, equipData[slotIndex].myPxmData);
 

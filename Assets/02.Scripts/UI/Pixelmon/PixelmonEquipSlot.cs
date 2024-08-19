@@ -9,6 +9,7 @@ public class PixelmonEquipSlot : PixelmonSlot
     public SaveManager saveManager;
     public bool isLocked = true;
     public Image stateIcon;
+
     private void Awake()
     {
         saveManager = SaveManager.Instance;
@@ -37,7 +38,7 @@ public class PixelmonEquipSlot : PixelmonSlot
             myPxmData = null;
     }
 
-    public override void InitSlot(PixelmonTab tab, PixelmonData data)
+    public override void InitSlot(UIPixelmonTab tab, PixelmonData data)
     {
         base.InitSlot(tab, data);
     }
@@ -99,6 +100,9 @@ public class PixelmonEquipSlot : PixelmonSlot
             if (GuideManager.Instance.guideNum == GuideManager.Instance.equipPixelmon)
             {
                 QuestManager.Instance.OnQuestEvent();
+                GuideManager.Instance.GuideArrow.SetActive(false);
+                saveManager.SetFieldData(nameof(saveManager.userData.tutoIndex), 4);
+                UIManager.Get<UIPixelmonTab>().isGuideOn = false;
             }
             pxmtab.EquipedPixelmon(slotIndex);
         }

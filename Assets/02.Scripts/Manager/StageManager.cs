@@ -9,6 +9,7 @@ public class StageManager : Singleton<StageManager>
     private SaveManager saveManager;
     private UserData userData;
     private QuestManager questManager;
+    private GuideManager guideManager;
 
     #region Stage Info
     [Header("Stage Info")]
@@ -105,6 +106,7 @@ public class StageManager : Singleton<StageManager>
 
         saveManager = SaveManager.Instance;
         userData = saveManager.userData;
+        guideManager = GuideManager.Instance;
         InitData();
     }
 
@@ -126,13 +128,13 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator Start()
     {
-        if (!userData.isDoneTutorial)
+        if (guideManager.guideNum < 2)
         {
             isStgFade = true;
             allFade.gameObject.SetActive(true);
             allFade.StartFadeOut();
         }
-        while (!userData.isDoneTutorial) yield return null;
+        while (guideManager.guideNum < 2) yield return null;
 
         GameManager.Instance.OnPlayerDie += OnPlayerDie;
         GameManager.Instance.OnEnemyDie += OnEnemyDie;
@@ -375,7 +377,7 @@ public class StageManager : Singleton<StageManager>
             isDungeon = false;
             isDungeonClear = true;
             dgBoss.DisableDgMonster();
-            if (dgIndex == 0 && GuideManager.Instance.guideNum == GuideManager.Instance.goldDg)
+            if (dgIndex == 0 && guideManager.guideNum == guideManager.goldDg)
             {
                 questManager.OnQuestEvent();
             }

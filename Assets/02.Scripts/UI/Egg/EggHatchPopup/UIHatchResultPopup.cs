@@ -45,7 +45,15 @@ public class UIHatchResultPopup : UIBase
 
     private EggHatch eggHatch;
     private UserData userData => SaveManager.Instance.userData;
-    
+
+    private void OnDisable()
+    {
+        if (userData.tutoIndex == 2)
+        {
+            GuideManager.Instance.GuideNumTrigger(GuideManager.Instance.guideNum);
+        }
+    }
+
     public void SetPopup(EggHatch eggHatch)
     {
         SaveManager.Instance.SetFieldData(nameof(userData.isGetPxm), false);
@@ -76,6 +84,11 @@ public class UIHatchResultPopup : UIBase
             FirstPxmUI();
         }      
         #endregion
+    }
+
+    public void SetTutorialArrow()
+    {
+        GuideManager.Instance.SetArrow(CollectBtn, 40f);
     }
 
     private void OwnedPxmUI()

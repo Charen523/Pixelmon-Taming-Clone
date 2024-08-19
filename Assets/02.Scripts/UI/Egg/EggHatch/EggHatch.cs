@@ -36,13 +36,20 @@ public class EggHatch : MonoBehaviour
     private WaitForSeconds delayAutoTime;
     #endregion
 
+    private GuideManager guideManager;
     private UserData userData => SaveManager.Instance.userData;
 
     private async void Awake()
     {
+        guideManager = GuideManager.Instance;
+
         HatchResultPopup = await UIManager.Show<UIHatchResultPopup>();
-        if (!SaveManager.Instance.userData.isSetArrowOnEgg)
-            GuideManager.Instance.SetArrow(BreakAnim.gameObject);
+
+        if (userData.tutoIndex < 3)
+        {
+            OnEggTutorial(0);
+            guideManager.OnGuideAction += OnEggTutorial;
+        }
     }
 
     private void Start()
@@ -69,9 +76,18 @@ public class EggHatch : MonoBehaviour
         }
     }
 
+    private void OnEggTutorial(int guideNum)
+    {
+        if (guideNum == 0)
+        {
+            guideManager.GuideArrow.SetActive(true);
+            guideManager.SetArrow(BreakAnim.gameObject);
+        }
+    }
+
     private bool Gacha()
     {
-        if (UIManager.Get<Tutorial>() != null)
+        if (userData.tutoIndex < 3)
         {
             HatchPxmData = DataManager.Instance.pixelmonData.data[0];
             PxmRank = (PxmRank)Enum.Parse(typeof(PxmRank), HatchPxmData.rank);
@@ -117,6 +133,7 @@ public class EggHatch : MonoBehaviour
         #endregion
         return true;
     }
+
     private void SetNewPsvValue()
     {
         for (int i = 0; i < HatchMyPxmData.psvSkill.Count; i++)
@@ -141,18 +158,15 @@ public class EggHatch : MonoBehaviour
     }
 
     public void OnClickEgg(Button btn)
-    { 
-        if (UIManager.Get<Tutorial>() != null)
+    {
+        if (guideManager.guideNum == 0 && userData.tutoIndex == 2)
         {
-            if (userData.isEggHatched == true)
-            {
-                UIManager.Instance.ShowWarn("튜토리얼을 진행해주세요!");
-                return;
-            }
-            else
-            {
-                UIManager.Get<Tutorial>().HatchEgg();
-            }
+            UIManager.Get<UIHatchResultPopup>().SetTutorialArrow();
+        }
+        else if (guideManager.guideNum == 1)
+        {
+            UIManager.Instance.ShowWarn("튜토리얼을 진행해주세요!");
+            return;
         }
 
         StartCoroutine(ClickEgg(btn));
@@ -183,6 +197,12 @@ public class EggHatch : MonoBehaviour
             
             Gacha();
             yield return SetPxmHatchAnim();
+
+            if (guideManager.guideNum == 0 && userData.tutoIndex == 1)
+            {
+                UIManager.Get<UIHatchResultPopup>().SetTutorialArrow();
+                SaveManager.Instance.SetFieldData(nameof(userData.tutoIndex), 2);
+            }
         }
 
         isDoneGetPxm = false;
@@ -277,11 +297,11 @@ public class EggHatch : MonoBehaviour
     #region HatchResultPopup
     public void GetPixelmon(bool isReplaceBtn)
     {
-        if (isReplaceBtn && IsOwnedPxm == true) // 교체하기(교체 및 수집)
+        if (isReplaceBtn && IsOwnedPxm == true) //교체하기(교체 및 수집)
         {
             ReplacePsv();
         }
-        else // 수집하기
+        else //수집하기
         {
             if (!IsOwnedPxm)
                 GetFirst();
@@ -298,14 +318,14 @@ public class EggHatch : MonoBehaviour
         SaveManager.Instance.SetFieldData(nameof(userData.isGetPxm), true);
         isDoneGetPxm = true;
 
-        //튜토리얼 체크
-        if (userData.isEggHatched == false)
+        if (userData.tutoIndex == 2)
         {
-            SaveManager.Instance.SetFieldData(nameof(userData.isEggHatched), true);
-            GuideManager.Instance.Locks[0].SetActive(false);
-            GuideManager.Instance.Locks[1].SetActive(false);
+            SaveManager.Instance.SetFieldData(nameof(userData.tutoIndex), 3);
+            guideManager.guideNum++;
+            guideManager.SetBottomLock();
+            guideManager.GuideNumTrigger(guideManager.guideNum);
         }
-
+        
         HatchResultPopup.SetActive(false);
     }
 

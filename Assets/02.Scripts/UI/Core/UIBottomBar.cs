@@ -28,15 +28,15 @@ public class UIBottomBar : MonoBehaviour
 
     private async void Awake()
     {
+        guideManager = GuideManager.Instance;
+        guideManager.OnGuideAction += SetGuideArrow;
+
         var names = Enum.GetNames(typeof(eTabs));
 
         for (int i = 0; i < names.Length; i++)
         {
             uiTabs.Add(await UIManager.Show(names[i]));
         }
-
-        guideManager = GuideManager.Instance;
-        guideManager.OnGuideAction += SetGuideArrow;
     }
 
     public void OnvalueChanged()
@@ -76,16 +76,6 @@ public class UIBottomBar : MonoBehaviour
                         break;
                 }
             }
-            else if (isGuideOn && index == guidingToggle)
-            {
-                guideManager.GuideArrow.SetActive(false);
-                guideManager.guideArrowIndex++;
-            }
-        }
-
-        if (!SaveManager.Instance.userData.isDoneTutorial)
-        {
-            guideManager.SetArrow(guideManager.PxmToggle.gameObject);
         }
         
         overlayPanel.SetActive(selectedIndex >= 0);
@@ -101,7 +91,7 @@ public class UIBottomBar : MonoBehaviour
                 switch(selectedIndex)
                 {
                     case 0:
-                        PixelmonTab tab = uiTabs[selectedIndex].GetComponent<PixelmonTab>();
+                        UIPixelmonTab tab = uiTabs[selectedIndex].GetComponent<UIPixelmonTab>();
                         tab.InvokePixelmonTabGuide();
                         break;
                     default:
@@ -111,14 +101,17 @@ public class UIBottomBar : MonoBehaviour
         }
     }
 
-    public void SetGuideArrow(int guideIndex)
+    private void SetGuideArrow(int guideIndex)
     {
         guideManager.GuideArrow.SetActive(true);
-        guideManager.guideArrowIndex = 1;
         isGuideOn = true;
 
         switch (guideIndex)
-        {    
+        {
+            case 1:
+                guideManager.SetArrow(toggles[0].gameObject);
+                guidingToggle = 0;
+                break;
             case 3: //일괄편성
                 guideManager.SetArrow(toggles[0].gameObject);
                 guidingToggle = 0;
