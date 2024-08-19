@@ -41,7 +41,7 @@ public class DgMonster : MonoBehaviour
     private async void Awake()
     {
         dgProgress = await UIManager.Show<UIDungeonProgress>();
-        Player.Instance.statHandler.data.baseAtkRange = 2;
+        Player.Instance.statHandler.data.baseAtkRange = 3;
         Player.Instance.fsm.ChangeState(Player.Instance.fsm.DetectState);
     }
 
