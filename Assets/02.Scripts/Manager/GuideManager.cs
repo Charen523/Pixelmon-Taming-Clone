@@ -7,11 +7,11 @@ public class GuideManager : Singleton<GuideManager>
     public GameObject[] Locks;
     public GameObject GuideArrow;
     public GameObject PxmToggle;
-    public int guideNum = 0;
+    public int guideNum = -1;
     private UserData userData => SaveManager.Instance.userData;
 
     #region Tutorial Start Indexes
-    private readonly HashSet<int> guideNumSet = new HashSet<int> { 0, 1, 3, 6, 9, 10, 21, 23, 35, 45, 51 };
+    private readonly HashSet<int> guideNumSet = new HashSet<int> { 0, 1, 3 };
     public event Action<int> OnGuideAction;
 
     public readonly int equipPixelmon = 1;
