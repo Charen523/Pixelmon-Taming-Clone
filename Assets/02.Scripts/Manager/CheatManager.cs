@@ -30,7 +30,7 @@ public class CheatManager : Singleton<CheatManager>
                 case "e":
                 case "E":
                     BigInteger exp = 1000000000;
-                    SaveManager.Instance.SetFieldData("exp", exp, true);
+                    SaveManager.Instance.SetFieldData("userExp", exp, true);
                     break;
                 default:
                     break;
