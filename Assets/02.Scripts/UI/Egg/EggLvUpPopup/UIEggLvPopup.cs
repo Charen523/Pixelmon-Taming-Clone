@@ -46,6 +46,7 @@ public class UIEggLvPopup : UIBase
     private float totalTime => userData.eggLv * 1800f; // 레벨*30분
     private float remainingTime;
 
+    [SerializeField] private TextMeshProUGUI adsSkipCountTxt;
     private int skipDia = 1000;
     #endregion
 
@@ -259,9 +260,14 @@ public class UIEggLvPopup : UIBase
         SetLvUpMode();
     }
 
-    //TODO : 광고넣기
-    public void OnClickAdBtn()
+    //광고넣기
+    public void OnClickAdBtn(int decTime)
     {
+        SaveManager.Instance.SetFieldData(nameof(userData.adsCount), --userData.adsCount);
+        SaveManager.Instance.SetFieldData(nameof(userData.skipTime), userData.skipTime + decTime);
+        adsSkipCountTxt.text = string.Format("{0}/4", userData.adsCount);
+        remainingTime -= decTime;
+        if (remainingTime <= 0) SetGaugeMode();
     }
 
     public void OnClickDiaBtn()
