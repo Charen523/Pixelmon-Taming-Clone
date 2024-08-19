@@ -128,13 +128,13 @@ public class StageManager : Singleton<StageManager>
 
     private IEnumerator Start()
     {
-        if (guideManager.guideNum < 2)
+        if (userData.tutoIndex < 4)
         {
             isStgFade = true;
             allFade.gameObject.SetActive(true);
             allFade.StartFadeOut();
         }
-        while (guideManager.guideNum < 2) yield return null;
+        while (userData.tutoIndex < 4) yield return null;
 
         GameManager.Instance.OnPlayerDie += OnPlayerDie;
         GameManager.Instance.OnEnemyDie += OnEnemyDie;
