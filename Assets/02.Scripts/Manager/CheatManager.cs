@@ -27,6 +27,10 @@ public class CheatManager : Singleton<CheatManager>
                 case "Q":
                     QuestCheat();
                     break;
+                case "e":
+                case "E":
+                    SaveManager.Instance.SetFieldData("exp", 1000000000, true);
+                    break;
                 default:
                     break;
             }
