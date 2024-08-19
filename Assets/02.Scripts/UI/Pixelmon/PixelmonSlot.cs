@@ -29,13 +29,13 @@ public class PixelmonSlot : MonoBehaviour
     #endregion
 
     #region 데이터
-    public PixelmonTab pxmtab;
+    public UIPixelmonTab pxmtab;
     public PixelmonData pxmData;
     public MyPixelmonData myPxmData = new MyPixelmonData();
     public bool isOwned => myPxmData.isOwned;
     #endregion
 
-    public virtual void InitSlot(PixelmonTab tab, PixelmonData data)
+    public virtual void InitSlot(UIPixelmonTab tab, PixelmonData data)
     {
         dataManager = DataManager.Instance;
         pxmtab = tab;
