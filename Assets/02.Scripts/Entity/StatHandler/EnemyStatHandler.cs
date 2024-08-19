@@ -20,7 +20,7 @@ public class EnemyStatHandler : MonoBehaviour
         int world = StageManager.Instance.worldNum;
         int stage = StageManager.Instance.stageNum;
 
-        int deltaStage = (world - 1) * 30 + stage;
+        int deltaStage = (world - 1) * 10 + stage;
 
         if (data.isBoss)
         {
