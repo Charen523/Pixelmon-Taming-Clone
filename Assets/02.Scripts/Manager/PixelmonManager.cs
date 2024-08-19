@@ -116,18 +116,18 @@ public class PixelmonManager : Singleton<PixelmonManager>
     {
         switch (index) 
         {
-            case 5:
+            case 10:
                 UnLockedSlot(2);
                 UIManager.Instance.ShowWarn("3번째 픽셀몬 슬롯이 개방되었습니다.");
                 break;
-            case 10:
+            case 50:
                 UnLockedSlot(3);
-                UIManager.Instance.ShowWarn("3번째 픽셀몬 슬롯이 개방되었습니다.");
+                UIManager.Instance.ShowWarn("4번째 픽셀몬 슬롯이 개방되었습니다.");
                 break;
-            case 30:
+            case 100:
                 UnLockedSlot(4);
                 unlockSlotAction -= UnLockedSlots;
-                UIManager.Instance.ShowWarn("3번째 픽셀몬 슬롯이 개방되었습니다.");
+                UIManager.Instance.ShowWarn("5번째 픽셀몬 슬롯이 개방되었습니다.");
                 break;
             default:
                 break;
