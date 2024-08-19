@@ -61,6 +61,7 @@ public class QuestManager : Singleton<QuestManager>
         userData = SaveManager.Instance.userData;
 
         GetQuestIndex();
+        guideManager.SetBottomLock();
     }
 
     private void Start()
@@ -166,7 +167,6 @@ public class QuestManager : Singleton<QuestManager>
         string[] splitId = userData.questIndex.Split('_');
         repeatCount = int.Parse(splitId[0]);
         curIndex = splitId[1];
-
         if (splitId[1][0] == 'R')
         {
             questNum = (repeatCount - 1) * maxRepeatNum + int.Parse(splitId[1][1..]) + 56;
@@ -182,7 +182,6 @@ public class QuestManager : Singleton<QuestManager>
             }
             guideManager.GuideNumTrigger(guideManager.guideNum);
         }
-        guideManager.SetBottomLock();
 
         data = DataManager.Instance.GetData<QuestData>(curIndex);
         curType = data.type;

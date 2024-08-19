@@ -56,14 +56,6 @@ public class GuideManager : Singleton<GuideManager>
 
     public void SetBottomLock()
     {
-        if (guideNum == -1)
-        {
-            for (int i = 0; i < Locks.Length; i++)
-            {
-                Locks[i].SetActive(false);  
-            }
-        }
-
         if (guideNum > 0)
         {
             Locks[0].SetActive(false);
