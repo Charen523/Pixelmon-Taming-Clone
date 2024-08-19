@@ -175,6 +175,12 @@ public class QuestManager : Singleton<QuestManager>
         {
             questNum = int.Parse(curIndex[1..]);
             guideManager.guideNum = questNum;
+
+            if (userData.tutoIndex < 3)
+            {
+                guideManager.guideNum = 0;
+            }
+            guideManager.GuideNumTrigger(guideManager.guideNum);
         }
 
         data = DataManager.Instance.GetData<QuestData>(curIndex);
