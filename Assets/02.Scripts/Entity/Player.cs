@@ -15,7 +15,7 @@ public class Player : Singleton<Player>
 
     private IEnumerator Start()
     {
-        while(GuideManager.Instance.guideNum < 2) yield return null;
+        while(GuideManager.Instance.guideNum < 4) yield return null;
         fsm.Init();
     }
 
