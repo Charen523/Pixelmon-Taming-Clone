@@ -19,7 +19,7 @@ public class Player : Singleton<Player>
 
     private IEnumerator Start()
     {
-        while(!SaveManager.Instance.userData.isDoneTutorial) yield return null;
+        while(GuideManager.Instance.guideNum < 2) yield return null;
         fsm.Init();
     }
 
