@@ -7,7 +7,7 @@ public class UIPixelmonPopUp : UIBase
 {
     #region Data
     [SerializeField]
-    private PixelmonTab pxmTab;
+    private UIPixelmonTab pxmTab;
     [SerializeField]
     private PixelmonData data;
     [SerializeField]
@@ -66,19 +66,21 @@ public class UIPixelmonPopUp : UIBase
     public int foodPerExp = 10;
     public int maxExp = 50;
     private string maxLv = "-";
-    public void ShowPopUp(int dataIndex, PixelmonTab tab)
+    public void ShowPopUp(int dataIndex, UIPixelmonTab tab)
     {
         pxmTab = tab;
         infoIndex = dataIndex;
         SetData();
-        if((dataIndex == 0) && !saveManager.userData.isDoneTutorial)
+        if((dataIndex == 0) && GuideManager.Instance.guideNum == 1)
+        {
             GuideManager.Instance.SetArrow(equipBtn.gameObject, 40f);
+        }
     }
 
     public void OnClickOverlay()
     {
         gameObject.SetActive(false);
-        pxmTab.StartCheckTutorial();
+        pxmTab.InvokePixelmonTabGuide();
     }
 
     public void OnPreviousInfo()
