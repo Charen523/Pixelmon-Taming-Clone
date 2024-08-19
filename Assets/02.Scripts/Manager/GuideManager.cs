@@ -7,7 +7,7 @@ public class GuideManager : Singleton<GuideManager>
     public GameObject[] Locks;
     public GameObject GuideArrow;
     public GameObject PxmToggle;
-    public int guideNum = -1;
+    public int guideNum = 100;
     private UserData userData => SaveManager.Instance.userData;
 
     #region Tutorial Start Indexes
