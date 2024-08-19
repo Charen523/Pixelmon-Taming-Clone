@@ -18,7 +18,10 @@ public class CanvasGame : MonoBehaviour
         yield return new WaitUntil(() => DataManager.Instance.isInit);
         yield return UIManager.Show<UIMiddleBar>();
         yield return new WaitUntil(() => AllFade.activeInHierarchy == false);
-        if (!SaveManager.Instance.userData.isDoneTutorial)
+
+        if (SaveManager.Instance.userData.tutoIndex == 0)
+        {
             yield return UIManager.Show<Tutorial>();
+        }
     }
 }
