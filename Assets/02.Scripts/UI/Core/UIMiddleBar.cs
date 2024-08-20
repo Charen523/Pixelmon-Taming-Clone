@@ -20,6 +20,7 @@ public class UIMiddleBar : UIBase
 
     protected override async void Awake()
     {
+        GuideManager.Instance.OnGuideAction += SetGuideArrow;
         EggLvPopup = await UIManager.Show<UIEggLvPopup>(this);
         AutoEggHatch = await UIManager.Show<UIAutoEggHatch>(EggHatch);
     }
@@ -27,7 +28,6 @@ public class UIMiddleBar : UIBase
     {
         SetMiddleBarUI();
         UIManager.Instance.UpdateUI += UpdateMiddleBarUI;
-        GuideManager.Instance.OnGuideAction += SetGuideArrow;
     }
 
     private void SetMiddleBarUI()
@@ -63,15 +63,14 @@ public class UIMiddleBar : UIBase
             AutoEggHatch.SetActive(true);            
     }
 
-    private void SetGuideArrow(int guideIndex)
+    public void SetGuideArrow(int guideIndex)
     {
-        //GuideManager.Instance.GuideArrow.SetActive(true);
+        GuideManager.Instance.GuideArrow.SetActive(true);
 
         switch (guideIndex)
         {
             case 6:
-                //GuideManager.Instance.SetArrow(nestLvBtn);
-                Debug.Log("둥지 버튼에 가이드ON");
+                GuideManager.Instance.SetArrow(nestLvBtn, 20f);
                 break;
         }
     }
