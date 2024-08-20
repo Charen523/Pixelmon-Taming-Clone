@@ -223,10 +223,9 @@ public class FieldSlot : MonoBehaviour
         while (passTime > 0)
         {
             passTime -= Time.deltaTime;
-            int hours = Mathf.FloorToInt(passTime / 3600f);
             int minutes = Mathf.FloorToInt((passTime % 3600f) / 60f);
             int seconds = Mathf.FloorToInt(passTime % 60f);
-            timeTxt.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+            timeTxt.text = string.Format("{0:00}:{1:00}", minutes, seconds);
             timeSldr.value = passTime / fieldData.leftTime;
             yield return null;
         }
