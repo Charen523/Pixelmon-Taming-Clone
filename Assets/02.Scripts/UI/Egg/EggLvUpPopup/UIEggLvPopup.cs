@@ -62,6 +62,8 @@ public class UIEggLvPopup : UIBase
     private UserData userData => SaveManager.Instance.userData;
     private Coroutine updateTimerCoroutine;
 
+    private bool isGuide = false;
+
     public override void Opened(object[] param) 
     { 
         base.Opened(param);      
@@ -176,6 +178,11 @@ public class UIEggLvPopup : UIBase
         {
             SetBtnSprite(EggLvBtnType.LvUp, LvUpBtn, false);
             SetBtnSprite(EggLvBtnType.GaugeUp, GaugeUpBtn, true);
+        }
+
+        if (isGuide)
+        {
+            EggLvGuide();
         }
     }
 
@@ -324,6 +331,25 @@ public class UIEggLvPopup : UIBase
         {
             StopCoroutine(updateTimerCoroutine);
             updateTimerCoroutine = null;
+        }
+
+        if (isGuide)
+        {
+            uiMiddleBar.SetGuideArrow(GuideManager.Instance.nestLvUp);
+        }
+    }
+
+    public void EggLvGuide()
+    {
+        isGuide = true;
+
+        if (userData.fullGaugeCnt == lvUpGauges.Count)
+        {
+            GuideManager.Instance.SetArrow(LvUpBtn.gameObject);
+        }
+        else
+        {
+            GuideManager.Instance.SetArrow(GaugeUpBtn.gameObject);
         }
     }
 }
