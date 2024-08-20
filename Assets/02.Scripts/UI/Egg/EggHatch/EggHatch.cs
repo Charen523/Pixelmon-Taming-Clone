@@ -47,7 +47,6 @@ public class EggHatch : MonoBehaviour
     {
         guideManager = GuideManager.Instance;
         HatchResultPopup = await UIManager.Show<UIHatchResultPopup>();
-        AnimData.Initialize();
 
         if (userData.tutoIndex < 3)
         {
@@ -58,6 +57,7 @@ public class EggHatch : MonoBehaviour
 
     private void Start()
     {
+        AnimData.Initialize();
         isDoneGetPxm = true;
         getPixelmon = new WaitUntil(() => isDoneGetPxm == true);
         delayAutoTime = new WaitForSeconds(1f);

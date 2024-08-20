@@ -1,6 +1,6 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -43,8 +43,16 @@ public class UIHatchResultPopup : UIBase
     [SerializeField] private GameObject OwnedBtn;
     [SerializeField] private Button rePlaceBtn;
 
+    private int lowPsvCnt;
     private EggHatch eggHatch;
     private UserData userData => SaveManager.Instance.userData;
+
+    public UIHatchWarnPopup hatchWarnPopup;
+
+    private async void Start()
+    {
+        hatchWarnPopup = await UIManager.Show<UIHatchWarnPopup>();
+    }
 
     private void OnDisable()
     {
@@ -93,6 +101,8 @@ public class UIHatchResultPopup : UIBase
 
     private void OwnedPxmUI()
     {
+        lowPsvCnt = 0;
+
         CollectBtn.SetActive(false);
         OwnedBtn.SetActive(true);
 
@@ -112,7 +122,10 @@ public class UIHatchResultPopup : UIBase
             if (eggHatch.PsvData[i].NewPsvValue > eggHatch.HatchMyPxmData.psvSkill[i].psvValue)
                 UIPsv[i].NewPsvValueTxt.HexColor("#78FF1E");
             else if(eggHatch.PsvData[i].NewPsvValue < eggHatch.HatchMyPxmData.psvSkill[i].psvValue)
-                UIPsv[i].NewPsvValueTxt.HexColor("#FF0A0A");
+            {
+                UIPsv[i].NewPsvValueTxt.HexColor("#FF0A0A"); 
+                lowPsvCnt++;
+            }             
         }
         for (int i = 3; i >= eggHatch.HatchMyPxmData.psvSkill.Count; i--)
         {
@@ -141,6 +154,12 @@ public class UIHatchResultPopup : UIBase
 
     public void OnClickGetPixelmon(bool isReplaceBtn)
     {
-        eggHatch.GetPixelmon(isReplaceBtn);
+        if ((eggHatch.HatchMyPxmData.psvSkill.Count == lowPsvCnt) 
+            && isReplaceBtn)
+        {
+            hatchWarnPopup.SetActive(true);
+            hatchWarnPopup.SetPopup(eggHatch);
+        }           
+        else eggHatch.GetPixelmon(isReplaceBtn);
     }
 }
