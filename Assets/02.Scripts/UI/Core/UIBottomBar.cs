@@ -101,64 +101,53 @@ public class UIBottomBar : MonoBehaviour
         }
     }
 
-    private void SetGuideArrow(int guideIndex)
+    private async void SetGuideArrow(int guideIndex)
     {
-        switch (guideIndex)
+        if (guideIndex == guideManager.equipPixelmon)
         {
-            case 1:
-                isGuideOn = true;
-                guideManager.GuideArrow.SetActive(true);
-                guideManager.SetArrow(toggles[0].gameObject);
-                guidingToggle = 0;
-                break;
-            case 3: //일괄편성
-                isGuideOn = true;
-                guideManager.GuideArrow.SetActive(true);
-                guideManager.SetArrow(toggles[0].gameObject);
-                guidingToggle = 0;
-                break;
-            case 9: //공격력 업그레이드
-                isGuideOn = true;
-                guideManager.GuideArrow.SetActive(true);
-                guideManager.SetArrow(toggles[1].gameObject);
-                guidingToggle = 1;
-                break;
-            case 10: //먹이주기
-                isGuideOn = true;
-                guideManager.GuideArrow.SetActive(true);
-                guideManager.SetArrow(toggles[0].gameObject);
-                guidingToggle = 0;
-                break;
-            case 21: //스킬 뽑기
-                isGuideOn = true;
-                guideManager.GuideArrow.SetActive(true);
-                guideManager.SetArrow(toggles[5].gameObject);
-                guidingToggle = 5;
-                break;
-            case 23: //스킬 장착
-                isGuideOn = true;
-                guideManager.GuideArrow.SetActive(true);
-                guideManager.SetArrow(toggles[2].gameObject);
-                guidingToggle = 2;
-                break;
-            case 35: //씨앗심기
-                isGuideOn = true;
-                guideManager.GuideArrow.SetActive(true);
-                guideManager.SetArrow(toggles[3].gameObject);
-                guidingToggle = 3;
-                break;
-            case 45: //수확하기
-                isGuideOn = true;
-                guideManager.GuideArrow.SetActive(true);
-                guideManager.SetArrow(toggles[3].gameObject);
-                guidingToggle = 3;
-                break;
-            case 51: //골드 던전
-                isGuideOn = true;
-                guideManager.GuideArrow.SetActive(true);
-                guideManager.SetArrow(toggles[4].gameObject);
-                guidingToggle = 4;
-                break;
+            isGuideOn = true;
+            guideManager.GuideArrow.SetActive(true);
+            guideManager.SetArrow(toggles[0].gameObject);
+            guidingToggle = 0;
+        }
+        else if (guideIndex == guideManager.setAllPixelmon)
+        {
+            isGuideOn = true;
+            guideManager.GuideArrow.SetActive(true);
+            guideManager.SetArrow(toggles[0].gameObject);
+            guidingToggle = 0;
+        }
+        else if (guideIndex == guideManager.upgrAtk)
+        {
+            await UIManager.Show<UIUnlockPopup>("성장탭 해금!");
+            //isGuideOn = true;
+            //guideManager.GuideArrow.SetActive(true);
+            //guideManager.SetArrow(toggles[1].gameObject);
+            //guidingToggle = 1;
+        }
+        else if (guideIndex == guideManager.skillGatcha)
+        {
+            await UIManager.Show<UIUnlockPopup>("스킬,상점탭 해금!");
+            //isGuideOn = true;
+            //guideManager.GuideArrow.SetActive(true);
+            //guideManager.SetArrow(toggles[5].gameObject);
+            //guidingToggle = 5;
+        }
+        else if (guideIndex == guideManager.seedFarm)
+        {
+            await UIManager.Show<UIUnlockPopup>("농장탭 해금!");
+            //isGuideOn = true;
+            //guideManager.GuideArrow.SetActive(true);
+            //guideManager.SetArrow(toggles[3].gameObject);
+            //guidingToggle = 3;
+        }
+        else if (guideIndex == guideManager.goldDg)
+        {
+            await UIManager.Show<UIUnlockPopup>("던전탭 해금!");
+            //isGuideOn = true;
+            //guideManager.GuideArrow.SetActive(true);
+            //guideManager.SetArrow(toggles[4].gameObject);
+            //guidingToggle = 4;
         }
     }
 }
