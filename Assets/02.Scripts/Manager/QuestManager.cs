@@ -17,7 +17,8 @@ public enum QuestType
     Skill,
     Feed,
     Seed,
-    Harvest
+    Harvest,
+    Null
 }
 
 public class QuestManager : Singleton<QuestManager>

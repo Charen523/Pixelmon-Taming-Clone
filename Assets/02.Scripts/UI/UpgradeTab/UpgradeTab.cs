@@ -10,11 +10,11 @@ public class UpgradeTab : UIBase
     public Dictionary<UpgradeIndex, QuestType> questMapping = new Dictionary<UpgradeIndex, QuestType>
     {   {UpgradeIndex.Atk, QuestType.UpgradeAtk },
         {UpgradeIndex.Dmg, QuestType.UpgradeDmg},
-        {UpgradeIndex.SDmg, QuestType.Default },
-        {UpgradeIndex.Cri, QuestType.Default },
-        {UpgradeIndex.CriDmg, QuestType.Default },
-        {UpgradeIndex.SCri, QuestType.Default },
-        {UpgradeIndex.SCriDmg, QuestType.Default }
+        {UpgradeIndex.SDmg, QuestType.Null },
+        {UpgradeIndex.Cri, QuestType.Null },
+        {UpgradeIndex.CriDmg, QuestType.Null },
+        {UpgradeIndex.SCri, QuestType.Null },
+        {UpgradeIndex.SCriDmg, QuestType.Null }
     };
 
     protected override void Awake()
