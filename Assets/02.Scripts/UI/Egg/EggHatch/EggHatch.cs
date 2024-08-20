@@ -37,9 +37,7 @@ public class EggHatch : MonoBehaviour
     private PsvRank autoPsvRank;
 
     private WaitForSeconds delayAutoTime;
-
-    public AnimationData animData = new AnimationData();
-    public Animator autoBtnAnim = new Animator();
+    public Animator autoBtnAnim;
     #endregion
 
     private GuideManager guideManager;
@@ -48,8 +46,8 @@ public class EggHatch : MonoBehaviour
     private async void Awake()
     {
         guideManager = GuideManager.Instance;
-
         HatchResultPopup = await UIManager.Show<UIHatchResultPopup>();
+        AnimData.Initialize();
 
         if (userData.tutoIndex < 3)
         {
@@ -64,8 +62,6 @@ public class EggHatch : MonoBehaviour
         getPixelmon = new WaitUntil(() => isDoneGetPxm == true);
         delayAutoTime = new WaitForSeconds(1f);
         HatchedPixelmonImg.gameObject.SetActive(false);
-
-        AnimData.Initialize();
 
         PsvData = new PxmPsvData[4];
         for (int i = 0; i < PsvData.Length; i++)
@@ -250,13 +246,13 @@ public class EggHatch : MonoBehaviour
     {
         autoPxmRank = autoRank;
         autoPsvRank = autoPsv;
-        autoBtnAnim.SetBool(animData.EggHatchAutoModeParameterHash, true);
+        autoBtnAnim.SetBool(AnimData.EggHatchAutoModeParameterHash, true);
 
         while (isAutoMode)
         {
             yield return ClickEgg();
         }
-        autoBtnAnim.SetBool(animData.EggHatchAutoModeParameterHash, false);
+        autoBtnAnim.SetBool(AnimData.EggHatchAutoModeParameterHash, false);
     }
 
     private IEnumerator SetPxmHatchAnim()
