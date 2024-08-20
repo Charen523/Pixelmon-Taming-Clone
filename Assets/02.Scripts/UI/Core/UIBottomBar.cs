@@ -103,54 +103,61 @@ public class UIBottomBar : MonoBehaviour
 
     private void SetGuideArrow(int guideIndex)
     {
-        isGuideOn = true;
-
         switch (guideIndex)
         {
             case 1:
+                isGuideOn = true;
+                guideManager.GuideArrow.SetActive(true);
                 guideManager.SetArrow(toggles[0].gameObject);
                 guidingToggle = 0;
-                guideManager.GuideArrow.SetActive(true);
                 break;
             case 3: //일괄편성
+                isGuideOn = true;
+                guideManager.GuideArrow.SetActive(true);
                 guideManager.SetArrow(toggles[0].gameObject);
                 guidingToggle = 0;
-                guideManager.GuideArrow.SetActive(true);
                 break;
             case 9: //공격력 업그레이드
+                isGuideOn = true;
+                guideManager.GuideArrow.SetActive(true);
                 guideManager.SetArrow(toggles[1].gameObject);
                 guidingToggle = 1;
-                guideManager.GuideArrow.SetActive(true);
                 break;
             case 10: //먹이주기
+                isGuideOn = true;
+                guideManager.GuideArrow.SetActive(true);
                 guideManager.SetArrow(toggles[0].gameObject);
                 guidingToggle = 0;
-                guideManager.GuideArrow.SetActive(true);
                 break;
             case 21: //스킬 뽑기
+                isGuideOn = true;
+                guideManager.GuideArrow.SetActive(true);
                 guideManager.SetArrow(toggles[5].gameObject);
                 guidingToggle = 5;
-                guideManager.GuideArrow.SetActive(true);
                 break;
             case 23: //스킬 장착
+                isGuideOn = true;
+                guideManager.GuideArrow.SetActive(true);
                 guideManager.SetArrow(toggles[2].gameObject);
                 guidingToggle = 2;
-                guideManager.GuideArrow.SetActive(true);
                 break;
             case 35: //씨앗심기
+                isGuideOn = true;
+                guideManager.GuideArrow.SetActive(true);
                 guideManager.SetArrow(toggles[3].gameObject);
                 guidingToggle = 3;
-                guideManager.GuideArrow.SetActive(true);
                 break;
             case 45: //수확하기
-                guideManager.SetArrow(toggles[3].gameObject);
+                isGuideOn = true;
                 guideManager.GuideArrow.SetActive(true);
+                guideManager.SetArrow(toggles[3].gameObject);
                 guidingToggle = 3;
                 break;
             case 51: //골드 던전
+                isGuideOn = true;
+                guideManager.GuideArrow.SetActive(true);
                 guideManager.SetArrow(toggles[4].gameObject);
                 guidingToggle = 4;
-                guideManager.GuideArrow.SetActive(true);
                 break;
         }
     }
