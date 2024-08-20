@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using TMPro;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +10,7 @@ public class UIMiddleBar : UIBase
 {    
     public TextMeshProUGUI EggLvText;
     public TextMeshProUGUI EggCntText;
+    public GameObject nestLvBtn;
 
     public EggHatch EggHatch;
 
@@ -24,6 +20,7 @@ public class UIMiddleBar : UIBase
 
     protected override async void Awake()
     {
+        GuideManager.Instance.OnGuideAction += SetGuideArrow;
         EggLvPopup = await UIManager.Show<UIEggLvPopup>(this);
         AutoEggHatch = await UIManager.Show<UIAutoEggHatch>(EggHatch);
     }
@@ -60,7 +57,21 @@ public class UIMiddleBar : UIBase
 
     public void OnClickAutoBtn()
     {
-        //EggHatch.isAutoMode = false;
-        AutoEggHatch.SetActive(true);
+        if (EggHatch.isAutoMode)
+            EggHatch.isWantStopAuto = true;
+        else
+            AutoEggHatch.SetActive(true);            
+    }
+
+    public void SetGuideArrow(int guideIndex)
+    {
+        GuideManager.Instance.GuideArrow.SetActive(true);
+
+        switch (guideIndex)
+        {
+            case 6:
+                GuideManager.Instance.SetArrow(nestLvBtn, 20f);
+                break;
+        }
     }
 }

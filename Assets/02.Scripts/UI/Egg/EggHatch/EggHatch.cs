@@ -30,10 +30,14 @@ public class EggHatch : MonoBehaviour
 
     #region 알 자동 뽑기
     public bool isAutoMode;
+    public bool isWantStopAuto;
     private bool isHighRankPsvSet;
+
     private PxmRank autoPxmRank;
     private PsvRank autoPsvRank;
+
     private WaitForSeconds delayAutoTime;
+    public Animator autoBtnAnim;
     #endregion
 
     private GuideManager guideManager;
@@ -42,8 +46,8 @@ public class EggHatch : MonoBehaviour
     private async void Awake()
     {
         guideManager = GuideManager.Instance;
-
         HatchResultPopup = await UIManager.Show<UIHatchResultPopup>();
+        AnimData.Initialize();
 
         if (userData.tutoIndex < 3)
         {
@@ -58,8 +62,6 @@ public class EggHatch : MonoBehaviour
         getPixelmon = new WaitUntil(() => isDoneGetPxm == true);
         delayAutoTime = new WaitForSeconds(1f);
         HatchedPixelmonImg.gameObject.SetActive(false);
-
-        AnimData.Initialize();
 
         PsvData = new PxmPsvData[4];
         for (int i = 0; i < PsvData.Length; i++)
@@ -169,7 +171,9 @@ public class EggHatch : MonoBehaviour
             return;
         }
 
-        StartCoroutine(ClickEgg(btn));
+        if (!isAutoMode)
+            StartCoroutine(ClickEgg(btn));
+        else isWantStopAuto = true;
     }
 
     public IEnumerator ClickEgg(Button btn = null)
@@ -180,9 +184,6 @@ public class EggHatch : MonoBehaviour
             isAutoMode = false;
             yield break;
         }
-
-        if (isAutoMode && btn != null)
-            isAutoMode = false;
 
         if (btn != null)
             btn.interactable = false;
@@ -207,11 +208,17 @@ public class EggHatch : MonoBehaviour
 
         isDoneGetPxm = false;
 
-        if (isAutoMode && isHighRankPsvSet && PxmRank >= autoPxmRank)
+        if (isAutoMode && isHighRankPsvSet && (PxmRank >= autoPxmRank))
         {
             isAutoMode = false;
             isHighRankPsvSet = false;
         }
+
+        if (isWantStopAuto)
+        {
+            isAutoMode = false;
+            isWantStopAuto = false;
+        }           
 
         if (!isAutoMode)
         {
@@ -239,10 +246,13 @@ public class EggHatch : MonoBehaviour
     {
         autoPxmRank = autoRank;
         autoPsvRank = autoPsv;
+        autoBtnAnim.SetBool(AnimData.EggHatchAutoModeParameterHash, true);
+
         while (isAutoMode)
         {
             yield return ClickEgg();
-        }           
+        }
+        autoBtnAnim.SetBool(AnimData.EggHatchAutoModeParameterHash, false);
     }
 
     private IEnumerator SetPxmHatchAnim()

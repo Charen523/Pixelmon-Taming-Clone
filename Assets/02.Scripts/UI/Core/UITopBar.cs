@@ -21,9 +21,9 @@ public class UITopBar : UIBase
     #endregion
 
     #region Data Fields
-    private int bNum = 10000;
-    private int d1 = 50000;
-    private int d2 = 10000;
+    private int bNum = 2000;
+    private int d1 = 100;
+    private int d2 = 100;
 
     private BigInteger currentExp => saveManager.userData.userExp; 
     private BigInteger tempMaxExp => Calculater.CalPrice(userData.userLv, bNum, d1, d2); //임시 변수
