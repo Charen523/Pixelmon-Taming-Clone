@@ -11,7 +11,7 @@ public class GuideManager : Singleton<GuideManager>
     private UserData userData => SaveManager.Instance.userData;
 
     #region Tutorial Start Indexes
-    private readonly HashSet<int> guideNumSet = new HashSet<int> { 0, 1, 3 };
+    private readonly HashSet<int> guideNumSet = new HashSet<int> { 0, 1, 3, 6 };
     public event Action<int> OnGuideAction;
 
     public readonly int equipPixelmon = 1;
@@ -51,6 +51,10 @@ public class GuideManager : Singleton<GuideManager>
         if (guideNumSet.Contains(guideNum))
         {
             OnGuideAction?.Invoke(guideNum);
+        }
+        else
+        {
+            GuideArrow.SetActive(false);
         }
     }
 
