@@ -66,15 +66,17 @@ public class UIMiddleBar : UIBase
 
     public void SetGuideArrow(int guideIndex)
     {
-        switch (guideIndex)
+        if (guideIndex == GuideManager.Instance.nestLvUp)
         {
-            case 6:
-                if (userData.eggLv < 2)
-                {
-                    GuideManager.Instance.GuideArrow.SetActive(true);
-                    GuideManager.Instance.SetArrow(nestLvBtn, 20f);
-                }
-                break;
+            if (userData.eggLv < 2)
+            {
+                GuideManager.Instance.GuideArrow.SetActive(true);
+                GuideManager.Instance.SetArrow(nestLvBtn, 20f);
+            }
+            else
+            {
+                GuideManager.Instance.GuideArrow.SetActive(false);
+            }
         }
     }
 }
