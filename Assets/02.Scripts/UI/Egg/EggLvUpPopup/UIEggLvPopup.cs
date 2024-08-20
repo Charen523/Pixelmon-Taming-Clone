@@ -335,21 +335,38 @@ public class UIEggLvPopup : UIBase
 
         if (isGuide)
         {
-            uiMiddleBar.SetGuideArrow(GuideManager.Instance.nestLvUp);
+            if (userData.eggLv < 2)
+            {
+                uiMiddleBar.SetGuideArrow(GuideManager.Instance.nestLvUp);
+            }
+            else
+            {
+                GuideManager.Instance.GuideArrow.SetActive(false);
+            }
         }
     }
 
     public void EggLvGuide()
     {
-        isGuide = true;
+        if (userData.eggLv > 1)
+        {
+            isGuide = false;
+            GuideManager.Instance.GuideArrow.SetActive(false);
+            return;
+        }
 
+        isGuide = true;
         if (userData.fullGaugeCnt == lvUpGauges.Count)
         {
-            GuideManager.Instance.SetArrow(LvUpBtn.gameObject);
+            GuideManager.Instance.SetArrow(LvUpBtn.gameObject, 20f);
+        }
+        else if (userData.isLvUpMode)
+        {
+            GuideManager.Instance.SetArrow(DiaBtn.gameObject, 20f);
         }
         else
         {
-            GuideManager.Instance.SetArrow(GaugeUpBtn.gameObject);
+            GuideManager.Instance.SetArrow(GaugeUpBtn.gameObject, 20f);
         }
     }
 }
