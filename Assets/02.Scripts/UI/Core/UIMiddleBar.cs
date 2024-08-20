@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class EggImg : BaseBg
@@ -56,8 +57,10 @@ public class UIMiddleBar : UIBase
 
     public void OnClickAutoBtn()
     {
-        //EggHatch.isAutoMode = false;
-        AutoEggHatch.SetActive(true);
+        if (EggHatch.isAutoMode)
+            EggHatch.isWantStopAuto = true;
+        else
+            AutoEggHatch.SetActive(true);            
     }
 
     private void SetGuideArrow(int guideIndex)

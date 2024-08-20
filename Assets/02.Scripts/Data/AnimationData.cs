@@ -16,6 +16,7 @@ public class AnimationData
     [SerializeField] private string skillParameterName = "Skill";
     [SerializeField] private string eggBreakParameterName = "Break";
     [SerializeField] private string eggHatchEffectParameterName = "Hatch";
+    [SerializeField] private string eggHatchAutoModeParameterName = "AutoMode";
     #endregion
 
     #region ParameterHashs
@@ -28,6 +29,7 @@ public class AnimationData
     public int SkillParameterHash { get; private set; }
     public int EggBreakParameterHash { get; private set; }
     public int EggHatchParameterHash { get; private set; }
+    public int EggHatchAutoModeParameterHash { get; private set; }
     #endregion
 
     public void Initialize()
@@ -45,6 +47,7 @@ public class AnimationData
         #region Egg Anim
         EggBreakParameterHash = Animator.StringToHash(eggBreakParameterName);
         EggHatchParameterHash = Animator.StringToHash(eggHatchEffectParameterName);
+        EggHatchAutoModeParameterHash = Animator.StringToHash(eggHatchAutoModeParameterName);
         #endregion
     }
 }
