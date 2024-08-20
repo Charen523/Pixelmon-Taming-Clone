@@ -53,6 +53,7 @@ public class UIMiddleBar : UIBase
     {
         EggLvPopup.SetActive(true);
         EggLvPopup.SetPopup(this);
+        EggLvPopup.EggLvGuide();
     }
 
     public void OnClickAutoBtn()
@@ -65,12 +66,14 @@ public class UIMiddleBar : UIBase
 
     public void SetGuideArrow(int guideIndex)
     {
-        GuideManager.Instance.GuideArrow.SetActive(true);
-
         switch (guideIndex)
         {
             case 6:
-                GuideManager.Instance.SetArrow(nestLvBtn, 20f);
+                if (userData.eggLv < 2)
+                {
+                    GuideManager.Instance.GuideArrow.SetActive(true);
+                    GuideManager.Instance.SetArrow(nestLvBtn, 20f);
+                }
                 break;
         }
     }
