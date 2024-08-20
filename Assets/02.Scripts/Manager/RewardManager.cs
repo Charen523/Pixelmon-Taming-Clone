@@ -50,12 +50,12 @@ public class RewardManager : Singleton<RewardManager>
         {
             case nameof(userData.gold):
                 BigInteger amount1 = _amount;
-                amount1 *= (stageCount * 105 / 100);
+                amount1 *= ((stageCount - 1) * 30 + 100) / 100;
                 SaveManager.Instance.SetFieldData(itemName, amount1, true);
                 break;
             case nameof(userData.userExp):
                 amount1 = _amount;
-                amount1 *= ((stageCount - 1) * 5 + 100) / 100;
+                amount1 *= ((stageCount - 1) * 30 + 100) / 100;
                 SaveManager.Instance.SetFieldData(itemName, amount1, true);
                 
                 break;

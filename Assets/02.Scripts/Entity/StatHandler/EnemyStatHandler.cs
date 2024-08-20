@@ -20,19 +20,19 @@ public class EnemyStatHandler : MonoBehaviour
         int world = StageManager.Instance.worldNum;
         int stage = StageManager.Instance.stageNum;
 
-        int deltaStage = (world - 1) * 20 + stage;
+        int deltaStage = (world - 1) * 10 + stage;
 
         if (data.isBoss)
         {
-            enemyAtk =  data.Atk * (deltaStage * 5 + 100)  * deltaDiff / 100;
-            enemyMaxHp = data.Hp * (deltaStage * 20 + 100)  * deltaDiff / 100;
-            enemyDef = data.Def * (deltaStage * 5 + 100) * deltaDiff / 100;
+            enemyAtk =  data.Atk * (deltaStage * 10 + 100)  * deltaDiff / 100;
+            enemyMaxHp = data.Hp * (deltaStage * 85 + 100)  * deltaDiff / 100;
+            enemyDef = data.Def * (deltaStage * 10 + 100) * deltaDiff / 100;
         }
         else
         {
-            enemyAtk = data.Atk * (deltaStage * 5 + 100) * deltaDiff / 100;
-            enemyMaxHp = data.Hp * (deltaStage * 10 + 100) * deltaDiff / 100;
-            enemyDef = data.Def * (deltaStage * 5 + 100) * deltaDiff / 100;
+            enemyAtk = data.Atk * (deltaStage * 10 + 100) * deltaDiff / 100;
+            enemyMaxHp = data.Hp * (deltaStage * 95 + 100) * deltaDiff / 100;
+            enemyDef = data.Def * (deltaStage * 10 + 100) * deltaDiff / 100;
         }
         enemy.healthSystem.initEnemyHealth(enemyMaxHp);
     }
