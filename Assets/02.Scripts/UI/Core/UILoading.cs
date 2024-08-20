@@ -42,6 +42,7 @@ public class UILoading : Singleton<UILoading>
     public void OnClickOveraly()
     {
         GameManager.isInit = true;
+        AudioManager.Instance.ChangeBackGroundMusic(BgmIndex.Main);
     }
 
     public void HideProgress()
@@ -51,7 +52,6 @@ public class UILoading : Singleton<UILoading>
         desc.gameObject.SetActive(false);
         TextEffect.SetActive(true);
         overlay.SetActive(true);
-        AudioManager.Instance.ChangeBackGroundMusic(BgmIndex.Main);
     }
 
     private void UpdateSliderValue()
