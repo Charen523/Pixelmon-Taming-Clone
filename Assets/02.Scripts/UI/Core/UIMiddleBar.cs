@@ -1,11 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using TMPro;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
-using UnityEngine.UI;
 
 [System.Serializable]
 public class EggImg : BaseBg
@@ -15,6 +9,7 @@ public class UIMiddleBar : UIBase
 {    
     public TextMeshProUGUI EggLvText;
     public TextMeshProUGUI EggCntText;
+    public GameObject nestLvBtn;
 
     public EggHatch EggHatch;
 
@@ -31,6 +26,7 @@ public class UIMiddleBar : UIBase
     {
         SetMiddleBarUI();
         UIManager.Instance.UpdateUI += UpdateMiddleBarUI;
+        GuideManager.Instance.OnGuideAction += SetGuideArrow;
     }
 
     private void SetMiddleBarUI()
@@ -62,5 +58,18 @@ public class UIMiddleBar : UIBase
     {
         //EggHatch.isAutoMode = false;
         AutoEggHatch.SetActive(true);
+    }
+
+    private void SetGuideArrow(int guideIndex)
+    {
+        //GuideManager.Instance.GuideArrow.SetActive(true);
+
+        switch (guideIndex)
+        {
+            case 6:
+                //GuideManager.Instance.SetArrow(nestLvBtn);
+                Debug.Log("둥지 버튼에 가이드ON");
+                break;
+        }
     }
 }
