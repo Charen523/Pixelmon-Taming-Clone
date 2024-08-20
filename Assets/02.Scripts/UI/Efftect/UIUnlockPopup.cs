@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UIUnlockPopup : UIBase
 {
     [SerializeField] private RawImage rawImg;
-    private Material material;
+    private Material materialInstance;
     [SerializeField] private CanvasGroup group;
     [SerializeField] private TextMeshProUGUI unlockMsg;
 
@@ -14,7 +14,9 @@ public class UIUnlockPopup : UIBase
 
     public override void Opened(object[] param)
     {
-        material = rawImg.material;
+        materialInstance = Instantiate(rawImg.material);
+        rawImg.material = materialInstance;
+
         unlockMsg.text = param[0].ToString();
         StartCoroutine(HandlePopup());
     }
@@ -22,7 +24,7 @@ public class UIUnlockPopup : UIBase
     private IEnumerator HandlePopup()
     {
         group.alpha = 1f;
-        Vector2 offset = material.mainTextureOffset;
+        Vector2 offset = materialInstance.mainTextureOffset;
         float elapsedTime = 0f;
         float startAlpha = group.alpha;
 
@@ -30,12 +32,20 @@ public class UIUnlockPopup : UIBase
         {
             elapsedTime += Time.deltaTime;
             offset += new Vector2(0.1f, 0.1f) * Time.deltaTime;
-            material.mainTextureOffset = offset;
+            materialInstance.mainTextureOffset = offset;
             group.alpha = Mathf.Lerp(startAlpha, 0f, elapsedTime / fadeDuration);
             yield return null;
         }
 
         group.alpha = 0f;
         UIManager.Hide<UIUnlockPopup>();
+    }
+
+    private void OnDestroy()
+    {
+        if (materialInstance != null)
+        {
+            Destroy(materialInstance);
+        }
     }
 }
