@@ -23,11 +23,6 @@ public class AudioManager : Singleton<AudioManager>
     public bool[] isMuted = new bool[3];
     private float[] preVolumes = new float[3];
 
-    private void Start()
-    {
-        //ChangeBackGroundMusic(BgmIndex.Intro);
-    }
-
     public void ChangeBackGroundMusic(BgmIndex clip)
     {
         if (bgmAudioSource[0].isPlaying)
@@ -53,6 +48,7 @@ public class AudioManager : Singleton<AudioManager>
         bgmAudioSource[playIndex].DOFade(0.5f, 2);
         bgmAudioSource[stopIndex].DOFade(0, 2).OnComplete(() => bgmAudioSource[stopIndex].Stop());
     }
+
     public void PlayClip(AudioClip clip)
     {
         AudioSource audio = sfxAudioSource.Dequeue();
@@ -68,33 +64,45 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    public void ToggleMute(int index)
+    public void SetBGMVolume(float volume)
     {
-        string audioName;
-
-        switch (index)
-        {
-            case 1:
-                audioName = "BGMVolume";
-                break;
-            case 2:
-                audioName = "SFXVolume";
-                break;
-            default:
-                audioName = "MasterVolume";
-                break;
-        }
-
-        isMuted[index] = !isMuted[index];
-
-        if (isMuted[index])
-        {
-            audioMixer.GetFloat(audioName, out preVolumes[index]);
-            audioMixer.SetFloat(audioName, -80);
-        }
-        else
-        {
-            audioMixer.SetFloat(audioName, preVolumes[index]);
-        }
+        float dB = Mathf.Log10(Mathf.Max(volume, 0.0001f)) * 20f;
+        audioMixer.SetFloat("BGMVolume", dB);
     }
+
+    public void SetSFXVolume(float volume)
+    {
+        float dB = Mathf.Log10(Mathf.Max(volume, 0.0001f)) * 20f;
+        audioMixer.SetFloat("SFXVolume", dB);
+    }
+
+    //public void ToggleMute(int index)
+    //{
+    //    string audioName;
+
+    //    switch (index)
+    //    {
+    //        case 1:
+    //            audioName = "BGMVolume";
+    //            break;
+    //        case 2:
+    //            audioName = "SFXVolume";
+    //            break;
+    //        default:
+    //            audioName = "MasterVolume";
+    //            break;
+    //    }
+
+    //    isMuted[index] = !isMuted[index];
+
+    //    if (isMuted[index])
+    //    {
+    //        audioMixer.GetFloat(audioName, out preVolumes[index]);
+    //        audioMixer.SetFloat(audioName, -80);
+    //    }
+    //    else
+    //    {
+    //        audioMixer.SetFloat(audioName, preVolumes[index]);
+    //    }
+    //}
 }
