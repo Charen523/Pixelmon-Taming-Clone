@@ -53,23 +53,23 @@ public class UIBottomBar : MonoBehaviour
                     case 0:
                         return;
                     case 1:
-                        msg = "해금조건: 퀘스트8 클리어";
+                        msg = "해금조건: 퀘스트11 클리어";
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     case 2:
-                        msg = "해금조건: 퀘스트20 클리어";
+                        msg = "해금조건: 퀘스트29 클리어";
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     case 3:
-                        msg = "해금조건: 퀘스트34 클리어";
+                        msg = "해금조건: 퀘스트40 클리어";
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     case 4:
-                        msg = "해금조건: 퀘스트50 클리어";
+                        msg = "해금조건: 퀘스트49 클리어";
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     case 5:
-                        msg = "해금조건: 퀘스트20 클리어";
+                        msg = "해금조건: 퀘스트29 클리어";
                         UIManager.Instance.ShowWarn(msg);
                         return;
                     default:
