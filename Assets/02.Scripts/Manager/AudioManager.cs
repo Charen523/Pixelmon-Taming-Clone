@@ -23,6 +23,12 @@ public class AudioManager : Singleton<AudioManager>
     public bool[] isMuted = new bool[3];
     private float[] preVolumes = new float[3];
 
+    private void Start()
+    {
+        SetBGMVolume(SaveManager.Instance.userData.BGMVolume);
+        SetSFXVolume(SaveManager.Instance.userData.SFXVolume);
+    }
+
     public void ChangeBackGroundMusic(BgmIndex clip)
     {
         if (bgmAudioSource[0].isPlaying)
