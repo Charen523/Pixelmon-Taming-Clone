@@ -145,8 +145,11 @@ public class QuestManager : Singleton<QuestManager>
                 curRwd = data.rewardValue + ((questNum - 50) / 3 * 5000);
                 rewardTxt.text = Calculater.NumFormatter(curRwd);
             }
-            curRwd = data.rewardValue;
-            rewardTxt.text = curRwd.ToString();
+            else
+            {
+                curRwd = data.rewardValue;
+                rewardTxt.text = curRwd.ToString();
+            }
         }
     }
 
