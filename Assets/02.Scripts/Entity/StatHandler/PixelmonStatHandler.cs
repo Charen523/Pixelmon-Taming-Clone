@@ -240,20 +240,20 @@ public static class PixelmonStatHandler
             if (IsCritical(status.Cri + status.SCri))
             {
                 isCri = true;
-                dealDmg = (BigInteger)((10 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + perSkill + status.SDmg) / 100 + status.perAtk) * (100 + status.SCriDmg) / 100);
+                dealDmg = (BigInteger)((100 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + perSkill + status.SDmg) / 100 + status.perAtk) * (100 + status.SCriDmg) / 100);
             }
             else
-                dealDmg = (BigInteger)((10 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + perSkill + status.SDmg) / 100) + status.perAtk);
+                dealDmg = (BigInteger)((100 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + perSkill + status.SDmg) / 100 + status.perAtk));
         }
         else
         {
             if (IsCritical(status.Cri))
             {
                 isCri= true;
-                dealDmg = (BigInteger)((10 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + status.Dmg)/100 + status.perAtk) * ((100 + status.CriDmg) / 100));
+                dealDmg = (BigInteger)((100 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + status.Dmg) / 100 + status.perAtk) * (100 + status.CriDmg) / 100);
             }
             else
-                dealDmg = (BigInteger)((10 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + status.Dmg)/100) + status.perAtk);
+                dealDmg = (BigInteger)((100 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + status.Dmg)/100 + status.perAtk));
         }
         //버프가 있다면 dealDmg *= 1;
 
