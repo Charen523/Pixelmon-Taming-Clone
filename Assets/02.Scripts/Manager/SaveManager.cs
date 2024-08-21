@@ -28,7 +28,7 @@ public class SaveManager : Singleton<SaveManager>
             Debug.Log(userData.version);
             File.Delete(userPath);
             LoadData();
-            SetFieldData(nameof(userData.version), "v1.0.6");
+            SetFieldData(nameof(userData.version), "v1.0.7");
         }
 
         SetFieldData(nameof(userData.gold), BigInteger.Parse(userData._gold));
