@@ -25,7 +25,6 @@ public class SaveManager : Singleton<SaveManager>
         
         if (userData.version == null)
         {
-            Debug.Log(userData.version);
             File.Delete(userPath);
             LoadData();
             SetFieldData(nameof(userData.version), "v1.0.7");
