@@ -65,7 +65,7 @@ public static class PixelmonStatHandler
 
     public static float SetStatus(float perAtk, int lv, float lvAtkRate)
     {
-        return (perAtk + 100) * 0.01f + lv * lvAtkRate;
+        return (perAtk + lv * lvAtkRate + 100) * 0.01f;
     }
 
     public static float SetMultiStatus(float upgradeStat, float psvAtk, float traitValue = 1)
