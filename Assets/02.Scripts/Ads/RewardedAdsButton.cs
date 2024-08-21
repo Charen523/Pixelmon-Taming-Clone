@@ -50,6 +50,7 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
     {
         if (SaveManager.Instance.userData.adsCount <= 0)
         {
+            AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20008").clip);
             UIManager.Instance.ShowWarn("금일 남아있는 광고보기 횟수가 없습니다.");
             return;
         }

@@ -128,6 +128,7 @@ public class UIEggLvPopup : UIBase
 
     public void HidePopup()
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20010").clip);
         UIManager.Hide<UIEggLvPopup>();
     }
 

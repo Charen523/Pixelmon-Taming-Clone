@@ -120,6 +120,7 @@ public class FieldSlot : MonoBehaviour
             }
             else
             {
+                AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20008").clip);
                 UIManager.Instance.ShowWarn("골드가 부족합니다!!");
                 return;
             }
@@ -132,6 +133,7 @@ public class FieldSlot : MonoBehaviour
             }
             else
             {
+                AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20008").clip);
                 UIManager.Instance.ShowWarn("다이아가 부족합니다!!");
                 return;
             }
@@ -147,6 +149,7 @@ public class FieldSlot : MonoBehaviour
     {
         if (farmTab.PlantSeed())
         {
+            AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20003").clip);
             RandomCrop();
             fieldData.leftTime = 900f;
             passTime = fieldData.leftTime;
@@ -162,6 +165,7 @@ public class FieldSlot : MonoBehaviour
 
     public void OnHarvestBtn()
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20004").clip);
         HarvestYield(fieldData.cropClass);
         GetFoodObj.SetActive(true);
         CurrentFieldState = FieldState.Empty;

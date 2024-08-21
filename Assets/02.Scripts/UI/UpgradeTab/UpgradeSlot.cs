@@ -109,6 +109,7 @@ public abstract class UpgradeSlot : MonoBehaviour
     {
         if (nextPrice > ownGold)
         {
+            AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20008").clip);
             UIManager.Instance.ShowWarn("골드가 부족합니다!!");
         }
         else

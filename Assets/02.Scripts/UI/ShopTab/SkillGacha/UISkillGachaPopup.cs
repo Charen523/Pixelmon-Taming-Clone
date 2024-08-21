@@ -47,8 +47,9 @@ public class UISkillGachaPopup : UIBase
         isInitSlots = true;
     }
 
-    public void SetPopup(int slotCnt, ActiveData[] datas, SkillGacha skillGacha)
+    public bool SetPopup(int slotCnt, ActiveData[] datas, SkillGacha skillGacha)
     {
+        bool isHigh = false;
         this.skillGacha = skillGacha;
         SetBtnInteractable();
 
@@ -63,11 +64,21 @@ public class UISkillGachaPopup : UIBase
             slot[i].gameObject.SetActive(true);
             slot[i].InitSlot(datas[i].bgIcon, datas[i].icon, skillGacha.slotDurationTime);
 
-            if (datas[i].rank == "S") slot[i].SRank.gameObject.SetActive(true);
-            if (datas[i].rank == "SS") slot[i].SSRank.gameObject.SetActive(true);
+            if (datas[i].rank == "S")
+            {
+                isHigh = true;
+                slot[i].SRank.gameObject.SetActive(true);
+            }
+            else if (datas[i].rank == "SS")
+            {
+                isHigh = true;
+                slot[i].SSRank.gameObject.SetActive(true);
+            }
         }
         for (int i = slotCnt; i < maxSlotCnt; i++)
             slot[i].gameObject.SetActive(false);
+
+        return isHigh;
     }
 
     public void OnClickBtn(int multiplier)
