@@ -30,7 +30,7 @@ public class RandomSpotSkill : BaseSkill
         for (int i = 0; i < skillobj.Length; i++)
         {
             skillobj[i].gameObject.SetActive(true);
-            skillobj[i].SetSkill(this);
+            skillobj[i].SetSkill(this, soundData);
             yield return spawnTime;
         }
         yield return duration;
