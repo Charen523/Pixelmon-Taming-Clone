@@ -2,12 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Threading;
 using TMPro;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.UI;
-using static Cinemachine.DocumentationSortingAttribute;
+
+public enum EggLvBtnType
+{
+    GaugeUp,
+    LvUp,
+    DiaBtn,
+    AdBtn
+}
 
 public class UIEggLvPopup : UIBase
 {
@@ -70,13 +75,9 @@ public class UIEggLvPopup : UIBase
 
     private bool isGuide = false;
 
-    public override void Opened(object[] param) 
-    { 
-        base.Opened(param);      
+    private void Start()
+    {
         UIManager.Instance.UpdateUI += UpdateEggLvPopupUI;
-        
-        SetPopup(param[0] as UIMiddleBar);
-
         UpdateLvAndRateUI();
 
         for (int i = 0; i < userData.eggLv / 5 + 2; i++)
@@ -86,7 +87,7 @@ public class UIEggLvPopup : UIBase
                 lvUpGauges[i].GaugeUp();
         }
 
-        if(userData.eggLv == 10)
+        if (userData.eggLv == 10)
         {
             Gauges.gameObject.SetActive(false);
             GaugeAndLvUp.SetActive(false);
@@ -94,6 +95,37 @@ public class UIEggLvPopup : UIBase
 
         price = Calculater.CalPrice(userData.eggLv, 10000, 17000, 12000);
         PriceTxt.text = Calculater.NumFormatter(price);
+    }
+
+    private void OnDisable()
+    {
+        if (updateTimerCoroutine != null)
+        {
+            StopCoroutine(updateTimerCoroutine);
+            updateTimerCoroutine = null;
+        }
+    }
+    
+    public override void Opened(object[] param) 
+    { 
+        SetPopup(param[0] as UIMiddleBar);  
+    }
+
+    public override void Closed(object[] param)
+    {
+        if (userData.eggLv < 2)
+        {
+            uiMiddleBar.SetGuideArrow(GuideManager.Instance.nestLvUp);
+        }
+        else
+        {
+            GuideManager.Instance.GuideArrow.SetActive(false);
+        }
+    }
+
+    public void HidePopup()
+    {
+        UIManager.Hide<UIEggLvPopup>();
     }
 
     public void SetPopup(UIMiddleBar middleBar)
@@ -149,13 +181,7 @@ public class UIEggLvPopup : UIBase
         LegendaryCurNum.text = curData.legendary.ToString("F2") + "%";
     }
 
-    public enum EggLvBtnType
-    {
-        GaugeUp,
-        LvUp,
-        DiaBtn,
-        AdBtn
-    }
+    
     private void SetBtnSprite(EggLvBtnType type, Button btn, bool isInteractable)
     {
         if (!isInteractable)
@@ -281,6 +307,7 @@ public class UIEggLvPopup : UIBase
             lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
 
         SetLvUpMode();
+        EggLvGuide();
     }
 
     public void OnClickAdBtn(float decTime)
@@ -343,30 +370,9 @@ public class UIEggLvPopup : UIBase
         TimeTxt.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
     }
 
-    private void OnDisable()
-    {
-        if (updateTimerCoroutine != null)
-        {
-            StopCoroutine(updateTimerCoroutine);
-            updateTimerCoroutine = null;
-        }
-    }
-
-    public override void Closed(object[] param)
-    {
-        if (userData.eggLv < 2)
-        {
-            uiMiddleBar.SetGuideArrow(GuideManager.Instance.nestLvUp);
-        }
-        else
-        {
-            GuideManager.Instance.GuideArrow.SetActive(false);
-        }
-    }
-
     public void EggLvGuide()
     {
-        if (userData.eggLv > 1)
+        if (userData.eggLv > 1 || userData.isLvUpMode)
         {
             isGuide = false;
             GuideManager.Instance.GuideArrow.SetActive(false);
@@ -377,10 +383,6 @@ public class UIEggLvPopup : UIBase
         if (userData.fullGaugeCnt == lvUpGauges.Count)
         {
             GuideManager.Instance.SetArrow(LvUpBtn.gameObject, 20f);
-        }
-        else if (userData.isLvUpMode)
-        {
-            GuideManager.Instance.SetArrow(DiaBtn.gameObject, 20f);
         }
         else
         {
