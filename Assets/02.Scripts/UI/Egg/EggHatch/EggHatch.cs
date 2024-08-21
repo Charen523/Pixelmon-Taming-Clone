@@ -186,6 +186,8 @@ public class EggHatch : MonoBehaviour
             yield break;
         }
 
+        bool isConditionMet = false;
+
         if (btn != null)
             btn.interactable = false;
 
@@ -205,11 +207,17 @@ public class EggHatch : MonoBehaviour
                 UIManager.Get<UIHatchResultPopup>().SetTutorialArrow();
                 SaveManager.Instance.SetFieldData(nameof(userData.tutoIndex), 2);
             }
+            if (isAutoMode && isHighRankPsvSet && (PxmRank >= autoPxmRank))
+            {
+                isConditionMet = true;
+                isHighRankPsvSet = false;
+                isAutoMode = false;
+            }
         }
 
         isDoneGetPxm = false;
 
-        if (isAutoMode && isHighRankPsvSet && (PxmRank >= autoPxmRank))
+        if (!IsOwnedPxm)
         {
             isAutoMode = false;
             isHighRankPsvSet = false;
@@ -219,14 +227,15 @@ public class EggHatch : MonoBehaviour
         {
             isAutoMode = false;
             isWantStopAuto = false;
+            isHighRankPsvSet = false;
         }           
 
-        if (!isAutoMode)
+        if (!isAutoMode || isConditionMet)
         {
             HatchResultPopup.SetActive(true);
             HatchResultPopup.SetPopup(this);
         }
-        else
+        else if(isAutoMode && !isConditionMet)
         {
             yield return delayAutoTime;
             GetPixelmon(false);
