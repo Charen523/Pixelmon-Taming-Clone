@@ -154,7 +154,7 @@ public class UIHatchResultPopup : UIBase
 
     public void OnClickGetPixelmon(bool isReplaceBtn)
     {
-        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20002").clip);
+        
         if ((eggHatch.HatchMyPxmData.psvSkill.Count == lowPsvCnt) 
             && isReplaceBtn)
         {
