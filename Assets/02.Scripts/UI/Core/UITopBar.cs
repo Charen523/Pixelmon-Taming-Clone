@@ -118,4 +118,9 @@ public class UITopBar : UIBase
         expCoroutine = StartCoroutine(UIUtils.AnimateSliderChange(expSldr, prevExp, curExp, 1));
         expTxt.text = (curExp * 100).ToString("0.00") + "%";
     }
+
+    public async void OnMenuBtn()
+    {
+        await UIManager.Show<UISettings>();
+    }
 }
