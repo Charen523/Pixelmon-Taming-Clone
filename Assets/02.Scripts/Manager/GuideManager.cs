@@ -23,6 +23,12 @@ public class GuideManager : Singleton<GuideManager>
     public readonly int goldDg = 49;
     #endregion
 
+    protected override void Awake()
+    {
+        isDontDestroyOnLoad = false;
+        base.Awake();
+    }
+
     public void SetArrow(GameObject obj, float addYPos = 0)
     {
         Vector3 currentPosition = obj.transform.position;
