@@ -157,6 +157,7 @@ public class QuestManager : Singleton<QuestManager>
             SetQuestIndex();
             ResetProgress();
             SetQuestUI();
+            AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20009").clip);
         }
         else
         {

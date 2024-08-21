@@ -82,6 +82,7 @@ public class UIPixelmonPopUp : UIBase
     {
         gameObject.SetActive(false);
         pxmTab.InvokePixelmonTabGuide();
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20010").clip);
     }
 
     public void OnPreviousInfo()
@@ -149,7 +150,6 @@ public class UIPixelmonPopUp : UIBase
     {
         if (!myData.isOwned)
         {
-            UIManager.Instance.ShowWarn("승급에 필요한 재료가 부족합니다.");
             return;
         }
         if (!myData.isEquipped)
@@ -170,12 +170,10 @@ public class UIPixelmonPopUp : UIBase
     public void OnFeeding()
     {
         if (!myData.isOwned)
-        {
-            UIManager.Instance.ShowWarn("레벨업에 필요한 먹이가 부족합니다.");
             return;
-        }
         else if (myData.lv >= 50)
         {
+            AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20008").clip);
             UIManager.Instance.ShowWarn("이미 최대레벨 입니다.");
             return;
         }
@@ -200,12 +198,12 @@ public class UIPixelmonPopUp : UIBase
             SetOwnedEffect();
             pxmTab.SetfoodCount();
             SetFoodCount();
-            //Debug.Log("레벨 업!");
+            AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20005").clip);
         }
         else
         {
+            AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20008").clip);
             UIManager.Instance.ShowWarn("먹이의 개수가 부족합니다.");
-            //Debug.Log("남은 먹이가 없습니다.");
         }
 
         if (QuestManager.Instance.IsMyTurn(QuestType.Feed))

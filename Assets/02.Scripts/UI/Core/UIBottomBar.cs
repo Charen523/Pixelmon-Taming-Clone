@@ -98,6 +98,7 @@ public class UIBottomBar : MonoBehaviour
                         break;
                 }
             }
+            AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20006").clip);
         }
     }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -134,7 +135,6 @@ public class SkillGacha : MonoBehaviour
     private IEnumerator Gacha(int count)
     {
         isDoneGacha = false;
-
         ActiveData[] resultDatas = new ActiveData[count];       
         var ownedSkills = userData.ownedSkills;
 
@@ -165,8 +165,10 @@ public class SkillGacha : MonoBehaviour
         }
 
         skillGachaPopup.SetActive(true);
-        skillGachaPopup.SetPopup(count, resultDatas, this);
+        bool isHigh = skillGachaPopup.SetPopup(count, resultDatas, this);
+        if (isHigh) AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20000").clip);
         yield return waitSlotDuration;
+
         isDoneGacha = true;
     }
 }

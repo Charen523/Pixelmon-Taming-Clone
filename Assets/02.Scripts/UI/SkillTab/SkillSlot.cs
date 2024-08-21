@@ -44,6 +44,7 @@ public class SkillSlot : MonoBehaviour
 
     public void OnClick()
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20012").clip);
         skillTab.OnSkillPopUp(atvData.id);
     }
 

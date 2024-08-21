@@ -94,6 +94,7 @@ public class UIManager : Singleton<UIManager>
         var ui = Instance.uiList.Find(obj => obj.name == typeof(T).ToString());
         if (ui != null)
         {
+            AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20010").clip);
             ui.closed.Invoke(param);
             if (ui.isDestroyAtClosed)
             {

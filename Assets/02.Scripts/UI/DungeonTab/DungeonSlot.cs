@@ -42,6 +42,7 @@ public class DungeonSlot : MonoBehaviour
         }
         else
         {
+            AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20008").clip);
             UIManager.Instance.ShowWarn("열쇠가 부족합니다!!");
             return false;
         }

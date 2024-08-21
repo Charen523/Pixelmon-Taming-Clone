@@ -13,11 +13,13 @@ public class UIHatchWarnPopup : UIBase
 
     public void OnClickNoBtn()
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20010").clip);
         gameObject.SetActive(false);
     }
 
     public void OnClickYesBtn()
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20010").clip);
         eggHatch.GetPixelmon(true);
         gameObject.SetActive(false);
     }

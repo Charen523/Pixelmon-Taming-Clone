@@ -135,4 +135,9 @@ public class DgMonster : MonoBehaviour
     {
         await UIManager.Show<UIDgResultPopup>(myReward);
     }
+
+    public void OnPlayBoxOpen()
+    {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20001").clip);
+    }
 }
