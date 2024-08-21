@@ -41,6 +41,6 @@ public class WarnPopup : UIBase
 
         yield return wait;
 
-        UIManager.Hide<WarnPopup>();
+        UIManager.Hide<WarnPopup>(false);
     }
 }

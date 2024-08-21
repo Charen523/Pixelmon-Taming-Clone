@@ -89,12 +89,12 @@ public class UIManager : Singleton<UIManager>
         return ui;
     }
 
-    public static void Hide<T>(params object[] param) where T : UIBase
+    public static void Hide<T>(bool isPlay = true, params object[] param) where T : UIBase
     {
         var ui = Instance.uiList.Find(obj => obj.name == typeof(T).ToString());
         if (ui != null)
         {
-            AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20010").clip);
+            if(isPlay) AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20010").clip);
             ui.closed.Invoke(param);
             if (ui.isDestroyAtClosed)
             {
