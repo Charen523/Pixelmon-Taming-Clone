@@ -150,11 +150,10 @@ public class UIEggLvPopup : UIBase
                 UpdateLvAndRateUI();
                 break;
             case DirtyUI.Gold:
-                if(GaugeUpBtn.interactable == false) 
-                    SetGaugeUpBtn();
+                SetGaugeUpBtn();
                 break;
             case DirtyUI.Diamond:
-                    SetDiaBtn();
+                SetDiaBtn();
                 break;
         }
     }
@@ -295,6 +294,7 @@ public class UIEggLvPopup : UIBase
 
     public void OnClickGaugeUpBtn()
     {
+        if (userData.gold < price) return;
         lvUpGauges[userData.fullGaugeCnt].GaugeUp();
         SaveManager.Instance.SetFieldData(nameof(userData.fullGaugeCnt), 1, true);
         SaveManager.Instance.SetFieldData(nameof(userData.gold), -price, true);
@@ -326,6 +326,7 @@ public class UIEggLvPopup : UIBase
 
     public void OnClickDiaBtn()
     {
+        if (userData.diamond < skipDia) return;
         SaveManager.Instance.SetFieldData(nameof(userData.diamond), -skipDia, true);
         SaveManager.Instance.SetFieldData(nameof(userData.skipTime), userData.skipTime + skipDiaTime);
         remainingTime -= skipDiaTime;
