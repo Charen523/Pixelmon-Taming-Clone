@@ -29,11 +29,13 @@ public class UISettings : UIBase
     public void SetBgmVolume(float value)
     {
         AudioManager.Instance.SetBGMVolume(value);
+        SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.BGMVolume), value);
     }
 
     public void SetSfxVolume(float value)
     {
         AudioManager.Instance.SetSFXVolume(value);
+        SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.SFXVolume), value);
     }
 
     public void SupportBtn()
