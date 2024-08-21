@@ -24,6 +24,11 @@ public class UserData
     public int skillTicket = 0;
     #endregion
 
+    #region Settings
+    public float BGMVolume = 0.8f;
+    public float SFXVolume = 0.8f;
+    #endregion
+
     #region Tutorial
     public int tutoIndex = 0; //0:first, 1:egg, 2:getPxm, 3:pxmTab, 4:end.
     #endregion
