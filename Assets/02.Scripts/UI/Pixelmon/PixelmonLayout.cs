@@ -10,7 +10,6 @@ public class PixelmonLayout : MonoBehaviour
     public Image[] stateIcon;
     public Image[] timer;
     public bool isMiddleBar;
-    public bool isSkillTab;
     PixelmonManager pxmManager => PixelmonManager.Instance;
     SkillManager skillManager => SkillManager.Instance;
 
@@ -21,7 +20,7 @@ public class PixelmonLayout : MonoBehaviour
             pxmManager.layouts[0] = this;
             skillManager.layout = this;
         }
-        else if (isSkillTab)
+        else
             pxmManager.layouts[1] = this;
     }
 

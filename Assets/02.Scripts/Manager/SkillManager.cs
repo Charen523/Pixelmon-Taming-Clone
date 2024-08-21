@@ -66,7 +66,6 @@ public class SkillManager : Singleton<SkillManager>
         {
             if (skillCoolTime[id] == 0)
             {
-                Debug.Log(id);
                 yield return new WaitUntil(
                     () => pxm.fsm.target != null &&
                     pxm.fsm.currentState == pxm.fsm.AttackState ||

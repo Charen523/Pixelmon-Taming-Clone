@@ -6,25 +6,7 @@ public class UIDungeonProgress : UIBase
 {
     [SerializeField] private GameObject popup;
     [SerializeField] private Button btn;
-    [SerializeField] private PixelmonLayout dgLayout;
-    private PixelmonLayout tempLayout;
 
-    private void OnEnable()
-    {
-        if (dgLayout.gameObject.activeInHierarchy)
-        {
-            tempLayout = SkillManager.Instance.layout;
-            SkillManager.Instance.layout = dgLayout;
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (SkillManager.Instance.layout == dgLayout)
-        {
-            SkillManager.Instance.layout = tempLayout;
-        }
-    }
     public void StopTime()
     {
         btn.enabled = false;
