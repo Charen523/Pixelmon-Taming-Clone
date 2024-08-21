@@ -111,7 +111,7 @@ public class SkillManager : Singleton<SkillManager>
             var skill = dicSkill[pxm.myData.atvSkillId][i];
             skill.gameObject.SetActive(true);
             //조건 설정
-            skill.InitInfo(pxm, targets[i].gameObject, atvData, myAtvData);
+            skill.InitInfo(pxm, targets[i].gameObject, myAtvData);
         }
     }
 
@@ -133,6 +133,8 @@ public class SkillManager : Singleton<SkillManager>
             for (int i = 0; i < dataManager.activeData.data[id].count; i++)
             {
                 var skill = Instantiate(prefablst[id], skillStorage);
+                skill.data = dataManager.activeData.data[id];
+                skill.SetSound();
                 dicSkill[id].Add(skill);
                 skill.gameObject.SetActive(false);
             }

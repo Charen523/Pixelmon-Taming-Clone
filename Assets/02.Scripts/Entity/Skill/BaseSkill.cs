@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BaseSkill : MonoBehaviour
@@ -9,17 +10,33 @@ public class BaseSkill : MonoBehaviour
     public Pixelmon owner;
     public Enemy enemy;
     public GameObject target;
-    public virtual void InitInfo(Pixelmon pxm, GameObject _target, ActiveData atvData, MyAtvData myAtvData)
+    public List<SoundData> soundData = new List<SoundData>();
+
+    public void SetSound()
     {
-        owner = pxm;
-        data = atvData;
+        foreach (var sound in DataManager.Instance.soundData.data)
+        {
+            for (int i = 0; i < data.Soundrcode.Length; i++)
+            {
+                if (data.Soundrcode[i] == sound.rcode)
+                    soundData.Add(sound);
+            }
+        }
+    }
+
+    public virtual void InitInfo(Pixelmon pxm, GameObject _target, MyAtvData myAtvData)
+    {
+        owner = pxm;       
         myData = myAtvData;
         target = _target;
         Setprojectile();
         ExecuteSkill();
     }
 
-    protected virtual void ExecuteSkill() { }
+    protected virtual void ExecuteSkill() 
+    {
+        AudioManager.Instance.PlayClip(soundData[Random.Range(0, soundData.Count)].clip);
+    }
     protected virtual void Setprojectile() { }
 
 
