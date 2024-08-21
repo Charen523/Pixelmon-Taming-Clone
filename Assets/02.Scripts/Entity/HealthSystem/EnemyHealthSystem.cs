@@ -1,4 +1,3 @@
-using System;
 using System.Numerics;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
@@ -8,14 +7,6 @@ public class EnemyHealthSystem : HealthSystem
     [SerializeField] protected Enemy enemy;
 
     [SerializeField] private Transform fillBar;
-
-    private void Start()
-    {
-        if (enemy == null)
-        {
-            enemy = GetComponent<Enemy>();
-        }
-    }
 
     protected override void Update()
     {
