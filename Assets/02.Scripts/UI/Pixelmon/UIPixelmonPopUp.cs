@@ -148,6 +148,7 @@ public class UIPixelmonPopUp : UIBase
 
     public void OnEquip()
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20002").clip);
         if (!myData.isOwned)
         {
             return;

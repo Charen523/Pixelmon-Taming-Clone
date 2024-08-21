@@ -54,6 +54,7 @@ public class UISkillPopUp : UIBase
 
     public void OnEquipEvt()
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20002").clip);
         skillTab.OnEquip(id);
         SetEquipTxt();
         gameObject.SetActive(false);

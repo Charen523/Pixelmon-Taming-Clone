@@ -175,6 +175,7 @@ public class UIPixelmonTab : UIBase
 
     public void OnArrangeAll()
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20002").clip);
         if (ownedData.Count == 0) return;
 
         int arrCount = 0;
@@ -237,6 +238,7 @@ public class UIPixelmonTab : UIBase
 
     public void OnAutoEvolved()
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20002").clip);
         if (!isAdvancable) return;
         foreach (var data in ownedData)
         {
