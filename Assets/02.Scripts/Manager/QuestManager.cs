@@ -34,8 +34,8 @@ public class QuestManager : Singleton<QuestManager>
     private int questNum;
     private string curIndex;
     private int repeatCount;
-    private readonly string maxMainQNum = "Q56";
-    private readonly int maxRepeatNum = 6;
+    private readonly string maxMainQNum = "Q49";
+    private readonly int maxRepeatNum = 3;
 
     private QuestType curType;
     private int curGoal;
