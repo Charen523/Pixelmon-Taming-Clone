@@ -34,7 +34,6 @@ public class SkillEquipSlot : MonoBehaviour
 
     public void OnClick()
     {
-        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20012").clip);
         if (skillTab.tabState == TabState.Normal && myAtvData == null)
         {
             UIManager.Instance.ShowWarn("장착된 스킬이 없습니다.");
@@ -109,5 +108,10 @@ public class SkillEquipSlot : MonoBehaviour
         myAtvData = null;
         saveManager.userData.equippedSkills[slotIndex] = -1;
         saveManager.SetData(nameof(saveManager.userData.equippedSkills), saveManager.userData.equippedSkills);
+    }
+
+    public void OnPlaySound()
+    {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20012").clip);
     }
 }

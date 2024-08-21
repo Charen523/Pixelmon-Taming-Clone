@@ -257,7 +257,6 @@ public class SkillTab : UIBase, IPointerDownHandler
         {
             if (!raycastResults[0].gameObject.TryGetComponent<SkillSlot>(out choiceSlot))
             {
-                AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20010").clip);
                 OnClosePopUp();
             }
         }

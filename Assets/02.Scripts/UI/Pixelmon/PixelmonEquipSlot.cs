@@ -84,7 +84,6 @@ public class PixelmonEquipSlot : PixelmonSlot
 
     public override void OnClick()
     {
-        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20012").clip);
         if (isLocked)
         {
             ShowUnlockInfo();
@@ -135,5 +134,10 @@ public class PixelmonEquipSlot : PixelmonSlot
             default:
                 return;
         }
+    }
+
+    public void OnPlaySound()
+    {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20012").clip);
     }
 }
