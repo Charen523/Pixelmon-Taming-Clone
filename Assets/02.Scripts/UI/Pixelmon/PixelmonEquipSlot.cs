@@ -84,6 +84,7 @@ public class PixelmonEquipSlot : PixelmonSlot
 
     public override void OnClick()
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20012").clip);
         if (isLocked)
         {
             ShowUnlockInfo();

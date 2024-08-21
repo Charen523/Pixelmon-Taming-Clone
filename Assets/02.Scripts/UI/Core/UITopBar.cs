@@ -121,6 +121,7 @@ public class UITopBar : UIBase
 
     public async void OnMenuBtn()
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20002").clip);
         await UIManager.Show<UISettings>();
     }
 }

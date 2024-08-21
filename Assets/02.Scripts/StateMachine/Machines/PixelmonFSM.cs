@@ -55,6 +55,7 @@ public class PixelmonFSM : FSM
                         UnityEngine.Vector2 direction = enemies[i].transform.position - transform.position;
                         (BigInteger, bool) damage = pixelmon.status.GetTotalDamage(pixelmon.myData);
                         PoolManager.Instance.SpawnFromPool<ProjectileController>("ATV00000").GetAttackSign(transform.position, direction, damage.Item1, damage.Item2, 10, 5);
+                        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20011").clip);
                     };
                 }
             }

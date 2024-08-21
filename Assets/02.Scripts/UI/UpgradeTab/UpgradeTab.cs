@@ -35,11 +35,13 @@ public class UpgradeTab : UIBase
 
     private void Recalculate(DirtyUI dirty)
     {
+
         CurrentToggle(lastToggleIndex);
     }
 
     public void CurrentToggle(int toggleIndex)
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20002").clip);
         lastToggleIndex = toggleIndex;  
         for (int i = 0; i < upgradeSlots.Length; i++)
         {

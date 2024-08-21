@@ -101,6 +101,7 @@ public class PixelmonSlot : MonoBehaviour
 
     public virtual void OnClick()
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20012").clip);
         pxmtab.OnInfoPopUp(pxmData.id);
     }
 

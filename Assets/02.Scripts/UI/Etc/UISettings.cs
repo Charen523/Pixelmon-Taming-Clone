@@ -23,6 +23,7 @@ public class UISettings : UIBase
 
     public override void HideDirect()
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20002").clip);
         UIManager.Hide<UISettings>();
     }
 
@@ -40,6 +41,7 @@ public class UISettings : UIBase
 
     public void SupportBtn()
     {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20002").clip);
         string emailUrl = $"mailto:{email}";
         Application.OpenURL(emailUrl);
     }

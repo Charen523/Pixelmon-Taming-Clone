@@ -95,6 +95,7 @@ public class FarmTab : UIBase
     {
         if (seedCount < 5)
         {
+            AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20008").clip);
             UIManager.Instance.ShowWarn("씨앗이 부족합니다!!");
             return false;
         }
