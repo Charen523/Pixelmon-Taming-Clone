@@ -180,6 +180,7 @@ public class EggHatch : MonoBehaviour
     {
         if (userData.eggCount <= 0)
         {
+            AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20008").clip);
             UIManager.Instance.ShowWarn("알이 부족합니다!!");
             isAutoMode = false;
             yield break;

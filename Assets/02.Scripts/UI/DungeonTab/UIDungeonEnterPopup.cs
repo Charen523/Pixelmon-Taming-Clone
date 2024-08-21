@@ -74,6 +74,7 @@ public class UIDungeonEnterPopup : UIBase
     {
         if (curSlot.UseKey())
         {
+            AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20010").clip);
             UIManager.Instance.tabOverlay.onClick.Invoke();
             StageManager.Instance.isDungeon = true;
             StageManager.Instance.dgIndex = (int)type;
