@@ -307,6 +307,7 @@ public class UIEggLvPopup : UIBase
             lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
 
         SetLvUpMode();
+        EggLvGuide();
     }
 
     public void OnClickAdBtn(float decTime)
