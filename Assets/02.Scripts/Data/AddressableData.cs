@@ -12,6 +12,7 @@ public enum eAddressableType
     ui,
     animator,
     font,
+    sound,
     data
 }
 
