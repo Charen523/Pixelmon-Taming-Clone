@@ -350,14 +350,9 @@ public class UIEggLvPopup : UIBase
             StopCoroutine(updateTimerCoroutine);
             updateTimerCoroutine = null;
         }
-
-        if (isGuide)
-        {
-            DisableDelay();
-        }
     }
 
-    public void DisableDelay()
+    public override void Closed(object[] param)
     {
         if (userData.eggLv < 2)
         {
