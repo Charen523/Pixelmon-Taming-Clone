@@ -350,14 +350,19 @@ public class UIEggLvPopup : UIBase
 
         if (isGuide)
         {
-            if (userData.eggLv < 2)
-            {
-                uiMiddleBar.SetGuideArrow(GuideManager.Instance.nestLvUp);
-            }
-            else
-            {
-                GuideManager.Instance.GuideArrow.SetActive(false);
-            }
+            DisableDelay();
+        }
+    }
+
+    public void DisableDelay()
+    {
+        if (userData.eggLv < 2)
+        {
+            uiMiddleBar.SetGuideArrow(GuideManager.Instance.nestLvUp);
+        }
+        else
+        {
+            GuideManager.Instance.GuideArrow.SetActive(false);
         }
     }
 
