@@ -41,12 +41,16 @@ public class UpgradeTab : UIBase
 
     public void CurrentToggle(int toggleIndex)
     {
-        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20002").clip);
         lastToggleIndex = toggleIndex;  
         for (int i = 0; i < upgradeSlots.Length; i++)
         {
             upgradeSlots[i].CalculatePrice(toggleIndex);
         }
+    }
+
+    public void PlayBtnSound()
+    {
+        AudioManager.Instance.PlayClip(DataManager.Instance.GetData<SoundData>("SOU20002").clip);
     }
 
     public void SaveUpgradeLvs(int index, int curLv)
