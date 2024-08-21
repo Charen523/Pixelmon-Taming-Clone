@@ -5,6 +5,8 @@ using System.Numerics;
 [Serializable]
 public class UserData
 {
+    public string version;
+
     #region Private User
     public string userId;
     public string userName = "아그니스";
