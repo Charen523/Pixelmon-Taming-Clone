@@ -74,28 +74,7 @@ public class UIEggLvPopup : UIBase
     private Coroutine updateTimerCoroutine;
 
     private bool isGuide = false;
-
-    private void Start()
-    {
-        UIManager.Instance.UpdateUI += UpdateEggLvPopupUI;
-        UpdateLvAndRateUI();
-
-        for (int i = 0; i < userData.eggLv / 5 + 2; i++)
-        {
-            lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
-            if (i < userData.fullGaugeCnt)
-                lvUpGauges[i].GaugeUp();
-        }
-
-        if (userData.eggLv == 10)
-        {
-            Gauges.gameObject.SetActive(false);
-            GaugeAndLvUp.SetActive(false);
-        }
-
-        price = Calculater.CalPrice(userData.eggLv, 10000, 17000, 12000);
-        PriceTxt.text = Calculater.NumFormatter(price);
-    }
+    private bool isInit = false;
 
     private void OnDisable()
     {
@@ -109,6 +88,30 @@ public class UIEggLvPopup : UIBase
     public override void Opened(object[] param) 
     { 
         SetPopup(param[0] as UIMiddleBar);  
+
+        if (!isInit)
+        {
+            isInit = true;
+
+            UIManager.Instance.UpdateUI += UpdateEggLvPopupUI;
+            UpdateLvAndRateUI();
+
+            for (int i = 0; i < userData.eggLv / 5 + 2; i++)
+            {
+                lvUpGauges.Add(Instantiate(LvUpGauge, Gauges));
+                if (i < userData.fullGaugeCnt)
+                    lvUpGauges[i].GaugeUp();
+            }
+
+            if (userData.eggLv == 10)
+            {
+                Gauges.gameObject.SetActive(false);
+                GaugeAndLvUp.SetActive(false);
+            }
+
+            price = Calculater.CalPrice(userData.eggLv, 10000, 17000, 12000);
+            PriceTxt.text = Calculater.NumFormatter(price);
+        }
     }
 
     public override void Closed(object[] param)
