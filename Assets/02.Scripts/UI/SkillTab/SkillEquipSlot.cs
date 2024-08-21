@@ -88,6 +88,11 @@ public class SkillEquipSlot : MonoBehaviour
 
         saveManager.UpdatePixelmonData(saveManager.userData.equippedPxms[idx].id, nameof(myPxmData.atvSkillId), atvData.id);
         SkillManager.Instance.ExecuteSkill(Player.Instance.pixelmons[idx], idx);
+
+        if (GuideManager.Instance.guideNum == GuideManager.Instance.skillEquip)
+        {
+            QuestManager.Instance.OnQuestEvent();
+        }
     }
 
     public void UnEquipAction()

@@ -23,6 +23,10 @@ public class GuideManager : Singleton<GuideManager>
     public readonly int goldDg = 49;
     #endregion
 
+    #region Specific Quest 
+    public readonly int skillEquip = 30;
+    #endregion
+
     protected override void Awake()
     {
         isDontDestroyOnLoad = false;
