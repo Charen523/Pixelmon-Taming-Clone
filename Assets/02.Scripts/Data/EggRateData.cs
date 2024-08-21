@@ -13,6 +13,7 @@ public class EggRateData : IData
     public float rare;
     public float epic;
     public float legendary;
+    public float lvUpTime;
     #endregion
 
     string IData.Rcode => rcode;

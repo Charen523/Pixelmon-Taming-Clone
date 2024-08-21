@@ -47,7 +47,7 @@ public class UIEggLvPopup : UIBase
     [SerializeField] private TextMeshProUGUI TimeTxt;
 
     // 1렙때 1분, 2렙이후부턴 30분 * 2^(레벨-2)
-    private float totalTime => 1800f * (int)Mathf.Pow(2, userData.eggLv - 2);
+    private float totalTime;
     private float remainingTime;
     private WaitForSeconds oneSecTime = new WaitForSeconds(1f);
 
@@ -86,6 +86,12 @@ public class UIEggLvPopup : UIBase
                 lvUpGauges[i].GaugeUp();
         }
 
+        if(userData.eggLv == 10)
+        {
+            Gauges.gameObject.SetActive(false);
+            GaugeAndLvUp.SetActive(false);
+        }
+
         price = Calculater.CalPrice(userData.eggLv, 10000, 17000, 12000);
         PriceTxt.text = Calculater.NumFormatter(price);
     }
@@ -121,8 +127,8 @@ public class UIEggLvPopup : UIBase
     {
         if (userData.eggLv != 10)
         {         
-            NextLvNum.text = (userData.eggLv + 1).ToString();          
-            var nextData= DataManager.Instance.GetData<EggRateData>((userData.eggLv + 1).ToString());
+            NextLvNum.text = (userData.eggLv + 1).ToString();
+            var nextData = DataManager.Instance.GetData<EggRateData>((userData.eggLv + 1).ToString());
           
             CommonNextNum.text = nextData.common.ToString("F2") + "%";           
             AdvancedNextNum.text = nextData.advanced.ToString("F2") + "%";           
@@ -218,19 +224,21 @@ public class UIEggLvPopup : UIBase
 
         if (userData.eggLv < 10)
         {
-            Debug.Log("userData.eggLv < 10");
             Clock.SetActive(true);
             Skip.SetActive(true);
             SetDiaBtn();
 
             if(userData.eggLv < 9)
             {
-                Debug.Log("userData.eggLv < 9");
                 price = Calculater.CalPrice(userData.eggLv + 1, 10000, 17000, 12000);
                 PriceTxt.text = Calculater.NumFormatter(price);
             }
         }     
 
+        totalTime = DataManager.Instance.GetData<EggRateData>(userData.eggLv.ToString()).lvUpTime;
+        // 앱이 다시 시작될 때 경과된 시간 계산
+        TimeSpan elapsedTime = DateTime.Now - DateTime.Parse(userData.startLvUpTime);
+        remainingTime = totalTime - (float)elapsedTime.TotalSeconds - userData.skipTime;
         updateTimerCoroutine = StartCoroutine(UpdateTimer());
     }
 
@@ -296,7 +304,8 @@ public class UIEggLvPopup : UIBase
 
     private void LvUp()
     {
-        StopCoroutine(updateTimerCoroutine);
+        if(updateTimerCoroutine != null)
+            StopCoroutine(updateTimerCoroutine);
         remainingTime = 0;
         UpdateTimerText();
 
@@ -314,12 +323,6 @@ public class UIEggLvPopup : UIBase
 
     private IEnumerator UpdateTimer()
     {
-        // 앱이 다시 시작될 때 경과된 시간 계산
-        TimeSpan elapsedTime = DateTime.Now - DateTime.Parse(userData.startLvUpTime);
-        if(userData.eggLv == 1) // 1렙때 1분, 2렙이후부턴 30분 * 2^(레벨-2)
-            remainingTime = 3f - (float)elapsedTime.TotalSeconds - userData.skipTime; // 60f == 1분
-        else remainingTime = totalTime - (float)elapsedTime.TotalSeconds - userData.skipTime;
-
         while (remainingTime > 1f)
         {
             remainingTime -= 1f; // 1초마다 감소

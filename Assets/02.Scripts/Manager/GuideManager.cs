@@ -11,16 +11,16 @@ public class GuideManager : Singleton<GuideManager>
     private UserData userData => SaveManager.Instance.userData;
 
     #region Tutorial Start Indexes
-    private readonly HashSet<int> guideNumSet = new HashSet<int> { 0, 1, 3, 7, 12, 30, 41, 50 };
+    private readonly HashSet<int> guideNumSet = new HashSet<int> { 0, 1, 3, 6, 11, 29, 40, 49 };
     public event Action<int> OnGuideAction;
 
-    [HideInInspector] public readonly int equipPixelmon = 1;
-    [HideInInspector] public readonly int setAllPixelmon = 3;
-    [HideInInspector] public readonly int nestLvUp = 7;
-    [HideInInspector] public readonly int upgrAtk = 12;
-    [HideInInspector] public readonly int skillGatcha = 30;
-    [HideInInspector] public readonly int seedFarm = 41;
-    [HideInInspector] public readonly int goldDg = 50;
+    public readonly int equipPixelmon = 1;
+    public readonly int setAllPixelmon = 3;
+    public readonly int nestLvUp = 6;
+    public readonly int upgrAtk = 11;
+    public readonly int skillGatcha = 29;
+    public readonly int seedFarm = 40;
+    public readonly int goldDg = 49;
     #endregion
 
     public void SetArrow(GameObject obj, float addYPos = 0)

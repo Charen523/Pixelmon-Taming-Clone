@@ -51,6 +51,11 @@ public class UIMiddleBar : UIBase
 
     public void OnClickEggLvBtn()
     {
+        if (GuideManager.Instance.guideNum < GuideManager.Instance.nestLvUp)
+        {
+            UIManager.Instance.ShowWarn("해금조건: 5번 퀘스트 완료");
+            return;
+        }
         EggLvPopup.SetActive(true);
         EggLvPopup.SetPopup(this);
         EggLvPopup.EggLvGuide();
@@ -58,6 +63,11 @@ public class UIMiddleBar : UIBase
 
     public void OnClickAutoBtn()
     {
+        if(userData.userLv < 10)
+        {
+            UIManager.Instance.ShowWarn("해금조건: 플레이어 10레벨 달성");           
+            return;
+        }
         if (EggHatch.isAutoMode)
             EggHatch.isWantStopAuto = true;
         else

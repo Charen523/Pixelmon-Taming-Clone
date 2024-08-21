@@ -53,28 +53,24 @@ public class UIBottomBar : MonoBehaviour
                     case 0:
                         return;
                     case 1:
-                        msg = "해금조건: 퀘스트11 클리어";
-                        UIManager.Instance.ShowWarn(msg);
+                        msg = "해금조건: 퀘스트11 클리어";        
                         return;
                     case 2:
                         msg = "해금조건: 퀘스트29 클리어";
-                        UIManager.Instance.ShowWarn(msg);
                         return;
                     case 3:
                         msg = "해금조건: 퀘스트40 클리어";
-                        UIManager.Instance.ShowWarn(msg);
                         return;
                     case 4:
                         msg = "해금조건: 퀘스트49 클리어";
-                        UIManager.Instance.ShowWarn(msg);
                         return;
                     case 5:
                         msg = "해금조건: 퀘스트29 클리어";
-                        UIManager.Instance.ShowWarn(msg);
                         return;
                     default:
                         break;
                 }
+                UIManager.Instance.ShowWarn(msg);
             }
         }
         
@@ -117,7 +113,6 @@ public class UIBottomBar : MonoBehaviour
             guideManager.SetArrow(toggles[0].gameObject);
             guidingToggle = 0;
         }
-
         if (QuestManager.Instance.isSet)
         {
             if (guideIndex == guideManager.upgrAtk)
