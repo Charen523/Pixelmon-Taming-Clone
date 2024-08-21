@@ -111,7 +111,15 @@ public class QuestManager : Singleton<QuestManager>
         switch (data.rewardType)
         {
             case "RWD_Gold":
-                rwdIcon.sprite = rwdSprite[0];
+                if (data.rcode[0] == 'Q')
+                {
+                    rwdIcon.sprite = rwdSprite[0];
+                }
+                else
+                {
+                    
+                }
+                
                 break;
             case "RWD_Dia":
                 rwdIcon.sprite = rwdSprite[1];
@@ -137,10 +145,16 @@ public class QuestManager : Singleton<QuestManager>
                 curRwd = 0;
                 break;
         }
+
         if (data.rewardType != "")
         {
-            rewardTxt.text = data.rewardValue.ToString();
+            if (data.rewardType == "RWD_Gold")
+            {
+                curRwd = data.rewardValue + (questNum - 50) * 5000;
+                rewardTxt.text = Calculater.NumFormatter(curRwd);
+            }
             curRwd = data.rewardValue;
+            rewardTxt.text = curRwd.ToString();
         }
     }
 
