@@ -146,6 +146,7 @@ public class UIBottomBar : MonoBehaviour
             }
             else if (guideIndex == guideManager.goldDg)
             {
+                guideIndex = 100;
                 await UIManager.Show<UIUnlockPopup>("던전탭 해금!");
                 //isGuideOn = true;
                 //guideManager.GuideArrow.SetActive(true);

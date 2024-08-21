@@ -65,7 +65,7 @@ public static class PixelmonStatHandler
 
     public static float SetStatus(float perAtk, int lv, float lvAtkRate)
     {
-        return (perAtk + 100) * 0.01f + lv * lvAtkRate;
+        return (perAtk + lv * lvAtkRate + 100) * 0.01f;
     }
 
     public static float SetMultiStatus(float upgradeStat, float psvAtk, float traitValue = 1)
@@ -240,20 +240,20 @@ public static class PixelmonStatHandler
             if (IsCritical(status.Cri + status.SCri))
             {
                 isCri = true;
-                dealDmg = (BigInteger)((10 + PixelmonManager.Instance.upgradeStatus.Atk) * (100 + status.perAtk + perSkill + status.SDmg) / 100 * (100 + status.SCriDmg) / 100);
+                dealDmg = (BigInteger)((100 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + perSkill + status.SDmg) / 100 + status.perAtk) * (100 + status.SCriDmg) / 100);
             }
             else
-                dealDmg = (BigInteger)((10 + PixelmonManager.Instance.upgradeStatus.Atk) * (100 + status.perAtk + perSkill + status.SDmg) / 100);
+                dealDmg = (BigInteger)((100 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + perSkill + status.SDmg) / 100 + status.perAtk));
         }
         else
         {
             if (IsCritical(status.Cri))
             {
                 isCri= true;
-                dealDmg = (BigInteger)((10 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + status.perAtk + status.Dmg)/100) * ((100 + status.CriDmg) / 100));
+                dealDmg = (BigInteger)((100 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + status.Dmg) / 100 + status.perAtk) * (100 + status.CriDmg) / 100);
             }
             else
-                dealDmg = (BigInteger)((10 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + status.perAtk + status.Dmg)/100));
+                dealDmg = (BigInteger)((100 + PixelmonManager.Instance.upgradeStatus.Atk) * ((100 + status.Dmg)/100 + status.perAtk));
         }
         //버프가 있다면 dealDmg *= 1;
 

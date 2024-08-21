@@ -23,13 +23,13 @@ public class EnemyStatHandler : MonoBehaviour
         int world = StageManager.Instance.worldNum;
         int stage = StageManager.Instance.stageNum;
 
-        int deltaStage = difficulty * 150 + (world - 1) * 15 + stage;
+        int deltaStage = difficulty * 150 + (world - 1) * 5 + stage -1;
 
         if (data.isBoss)
         {
-            enemyAtk = data.Atk * (deltaStage * 10 + 100) / 100;
-            enemyMaxHp = data.Hp * (deltaStage * 85 + 100) / 100;
-            enemyDef = data.Def * (deltaStage * 10 + 100) / 100;
+            enemyAtk = data.Atk * (deltaStage * 3 + 100) / 100;
+            enemyMaxHp = data.Hp * (deltaStage * 25 + 100) / 100;
+            enemyDef = data.Def * (deltaStage * 2 + 100) / 100;
 
             enemyAtk1 = enemyAtk.ToString();
             enemyHp1 = enemyMaxHp.ToString();
@@ -37,9 +37,9 @@ public class EnemyStatHandler : MonoBehaviour
         }
         else
         {
-            enemyAtk = data.Atk * (deltaStage * 10 + 100) / 100;
-            enemyMaxHp = data.Hp * (deltaStage * 95 + 100) / 100;
-            enemyDef = data.Def * (deltaStage * 10 + 100) / 100;
+            enemyAtk = data.Atk * (deltaStage * 3 + 100) / 100;
+            enemyMaxHp = data.Hp * (deltaStage * 25 + 100) / 100;
+            enemyDef = data.Def * (deltaStage * 2 + 100) / 100;
 
             enemyAtk1 = enemyAtk.ToString();
             enemyHp1 = enemyMaxHp.ToString();
