@@ -12,27 +12,39 @@ public class EnemyStatHandler : MonoBehaviour
     public BigInteger enemyDef;
     #endregion
 
+    public string enemyAtk1;
+    public string enemyHp1;
+    public string enemyDef1;
+
     public void UpdateEnemyStats()
     {
         int difficulty = StageManager.Instance.diffNum;
-        int deltaDiff = difficulty + 1;
 
         int world = StageManager.Instance.worldNum;
         int stage = StageManager.Instance.stageNum;
 
-        int deltaStage = (world - 1) * 10 + stage;
+        int deltaStage = difficulty * 150 + (world - 1) * 15 + stage;
+        Debug.Log(deltaStage);
 
         if (data.isBoss)
         {
-            enemyAtk =  data.Atk * (deltaStage * 10 + 100)  * deltaDiff / 100;
-            enemyMaxHp = data.Hp * (deltaStage * 85 + 100)  * deltaDiff / 100;
-            enemyDef = data.Def * (deltaStage * 10 + 100) * deltaDiff / 100;
+            enemyAtk = data.Atk * (deltaStage * 10 + 100);
+            enemyMaxHp = data.Hp * (deltaStage * 85 + 100);
+            enemyDef = data.Def * (deltaStage * 10 + 100);
+
+            enemyAtk1 = enemyAtk.ToString();
+            enemyHp1 = enemyMaxHp.ToString();
+            enemyDef1 = enemyDef.ToString();
         }
         else
         {
-            enemyAtk = data.Atk * (deltaStage * 10 + 100) * deltaDiff / 100;
-            enemyMaxHp = data.Hp * (deltaStage * 95 + 100) * deltaDiff / 100;
-            enemyDef = data.Def * (deltaStage * 10 + 100) * deltaDiff / 100;
+            enemyAtk = data.Atk * (deltaStage * 10 + 100);
+            enemyMaxHp = data.Hp * (deltaStage * 95 + 100);
+            enemyDef = data.Def * (deltaStage * 10 + 100);
+
+            enemyAtk1 = enemyAtk.ToString();
+            enemyHp1 = enemyMaxHp.ToString();
+            enemyDef1 = enemyDef.ToString();
         }
         enemy.healthSystem.initEnemyHealth(enemyMaxHp);
     }
