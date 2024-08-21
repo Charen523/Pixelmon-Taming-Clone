@@ -32,6 +32,8 @@ public abstract class HealthSystem : SerializedMonoBehaviour
     public virtual void TakeDamage(BigInteger delta, bool isCri = false, bool isPlayer = false)
     {
         BigInteger damage = delta - def;
+        if (damage < 0) damage = 0;
+
         if(damage > currentHealth)
         currentHealth = 0;
         else

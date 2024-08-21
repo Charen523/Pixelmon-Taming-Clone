@@ -68,7 +68,7 @@ public class RewardedAdsButton : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
             // Grant a reward.
             //이곳에 보상을 작성
             Debug.Log("보상획득");
-            eggLvPopup.OnClickAdBtn(1800);
+            eggLvPopup.OnClickAdBtn(1800f);
             _showAdButton.interactable = true;
         }
     }

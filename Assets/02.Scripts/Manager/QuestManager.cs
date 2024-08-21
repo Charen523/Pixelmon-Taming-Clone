@@ -17,7 +17,8 @@ public enum QuestType
     Skill,
     Feed,
     Seed,
-    Harvest
+    Harvest,
+    Null
 }
 
 public class QuestManager : Singleton<QuestManager>
@@ -49,6 +50,8 @@ public class QuestManager : Singleton<QuestManager>
     [SerializeField] private Image rwdIcon;
     [SerializeField] private Sprite[] rwdSprite;
     #endregion
+
+    public bool isSet = false;
 
     protected override void Awake()
     {
@@ -206,6 +209,7 @@ public class QuestManager : Singleton<QuestManager>
                 int index = int.Parse(curIndex[1..]);
                 qNum = "Q" + (++index).ToString();
                 guideManager.guideNum = index;
+                isSet = true;
                 guideManager.GuideNumTrigger(index);
                 guideManager.SetBottomLock();
             }

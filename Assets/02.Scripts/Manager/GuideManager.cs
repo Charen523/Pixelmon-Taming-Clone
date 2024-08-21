@@ -11,33 +11,17 @@ public class GuideManager : Singleton<GuideManager>
     private UserData userData => SaveManager.Instance.userData;
 
     #region Tutorial Start Indexes
-    private readonly HashSet<int> guideNumSet = new HashSet<int> { 0, 1, 3, 6 };
+    private readonly HashSet<int> guideNumSet = new HashSet<int> { 0, 1, 3, 6, 11, 29, 40, 49 };
     public event Action<int> OnGuideAction;
 
     public readonly int equipPixelmon = 1;
     public readonly int setAllPixelmon = 3;
     public readonly int nestLvUp = 6;
-    public readonly int upgrAtk = 9;
-    public readonly int feedPixelmon = 10;
-    public readonly int skillGatcha = 21;
-    public readonly int skillEquip = 23;
-    public readonly int seedFarm = 35;
-    public readonly int harvestFarm = 45;
-    public readonly int goldDg = 51;
+    public readonly int upgrAtk = 11;
+    public readonly int skillGatcha = 29;
+    public readonly int seedFarm = 40;
+    public readonly int goldDg = 49;
     #endregion
-
-    #region Unlock Indexes: 해금될 Q 번호
-    private readonly int tabUpgr = 8;
-    private readonly int tabSkill = 20;
-    private readonly int tabFarm = 34;
-    public readonly int tabFarm2 = 45;
-    private readonly int tabDg = 50;
-    #endregion
-
-    protected override void Awake()
-    {
-        base.Awake();        
-    }
 
     public void SetArrow(GameObject obj, float addYPos = 0)
     {
@@ -65,23 +49,23 @@ public class GuideManager : Singleton<GuideManager>
             Locks[0].SetActive(false);
         }
         
-        if (guideNum > tabUpgr)
+        if (guideNum >= upgrAtk)
         {
             Locks[1].SetActive(false);
         }
 
-        if (guideNum > tabSkill)
+        if (guideNum >= skillGatcha)
         {
             Locks[2].SetActive(false);
             Locks[5].SetActive(false);
         }
 
-        if (guideNum > tabFarm)
+        if (guideNum >= seedFarm)
         {
             Locks[3].SetActive(false);
         }
 
-        if (guideNum > tabDg)
+        if (guideNum >= goldDg)
         {
             Locks[4].SetActive(false);
         }

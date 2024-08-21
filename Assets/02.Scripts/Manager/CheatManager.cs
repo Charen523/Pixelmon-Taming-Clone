@@ -32,6 +32,11 @@ public class CheatManager : Singleton<CheatManager>
                     BigInteger exp = 100000;
                     SaveManager.Instance.SetFieldData("userExp", exp, true);
                     break;
+                case "l":
+                case "L":
+                    if (SaveManager.Instance.userData.eggLv < 10)
+                        SaveManager.Instance.SetFieldData(nameof(SaveManager.Instance.userData.eggLv), 1, true);
+                    break;
                 default:
                     break;
             }
