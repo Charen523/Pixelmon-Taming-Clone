@@ -33,10 +33,7 @@ public class BaseSkill : MonoBehaviour
         ExecuteSkill();
     }
 
-    protected virtual void ExecuteSkill() 
-    {
-        AudioManager.Instance.PlayClip(soundData[Random.Range(0, soundData.Count)].clip);
-    }
+    protected virtual void ExecuteSkill() { }
     protected virtual void Setprojectile() { }
 
 
