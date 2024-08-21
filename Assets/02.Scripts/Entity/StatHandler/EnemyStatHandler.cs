@@ -27,9 +27,9 @@ public class EnemyStatHandler : MonoBehaviour
 
         if (data.isBoss)
         {
-            enemyAtk = data.Atk * (deltaStage * 3 + 100) / 100;
-            enemyMaxHp = data.Hp * (deltaStage * 25 + 100) / 100;
-            enemyDef = data.Def * (deltaStage * 2 + 100) / 100;
+            enemyAtk = data.Atk * (deltaStage * 6 + 100) / 100;
+            enemyMaxHp = data.Hp * (deltaStage * 70 + 100) / 100;
+            enemyDef = data.Def * (deltaStage * 3 + 100) / 100;
 
             enemyAtk1 = enemyAtk.ToString();
             enemyHp1 = enemyMaxHp.ToString();
@@ -37,9 +37,9 @@ public class EnemyStatHandler : MonoBehaviour
         }
         else
         {
-            enemyAtk = data.Atk * (deltaStage * 3 + 100) / 100;
+            enemyAtk = data.Atk * (deltaStage * 4 + 100) / 100;
             enemyMaxHp = data.Hp * (deltaStage * 25 + 100) / 100;
-            enemyDef = data.Def * (deltaStage * 2 + 100) / 100;
+            enemyDef = data.Def * (deltaStage * 3 + 100) / 100;
 
             enemyAtk1 = enemyAtk.ToString();
             enemyHp1 = enemyMaxHp.ToString();
