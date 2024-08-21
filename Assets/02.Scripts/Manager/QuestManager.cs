@@ -111,15 +111,7 @@ public class QuestManager : Singleton<QuestManager>
         switch (data.rewardType)
         {
             case "RWD_Gold":
-                if (data.rcode[0] == 'Q')
-                {
-                    rwdIcon.sprite = rwdSprite[0];
-                }
-                else
-                {
-                    
-                }
-                
+                rwdIcon.sprite = rwdSprite[0];
                 break;
             case "RWD_Dia":
                 rwdIcon.sprite = rwdSprite[1];
