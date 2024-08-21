@@ -49,8 +49,8 @@ public class DailyManager : MonoBehaviour
 
     private void ResetAds()
     {
-        userData.adsCount = 24;
-        saveManager.SetFieldData(nameof(userData.adsCount), 24);
+        userData.adsCount = 4;
+        saveManager.SetFieldData(nameof(userData.adsCount), 4);
     }
 
     private void ResetKey()
