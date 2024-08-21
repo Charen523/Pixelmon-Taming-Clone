@@ -22,12 +22,13 @@ public class SaveManager : Singleton<SaveManager>
         initPath = "InitData";
         userPath = Path.Combine(Application.persistentDataPath, "userData.json");
         LoadData();
-
-        if (userData.version != "v1.0.5")
+        
+        if (userData.version == null)
         {
+            Debug.Log(userData.version);
             File.Delete(userPath);
             LoadData();
-            SetFieldData(nameof(userData.version), "v1.0.5");
+            SetFieldData(nameof(userData.version), "v1.0.7");
         }
 
         SetFieldData(nameof(userData.gold), BigInteger.Parse(userData._gold));
