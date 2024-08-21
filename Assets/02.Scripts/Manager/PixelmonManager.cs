@@ -34,7 +34,7 @@ public class PixelmonManager : Singleton<PixelmonManager>
         userData = saveManager.userData;
         equipAction += Equipped;
         unEquipAction += UnEquipped;
-        if(saveManager.userData.userLv < 30)
+        if(saveManager.userData.userLv < 100)
             unlockSlotAction += UnLockedSlots;
         InitUpgradeStatus();
         InitEquippedPixelmon();

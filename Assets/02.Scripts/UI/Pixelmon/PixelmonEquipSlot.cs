@@ -126,10 +126,10 @@ public class PixelmonEquipSlot : PixelmonSlot
                 uiManager.ShowWarn("유저 레벨 10Lv에 해금");
                 return;
             case 3:
-                uiManager.ShowWarn("유저 레벨 30Lv에 해금");
+                uiManager.ShowWarn("유저 레벨 50Lv에 해금");
                 return;
             case 4:
-                uiManager.ShowWarn("유저 레벨 50Lv에 해금");
+                uiManager.ShowWarn("유저 레벨 100Lv에 해금");
                 return;
             default:
                 return;
