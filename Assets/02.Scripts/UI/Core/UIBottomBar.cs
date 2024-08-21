@@ -117,37 +117,41 @@ public class UIBottomBar : MonoBehaviour
             guideManager.SetArrow(toggles[0].gameObject);
             guidingToggle = 0;
         }
-        else if (guideIndex == guideManager.upgrAtk)
+
+        if (QuestManager.Instance.isSet)
         {
-            await UIManager.Show<UIUnlockPopup>("성장탭 해금!");
-            //isGuideOn = true;
-            //guideManager.GuideArrow.SetActive(true);
-            //guideManager.SetArrow(toggles[1].gameObject);
-            //guidingToggle = 1;
-        }
-        else if (guideIndex == guideManager.skillGatcha)
-        {
-            await UIManager.Show<UIUnlockPopup>("스킬,상점탭 해금!");
-            //isGuideOn = true;
-            //guideManager.GuideArrow.SetActive(true);
-            //guideManager.SetArrow(toggles[5].gameObject);
-            //guidingToggle = 5;
-        }
-        else if (guideIndex == guideManager.seedFarm)
-        {
-            await UIManager.Show<UIUnlockPopup>("농장탭 해금!");
-            //isGuideOn = true;
-            //guideManager.GuideArrow.SetActive(true);
-            //guideManager.SetArrow(toggles[3].gameObject);
-            //guidingToggle = 3;
-        }
-        else if (guideIndex == guideManager.goldDg)
-        {
-            await UIManager.Show<UIUnlockPopup>("던전탭 해금!");
-            //isGuideOn = true;
-            //guideManager.GuideArrow.SetActive(true);
-            //guideManager.SetArrow(toggles[4].gameObject);
-            //guidingToggle = 4;
+            if (guideIndex == guideManager.upgrAtk)
+            {
+                await UIManager.Show<UIUnlockPopup>("성장탭 해금!");
+                //isGuideOn = true;
+                //guideManager.GuideArrow.SetActive(true);
+                //guideManager.SetArrow(toggles[1].gameObject);
+                //guidingToggle = 1;
+            }
+            else if (guideIndex == guideManager.skillGatcha)
+            {
+                await UIManager.Show<UIUnlockPopup>("스킬,상점탭 해금!");
+                //isGuideOn = true;
+                //guideManager.GuideArrow.SetActive(true);
+                //guideManager.SetArrow(toggles[5].gameObject);
+                //guidingToggle = 5;
+            }
+            else if (guideIndex == guideManager.seedFarm)
+            {
+                await UIManager.Show<UIUnlockPopup>("농장탭 해금!");
+                //isGuideOn = true;
+                //guideManager.GuideArrow.SetActive(true);
+                //guideManager.SetArrow(toggles[3].gameObject);
+                //guidingToggle = 3;
+            }
+            else if (guideIndex == guideManager.goldDg)
+            {
+                await UIManager.Show<UIUnlockPopup>("던전탭 해금!");
+                //isGuideOn = true;
+                //guideManager.GuideArrow.SetActive(true);
+                //guideManager.SetArrow(toggles[4].gameObject);
+                //guidingToggle = 4;
+            }
         }
     }
 }

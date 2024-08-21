@@ -51,6 +51,8 @@ public class QuestManager : Singleton<QuestManager>
     [SerializeField] private Sprite[] rwdSprite;
     #endregion
 
+    public bool isSet = false;
+
     protected override void Awake()
     {
         isDontDestroyOnLoad = false;
@@ -207,6 +209,7 @@ public class QuestManager : Singleton<QuestManager>
                 int index = int.Parse(curIndex[1..]);
                 qNum = "Q" + (++index).ToString();
                 guideManager.guideNum = index;
+                isSet = true;
                 guideManager.GuideNumTrigger(index);
                 guideManager.SetBottomLock();
             }
