@@ -17,6 +17,7 @@ public class DataManager : GSpreadReader<DataManager>
     public GameData<BasePsvData> basePsvData;
     public GameData<ActiveData> activeData;
     public GameData<QuestData> questData;
+    public GameData<SoundData> soundData;
     public Sprite[] pxmBgIcons;
     public Sprite[] skillBgIcons;
  
@@ -25,6 +26,13 @@ public class DataManager : GSpreadReader<DataManager>
     public async Task SetBaseData()
     {
         float progress = 1.0f;
+        foreach (var data in soundData.data)
+        {
+            UILoading.Instance.SetProgress(progress++ / soundData.data.Count, "선율을 다듬는 중");
+            data.clip = await ResourceManager.Instance.LoadAsset<AudioClip>(data.rcode, eAddressableType.sound);
+        }
+
+        progress = 1.0f;
         foreach (var data in pixelmonData.data)
         {
             UILoading.Instance.SetProgress(progress++ / pixelmonData.data.Count, "픽셀몬 부화중");
@@ -114,6 +122,7 @@ public class DataManager : GSpreadReader<DataManager>
         });
         SaveManager.Instance.userData.ownedPxms.RemoveAll(obj => removeList.Contains(obj.rcode));
         SaveManager.Instance.SetData(nameof(SaveManager.Instance.userData.ownedPxms), SaveManager.Instance.userData.ownedPxms);
+
         isPxmInit = true;
     }
 

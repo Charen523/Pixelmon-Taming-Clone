@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -14,10 +15,11 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField] private AudioMixerGroup bgmMixerGroup;
     [SerializeField] private AudioMixerGroup sfxMixerGroup;
 
-    [SerializeField] private bool isFirstAudio;
     [SerializeField] private AudioSource[] bgmAudioSource;
     [SerializeField] private AudioClip[] bgmClip;
 
+    [SerializeField] private Queue<AudioSource> sfxAudioSource;
+    
     public bool[] isMuted = new bool[3];
     private float[] preVolumes = new float[3];
 
@@ -51,9 +53,19 @@ public class AudioManager : Singleton<AudioManager>
         bgmAudioSource[playIndex].DOFade(0.5f, 2);
         bgmAudioSource[stopIndex].DOFade(0, 2).OnComplete(() => bgmAudioSource[stopIndex].Stop());
     }
-    public static void PlayClip(AudioClip clip)
+    public void PlayClip(AudioClip clip)
     {
-        //효과음?
+        AudioSource audio = sfxAudioSource.Dequeue();
+        sfxAudioSource.Enqueue(audio);
+        if (!audio.isPlaying)
+        {
+            audio.PlayOneShot(clip);
+        }
+        else
+        {
+            audio.Stop();
+            audio.PlayOneShot(clip);
+        }
     }
 
     public void ToggleMute(int index)

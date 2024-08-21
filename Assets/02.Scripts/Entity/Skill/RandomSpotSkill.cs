@@ -8,9 +8,9 @@ public class RandomSpotSkill : BaseSkill
     WaitForSeconds spawnTime;
     WaitForSeconds duration;
 
-    public override void InitInfo(Pixelmon pxm, GameObject target, ActiveData atvData, MyAtvData myAtvData)
+    public override void InitInfo(Pixelmon pxm, GameObject target, MyAtvData myAtvData)
     {
-        base.InitInfo(pxm, target, atvData, myAtvData);
+        base.InitInfo(pxm, target, myAtvData);
         if (spawnTime == null)
         {
             spawnTime = new WaitForSeconds(waitTime);

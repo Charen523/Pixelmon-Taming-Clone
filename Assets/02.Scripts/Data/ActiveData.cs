@@ -14,7 +14,8 @@ public class ActiveData : IData
     public bool isCT;
     public float coolTime;
     public float maxRate;
-    
+    public string sound;
+
     public string prefabrcode;
     public int count = 1;
     public float range;
@@ -25,5 +26,6 @@ public class ActiveData : IData
     public Sprite bgIcon;
 
     public string Rcode => rcode;
+    public string[] Soundrcode => sound.Split(' ');
 
 }
