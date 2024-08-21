@@ -150,7 +150,7 @@ public class QuestManager : Singleton<QuestManager>
         {
             if (data.rewardType == "RWD_Gold")
             {
-                curRwd = data.rewardValue + (questNum - 50) * 5000;
+                curRwd = data.rewardValue + ((questNum - 50) / 3 * 5000);
                 rewardTxt.text = Calculater.NumFormatter(curRwd);
             }
             curRwd = data.rewardValue;
