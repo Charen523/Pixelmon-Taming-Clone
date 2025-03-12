@@ -1,9 +1,15 @@
 <h2><b>✨ 시연 영상 바로가기▽ ✨</b></h2>
 
-<a href="https://www.youtube.com/watch?v=MWmmSx7kkx4">
-    <img src="https://github.com/user-attachments/assets/62288f3a-c7bc-40d9-b22d-668da9471280" alt="배너를 클릭하면 시연영상 유튜브 링크로 연결됩니다" style="display: block; margin: 0 auto; width: 80%;">
-</a>
-
+<div align="center">
+    <a href="https://www.youtube.com/watch?v=MWmmSx7kkx4">
+        <img src="https://github.com/user-attachments/assets/62288f3a-c7bc-40d9-b22d-668da9471280" 
+             alt="배너를 클릭하면 시연영상 유튜브 링크로 연결됩니다" 
+             width="45%">
+    </a>
+    <img src="https://github.com/user-attachments/assets/c9849e66-96eb-4801-afbb-d8d034e472cf" 
+         alt="Unity4기 우수상-1" 
+         width="45%">
+</div>
 
 
 <h1 align="center">
